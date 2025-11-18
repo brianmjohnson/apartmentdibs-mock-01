@@ -10,6 +10,15 @@ const compat = new FlatCompat({
 });
 
 const eslintConfig = [
+  {
+    ignores: [
+      "lib/generated/**",
+      "lib/hooks/generated/**",
+      "server/routers/generated/**",
+      ".zenstack/**",
+      "prisma/schema.prisma",
+    ],
+  },
   ...compat.extends("next/core-web-vitals", "next/typescript", "prettier"),
   {
     rules: {

@@ -96,7 +96,7 @@ async function scanHITLDirectory(): Promise<HITLFile[]> {
   }
 }
 
-function categorizeby Status(files: HITLFile[]): HITLSummary {
+function categorizeByStatus(files: HITLFile[]): HITLSummary {
   return {
     approved: files.filter(f => f.status === 'APPROVED'),
     needsRevision: files.filter(f => f.status === 'NEEDS_REVISION'),
