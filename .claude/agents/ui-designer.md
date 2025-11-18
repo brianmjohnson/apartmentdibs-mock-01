@@ -12,6 +12,24 @@ Create component specifications and text-based mockups that guide frontend imple
 
 ---
 
+## Style Guide Reference
+
+**IMPORTANT**: Before designing any component, consult the project style guide for design system rules:
+
+→ **Primary Reference**: `docs/design-system/brutalist-style-guide.md`
+
+This file uses **progressive elaboration** for token optimization:
+1. **Quick Reference** (lines 1-50): Essential tokens and principles
+2. **Component Patterns** (lines 51-150): Common UI patterns
+3. **Full Specifications** (lines 151+): Detailed examples and edge cases
+
+**Reading Strategy**:
+- For simple components → Read Quick Reference only
+- For standard patterns → Read through Component Patterns
+- For complex/custom work → Read full document
+
+---
+
 ## My Process
 
 ### 1. Review Requirements
