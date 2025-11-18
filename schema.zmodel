@@ -1,0 +1,81 @@
+/**
+ * ZenStack Schema - Main Entry Point
+ *
+ * This is the main schema file that imports all modular .zmodel files.
+ * Structure:
+ * 1. Non-user models imported directly (config, etc.)
+ * 2. auth.zmodel imported (which brings User + all user FK models)
+ *
+ * After editing, run: pnpm gen:check
+ */
+
+// Import non-user-related models first
+import "zschema/config.zmodel"
+
+// Import auth.zmodel - this brings User and all models with User FK
+import "zschema/auth.zmodel"
+
+/**
+ * Database Configuration
+ * Update connection string in .env file
+ */
+datasource db {
+  provider  = "postgresql"
+  url       = env("NEON_DATABASE_URL")
+  directUrl = env("NEON_DATABASE_URL_UNPOOLED")
+}
+
+/**
+ * Prisma Client Generator
+ * Generates Prisma Client from schema
+ */
+generator client {
+  provider = "prisma-client-js"
+}
+
+/**
+ * ZenStack Plugins Configuration
+ */
+
+// Prisma Plugin - Generates prisma/schema.prisma
+plugin prisma {
+  provider = "@core/prisma"
+  output   = "prisma/schema.prisma"
+  generateClient = true
+  format   = true
+  customAttributesAsComments = true
+}
+
+// Enhancer Plugin - Generates runtime access control
+plugin enhancer {
+  provider       = "@core/enhancer"
+  output         = ".zenstack"
+  preserveTsFiles = false
+}
+
+// Zod Plugin - Generates Zod schemas for validation
+plugin zod {
+  provider = "@core/zod"
+  output   = "./lib/generated/schema/zod"
+  compile  = false
+  version  = "v4"
+}
+
+// TanStack Query Plugin - Generates React hooks
+plugin tanstack {
+  provider = '@zenstackhq/tanstack-query'
+  output   = './lib/hooks/generated/tanstack-query'
+  target   = 'react'
+  version  = 'v5'
+}
+
+// tRPC Plugin - Generates tRPC routers
+plugin trpc {
+  provider              = '@zenstackhq/trpc'
+  output                = './server/routers/generated/trpc'
+  version               = 'v11'
+  generateClientHelpers = 'next'
+  importCreateRouter    = "./lib/trpc"
+  importProcedure       = "./lib/trpc"
+  zodSchemaImport       = "./lib/generated/schema/zod"
+}

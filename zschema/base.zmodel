@@ -1,0 +1,51 @@
+/**
+ * Base Models
+ * Common fields and abstract models for reuse across all entities
+ */
+
+import "./auth.zmodel"
+
+/**
+ * Base model with essential tracking fields
+ * All models should extend this for consistency
+ */
+abstract model BaseModel {
+  id        String   @id @default(uuid(7))
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+/**
+ * Base model with user tracking
+ * Use for entities that need audit trail of who created/updated
+ */
+abstract model BaseModelWithUser extends BaseModel {
+  createdById String?
+  createdBy   User?    @relation(name: "created_by", fields: [createdById], references: [id])
+  updatedById String?
+  updatedBy   User?    @relation(name: "updated_by", fields: [updatedById], references: [id])
+}
+
+/**
+ * Base model with soft delete capability
+ * Use for entities that should never be permanently deleted
+ */
+abstract model BaseModelWithSoftDelete extends BaseModel {
+  deletedAt   DateTime?
+  deletedById String?
+  deletedBy   User?      @relation(name: "deleted_by", fields: [deletedById], references: [id])
+}
+
+/**
+ * Base model combining user tracking and soft delete
+ * Use for critical business entities requiring full audit trail
+ */
+abstract model BaseModelComplete extends BaseModel {
+  createdById String?
+  createdBy   User?      @relation(name: "created_by", fields: [createdById], references: [id])
+  updatedById String?
+  updatedBy   User?      @relation(name: "updated_by", fields: [updatedById], references: [id])
+  deletedAt   DateTime?
+  deletedById String?
+  deletedBy   User?      @relation(name: "deleted_by", fields: [deletedById], references: [id])
+}

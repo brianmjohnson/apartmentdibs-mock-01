@@ -1,0 +1,60 @@
+```mermaid
+graph TB
+    Start([Human: Business Idea]) --> Phase1[Phase 1: Business Plan]
+
+    Phase1 --> README[Create/Update README.md]
+    README --> Phase2[Phase 2: User Stories]
+
+    Phase2 --> PM[Product Manager Agent]
+    PM --> Stories[Generate User Stories]
+    Stories --> HITL1{HITL Gate #1:<br/>User Story Review}
+
+    HITL1 -->|NEEDS_REVISION| PM
+    HITL1 -->|APPROVED| Phase3[Phase 3: Architecture]
+
+    Phase3 --> Arch[Architecture Agent]
+    Arch --> ADRs[Create/Update ADRs]
+    ADRs --> HITL2{HITL Gate #2:<br/>ADR Review}
+
+    HITL2 -->|NEEDS_REVISION| Arch
+    HITL2 -->|APPROVED| Phase4[Phase 4: Tech Specs]
+
+    Phase4 --> BE[Backend Developer]
+    Phase4 --> FE[Frontend Developer]
+    BE --> BESpec[Design Data Models<br/>& API Contracts]
+    FE --> FESpec[Design Components<br/>& UI Flow]
+    BESpec --> HITL3{HITL Gate #3:<br/>Tech Spec Review}
+    FESpec --> HITL3
+
+    HITL3 -->|NEEDS_REVISION| Phase4
+    HITL3 -->|APPROVED| Phase5[Phase 5: Implementation]
+
+    Phase5 --> BEImpl[Backend Implementation]
+    Phase5 --> FEImpl[Frontend Implementation]
+
+    BEImpl --> BECode[ZenStack Models<br/>Generated tRPC<br/>Business Logic]
+    FEImpl --> FECode[React Components<br/>Generated Hooks<br/>UI Logic]
+
+    BECode --> Phase6[Phase 6: Quality Review]
+    FECode --> Phase6
+
+    Phase6 --> QA[Quality Reviewer Agent]
+    QA --> QACheck{All Tests<br/>Pass?}
+
+    QACheck -->|Issues Found| HITL4{HITL Gate #4:<br/>QA Issues}
+    HITL4 -->|Fix| Phase5
+    HITL4 -->|Refine Story| Phase2
+    HITL4 -->|Accept| Phase7[Phase 7: Session Summary]
+
+    QACheck -->|Pass| Phase7
+
+    Phase7 --> Summary[Session Summary Agent]
+    Summary --> Complete([Story Complete])
+
+    style HITL1 fill:#ffeb3b
+    style HITL2 fill:#ffeb3b
+    style HITL3 fill:#ffeb3b
+    style HITL4 fill:#ffeb3b
+    style Phase5 fill:#4caf50
+    style Complete fill:#2196f3
+```

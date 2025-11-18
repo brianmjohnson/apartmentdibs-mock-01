@@ -1,0 +1,27 @@
+/**
+ * Configuration Models
+ * Runtime configuration and feature flags (NO user FK)
+ */
+
+import "base.zmodel"
+
+/**
+ * ConfigParameter Model
+ * Stores runtime configuration values that can be updated without code deployment
+ * Use for feature flags, API keys, limits, etc.
+ */
+model ConfigParameter extends BaseModel {
+  key          String   @unique
+  valueTyp     String   @default("string")   // string, number, boolean, json
+  value        String
+  description  String?
+  category     String   @default("general")  // general, features, limits, integrations
+  isPublic     Boolean  @default(false)      // Can clients read this value?
+
+  @@index([category])
+
+  // Access control
+  @@allow('read', isPublic || auth().role == 'admin')
+  @@allow('create,update,delete', auth().role == 'admin')
+}
+

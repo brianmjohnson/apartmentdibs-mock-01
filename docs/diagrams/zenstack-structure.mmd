@@ -1,0 +1,39 @@
+```mermaid
+graph TB
+    Schema[schema.zmodel<br/>Main Entry Point]
+
+    Schema --> Config[import zschema/config.zmodel]
+    Schema --> Auth[import zschema/auth.zmodel]
+
+    Config --> ConfigModels["ConfigParameter<br/>(no user FK)"]
+
+    Auth --> Base[import zschema/base.zmodel]
+    Auth --> UserModels[User, Session,<br/>Account, Organization]
+
+    Auth --> Profile[import zschema/profile.zmodel]
+    Auth --> Wishlist[import zschema/wishlist.zmodel]
+    Auth --> Feature[import zschema/feature.zmodel]
+
+    Profile --> ProfileModel["Profile<br/>(has user FK)"]
+    Wishlist --> WishlistModel["Wishlist, WishlistItem<br/>(have user FK)"]
+    Feature --> FeatureModel["YourModels<br/>(have user FK)"]
+
+    Base --> BaseModels["BaseModel<br/>BaseModelWithUser<br/>BaseModelWithSoftDelete"]
+
+    Schema --> Plugins[Plugins Configuration]
+    Plugins --> Prisma[prisma → schema.prisma]
+    Plugins --> Enhancer[enhancer → .zenstack]
+    Plugins --> Zod[zod → lib/generated]
+    Plugins --> TanStack[tanstack → lib/hooks/generated]
+    Plugins --> TRPC[trpc → server/routers/generated]
+
+    Prisma --> PrismaGen[Prisma Client<br/>Type Definitions]
+    TanStack --> Hooks[React Query Hooks<br/>useCreate, useFind, etc]
+    TRPC --> Routers[tRPC Routers<br/>Type-safe API]
+
+    style Schema fill:#2196f3
+    style Auth fill:#4caf50
+    style Plugins fill:#ff9800
+    style Hooks fill:#e91e63
+    style Routers fill:#9c27b0
+```

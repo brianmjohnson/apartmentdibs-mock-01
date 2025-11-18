@@ -1,0 +1,54 @@
+```mermaid
+graph TB
+    Start([Claude Working]) --> Create[Create Individual<br/>HITL Files]
+    Create --> Files["hitl-2025-01-15-001.md<br/>hitl-2025-01-15-002.md<br/>hitl-2025-01-15-003.md<br/>..."]
+
+    Files --> Checkpoint{Reach<br/>Checkpoint?}
+
+    Checkpoint -->|Yes| Batch[Create Batch Review File]
+    Checkpoint -->|No| Create
+
+    Batch --> BatchFile["REVIEW_BATCH_<date>_<category>.md<br/>- Summary<br/>- Quick review options<br/>- Individual item links"]
+
+    BatchFile --> Pause[Claude STOPS<br/>Waits for Human]
+
+    Pause --> Human[Human Reviews Batch]
+    Human --> BulkReview{Bulk or<br/>Individual?}
+
+    BulkReview -->|Bulk| BulkApprove[Check quick actions<br/>Approve all P0/P1/etc]
+    BulkReview -->|Individual| IndivReview[Open each HITL file<br/>Review thoroughly]
+
+    BulkApprove --> UpdateFiles[Update status in<br/>each HITL file]
+    IndivReview --> UpdateFiles
+
+    UpdateFiles --> Status{Update<br/>Status}
+
+    Status --> APPROVED[Mark: APPROVED]
+    Status --> REVISION[Mark: NEEDS_REVISION<br/>Add feedback]
+    Status --> REJECTED[Mark: REJECTED<br/>Add reasoning]
+
+    APPROVED --> Resume[pnpm hitl:resume]
+    REVISION --> Resume
+    REJECTED --> Resume
+
+    Resume --> Script[hitl-resume.ts<br/>Scans & Reports]
+
+    Script --> Report["Report Shows:<br/>✅ Approved: X<br/>🔄 Needs Revision: Y<br/>❌ Rejected: Z"]
+
+    Report --> ClaudeContinue[Claude Reads Report<br/>Continues Work]
+
+    ClaudeContinue --> Process{Process<br/>Decisions}
+
+    Process -->|Approved Items| Proceed[Proceed with<br/>Implementation]
+    Process -->|Needs Revision| Revise[Make Changes<br/>Create new HITL]
+    Process -->|Rejected Items| Archive[Archive &<br/>Move On]
+
+    Proceed --> Done([Checkpoint Complete])
+    Revise --> Checkpoint
+    Archive --> Done
+
+    style Pause fill:#ffeb3b
+    style Human fill:#2196f3
+    style Resume fill:#4caf50
+    style Done fill:#4caf50
+```
