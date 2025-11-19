@@ -1,0 +1,412 @@
+/**
+ * Privacy & Data Management Models
+ * US-025: GDPR/CCPA Data Export & Deletion
+ *
+ * Key features:
+ * - Data export request processing
+ * - Full and selective deletion requests
+ * - Data inventory tracking
+ * - Third-party notification management
+ * - Audit trail anonymization
+ */
+
+import "base.zmodel"
+import "auth.zmodel"
+
+/**
+ * Data Request Type Enum
+ * Types of privacy requests
+ */
+enum DataRequestType {
+  EXPORT            // Full data export
+  DELETION          // Full account deletion
+  SELECTIVE_DELETE  // Specific data deletion
+  ACCESS            // View what data we have
+  CORRECTION        // Correct inaccurate data
+  PORTABILITY       // Transfer to another service
+}
+
+/**
+ * Data Request Status Enum
+ * Lifecycle of a data request
+ */
+enum DataRequestStatus {
+  PENDING           // Request submitted
+  PROCESSING        // Being processed
+  AWAITING_VERIFICATION // Needs identity verification
+  COMPLETED         // Request fulfilled
+  REJECTED          // Request denied (with reason)
+  CANCELLED         // User cancelled
+}
+
+/**
+ * Legal Basis Enum
+ * Legal grounds for data retention
+ */
+enum LegalBasis {
+  CONSENT           // User consented
+  CONTRACT          // Necessary for contract
+  LEGAL_OBLIGATION  // Required by law (FCRA, etc.)
+  LEGITIMATE_INTEREST // Business legitimate interest
+  VITAL_INTEREST    // Protect vital interests
+}
+
+/**
+ * Data Export Request Model
+ * US-025: Request for data export
+ */
+model DataExportRequest extends BaseModel {
+  // Foreign keys
+  userId            String
+  user              User          @relation(name: "data_export_requests", fields: [userId], references: [id], onDelete: Cascade)
+
+  // Request details
+  requestType       DataRequestType @default(EXPORT)
+  status            DataRequestStatus @default(PENDING)
+
+  // Requested formats
+  includeJson       Boolean       @default(true)
+  includePdf        Boolean       @default(true)
+  includeDocuments  Boolean       @default(true)
+  includeActivity   Boolean       @default(true)
+
+  // Processing
+  processedAt       DateTime?
+  processedById     String?       // Admin user ID
+
+  // Delivery
+  downloadUrl       String?       // Vercel Blob URL
+  downloadExpiresAt DateTime?     // Links expire after 7 days
+  downloadCount     Int           @default(0)
+
+  // File metadata
+  fileSizeBytes     Int?
+  fileHash          String?       // SHA-256 for integrity
+
+  // GDPR requires 30-day deadline
+  deadline          DateTime      // Must complete by this date
+  extensionRequested Boolean      @default(false)
+  extensionReason   String?
+
+  // Communication
+  notificationsSent String[]      // IDs of sent emails
+  lastNotifiedAt    DateTime?
+
+  @@index([userId, status])
+  @@index([status, deadline])
+
+  // Access control
+  @@allow('create', auth() == user)
+  @@allow('read', auth() == user || auth().role == 'admin')
+  @@allow('update', auth().role == 'admin')
+  @@allow('delete', auth() == user && status == 'PENDING')
+}
+
+/**
+ * Data Deletion Request Model
+ * US-025: Request for data deletion (right to be forgotten)
+ */
+model DataDeletionRequest extends BaseModel {
+  // Foreign keys
+  userId            String
+  user              User          @relation(name: "data_deletion_requests", fields: [userId], references: [id], onDelete: Cascade)
+
+  // Request details
+  requestType       DataRequestType @default(DELETION)
+  status            DataRequestStatus @default(PENDING)
+  scope             String        @default("full") // full, selective
+
+  // For selective deletion
+  selectedCategories String[]     // Data categories to delete
+  selectedItemIds   String[]      // Specific item IDs
+
+  // Verification
+  verifiedAt        DateTime?     // Identity verified
+  verificationMethod String?      // email, sms, id_verification
+
+  // Processing
+  processedAt       DateTime?
+  processedById     String?
+
+  // Deletion tracking
+  deletionSummary   DeletionSummary? @json
+
+  // Legal holds
+  hasLegalHold      Boolean       @default(false)
+  legalHoldReason   String?
+  legalHoldUntil    DateTime?
+
+  // Retention exceptions (FCRA 3-year requirement)
+  retainedForCompliance Boolean   @default(false)
+  retentionReason   String?
+  retainedData      String[]      // What's being retained
+
+  // GDPR requires 30-day deadline
+  deadline          DateTime
+  completedWithinDeadline Boolean?
+
+  // Third-party notifications
+  thirdPartiesNotified Boolean    @default(false)
+  thirdPartyStatuses String?      // JSON of notification statuses
+
+  // Confirmation
+  confirmationSent  Boolean       @default(false)
+  confirmationSentAt DateTime?
+
+  @@index([userId, status])
+  @@index([status, deadline])
+  @@index([hasLegalHold])
+
+  // Access control
+  @@allow('create', auth() == user)
+  @@allow('read', auth() == user || auth().role == 'admin')
+  @@allow('update', auth().role == 'admin')
+  @@allow('delete', auth() == user && status in ['PENDING', 'AWAITING_VERIFICATION'])
+}
+
+/**
+ * Deletion Summary Type
+ * What was deleted in the request
+ */
+type DeletionSummary {
+  totalItemsDeleted Int
+  categoriesDeleted String[]
+  tablesAffected    String[]
+  backupsPurged     Boolean
+  anonymizedItems   Int           // Audit logs anonymized instead of deleted
+}
+
+/**
+ * Data Category Model
+ * Inventory of data categories we hold
+ */
+model DataCategory extends BaseModel {
+  // Category identification
+  name              String        @unique // e.g., "personal_info", "financial_docs"
+  displayName       String        // e.g., "Personal Information"
+  description       String
+
+  // Classification
+  isPii             Boolean       @default(false)
+  isSensitive       Boolean       @default(false) // Special category data
+
+  // Retention
+  retentionDays     Int?          // NULL = until deletion requested
+  legalBasis        LegalBasis
+  legalReference    String?       // e.g., "FCRA 15 U.S.C. 1681p"
+
+  // What it includes
+  dataPoints        String[]      // List of specific fields
+  sourceModels      String[]      // Database tables
+
+  // Third-party sharing
+  sharedWithThirdParties Boolean  @default(false)
+  thirdPartyNames   String[]      // Who we share with
+
+  // Display
+  sortOrder         Int           @default(0)
+  showInInventory   Boolean       @default(true)
+
+  @@index([isPii, isSensitive])
+
+  // Access control
+  @@allow('read', true)
+  @@allow('create', auth().role == 'admin')
+  @@allow('update', auth().role == 'admin')
+  @@allow('delete', auth().role == 'admin')
+}
+
+/**
+ * User Data Inventory Model
+ * Per-user view of data we hold
+ */
+model UserDataInventory extends BaseModel {
+  // Foreign keys
+  userId            String        @unique
+  user              User          @relation(name: "user_data_inventory", fields: [userId], references: [id], onDelete: Cascade)
+
+  // Inventory snapshot
+  lastUpdated       DateTime      @default(now())
+
+  // Data presence by category
+  hasPersonalInfo   Boolean       @default(false)
+  hasContactInfo    Boolean       @default(false)
+  hasFinancialDocs  Boolean       @default(false)
+  hasIdDocuments    Boolean       @default(false)
+  hasApplications   Boolean       @default(false)
+  hasMessages       Boolean       @default(false)
+  hasActivityLogs   Boolean       @default(false)
+
+  // Counts
+  documentCount     Int           @default(0)
+  applicationCount  Int           @default(0)
+  messageCount      Int           @default(0)
+
+  // Third-party sharing history
+  sharedWithLandlords String[]    // Landlord user IDs
+  sharedAt          DateTime[]    // Corresponding dates
+
+  // Detailed inventory (JSON for flexibility)
+  inventoryDetails  String?       // JSON breakdown
+
+  @@index([userId])
+
+  // Access control
+  @@allow('create', auth().role == 'admin')
+  @@allow('read', auth() == user || auth().role == 'admin')
+  @@allow('update', auth().role == 'admin')
+  @@allow('delete', false)
+}
+
+/**
+ * Third Party Data Recipient Model
+ * Track who we've shared data with
+ */
+model ThirdPartyRecipient extends BaseModel {
+  // Recipient identification
+  name              String        @unique // e.g., "TransUnion"
+  type              String        // screening_provider, landlord, partner
+  contactEmail      String?
+
+  // Data shared
+  dataCategories    String[]      // Categories they receive
+
+  // For deletion notifications
+  deletionEndpoint  String?       // API endpoint for deletion requests
+  deletionMethod    String?       // api, email, manual
+
+  // Status
+  isActive          Boolean       @default(true)
+  supportsAutoDelete Boolean      @default(false)
+
+  // Compliance
+  dpaSignedAt       DateTime?     // Data Processing Agreement
+  complianceNotes   String?
+
+  // Relations
+  notifications     ThirdPartyNotification[]
+
+  @@index([type, isActive])
+
+  // Access control
+  @@allow('read', auth().role == 'admin')
+  @@allow('create', auth().role == 'admin')
+  @@allow('update', auth().role == 'admin')
+  @@allow('delete', auth().role == 'admin')
+}
+
+/**
+ * Third Party Notification Model
+ * US-025 AC-6: Notify third parties of deletion
+ */
+model ThirdPartyNotification extends BaseModel {
+  // Foreign keys
+  deletionRequestId String
+  recipientId       String
+  recipient         ThirdPartyRecipient @relation(fields: [recipientId], references: [id], onDelete: Cascade)
+
+  // Notification details
+  userId            String        // User being deleted
+  method            String        // email, api, manual
+
+  // Status
+  sentAt            DateTime?
+  acknowledgedAt    DateTime?
+  deletionConfirmedAt DateTime?
+
+  // Response
+  responseStatus    String?       // pending, completed, failed
+  responseMessage   String?
+
+  // Retry tracking
+  retryCount        Int           @default(0)
+  lastRetryAt       DateTime?
+  nextRetryAt       DateTime?
+
+  @@index([deletionRequestId, recipientId])
+  @@index([responseStatus])
+
+  // Access control
+  @@allow('read', auth().role == 'admin')
+  @@allow('create', auth().role == 'admin')
+  @@allow('update', auth().role == 'admin')
+  @@allow('delete', false)
+}
+
+/**
+ * Consent Record Model
+ * Track user consent for various purposes
+ */
+model ConsentRecord extends BaseModel {
+  // Foreign keys
+  userId            String
+  user              User          @relation(name: "consent_records", fields: [userId], references: [id], onDelete: Cascade)
+
+  // Consent details
+  purposeId         String        // e.g., "marketing_email", "data_sharing"
+  purposeName       String
+
+  // Consent status
+  consented         Boolean
+  consentedAt       DateTime?
+  withdrawnAt       DateTime?
+
+  // How consent was obtained
+  method            String        // checkbox, banner, form
+  source            String        // signup, settings, popup
+
+  // Version tracking
+  policyVersion     String?       // Which version of policy
+  termsVersion      String?       // Which version of terms
+
+  // Evidence
+  ipAddress         String?
+  userAgent         String?
+
+  @@unique([userId, purposeId])
+  @@index([userId, purposeId])
+  @@index([consented, purposeId])
+
+  // Access control
+  @@allow('create', auth() == user)
+  @@allow('read', auth() == user || auth().role == 'admin')
+  @@allow('update', auth() == user)
+  @@allow('delete', false)
+}
+
+/**
+ * Anonymization Log Model
+ * Track when data is anonymized instead of deleted
+ */
+model AnonymizationLog extends BaseModel {
+  // Context
+  userId            String        // Original user ID (before anonymization)
+  deletionRequestId String        // Related deletion request
+
+  // What was anonymized
+  modelName         String        // e.g., "AuditLog"
+  recordIds         String[]      // IDs of anonymized records
+  recordCount       Int
+
+  // How it was anonymized
+  fieldsAnonymized  String[]      // Which fields
+  anonymizationMethod String      // hash, redact, null
+
+  // Reason for retention
+  retentionReason   String        // e.g., "FCRA 3-year requirement"
+  legalBasis        LegalBasis
+  retainUntil       DateTime?     // When it can be fully deleted
+
+  // Verification
+  entryHash         String        // Tamper-evident hash
+
+  @@index([userId, createdAt])
+  @@index([deletionRequestId])
+  @@index([retainUntil])
+
+  // Access control - Immutable
+  @@allow('create', auth().role == 'admin')
+  @@allow('read', auth().role == 'admin')
+  @@deny('update', true)
+  @@deny('delete', true)
+}

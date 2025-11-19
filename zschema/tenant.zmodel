@@ -22,6 +22,8 @@ import "onboarding.zmodel"
 import "prequalification.zmodel"
 import "notification.zmodel"
 import "lease.zmodel"
+import "billing.zmodel"
+import "fraud.zmodel"
 
 /**
  * PII Data Type
@@ -211,6 +213,17 @@ model TenantProfile extends BaseModel {
 
   // Lease relations (US-017)
   leaseSignatures      LeaseSignature[]    @relation(name: "lease_signatures")
+
+  // Billing relations (US-020)
+  screeningPayments    ScreeningPayment[]
+
+  // Fraud detection relations (US-022, US-023)
+  documentAnalyses     DocumentAnalysis[]
+  referenceVerifications ReferenceVerification[]
+  incomeVerification   IncomeVerification?
+  identityVerification IdentityVerificationRecord?
+  manualReviewItems    ManualReviewItem[]
+  fraudAlerts          FraudAlert[]
 
   @@index([userId])
   @@index([tier, validUntil])

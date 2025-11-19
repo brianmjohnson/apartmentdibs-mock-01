@@ -1,0 +1,373 @@
+/**
+ * Platform Operations Models
+ * US-024: Platform Uptime SLA (99.9% Availability)
+ *
+ * Key features:
+ * - Uptime monitoring and logging
+ * - Incident tracking and communication
+ * - SLA credit calculation
+ * - Status page data
+ */
+
+import "base.zmodel"
+import "auth.zmodel"
+
+/**
+ * Component Status Enum
+ * Status of individual platform components
+ */
+enum ComponentStatus {
+  OPERATIONAL
+  DEGRADED_PERFORMANCE
+  PARTIAL_OUTAGE
+  MAJOR_OUTAGE
+  UNDER_MAINTENANCE
+}
+
+/**
+ * Incident Severity Enum
+ * Severity levels for incidents
+ */
+enum IncidentSeverity {
+  MINOR             // <5 min impact
+  MAJOR             // 5-30 min impact
+  CRITICAL          // >30 min or data loss
+}
+
+/**
+ * Incident Status Enum
+ * Lifecycle of an incident
+ */
+enum IncidentStatus {
+  INVESTIGATING
+  IDENTIFIED
+  MONITORING
+  RESOLVED
+}
+
+/**
+ * Platform Component Model
+ * Defines monitored platform components
+ */
+model PlatformComponent extends BaseModel {
+  // Component identification
+  name              String        @unique
+  slug              String        @unique
+  description       String?
+
+  // Current status
+  status            ComponentStatus @default(OPERATIONAL)
+
+  // Display
+  displayOrder      Int           @default(0)
+  showOnStatusPage  Boolean       @default(true)
+
+  // Monitoring
+  healthCheckUrl    String?       // Endpoint to check
+  healthCheckInterval Int         @default(60) // Seconds
+
+  // Relations
+  uptimeLogs        UptimeLog[]
+  incidentComponents IncidentComponent[]
+
+  @@index([status, showOnStatusPage])
+
+  // Access control
+  @@allow('read', true)
+  @@allow('create', auth().role == 'admin')
+  @@allow('update', auth().role == 'admin')
+  @@allow('delete', auth().role == 'admin')
+}
+
+/**
+ * Uptime Log Model
+ * Granular uptime tracking per component
+ */
+model UptimeLog extends BaseModel {
+  // Foreign keys
+  componentId       String
+  component         PlatformComponent @relation(fields: [componentId], references: [id], onDelete: Cascade)
+
+  // Time window
+  windowStart       DateTime
+  windowEnd         DateTime
+  windowSizeMinutes Int           @default(1) // 1-minute windows
+
+  // Status during window
+  status            ComponentStatus
+
+  // Response metrics
+  responseTimeMs    Int?          // Average response time
+  successRate       Float         @default(1.0) // 0.0 to 1.0
+  requestCount      Int           @default(0)
+  errorCount        Int           @default(0)
+
+  // Aggregations
+  isDowntime        Boolean       @default(false)
+  downtimeSeconds   Int           @default(0)
+
+  @@unique([componentId, windowStart])
+  @@index([componentId, windowStart])
+  @@index([isDowntime, windowStart])
+
+  // Access control - Immutable
+  @@allow('create', auth().role == 'admin')
+  @@allow('read', true)
+  @@deny('update', true)
+  @@deny('delete', true)
+}
+
+/**
+ * Incident Model
+ * Platform-wide incident tracking
+ */
+model Incident extends BaseModel {
+  // Incident identification
+  title             String
+  incidentNumber    Int           @unique @default(autoincrement())
+
+  // Severity and status
+  severity          IncidentSeverity
+  status            IncidentStatus @default(INVESTIGATING)
+
+  // Timing
+  startedAt         DateTime
+  identifiedAt      DateTime?
+  resolvedAt        DateTime?
+  duration          Int?          // Total duration in minutes
+
+  // Impact
+  affectedUsers     Int?          // Estimated number
+  impactDescription String?
+
+  // Root cause
+  rootCause         String?
+  postmortemUrl     String?
+
+  // Relations
+  updates           IncidentUpdate[]
+  components        IncidentComponent[]
+  slaCredits        SlaCredit[]
+
+  @@index([status, startedAt])
+  @@index([severity, startedAt])
+  @@index([incidentNumber])
+
+  // Access control
+  @@allow('read', true)
+  @@allow('create', auth().role == 'admin')
+  @@allow('update', auth().role == 'admin')
+  @@allow('delete', auth().role == 'admin')
+}
+
+/**
+ * Incident Component Model
+ * Links incidents to affected components
+ */
+model IncidentComponent extends BaseModel {
+  // Foreign keys
+  incidentId        String
+  incident          Incident      @relation(fields: [incidentId], references: [id], onDelete: Cascade)
+
+  componentId       String
+  component         PlatformComponent @relation(fields: [componentId], references: [id], onDelete: Cascade)
+
+  // Impact level for this component
+  impactLevel       ComponentStatus
+
+  @@unique([incidentId, componentId])
+  @@index([componentId, incidentId])
+
+  // Access control
+  @@allow('read', true)
+  @@allow('create', auth().role == 'admin')
+  @@allow('update', auth().role == 'admin')
+  @@allow('delete', auth().role == 'admin')
+}
+
+/**
+ * Incident Update Model
+ * Communication timeline for incidents
+ */
+model IncidentUpdate extends BaseModel {
+  // Foreign keys
+  incidentId        String
+  incident          Incident      @relation(fields: [incidentId], references: [id], onDelete: Cascade)
+
+  // Update content
+  status            IncidentStatus
+  message           String
+  isPublic          Boolean       @default(true)
+
+  // Author
+  authorId          String?
+  authorName        String?       // Cached name
+
+  // Notifications sent
+  emailsSent        Boolean       @default(false)
+  statusPageUpdated Boolean       @default(false)
+
+  @@index([incidentId, createdAt])
+
+  // Access control
+  @@allow('read', isPublic || auth().role == 'admin')
+  @@allow('create', auth().role == 'admin')
+  @@allow('update', auth().role == 'admin')
+  @@allow('delete', auth().role == 'admin')
+}
+
+/**
+ * Scheduled Maintenance Model
+ * Pre-announced maintenance windows
+ */
+model ScheduledMaintenance extends BaseModel {
+  // Maintenance details
+  title             String
+  description       String?
+
+  // Scheduling
+  scheduledStart    DateTime
+  scheduledEnd      DateTime
+  actualStart       DateTime?
+  actualEnd         DateTime?
+
+  // Status
+  status            String        @default("scheduled") // scheduled, in_progress, completed, cancelled
+
+  // Affected components
+  affectedComponentIds String[]
+
+  // Notifications
+  notifiedAt48h     DateTime?     // 48-hour notice sent
+  notifiedAt24h     DateTime?     // 24-hour notice sent
+
+  // Auto-create incident
+  incidentId        String?       // If maintenance causes incident
+
+  @@index([scheduledStart, status])
+  @@index([status])
+
+  // Access control
+  @@allow('read', true)
+  @@allow('create', auth().role == 'admin')
+  @@allow('update', auth().role == 'admin')
+  @@allow('delete', auth().role == 'admin')
+}
+
+/**
+ * Monthly Uptime Report Model
+ * Aggregated monthly uptime statistics
+ */
+model MonthlyUptimeReport extends BaseModel {
+  // Period
+  year              Int
+  month             Int           // 1-12
+
+  // Overall metrics
+  uptimePercentage  Float         // e.g., 99.95
+  totalDowntimeMinutes Int
+  incidentCount     Int           @default(0)
+
+  // Breakdown
+  componentMetrics  String        // JSON of per-component stats
+
+  // SLA status
+  slaMet            Boolean       // Did we meet 99.9%?
+  slaTarget         Float         @default(99.9)
+
+  // Financial impact
+  creditsIssuedCents Int          @default(0)
+  creditsIssuedCount Int          @default(0)
+
+  // Report
+  reportUrl         String?       // PDF report URL
+
+  @@unique([year, month])
+  @@index([year, month])
+  @@index([slaMet])
+
+  // Access control
+  @@allow('read', auth() != null)
+  @@allow('create', auth().role == 'admin')
+  @@allow('update', auth().role == 'admin')
+  @@allow('delete', false)
+}
+
+/**
+ * SLA Credit Model
+ * Credits issued for SLA breaches
+ */
+model SlaCredit extends BaseModel {
+  // Foreign keys - one of these should be set
+  agentSubscriptionId String?
+  landlordSubscriptionId String?
+
+  // Related incident
+  incidentId        String?
+  incident          Incident?     @relation(fields: [incidentId], references: [id])
+
+  // Credit period
+  periodYear        Int
+  periodMonth       Int
+
+  // Uptime during period
+  actualUptime      Float         // e.g., 99.85
+  targetUptime      Float         @default(99.9)
+
+  // Credit calculation
+  creditPercentage  Int           // 10, 25, or 50
+  subscriptionAmount Int          // Base amount in cents
+  creditAmountCents Int           // Credit amount in cents
+
+  // Application
+  status            String        @default("pending") // pending, applied, expired
+  appliedToInvoiceId String?
+  appliedAt         DateTime?
+
+  // Notification
+  notifiedAt        DateTime?
+
+  @@index([periodYear, periodMonth, status])
+  @@index([agentSubscriptionId])
+  @@index([landlordSubscriptionId])
+
+  // Access control
+  @@allow('read', auth().role == 'admin')
+  @@allow('create', auth().role == 'admin')
+  @@allow('update', auth().role == 'admin')
+  @@allow('delete', false)
+}
+
+/**
+ * Alert Configuration Model
+ * PagerDuty/alerting setup
+ */
+model AlertConfiguration extends BaseModel {
+  // Component (optional - for component-specific alerts)
+  componentId       String?
+
+  // Alert settings
+  name              String
+  alertType         String        // pagerduty, slack, email
+  endpoint          String        // Webhook URL or email
+
+  // Thresholds
+  triggerAfterSeconds Int         @default(60)
+  severityThreshold IncidentSeverity @default(MAJOR)
+
+  // Status
+  isActive          Boolean       @default(true)
+  lastTriggeredAt   DateTime?
+
+  // Escalation
+  escalationPolicy  String?       // JSON of escalation rules
+
+  @@index([componentId, isActive])
+  @@index([alertType, isActive])
+
+  // Access control
+  @@allow('read', auth().role == 'admin')
+  @@allow('create', auth().role == 'admin')
+  @@allow('update', auth().role == 'admin')
+  @@allow('delete', auth().role == 'admin')
+}

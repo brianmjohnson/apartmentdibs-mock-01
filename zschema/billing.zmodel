@@ -1,0 +1,447 @@
+/**
+ * Billing Models
+ * US-019: Agent Subscription Billing
+ * US-020: Tenant Screening Fees
+ * US-021: Landlord Compliance Tier
+ *
+ * Key features:
+ * - Stripe integration for subscriptions and payments
+ * - Tiered pricing for agents, tenants, and landlords
+ * - Usage tracking and limits
+ * - Dunning management for failed payments
+ */
+
+import "base.zmodel"
+import "auth.zmodel"
+import "tenant.zmodel"
+
+/**
+ * Agent Subscription Tier Enum
+ * US-019 pricing tiers
+ */
+enum AgentSubscriptionTier {
+  STARTER         // $99/mo - 10 listings
+  PROFESSIONAL    // $299/mo - Unlimited listings
+  ENTERPRISE      // Custom - Multi-agent teams
+}
+
+/**
+ * Agent Subscription Status Enum
+ * Subscription lifecycle states
+ */
+enum AgentSubscriptionStatus {
+  ACTIVE
+  PAST_DUE        // Payment failed, in retry period
+  CANCELED
+  PAUSED
+  TRIAL
+}
+
+/**
+ * Billing Interval Enum
+ * Payment frequency options
+ */
+enum BillingInterval {
+  MONTHLY
+  ANNUAL
+}
+
+/**
+ * Agent Subscription Plan Model
+ * Defines available subscription plans for agents
+ */
+model AgentSubscriptionPlan extends BaseModel {
+  // Plan identification
+  name              String        // e.g., "Professional"
+  tier              AgentSubscriptionTier @unique
+  description       String?
+
+  // Pricing (in cents)
+  monthlyPriceCents Int           // e.g., 29900 for $299
+  annualPriceCents  Int?          // e.g., 286800 for $2868 (20% off)
+
+  // Stripe product/price IDs
+  stripeProductId   String?
+  stripeMonthlyPriceId String?
+  stripAnnualPriceId String?
+
+  // Limits
+  maxListings       Int?          // NULL = unlimited
+  maxTeamMembers    Int           @default(1)
+
+  // Feature flags (JSON for flexibility)
+  features          AgentPlanFeatures @json
+
+  // Status
+  isActive          Boolean       @default(true)
+  sortOrder         Int           @default(0)
+
+  // Relations
+  subscriptions     AgentSubscription[]
+
+  @@index([tier, isActive])
+
+  // Access control
+  @@allow('read', true)
+  @@allow('create', auth().role == 'admin')
+  @@allow('update', auth().role == 'admin')
+  @@allow('delete', auth().role == 'admin')
+}
+
+/**
+ * Agent Plan Features Type
+ * Feature flags for subscription plans
+ */
+type AgentPlanFeatures {
+  crmEnabled        Boolean
+  syndicationCount  Int           // Number of platforms (1, 6, unlimited=-1)
+  prioritySupport   Boolean
+  apiAccess         Boolean
+  customBranding    Boolean
+  analyticsAdvanced Boolean
+  dedicatedManager  Boolean
+}
+
+/**
+ * Agent Subscription Model
+ * US-019: Agent subscription billing
+ */
+model AgentSubscription extends BaseModel {
+  // Foreign keys
+  userId            String        @unique
+  user              User          @relation(name: "agent_subscription", fields: [userId], references: [id], onDelete: Cascade)
+
+  planId            String
+  plan              AgentSubscriptionPlan @relation(fields: [planId], references: [id])
+
+  // Subscription details
+  status            AgentSubscriptionStatus @default(ACTIVE)
+  billingInterval   BillingInterval @default(MONTHLY)
+
+  // Stripe references
+  stripeCustomerId  String?
+  stripeSubscriptionId String?
+
+  // Billing cycle
+  currentPeriodStart DateTime
+  currentPeriodEnd  DateTime
+  cancelAtPeriodEnd Boolean       @default(false)
+
+  // Trial
+  trialStart        DateTime?
+  trialEnd          DateTime?
+
+  // Usage tracking
+  currentListingCount Int         @default(0)
+
+  // Dunning management
+  paymentFailedAt   DateTime?
+  paymentRetryCount Int           @default(0)
+  dunningStartedAt  DateTime?
+
+  // Metadata
+  canceledAt        DateTime?
+  cancelReason      String?
+
+  // Relations
+  invoices          SubscriptionInvoice[]
+  usageLogs         SubscriptionUsageLog[]
+
+  @@index([userId, status])
+  @@index([status, currentPeriodEnd])
+  @@index([stripeSubscriptionId])
+
+  // Access control
+  @@allow('create', auth() != null)
+  @@allow('read', auth() == user || auth().role == 'admin')
+  @@allow('update', auth() == user || auth().role == 'admin')
+  @@allow('delete', auth().role == 'admin')
+}
+
+/**
+ * Subscription Invoice Model
+ * Tracks billing history for subscriptions
+ */
+model SubscriptionInvoice extends BaseModel {
+  // Foreign keys
+  subscriptionId    String
+  subscription      AgentSubscription @relation(fields: [subscriptionId], references: [id], onDelete: Cascade)
+
+  // Stripe reference
+  stripeInvoiceId   String        @unique
+
+  // Invoice details
+  amountCents       Int
+  currency          String        @default("usd")
+  status            String        // draft, open, paid, void, uncollectible
+
+  // Dates
+  periodStart       DateTime
+  periodEnd         DateTime
+  dueDate           DateTime?
+  paidAt            DateTime?
+
+  // PDF
+  invoicePdfUrl     String?
+
+  @@index([subscriptionId, createdAt])
+  @@index([stripeInvoiceId])
+
+  // Access control
+  @@allow('create', auth().role == 'admin')
+  @@allow('read', auth() == subscription.user || auth().role == 'admin')
+  @@allow('update', auth().role == 'admin')
+  @@allow('delete', false)
+}
+
+/**
+ * Subscription Usage Log Model
+ * Tracks usage for limit enforcement
+ */
+model SubscriptionUsageLog extends BaseModel {
+  // Foreign keys
+  subscriptionId    String
+  subscription      AgentSubscription @relation(fields: [subscriptionId], references: [id], onDelete: Cascade)
+
+  // Usage details
+  usageType         String        // listing_created, listing_deleted, etc.
+  delta             Int           // +1, -1
+  newTotal          Int
+
+  // Context
+  resourceId        String?       // ID of listing, etc.
+  resourceType      String?
+
+  @@index([subscriptionId, createdAt])
+  @@index([usageType, createdAt])
+
+  // Access control - Immutable log
+  @@allow('create', true)
+  @@allow('read', auth() == subscription.user || auth().role == 'admin')
+  @@deny('update', true)
+  @@deny('delete', true)
+}
+
+// =============================================================================
+// US-020: Tenant Screening Fees
+// =============================================================================
+
+/**
+ * Screening Profile Tier Enum
+ * US-020 pricing tiers for tenant profiles
+ */
+enum ScreeningProfileTier {
+  BASIC             // $39.99 - Credit + basic background, 60 days
+  PREMIUM           // $54.99 - Full background + income, 90 days
+  GROUP             // $99.99 - 2-4 roommates, 90 days
+}
+
+/**
+ * Payment Status Enum
+ * Status of one-time payments
+ */
+enum PaymentStatus {
+  PENDING
+  PROCESSING
+  COMPLETED
+  FAILED
+  REFUNDED
+  DISPUTED
+}
+
+/**
+ * Screening Payment Model
+ * US-020: One-time payment for screening profiles
+ */
+model ScreeningPayment extends BaseModel {
+  // Foreign keys
+  tenantProfileId   String
+  tenantProfile     TenantProfile @relation(fields: [tenantProfileId], references: [id], onDelete: Cascade)
+
+  // Payment details
+  tier              ScreeningProfileTier
+  amountCents       Int           // e.g., 5499 for $54.99
+  currency          String        @default("usd")
+  status            PaymentStatus @default(PENDING)
+
+  // Stripe references
+  stripePaymentIntentId String?   @unique
+  stripeCustomerId  String?
+
+  // Validity period
+  validFrom         DateTime?     // When profile becomes active
+  validUntil        DateTime?     // Expiration date
+
+  // Third-party costs tracking
+  creditCheckCostCents Int?       // e.g., 1500 for $15
+  backgroundCheckCostCents Int?   // e.g., 500 for $5
+
+  // Completion tracking
+  completedAt       DateTime?
+  failedAt          DateTime?
+  failureReason     String?
+
+  // Renewal tracking
+  isRenewal         Boolean       @default(false)
+  previousPaymentId String?       // Link to previous payment if renewal
+  renewalDiscountCents Int?       // Discount applied for renewal
+
+  // Money-back guarantee
+  guaranteeEligible Boolean       @default(true)
+  guaranteeClaimed  Boolean       @default(false)
+  guaranteeClaimedAt DateTime?
+
+  // Relations
+  refundRequest     RefundRequest?
+
+  @@index([tenantProfileId, status])
+  @@index([stripePaymentIntentId])
+  @@index([validUntil])
+
+  // Access control
+  @@allow('create', auth() == tenantProfile.user)
+  @@allow('read', auth() == tenantProfile.user || auth().role == 'admin')
+  @@allow('update', auth().role == 'admin')
+  @@allow('delete', false)
+}
+
+/**
+ * Refund Request Model
+ * Money-back guarantee processing
+ */
+model RefundRequest extends BaseModel {
+  // Foreign keys
+  paymentId         String        @unique
+  payment           ScreeningPayment @relation(fields: [paymentId], references: [id], onDelete: Cascade)
+
+  // Request details
+  reason            String
+  status            String        @default("pending") // pending, approved, rejected
+
+  // Eligibility check
+  applicationsCount Int           // Number of applications submitted
+  rejectionsCount   Int           // Number of rejections received
+  isEligible        Boolean
+
+  // Processing
+  processedAt       DateTime?
+  processedBy       String?       // Admin user ID
+  stripeRefundId    String?
+
+  // Outcome
+  refundAmountCents Int?
+  rejectionReason   String?
+
+  @@index([status, createdAt])
+
+  // Access control
+  @@allow('create', auth() == payment.tenantProfile.user && payment.guaranteeEligible)
+  @@allow('read', auth() == payment.tenantProfile.user || auth().role == 'admin')
+  @@allow('update', auth().role == 'admin')
+  @@allow('delete', false)
+}
+
+// =============================================================================
+// US-021: Landlord Compliance Tier
+// =============================================================================
+
+/**
+ * Landlord Tier Enum
+ * US-021 pricing tiers for landlords
+ */
+enum LandlordTier {
+  FREE              // 1 listing, basic features
+  COMPLIANCE        // $249/year - Unlimited listings, full compliance
+  CONCIERGE         // $499/year + $99/listing - White-glove service
+}
+
+/**
+ * Landlord Subscription Status Enum
+ */
+enum LandlordSubscriptionStatus {
+  ACTIVE
+  PAST_DUE
+  CANCELED
+  EXPIRED
+}
+
+/**
+ * Landlord Subscription Model
+ * US-021: Annual subscription for landlord compliance
+ */
+model LandlordSubscription extends BaseModel {
+  // Foreign keys
+  userId            String        @unique
+  user              User          @relation(name: "landlord_subscription", fields: [userId], references: [id], onDelete: Cascade)
+
+  // Subscription details
+  tier              LandlordTier  @default(FREE)
+  status            LandlordSubscriptionStatus @default(ACTIVE)
+
+  // Pricing
+  annualPriceCents  Int           @default(0) // 0 for free, 24900 for $249, 49900 for $499
+  perListingCents   Int           @default(0) // 0 for non-concierge, 9900 for $99
+
+  // Stripe references
+  stripeCustomerId  String?
+  stripeSubscriptionId String?
+
+  // Billing cycle (annual)
+  currentPeriodStart DateTime
+  currentPeriodEnd  DateTime
+  cancelAtPeriodEnd Boolean       @default(false)
+
+  // Usage tracking
+  activeListingCount Int          @default(0)
+
+  // Concierge features
+  accountManagerId  String?       // Assigned account manager user ID
+  phoneSupport      Boolean       @default(false)
+
+  // Dunning
+  paymentFailedAt   DateTime?
+
+  // Relations
+  roiCalculations   RoiCalculation[]
+
+  @@index([userId, status])
+  @@index([tier, status])
+
+  // Access control
+  @@allow('create', auth() != null)
+  @@allow('read', auth() == user || auth().role == 'admin')
+  @@allow('update', auth() == user || auth().role == 'admin')
+  @@allow('delete', auth().role == 'admin')
+}
+
+/**
+ * ROI Calculation Model
+ * Tracks ROI calculations for marketing
+ */
+model RoiCalculation extends BaseModel {
+  // Foreign keys
+  subscriptionId    String
+  subscription      LandlordSubscription @relation(fields: [subscriptionId], references: [id], onDelete: Cascade)
+
+  // Input values
+  numberOfUnits     Int
+  averageRent       Int           // In cents
+  currentVacancyRate Float        // e.g., 0.05 for 5%
+
+  // Calculated values
+  estimatedSavings  Int           // In cents
+  attorneyFeeSavings Int          // In cents
+  vacancyReduction  Int           // In cents
+
+  // Conversion tracking
+  convertedToTier   LandlordTier?
+  convertedAt       DateTime?
+
+  @@index([subscriptionId, createdAt])
+
+  // Access control
+  @@allow('create', auth() == subscription.user)
+  @@allow('read', auth() == subscription.user || auth().role == 'admin')
+  @@allow('update', false)
+  @@allow('delete', false)
+}

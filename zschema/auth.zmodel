@@ -25,6 +25,10 @@ import "notification.zmodel"
 import "risk-score.zmodel"
 import "lease.zmodel"
 import "concierge.zmodel"
+import "billing.zmodel"
+import "fraud.zmodel"
+import "platform.zmodel"
+import "privacy.zmodel"
 
 /**
  * User Model - Core authentication entity
@@ -99,6 +103,16 @@ model User {
   // Concierge relations (US-018)
   conciergeSubscription   ConciergeSubscription? @relation(name: "concierge_subscription")
   conciergeAgentProfile   ConciergeAgent?   @relation(name: "concierge_agent_profile")
+
+  // Billing relations (US-019, US-021)
+  agentSubscription       AgentSubscription?    @relation(name: "agent_subscription")
+  landlordSubscription    LandlordSubscription? @relation(name: "landlord_subscription")
+
+  // Privacy relations (US-025)
+  dataExportRequests      DataExportRequest[]   @relation(name: "data_export_requests")
+  dataDeletionRequests    DataDeletionRequest[] @relation(name: "data_deletion_requests")
+  userDataInventory       UserDataInventory?    @relation(name: "user_data_inventory")
+  consentRecords          ConsentRecord[]       @relation(name: "consent_records")
 
   // Access control policies
   @@allow('create', true)  // Anyone can create account (sign up)

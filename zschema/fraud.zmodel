@@ -1,0 +1,512 @@
+/**
+ * Fraud Detection & Identity Verification Models
+ * US-022: Fraud Detection (Fake Pay Stubs, Fake References)
+ * US-023: Identity Verification (Liveness Detection, ID Verification)
+ *
+ * Key features:
+ * - Document analysis for fraud detection
+ * - Reference verification workflow
+ * - Income verification via Plaid
+ * - Identity verification via Onfido/Persona
+ * - Manual review queue for flagged items
+ */
+
+import "base.zmodel"
+import "auth.zmodel"
+import "tenant.zmodel"
+
+/**
+ * Document Type Enum
+ * Types of documents that can be analyzed
+ */
+enum FraudDocumentType {
+  PAY_STUB
+  BANK_STATEMENT
+  TAX_RETURN
+  EMPLOYMENT_LETTER
+  ID_DOCUMENT
+  REFERENCE_LETTER
+}
+
+/**
+ * Fraud Risk Level Enum
+ * Overall risk assessment
+ */
+enum FraudRiskLevel {
+  LOW               // High confidence, no issues
+  MEDIUM            // Some flags, needs review
+  HIGH              // Multiple flags, likely fraud
+  CRITICAL          // Confirmed fraud indicators
+}
+
+/**
+ * Fraud Indicator Type Enum
+ * Types of fraud indicators detected
+ */
+enum FraudIndicatorType {
+  // Document indicators
+  METADATA_INCONSISTENT     // PDF creation date issues
+  FONT_INCONSISTENT         // Font changes in document
+  MATH_ERROR                // Net != Gross - Deductions
+  IMAGE_MANIPULATION        // Signs of editing
+
+  // Employer indicators
+  EMPLOYER_NOT_FOUND        // Not in business registries
+  EMPLOYER_MISMATCH         // Different from stated
+  REFERENCE_SUSPICIOUS      // VoIP number, fake email
+
+  // Income indicators
+  INCOME_MISMATCH           // Stated vs verified income
+  DEPOSIT_IRREGULAR         // Unusual bank patterns
+  CASH_ONLY                 // No traceable deposits
+
+  // Identity indicators
+  ID_EXPIRED                // Expired document
+  ID_TAMPERED               // Signs of tampering
+  FACE_MISMATCH             // Selfie doesn't match ID
+  LIVENESS_FAILED           // Photo of photo detected
+}
+
+/**
+ * Review Status Enum
+ * Manual review queue status
+ */
+enum ReviewStatus {
+  PENDING
+  IN_REVIEW
+  APPROVED
+  REJECTED
+  ESCALATED
+}
+
+/**
+ * Document Analysis Model
+ * US-022: Fraud detection for uploaded documents
+ */
+model DocumentAnalysis extends BaseModel {
+  // Foreign keys
+  tenantProfileId   String
+  tenantProfile     TenantProfile @relation(fields: [tenantProfileId], references: [id], onDelete: Cascade)
+
+  // Document info
+  documentType      FraudDocumentType
+  documentUrl       String        // Vercel Blob URL
+  fileName          String
+
+  // Analysis results
+  overallConfidence Float         // 0.0 to 1.0
+  riskLevel         FraudRiskLevel @default(LOW)
+
+  // Metadata analysis
+  metadataAnalysis  DocumentMetadataAnalysis? @json
+
+  // OCR and content analysis
+  extractedData     DocumentExtractedData? @json
+
+  // Verification status
+  verified          Boolean       @default(false)
+  verifiedAt        DateTime?
+
+  // Manual review
+  requiresReview    Boolean       @default(false)
+  reviewStatus      ReviewStatus?
+
+  // External provider
+  analysisProvider  String?       // e.g., "internal", "aws-textract"
+  externalId        String?       // Provider's analysis ID
+
+  // Relations
+  fraudIndicators   FraudIndicator[]
+
+  @@index([tenantProfileId, documentType])
+  @@index([riskLevel, requiresReview])
+
+  // Access control
+  @@allow('create', auth() == tenantProfile.user || auth().role == 'admin')
+  @@allow('read', auth() == tenantProfile.user || auth().role == 'admin')
+  @@allow('update', auth().role == 'admin')
+  @@allow('delete', auth().role == 'admin')
+}
+
+/**
+ * Document Metadata Analysis Type
+ * PDF/Image metadata results
+ */
+type DocumentMetadataAnalysis {
+  creationDate      String?
+  modificationDate  String?
+  author            String?
+  producer          String?       // PDF software
+  fontCount         Int?
+  hasEmbeddedImages Boolean?
+  imageManipulation Boolean?
+  compressionLevel  String?
+}
+
+/**
+ * Document Extracted Data Type
+ * OCR and content extraction results
+ */
+type DocumentExtractedData {
+  // Pay stub specific
+  employerName      String?
+  employerAddress   String?
+  employeeName      String?
+  payPeriodStart    String?
+  payPeriodEnd      String?
+  grossPay          Int?          // In cents
+  netPay            Int?          // In cents
+  deductions        Int?          // In cents
+  ytdGross          Int?          // In cents
+
+  // Bank statement specific
+  accountHolder     String?
+  bankName          String?
+  statementPeriod   String?
+  averageBalance    Int?          // In cents
+  deposits          Int?          // In cents
+
+  // Math validation
+  mathValid         Boolean?
+  mathError         String?
+}
+
+/**
+ * Fraud Indicator Model
+ * Individual fraud flags detected
+ */
+model FraudIndicator extends BaseModel {
+  // Foreign keys
+  documentAnalysisId String
+  documentAnalysis  DocumentAnalysis @relation(fields: [documentAnalysisId], references: [id], onDelete: Cascade)
+
+  // Indicator details
+  indicatorType     FraudIndicatorType
+  severity          FraudRiskLevel
+  confidence        Float         // 0.0 to 1.0
+
+  // Details
+  description       String
+  evidence          String?       // JSON of supporting evidence
+  recommendation    String?       // Action to take
+
+  // Resolution
+  resolvedAt        DateTime?
+  resolvedById      String?
+  resolution        String?       // false_positive, confirmed_fraud, inconclusive
+
+  @@index([documentAnalysisId, indicatorType])
+  @@index([severity, resolvedAt])
+
+  // Access control - Immutable
+  @@allow('create', auth().role == 'admin')
+  @@allow('read', auth() == documentAnalysis.tenantProfile.user || auth().role == 'admin')
+  @@allow('update', auth().role == 'admin')
+  @@allow('delete', false)
+}
+
+/**
+ * Reference Verification Model
+ * US-022: Verify employer/landlord references
+ */
+model ReferenceVerification extends BaseModel {
+  // Foreign keys
+  tenantProfileId   String
+  tenantProfile     TenantProfile @relation(fields: [tenantProfileId], references: [id], onDelete: Cascade)
+
+  // Reference info
+  referenceType     String        // employer, landlord, personal
+  contactName       String
+  contactEmail      String?
+  contactPhone      String?
+  company           String?
+
+  // Verification methods used
+  emailSent         Boolean       @default(false)
+  phoneCalled       Boolean       @default(false)
+  linkedInChecked   Boolean       @default(false)
+  businessRegistryChecked Boolean @default(false)
+
+  // Results
+  verified          Boolean?      // NULL = pending
+  verifiedAt        DateTime?
+
+  // Business verification
+  businessFound     Boolean?      // Found in D&B, etc.
+  businessMatch     Float?        // Match confidence
+  businessDetails   String?       // JSON of business info
+
+  // Contact verification
+  phoneValid        Boolean?      // Not VoIP, valid number
+  emailValid        Boolean?      // Valid domain, not disposable
+  contactResponded  Boolean?
+
+  // Questionnaire responses
+  questionnaireSent Boolean       @default(false)
+  questionnaireCompleted Boolean  @default(false)
+  questionnaireResponses String?  // JSON of responses
+
+  // Risk assessment
+  riskLevel         FraudRiskLevel @default(LOW)
+  flags             String[]      // List of concerns
+
+  @@index([tenantProfileId, referenceType])
+  @@index([verified, riskLevel])
+
+  // Access control
+  @@allow('create', auth() == tenantProfile.user || auth().role == 'admin')
+  @@allow('read', auth() == tenantProfile.user || auth().role == 'admin')
+  @@allow('update', auth().role == 'admin')
+  @@allow('delete', auth().role == 'admin')
+}
+
+/**
+ * Income Verification Model
+ * US-022: Plaid-based income verification
+ */
+model IncomeVerification extends BaseModel {
+  // Foreign keys
+  tenantProfileId   String        @unique
+  tenantProfile     TenantProfile @relation(fields: [tenantProfileId], references: [id], onDelete: Cascade)
+
+  // Plaid connection
+  plaidItemId       String?
+  plaidAccessToken  String?       @omit // Encrypted
+  institutionName   String?
+  institutionId     String?
+
+  // Connection status
+  connected         Boolean       @default(false)
+  connectedAt       DateTime?
+  lastRefreshed     DateTime?
+
+  // Income analysis
+  monthlyIncome     Int?          // In cents
+  incomeStreams     Int?          // Number of income sources
+  averageBalance    Int?          // In cents
+
+  // Verification against stated income
+  statedIncome      Int?          // What tenant claimed (cents)
+  incomeMatch       Boolean?      // Does it match?
+  discrepancy       Int?          // Difference in cents
+
+  // Deposit analysis
+  regularDeposits   Boolean?      // Regular employer deposits
+  irregularPatterns String?       // JSON of concerns
+
+  // Risk assessment
+  riskLevel         FraudRiskLevel @default(LOW)
+  verificationScore Float?        // 0.0 to 1.0
+
+  @@index([tenantProfileId, connected])
+
+  // Access control
+  @@allow('create', auth() == tenantProfile.user)
+  @@allow('read', auth() == tenantProfile.user || auth().role == 'admin')
+  @@allow('update', auth() == tenantProfile.user || auth().role == 'admin')
+  @@allow('delete', auth() == tenantProfile.user)
+}
+
+// =============================================================================
+// US-023: Identity Verification
+// =============================================================================
+
+/**
+ * ID Document Type Enum
+ * Supported government ID types
+ */
+enum IdDocumentType {
+  DRIVERS_LICENSE
+  PASSPORT
+  STATE_ID
+  MILITARY_ID
+  PERMANENT_RESIDENT
+}
+
+/**
+ * Identity Verification Status Enum
+ */
+enum IdentityVerificationStatus {
+  PENDING
+  PROCESSING
+  VERIFIED
+  FAILED
+  EXPIRED
+}
+
+/**
+ * Identity Verification Model
+ * US-023: Liveness detection and ID verification
+ */
+model IdentityVerificationRecord extends BaseModel {
+  // Foreign keys
+  tenantProfileId   String        @unique
+  tenantProfile     TenantProfile @relation(fields: [tenantProfileId], references: [id], onDelete: Cascade)
+
+  // Verification status
+  status            IdentityVerificationStatus @default(PENDING)
+  verifiedAt        DateTime?
+  expiresAt         DateTime?     // ID verifications typically valid for 1 year
+
+  // Provider
+  provider          String        @default("onfido") // onfido, persona, stripe-identity
+  externalId        String?       // Provider's verification ID
+  externalStatus    String?       // Provider-specific status
+
+  // ID Document
+  idDocumentType    IdDocumentType?
+  idDocumentUrl     String?       @omit // Encrypted, auto-delete after 90 days
+  idExpirationDate  DateTime?
+
+  // Extracted data (encrypted at rest)
+  extractedData     IdExtractedData? @json @omit
+
+  // Selfie/Liveness
+  selfieUrl         String?       @omit // Encrypted, auto-delete after 90 days
+  livenessChecked   Boolean       @default(false)
+  livenessConfidence Float?       // 0.0 to 1.0
+
+  // Face match
+  faceMatchChecked  Boolean       @default(false)
+  faceMatchScore    Float?        // 0.0 to 1.0
+  faceMatchPassed   Boolean?
+
+  // Document authenticity
+  authenticityChecked Boolean     @default(false)
+  authenticityScore Float?        // 0.0 to 1.0
+  authenticityPassed Boolean?
+
+  // Overall verification
+  overallScore      Float?        // 0.0 to 1.0
+  verificationMethod String?      // Combined method description
+
+  // Error handling
+  failureReason     String?
+  retryCount        Int           @default(0)
+
+  // Data retention (GDPR/CCPA compliance)
+  dataRetentionDate DateTime      // When to auto-delete sensitive data
+  dataDeleted       Boolean       @default(false)
+
+  @@index([tenantProfileId, status])
+  @@index([dataRetentionDate, dataDeleted])
+
+  // Access control
+  @@allow('create', auth() == tenantProfile.user)
+  @@allow('read', auth() == tenantProfile.user || auth().role == 'admin')
+  @@allow('update', auth() == tenantProfile.user || auth().role == 'admin')
+  @@allow('delete', auth().role == 'admin')
+}
+
+/**
+ * ID Extracted Data Type
+ * Data extracted from government ID
+ */
+type IdExtractedData {
+  firstName         String?
+  lastName          String?
+  middleName        String?
+  dateOfBirth       String?       // ISO date
+  address           String?
+  city              String?
+  state             String?
+  zipCode           String?
+  documentNumber    String?
+  issuingCountry    String?
+  issuingState      String?
+  expirationDate    String?       // ISO date
+  issueDate         String?       // ISO date
+}
+
+/**
+ * Manual Review Queue Model
+ * US-022/023: Admin review for flagged items
+ */
+model ManualReviewItem extends BaseModel {
+  // Foreign keys
+  tenantProfileId   String
+  tenantProfile     TenantProfile @relation(fields: [tenantProfileId], references: [id], onDelete: Cascade)
+
+  // Review type
+  reviewType        String        // document, reference, income, identity
+  sourceId          String        // ID of related record
+  sourceModel       String        // Model name
+
+  // Status
+  status            ReviewStatus  @default(PENDING)
+  priority          Int           @default(0) // Higher = more urgent
+
+  // Flags
+  flagReasons       String[]      // List of reasons for review
+  riskLevel         FraudRiskLevel
+
+  // Assignment
+  assignedToId      String?
+  assignedAt        DateTime?
+
+  // Review outcome
+  reviewedById      String?
+  reviewedAt        DateTime?
+  decision          String?       // approved, rejected, escalated
+  decisionNotes     String?
+
+  // Actions taken
+  additionalDocsRequested Boolean @default(false)
+  applicantNotified Boolean       @default(false)
+
+  @@index([status, priority])
+  @@index([tenantProfileId, reviewType])
+  @@index([assignedToId, status])
+
+  // Access control
+  @@allow('create', auth().role == 'admin')
+  @@allow('read', auth() == tenantProfile.user || auth().role == 'admin')
+  @@allow('update', auth().role == 'admin')
+  @@allow('delete', false)
+}
+
+/**
+ * Fraud Alert Model
+ * Aggregated fraud risk for application
+ */
+model FraudAlert extends BaseModel {
+  // Foreign keys
+  tenantProfileId   String
+  tenantProfile     TenantProfile @relation(fields: [tenantProfileId], references: [id], onDelete: Cascade)
+
+  // Overall assessment
+  overallRiskLevel  FraudRiskLevel
+  riskScore         Float         // 0.0 to 1.0
+
+  // Component scores
+  documentScore     Float?
+  referenceScore    Float?
+  incomeScore       Float?
+  identityScore     Float?
+
+  // Alert details
+  alertType         String        // initial_assessment, flag_update, resolved
+  description       String
+
+  // Items contributing to score
+  contributingFactors String[]    // List of issues
+
+  // Resolution
+  resolved          Boolean       @default(false)
+  resolvedAt        DateTime?
+  resolvedById      String?
+  resolution        String?       // cleared, confirmed_fraud, requires_monitoring
+
+  // Visibility
+  visibleToLandlord Boolean       @default(false)
+  landlordSummary   String?       // Sanitized version for landlord
+
+  @@index([tenantProfileId, overallRiskLevel])
+  @@index([resolved, createdAt])
+
+  // Access control
+  @@allow('create', auth().role == 'admin')
+  @@allow('read', auth() == tenantProfile.user || auth().role == 'admin')
+  @@allow('update', auth().role == 'admin')
+  @@allow('delete', false)
+}
