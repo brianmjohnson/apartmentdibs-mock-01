@@ -71,8 +71,16 @@ rg "enum ModelEnum" zschema/
 - Where should it live? (auth.zmodel vs separate file)
 
 **ZenStack File Organization**:
-- **Has user FK?** → Import in `zschema/auth.zmodel`
-- **No user FK?** → Import in `schema.zmodel`
+
+⚠️ **CRITICAL: NEVER put `model`, `enum`, or `type` definitions directly in `schema.zmodel`!**
+
+The `schema.zmodel` file is ONLY for imports. ALL model/enum/type definitions MUST go in domain-specific files under `zschema/<domain>.zmodel`.
+
+**Mutual Imports Are Expected**: ZenStack flattens all imports before processing. Circular/mutual imports between zmodel files are **NOT a bug** - they are the intended design pattern! When models in different files reference each other, you MUST have imports in BOTH files.
+
+**File placement rules**:
+- **Has user FK?** → Create in `zschema/<domain>.zmodel`, import in `zschema/auth.zmodel`
+- **No user FK?** → Create in `zschema/<domain>.zmodel`, import in `schema.zmodel`
 
 **Example - User FK** (most common):
 ```zmodel
@@ -126,6 +134,65 @@ model ConfigParameter extends BaseModel {
 Import in `schema.zmodel`:
 ```zmodel
 import "zschema/config.zmodel"
+```
+
+### 2.1 Bidirectional Foreign Key Relationships
+
+⚠️ **CRITICAL: When adding FK relationships, you MUST**:
+1. Add the relation field on BOTH models
+2. Add reciprocal imports in BOTH zmodel files
+
+**Example - Cross-file relationships**:
+
+```zmodel
+// File: zschema/property.zmodel
+import "base.zmodel"
+import "listing.zmodel"  // ← MUST import the related model's file
+
+model Property extends BaseModel {
+  name      String
+  listings  Listing[]  // ← Relation to Listing model
+
+  @@allow('read', true)
+}
+```
+
+```zmodel
+// File: zschema/listing.zmodel
+import "base.zmodel"
+import "property.zmodel"  // ← MUST import the related model's file
+
+model Listing extends BaseModel {
+  propertyId String
+  property   Property @relation(fields: [propertyId], references: [id])  // ← FK reference
+
+  price      Decimal
+
+  @@allow('read', true)
+}
+```
+
+**Common Mistake to AVOID**:
+```zmodel
+// ❌ WRONG - Missing reciprocal relation
+model Property {
+  // No listings field defined!
+}
+
+model Listing {
+  propertyId String
+  property   Property @relation(fields: [propertyId], references: [id])
+}
+
+// ✅ CORRECT - Both sides defined
+model Property {
+  listings  Listing[]  // ← Add this!
+}
+
+model Listing {
+  propertyId String
+  property   Property @relation(fields: [propertyId], references: [id])
+}
 ```
 
 **Marking Sensitive Data Fields**:
@@ -904,14 +971,67 @@ enum WishlistStatus {
 
 **JSON Fields**:
 @see: https://zenstack.dev/docs/reference/zmodel-language#type
+
+⚠️ **CRITICAL: ALWAYS use typed JSON for end-to-end type safety!**
+
+When adding a JSON field, you MUST:
+1. Define a `type` model for the JSON structure
+2. Reference the type with `@json` attribute
+3. NEVER use raw `Json` type - always use a named type
+
 ```zmodel
+// ✅ CORRECT - Typed JSON with named type
 model Wishlist {
   metadata WishlistMetadata @json
 }
+
 type WishlistMetadata {
-  notes  String
+  notes       String
+  priority    Int?
+  tags        String[]
+}
+
+// ❌ WRONG - Untyped JSON loses type safety
+model Wishlist {
+  metadata Json  // DON'T DO THIS!
 }
 ```
+
+**Nested Types for Complex Structures**:
+
+For extensible columns (metadata, attributes, settings) that may vary row-by-row, leverage nested types:
+
+```zmodel
+model Property {
+  attributes PropertyAttributes @json
+}
+
+type PropertyAttributes {
+  basics      PropertyBasics
+  amenities   PropertyAmenities?
+  custom      PropertyCustomField[]
+}
+
+type PropertyBasics {
+  bedrooms    Int
+  bathrooms   Float
+  sqft        Int?
+}
+
+type PropertyAmenities {
+  parking     Boolean
+  pool        Boolean
+  gym         Boolean
+}
+
+type PropertyCustomField {
+  key         String
+  value       String
+  category    String?
+}
+```
+
+This provides full TypeScript type safety from database to frontend while allowing flexible JSON structures.
 
 **Indexes**:
 ```zmodel
@@ -1135,6 +1255,65 @@ Before marking backend complete:
 - `schema.zmodel` - Main schema file
 - `zschema/*.zmodel` - Existing models
 - `docs/adr/` - Architecture decisions
+
+---
+
+## Story Completion & Push Process
+
+When working on multiple user stories, **push after completing each story** to create atomic commits per story.
+
+### After Completing Each Story
+
+**1. Run Validation**:
+```bash
+pnpm gen:check         # ZenStack generation
+pnpm test              # All tests passing
+pnpm lint              # Lint checks passed
+tsc --noEmit && pnpm build  # Build successful
+```
+
+**2. Commit the Story**:
+```bash
+git add .
+git commit -m "feat: implement US-XXX - [story title]
+
+- Added/updated models in zschema/
+- Defined access control policies
+- Created migrations
+- Added tests
+
+🤖 Generated with [Claude Code](https://claude.com/claude-code)
+
+Co-Authored-By: Claude <noreply@anthropic.com>"
+```
+
+**3. Push After Build Succeeds**:
+```bash
+git push
+```
+
+**4. Monitor Deployment**:
+- Use `vercel build` locally to reproduce any CI/CD failures
+- Monitor GitHub PR comments for feedback
+- Check migration status if schema changed
+- Fix issues before starting next story
+
+### Why Push Per Story
+
+- **Atomic commits**: Each commit = one complete story
+- **Easier rollback**: Can revert specific stories (especially migrations)
+- **Better review**: Reviewers can see story-by-story progress
+- **Faster feedback**: Catch issues early
+
+### Multi-Story Workflow
+
+```
+Story 1 → Implement → Validate → Commit → Push → Monitor
+Story 2 → Implement → Validate → Commit → Push → Monitor
+Story 3 → Implement → Validate → Commit → Push → Monitor
+```
+
+**Do NOT batch multiple stories into one commit.**
 
 ---
 
