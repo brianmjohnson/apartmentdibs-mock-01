@@ -60,6 +60,65 @@ export interface LeaseHistory {
   endReason: 'expired' | 'terminated' | 'renewed';
 }
 
+export interface Lease {
+  id: string;
+  propertyId: string;
+  unitId: string;
+  propertyAddress: string;
+  unitNumber: string;
+  tenantId: string;
+  tenantName: string;
+  tenantEmail: string;
+  tenantPhone: string;
+  startDate: string;
+  endDate: string;
+  monthlyRent: number;
+  securityDeposit: number;
+  status: 'active' | 'expiring_soon' | 'expired' | 'terminated';
+  documents: {
+    id: string;
+    name: string;
+    type: 'lease' | 'amendment' | 'addendum';
+    uploadedAt: string;
+  }[];
+}
+
+export interface RentPayment {
+  id: string;
+  leaseId: string;
+  propertyId: string;
+  unitId: string;
+  propertyAddress: string;
+  unitNumber: string;
+  tenantName: string;
+  date: string;
+  dueDate: string;
+  amount: number;
+  status: 'paid' | 'pending' | 'late' | 'failed';
+  paymentMethod?: string;
+  transactionId?: string;
+}
+
+export interface MaintenanceRequest {
+  id: string;
+  propertyId: string;
+  unitId: string;
+  propertyAddress: string;
+  unitNumber: string;
+  tenantName: string;
+  tenantEmail: string;
+  tenantPhone: string;
+  issue: string;
+  description: string;
+  priority: 'low' | 'medium' | 'high' | 'urgent';
+  status: 'open' | 'in_progress' | 'completed' | 'cancelled';
+  submittedAt: string;
+  completedAt?: string;
+  photos?: string[];
+  notes?: string;
+  assignedTo?: string;
+}
+
 export interface LandlordListing {
   id: string;
   propertyId: string;
@@ -698,6 +757,362 @@ export const mockLeaseExpirations: LeaseExpiration[] = [
   }
 ];
 
+export const mockLeases: Lease[] = [
+  {
+    id: "lease-1",
+    propertyId: "property-1",
+    unitId: "unit-1",
+    propertyAddress: "100 Park Avenue, Brooklyn, NY",
+    unitNumber: "1A",
+    tenantId: "tenant-1",
+    tenantName: "John Smith",
+    tenantEmail: "john.smith@email.com",
+    tenantPhone: "(555) 123-4567",
+    startDate: "2025-01-01",
+    endDate: "2026-01-01",
+    monthlyRent: 3000,
+    securityDeposit: 3000,
+    status: "active",
+    documents: [
+      { id: "doc-1", name: "Lease Agreement - John Smith", type: "lease", uploadedAt: "2024-12-15" },
+      { id: "doc-2", name: "Pet Addendum", type: "addendum", uploadedAt: "2024-12-15" }
+    ]
+  },
+  {
+    id: "lease-2",
+    propertyId: "property-1",
+    unitId: "unit-2",
+    propertyAddress: "100 Park Avenue, Brooklyn, NY",
+    unitNumber: "1B",
+    tenantId: "tenant-2",
+    tenantName: "Sarah Johnson",
+    tenantEmail: "sarah.j@email.com",
+    tenantPhone: "(555) 234-5678",
+    startDate: "2024-08-01",
+    endDate: "2025-08-01",
+    monthlyRent: 2500,
+    securityDeposit: 2500,
+    status: "active",
+    documents: [
+      { id: "doc-3", name: "Lease Agreement - Sarah Johnson", type: "lease", uploadedAt: "2024-07-15" }
+    ]
+  },
+  {
+    id: "lease-3",
+    propertyId: "property-1",
+    unitId: "unit-3",
+    propertyAddress: "100 Park Avenue, Brooklyn, NY",
+    unitNumber: "2A",
+    tenantId: "tenant-3",
+    tenantName: "Michael Brown",
+    tenantEmail: "m.brown@email.com",
+    tenantPhone: "(555) 345-6789",
+    startDate: "2024-12-01",
+    endDate: "2025-12-01",
+    monthlyRent: 3200,
+    securityDeposit: 3200,
+    status: "active",
+    documents: [
+      { id: "doc-4", name: "Lease Agreement - Michael Brown", type: "lease", uploadedAt: "2024-11-20" }
+    ]
+  },
+  {
+    id: "lease-4",
+    propertyId: "property-2",
+    unitId: "unit-10",
+    propertyAddress: "250 Ocean Parkway, Brooklyn, NY",
+    unitNumber: "4",
+    tenantId: "tenant-9",
+    tenantName: "Chris Thompson",
+    tenantEmail: "c.thompson@email.com",
+    tenantPhone: "(555) 901-2345",
+    startDate: "2024-11-01",
+    endDate: "2025-11-30",
+    monthlyRent: 2400,
+    securityDeposit: 2400,
+    status: "expiring_soon",
+    documents: [
+      { id: "doc-5", name: "Lease Agreement - Chris Thompson", type: "lease", uploadedAt: "2024-10-15" }
+    ]
+  },
+  {
+    id: "lease-5",
+    propertyId: "property-1",
+    unitId: "unit-5",
+    propertyAddress: "100 Park Avenue, Brooklyn, NY",
+    unitNumber: "3A",
+    tenantId: "tenant-5",
+    tenantName: "Robert Wilson",
+    tenantEmail: "r.wilson@email.com",
+    tenantPhone: "(555) 567-8901",
+    startDate: "2024-06-01",
+    endDate: "2025-06-01",
+    monthlyRent: 3700,
+    securityDeposit: 3700,
+    status: "active",
+    documents: [
+      { id: "doc-6", name: "Lease Agreement - Robert Wilson", type: "lease", uploadedAt: "2024-05-20" },
+      { id: "doc-7", name: "Rent Increase Amendment", type: "amendment", uploadedAt: "2024-12-01" }
+    ]
+  },
+  {
+    id: "lease-6",
+    propertyId: "property-3",
+    unitId: "unit-11",
+    propertyAddress: "45 Prospect Place, Brooklyn, NY",
+    unitNumber: "A",
+    tenantId: "tenant-10",
+    tenantName: "Lisa Anderson",
+    tenantEmail: "l.anderson@email.com",
+    tenantPhone: "(555) 012-3456",
+    startDate: "2025-05-01",
+    endDate: "2026-05-01",
+    monthlyRent: 3000,
+    securityDeposit: 3000,
+    status: "active",
+    documents: [
+      { id: "doc-8", name: "Lease Agreement - Lisa Anderson", type: "lease", uploadedAt: "2025-04-15" }
+    ]
+  }
+];
+
+export const mockRentPayments: RentPayment[] = [
+  // November 2025 payments
+  {
+    id: "payment-1",
+    leaseId: "lease-1",
+    propertyId: "property-1",
+    unitId: "unit-1",
+    propertyAddress: "100 Park Avenue",
+    unitNumber: "1A",
+    tenantName: "John Smith",
+    date: "2025-11-01",
+    dueDate: "2025-11-01",
+    amount: 3000,
+    status: "paid",
+    paymentMethod: "ACH",
+    transactionId: "TXN-001"
+  },
+  {
+    id: "payment-2",
+    leaseId: "lease-2",
+    propertyId: "property-1",
+    unitId: "unit-2",
+    propertyAddress: "100 Park Avenue",
+    unitNumber: "1B",
+    tenantName: "Sarah Johnson",
+    date: "2025-11-01",
+    dueDate: "2025-11-01",
+    amount: 2500,
+    status: "paid",
+    paymentMethod: "ACH",
+    transactionId: "TXN-002"
+  },
+  {
+    id: "payment-3",
+    leaseId: "lease-3",
+    propertyId: "property-1",
+    unitId: "unit-3",
+    propertyAddress: "100 Park Avenue",
+    unitNumber: "2A",
+    tenantName: "Michael Brown",
+    date: "2025-11-15",
+    dueDate: "2025-11-01",
+    amount: 3200,
+    status: "late",
+    paymentMethod: "Credit Card",
+    transactionId: "TXN-003"
+  },
+  {
+    id: "payment-4",
+    leaseId: "lease-4",
+    propertyId: "property-2",
+    unitId: "unit-10",
+    propertyAddress: "250 Ocean Parkway",
+    unitNumber: "4",
+    tenantName: "Chris Thompson",
+    date: "2025-11-01",
+    dueDate: "2025-11-01",
+    amount: 2400,
+    status: "paid",
+    paymentMethod: "ACH",
+    transactionId: "TXN-004"
+  },
+  {
+    id: "payment-5",
+    leaseId: "lease-5",
+    propertyId: "property-1",
+    unitId: "unit-5",
+    propertyAddress: "100 Park Avenue",
+    unitNumber: "3A",
+    tenantName: "Robert Wilson",
+    date: "2025-11-01",
+    dueDate: "2025-11-01",
+    amount: 3700,
+    status: "paid",
+    paymentMethod: "Check",
+    transactionId: "TXN-005"
+  },
+  // December 2025 payments (pending)
+  {
+    id: "payment-6",
+    leaseId: "lease-1",
+    propertyId: "property-1",
+    unitId: "unit-1",
+    propertyAddress: "100 Park Avenue",
+    unitNumber: "1A",
+    tenantName: "John Smith",
+    date: "",
+    dueDate: "2025-12-01",
+    amount: 3000,
+    status: "pending"
+  },
+  {
+    id: "payment-7",
+    leaseId: "lease-2",
+    propertyId: "property-1",
+    unitId: "unit-2",
+    propertyAddress: "100 Park Avenue",
+    unitNumber: "1B",
+    tenantName: "Sarah Johnson",
+    date: "",
+    dueDate: "2025-12-01",
+    amount: 2500,
+    status: "pending"
+  },
+  // October 2025 payments (historical)
+  {
+    id: "payment-8",
+    leaseId: "lease-1",
+    propertyId: "property-1",
+    unitId: "unit-1",
+    propertyAddress: "100 Park Avenue",
+    unitNumber: "1A",
+    tenantName: "John Smith",
+    date: "2025-10-01",
+    dueDate: "2025-10-01",
+    amount: 3000,
+    status: "paid",
+    paymentMethod: "ACH",
+    transactionId: "TXN-006"
+  },
+  {
+    id: "payment-9",
+    leaseId: "lease-3",
+    propertyId: "property-1",
+    unitId: "unit-3",
+    propertyAddress: "100 Park Avenue",
+    unitNumber: "2A",
+    tenantName: "Michael Brown",
+    date: "",
+    dueDate: "2025-10-01",
+    amount: 3200,
+    status: "failed"
+  }
+];
+
+export const mockMaintenanceRequests: MaintenanceRequest[] = [
+  {
+    id: "maint-1",
+    propertyId: "property-2",
+    unitId: "unit-9",
+    propertyAddress: "250 Ocean Parkway",
+    unitNumber: "3",
+    tenantName: "Amanda Martinez",
+    tenantEmail: "a.martinez@email.com",
+    tenantPhone: "(555) 890-1234",
+    issue: "Leaking faucet in bathroom",
+    description: "The bathroom sink faucet has been leaking for a few days. Water drips constantly even when turned off completely. Starting to cause water stains.",
+    priority: "medium",
+    status: "open",
+    submittedAt: "2025-11-17T09:00:00Z",
+    photos: ["/placeholder-photo-1.jpg"]
+  },
+  {
+    id: "maint-2",
+    propertyId: "property-1",
+    unitId: "unit-3",
+    propertyAddress: "100 Park Avenue",
+    unitNumber: "2A",
+    tenantName: "Michael Brown",
+    tenantEmail: "m.brown@email.com",
+    tenantPhone: "(555) 345-6789",
+    issue: "HVAC not heating properly",
+    description: "The heating system is not producing warm air. The thermostat shows it's on but only cold air comes out. Very uncomfortable with winter approaching.",
+    priority: "high",
+    status: "in_progress",
+    submittedAt: "2025-11-15T14:30:00Z",
+    assignedTo: "ABC HVAC Services",
+    notes: "Technician scheduled for Nov 19th morning"
+  },
+  {
+    id: "maint-3",
+    propertyId: "property-1",
+    unitId: "unit-1",
+    propertyAddress: "100 Park Avenue",
+    unitNumber: "1A",
+    tenantName: "John Smith",
+    tenantEmail: "john.smith@email.com",
+    tenantPhone: "(555) 123-4567",
+    issue: "Garbage disposal jammed",
+    description: "Kitchen garbage disposal is making a humming noise but not working. Tried the reset button but no luck.",
+    priority: "low",
+    status: "open",
+    submittedAt: "2025-11-18T10:15:00Z"
+  },
+  {
+    id: "maint-4",
+    propertyId: "property-3",
+    unitId: "unit-11",
+    propertyAddress: "45 Prospect Place",
+    unitNumber: "A",
+    tenantName: "Lisa Anderson",
+    tenantEmail: "l.anderson@email.com",
+    tenantPhone: "(555) 012-3456",
+    issue: "Broken window lock",
+    description: "The lock on the bedroom window is broken and won't secure properly. Security concern.",
+    priority: "urgent",
+    status: "open",
+    submittedAt: "2025-11-18T16:45:00Z"
+  },
+  {
+    id: "maint-5",
+    propertyId: "property-1",
+    unitId: "unit-4",
+    propertyAddress: "100 Park Avenue",
+    unitNumber: "2B",
+    tenantName: "Emily Davis",
+    tenantEmail: "emily.d@email.com",
+    tenantPhone: "(555) 456-7890",
+    issue: "Light fixture replacement",
+    description: "The ceiling light in the living room stopped working. Replaced the bulb but still doesn't turn on.",
+    priority: "low",
+    status: "completed",
+    submittedAt: "2025-11-10T11:00:00Z",
+    completedAt: "2025-11-12T15:00:00Z",
+    assignedTo: "Building Super",
+    notes: "Replaced faulty wiring in fixture"
+  },
+  {
+    id: "maint-6",
+    propertyId: "property-2",
+    unitId: "unit-7",
+    propertyAddress: "250 Ocean Parkway",
+    unitNumber: "1",
+    tenantName: "Jennifer Lee",
+    tenantEmail: "j.lee@email.com",
+    tenantPhone: "(555) 678-9012",
+    issue: "Clogged drain in kitchen",
+    description: "Kitchen sink draining very slowly. Have tried basic drain cleaner but it's still very slow.",
+    priority: "medium",
+    status: "completed",
+    submittedAt: "2025-11-08T08:30:00Z",
+    completedAt: "2025-11-09T14:00:00Z",
+    assignedTo: "Quick Plumbing Co",
+    notes: "Cleared grease buildup in P-trap"
+  }
+];
+
 // Helper functions
 export function getUnitStatusColor(status: Unit['status']): string {
   switch (status) {
@@ -815,6 +1230,74 @@ export function getApplicantsByListing(listingId: string): LandlordApplicant[] {
 
 export function getLeaseHistoryByUnit(unitId: string): LeaseHistory[] {
   return mockLeaseHistory.filter(history => history.unitId === unitId);
+}
+
+export function getLeaseById(leaseId: string): Lease | undefined {
+  return mockLeases.find(lease => lease.id === leaseId);
+}
+
+export function getPaymentsByLease(leaseId: string): RentPayment[] {
+  return mockRentPayments.filter(payment => payment.leaseId === leaseId);
+}
+
+export function getLeaseStatusColor(status: Lease['status']): string {
+  switch (status) {
+    case 'active':
+      return 'bg-green-100 text-green-800 border-green-300';
+    case 'expiring_soon':
+      return 'bg-yellow-100 text-yellow-800 border-yellow-300';
+    case 'expired':
+      return 'bg-red-100 text-red-800 border-red-300';
+    case 'terminated':
+      return 'bg-gray-100 text-gray-600 border-gray-300';
+    default:
+      return 'bg-gray-100 text-gray-600 border-gray-300';
+  }
+}
+
+export function getRentPaymentStatusColor(status: RentPayment['status']): string {
+  switch (status) {
+    case 'paid':
+      return 'bg-green-100 text-green-800 border-green-300';
+    case 'pending':
+      return 'bg-blue-100 text-blue-800 border-blue-300';
+    case 'late':
+      return 'bg-yellow-100 text-yellow-800 border-yellow-300';
+    case 'failed':
+      return 'bg-red-100 text-red-800 border-red-300';
+    default:
+      return 'bg-gray-100 text-gray-600 border-gray-300';
+  }
+}
+
+export function getMaintenancePriorityColor(priority: MaintenanceRequest['priority']): string {
+  switch (priority) {
+    case 'low':
+      return 'bg-gray-100 text-gray-800 border-gray-300';
+    case 'medium':
+      return 'bg-blue-100 text-blue-800 border-blue-300';
+    case 'high':
+      return 'bg-orange-100 text-orange-800 border-orange-300';
+    case 'urgent':
+      return 'bg-red-100 text-red-800 border-red-300';
+    default:
+      return 'bg-gray-100 text-gray-600 border-gray-300';
+  }
+}
+
+export function getMaintenanceStatusColor(status: MaintenanceRequest['status']): string {
+  switch (status) {
+    case 'open':
+      return 'bg-yellow-100 text-yellow-800 border-yellow-300';
+    case 'in_progress':
+      return 'bg-blue-100 text-blue-800 border-blue-300';
+    case 'completed':
+      return 'bg-green-100 text-green-800 border-green-300';
+    case 'cancelled':
+      return 'bg-gray-100 text-gray-600 border-gray-300';
+    default:
+      return 'bg-gray-100 text-gray-600 border-gray-300';
+  }
 }
 
 // Property type options for create form

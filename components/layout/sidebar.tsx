@@ -17,6 +17,8 @@ import {
   ChevronLeft,
   ChevronRight,
   LucideIcon,
+  Shield,
+  Headphones,
 } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { Button } from '@/components/ui/button'
@@ -63,24 +65,30 @@ const navItems: Record<string, NavItem[]> = {
   ],
   admin: [
     { href: '/dashboard', label: 'Dashboard', icon: Home },
-    { href: '/dashboard/users', label: 'Users', icon: Users },
-    { href: '/dashboard/listings', label: 'Listings', icon: Building },
-    { href: '/dashboard/reports', label: 'Reports', icon: BarChart3 },
-    { href: '/dashboard/compliance', label: 'Compliance', icon: FileText },
-    { href: '/dashboard/messages', label: 'Messages', icon: MessageSquare },
+    { href: '/users', label: 'Users', icon: Users },
+    { href: '/listings', label: 'Listings', icon: Building },
+    { href: '/compliance', label: 'Compliance', icon: Shield },
+    { href: '/support', label: 'Support', icon: Headphones },
+    { href: '/analytics', label: 'Analytics', icon: BarChart3 },
   ],
 }
 
-const secondaryItems: NavItem[] = [
-  { href: '/dashboard/settings', label: 'Settings', icon: Settings },
-  { href: '/dashboard/help', label: 'Help & Support', icon: HelpCircle },
-]
+const secondaryItems: Record<string, NavItem[]> = {
+  default: [
+    { href: '/dashboard/settings', label: 'Settings', icon: Settings },
+    { href: '/dashboard/help', label: 'Help & Support', icon: HelpCircle },
+  ],
+  admin: [
+    { href: '/settings', label: 'Settings', icon: Settings },
+  ],
+}
 
 export function Sidebar({ persona = 'tenant' }: SidebarProps) {
   const pathname = usePathname()
   const [collapsed, setCollapsed] = useState(false)
 
   const primaryNav = navItems[persona] || navItems.tenant
+  const secondaryNav = secondaryItems[persona] || secondaryItems.default
 
   return (
     <TooltipProvider delayDuration={0}>
@@ -160,7 +168,7 @@ export function Sidebar({ persona = 'tenant' }: SidebarProps) {
           {/* Secondary Navigation */}
           <div className="border-t-2 border-border py-4">
             <ul className="space-y-1 px-2">
-              {secondaryItems.map((item) => {
+              {secondaryNav.map((item) => {
                 const isActive = pathname === item.href
                 const Icon = item.icon
 
