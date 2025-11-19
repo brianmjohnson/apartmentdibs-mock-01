@@ -1,59 +1,56 @@
-"use client";
+'use client'
 
-import Image from "next/image";
-import { useState } from "react";
-import { AspectRatio } from "@/components/ui/aspect-ratio";
-import { Button } from "@/components/ui/button";
-import { Skeleton } from "@/components/ui/skeleton";
+import Image from 'next/image'
+import { useState } from 'react'
+import { AspectRatio } from '@/components/ui/aspect-ratio'
+import { Skeleton } from '@/components/ui/skeleton'
 import {
   Carousel,
   CarouselContent,
   CarouselItem,
   CarouselNext,
   CarouselPrevious,
-} from "@/components/ui/carousel";
-import { ChevronLeft, ChevronRight, Grid3X3, X } from "lucide-react";
+} from '@/components/ui/carousel'
+import { ChevronLeft, ChevronRight, Grid3X3, X } from 'lucide-react'
 
 interface ListingGalleryProps {
-  images: string[];
-  address: string;
+  images: string[]
+  address: string
 }
 
 export function ListingGallery({ images, address }: ListingGalleryProps) {
-  const [selectedIndex, setSelectedIndex] = useState(0);
-  const [showLightbox, setShowLightbox] = useState(false);
-  const [loadedImages, setLoadedImages] = useState<Record<number, boolean>>({});
+  const [selectedIndex, setSelectedIndex] = useState(0)
+  const [showLightbox, setShowLightbox] = useState(false)
+  const [loadedImages, setLoadedImages] = useState<Record<number, boolean>>({})
 
   const handleImageLoad = (index: number) => {
-    setLoadedImages(prev => ({ ...prev, [index]: true }));
-  };
+    setLoadedImages((prev) => ({ ...prev, [index]: true }))
+  }
 
   const handlePrevious = () => {
-    setSelectedIndex(prev => (prev === 0 ? images.length - 1 : prev - 1));
-  };
+    setSelectedIndex((prev) => (prev === 0 ? images.length - 1 : prev - 1))
+  }
 
   const handleNext = () => {
-    setSelectedIndex(prev => (prev === images.length - 1 ? 0 : prev + 1));
-  };
+    setSelectedIndex((prev) => (prev === images.length - 1 ? 0 : prev + 1))
+  }
 
   return (
     <>
       {/* Desktop Grid View */}
-      <div className="hidden md:grid md:grid-cols-4 md:grid-rows-2 gap-2 h-[400px]">
-        <div className="col-span-2 row-span-2 relative rounded-l-lg overflow-hidden">
-          {!loadedImages[0] && (
-            <Skeleton className="absolute inset-0 w-full h-full" />
-          )}
+      <div className="hidden h-[400px] gap-2 md:grid md:grid-cols-4 md:grid-rows-2">
+        <div className="relative col-span-2 row-span-2 overflow-hidden rounded-l-lg">
+          {!loadedImages[0] && <Skeleton className="absolute inset-0 h-full w-full" />}
           <Image
             src={images[0]}
             alt={`${address} - Main photo`}
             fill
-            className={`object-cover cursor-pointer hover:opacity-95 transition-opacity ${
-              loadedImages[0] ? "opacity-100" : "opacity-0"
+            className={`cursor-pointer object-cover transition-opacity hover:opacity-95 ${
+              loadedImages[0] ? 'opacity-100' : 'opacity-0'
             }`}
             onClick={() => {
-              setSelectedIndex(0);
-              setShowLightbox(true);
+              setSelectedIndex(0)
+              setShowLightbox(true)
             }}
             onLoad={() => handleImageLoad(0)}
             priority
@@ -64,22 +61,20 @@ export function ListingGallery({ images, address }: ListingGalleryProps) {
           <div
             key={index + 1}
             className={`relative overflow-hidden ${
-              index === 1 ? "rounded-tr-lg" : ""
-            } ${index === 3 ? "rounded-br-lg" : ""}`}
+              index === 1 ? 'rounded-tr-lg' : ''
+            } ${index === 3 ? 'rounded-br-lg' : ''}`}
           >
-            {!loadedImages[index + 1] && (
-              <Skeleton className="absolute inset-0 w-full h-full" />
-            )}
+            {!loadedImages[index + 1] && <Skeleton className="absolute inset-0 h-full w-full" />}
             <Image
               src={image}
               alt={`${address} - Photo ${index + 2}`}
               fill
-              className={`object-cover cursor-pointer hover:opacity-95 transition-opacity ${
-                loadedImages[index + 1] ? "opacity-100" : "opacity-0"
+              className={`cursor-pointer object-cover transition-opacity hover:opacity-95 ${
+                loadedImages[index + 1] ? 'opacity-100' : 'opacity-0'
               }`}
               onClick={() => {
-                setSelectedIndex(index + 1);
-                setShowLightbox(true);
+                setSelectedIndex(index + 1)
+                setShowLightbox(true)
               }}
               onLoad={() => handleImageLoad(index + 1)}
               sizes="25vw"
@@ -87,12 +82,12 @@ export function ListingGallery({ images, address }: ListingGalleryProps) {
             {index === 3 && images.length > 5 && (
               <button
                 onClick={() => {
-                  setSelectedIndex(0);
-                  setShowLightbox(true);
+                  setSelectedIndex(0)
+                  setShowLightbox(true)
                 }}
-                className="absolute inset-0 bg-black/50 flex items-center justify-center text-white font-medium hover:bg-black/60 transition-colors"
+                className="absolute inset-0 flex items-center justify-center bg-black/50 font-medium text-white transition-colors hover:bg-black/60"
               >
-                <Grid3X3 className="h-5 w-5 mr-2" />
+                <Grid3X3 className="mr-2 h-5 w-5" />
                 Show all {images.length} photos
               </button>
             )}
@@ -111,10 +106,10 @@ export function ListingGallery({ images, address }: ListingGalleryProps) {
                     src={image}
                     alt={`${address} - Photo ${index + 1}`}
                     fill
-                    className="object-cover rounded-lg"
+                    className="rounded-lg object-cover"
                     onClick={() => {
-                      setSelectedIndex(index);
-                      setShowLightbox(true);
+                      setSelectedIndex(index)
+                      setShowLightbox(true)
                     }}
                     sizes="100vw"
                   />
@@ -125,17 +120,15 @@ export function ListingGallery({ images, address }: ListingGalleryProps) {
           <CarouselPrevious className="left-2" />
           <CarouselNext className="right-2" />
         </Carousel>
-        <div className="text-center mt-2 text-sm text-muted-foreground">
-          {images.length} photos
-        </div>
+        <div className="mt-2 text-center text-sm text-muted-foreground">{images.length} photos</div>
       </div>
 
       {/* Lightbox */}
       {showLightbox && (
-        <div className="fixed inset-0 z-50 bg-black/95 flex items-center justify-center">
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/95">
           <button
             onClick={() => setShowLightbox(false)}
-            className="absolute top-4 right-4 p-2 text-white hover:bg-white/10 rounded-full transition-colors"
+            className="absolute right-4 top-4 rounded-full p-2 text-white transition-colors hover:bg-white/10"
             aria-label="Close gallery"
           >
             <X className="h-6 w-6" />
@@ -143,13 +136,13 @@ export function ListingGallery({ images, address }: ListingGalleryProps) {
 
           <button
             onClick={handlePrevious}
-            className="absolute left-4 p-2 text-white hover:bg-white/10 rounded-full transition-colors"
+            className="absolute left-4 rounded-full p-2 text-white transition-colors hover:bg-white/10"
             aria-label="Previous image"
           >
             <ChevronLeft className="h-8 w-8" />
           </button>
 
-          <div className="relative w-full max-w-5xl h-[80vh] mx-16">
+          <div className="relative mx-16 h-[80vh] w-full max-w-5xl">
             <Image
               src={images[selectedIndex]}
               alt={`${address} - Photo ${selectedIndex + 1}`}
@@ -161,7 +154,7 @@ export function ListingGallery({ images, address }: ListingGalleryProps) {
 
           <button
             onClick={handleNext}
-            className="absolute right-4 p-2 text-white hover:bg-white/10 rounded-full transition-colors"
+            className="absolute right-4 rounded-full p-2 text-white transition-colors hover:bg-white/10"
             aria-label="Next image"
           >
             <ChevronRight className="h-8 w-8" />
@@ -173,5 +166,5 @@ export function ListingGallery({ images, address }: ListingGalleryProps) {
         </div>
       )}
     </>
-  );
+  )
 }
