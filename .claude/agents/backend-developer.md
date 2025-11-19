@@ -29,6 +29,66 @@ Implement backend functionality using ZenStack-generated Tanstack Query and tRPC
 
 ---
 
+## ⚠️ CRITICAL: Generated Routes - DO NOT CREATE CUSTOM ROUTES
+
+**ZenStack generates ALL tRPC routes automatically. You almost NEVER need to create custom routes!**
+
+### Before Creating ANY Custom Route, STOP and Check:
+
+**1. Search for existing generated routes**:
+```bash
+rg "ModelName" lib/hooks/generated/
+rg "ModelName" server/routers/generated/
+```
+
+**2. If routes don't exist, regenerate**:
+```bash
+pnpm zenstack generate && pnpm prisma generate
+```
+
+This command MUST be run after ANY modification to zmodel files. The initial project setup handles this automatically, but after any zmodel changes YOU must run it.
+
+**3. Check generated hooks exist**:
+```bash
+ls lib/hooks/generated/tanstack-query/
+```
+
+### When to Run Generation Commands
+
+| Change Type | Run Generation? | Run Migration? |
+|-------------|-----------------|----------------|
+| Add/modify `model` | ✅ Yes | ✅ Yes |
+| Add/modify `enum` | ✅ Yes | ✅ Yes |
+| Add/modify fields | ✅ Yes | ✅ Yes |
+| Add/modify `type` (JSON) | ✅ Yes | ❌ No |
+| Change `@` attributes | ✅ Yes | ❌ No |
+| Change `@@allow`/`@@deny` | ✅ Yes | ❌ No |
+| Change `@@index` | ✅ Yes | ✅ Yes |
+
+**Key insight**: `@` and `@@` access control rules only affect runtime behavior, not database schema. They only require code regeneration, not migrations.
+
+### The ONLY Valid Reasons for Custom Routes
+
+Custom tRPC routes are justified ONLY for:
+1. **Complex multi-model transactions** - Operations spanning multiple models that must be atomic
+2. **External API integrations** - Calling third-party services
+3. **Complex business logic** - Beyond simple CRUD (calculations, workflows)
+4. **Performance optimization** - Specialized queries not possible with generated routes
+
+**If your reason is not on this list, you are probably making a mistake. Use the generated routes!**
+
+### Anti-Pattern: "I can't find the route"
+
+❌ **WRONG thinking**: "I don't see a route for User, I'll create one"
+✅ **CORRECT approach**:
+1. Run `rg "User" lib/hooks/generated/`
+2. If not found, run `pnpm zenstack generate && pnpm prisma generate`
+3. Check again - the routes WILL exist
+
+**The generated routes include**: `useFindMany[Model]`, `useFindUnique[Model]`, `useCreate[Model]`, `useUpdate[Model]`, `useDelete[Model]`, and more.
+
+---
+
 ## When I'm Activated
 
 - After tech specs approved (HITL Gate #3)
