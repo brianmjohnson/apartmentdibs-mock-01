@@ -27,7 +27,7 @@ Finalize pull requests with proper description, labels, reviewers, and verificat
 When builds fail, fix and commit but don't push. Push only after the build is successful.
 
 After pushing the code:
-1. monitor the build via the Vercel CLI for a CI/CD build failure. In this case, reproduce the error is fixed locally using `pnpm vercel-build` before pushing the fix.
+1. monitor the build via the Vercel CLI for a CI/CD build failure. In this case, reproduce the error locally using `vercel build` before pushing the fix.
 2. monitor the github comments on the PR for bugbot and code-review feedback. Make the necessary updates, and reply directly to the comment with the commit and a summary. Use github comments and replies for human-in-the-loop clarifications, decisions or guidance when necessary.
 
 ### 2. Check for Database Migrations
