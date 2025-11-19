@@ -172,26 +172,52 @@ Display wishlist summary in grid/list view
 
 ## Component Library
 
-**shadcn/ui components to use**:
+### shadcn/ui Components (Primary Source)
+
+**ALWAYS check shadcn/ui first** before creating custom components.
+
+**Step 1: Core Components** → https://ui.shadcn.com/docs/components
+
+Browse the built-in component library for:
 
 - Button, Input, Label, Textarea
-- Card, Dialog, Sheet
-- Form, Select, Checkbox, Switch
-- Table, Tabs
-- Toast, Alert
+- Card, Dialog, Sheet, Drawer
+- Form, Select, Checkbox, Switch, Radio Group
+- Table, Tabs, Accordion
+- Toast, Alert, Alert Dialog
 - Skeleton, Badge, Avatar
+- Dropdown Menu, Context Menu, Menubar
+- Navigation Menu, Breadcrumb
+- Popover, Tooltip, Hover Card
+- Progress, Slider, Calendar
+- Command, Combobox
 
-**Other components to use**:
+**Step 2: Extended Components** → https://ui.shadcn.com/docs/directory
 
-- lucide.dev for icons
-- platejs.org for rich-text editing
-- tailwind css styling
+If core components don't meet needs, investigate the directory for:
 
-**When to create custom**:
+- Data tables with sorting/filtering
+- Charts and visualizations
+- File uploads
+- Date/time pickers
+- Rich text editors
+- And many more community components
 
-- [ ] no suitable components found during web search
-- Specific business component
-- Composition of existing components
+### Other Libraries
+
+- **Icons**: lucide.dev
+- **Rich text**: platejs.org
+- **Styling**: Tailwind CSS
+
+### When to Create Custom
+
+Only create custom components when:
+
+- [ ] Checked https://ui.shadcn.com/docs/components - nothing suitable
+- [ ] Checked https://ui.shadcn.com/docs/directory - nothing suitable
+- [ ] Performed web search - no existing solutions
+- Specific business logic required
+- Composition of multiple existing components
 - Domain-specific visualization
 
 ---
