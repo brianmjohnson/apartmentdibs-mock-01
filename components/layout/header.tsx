@@ -39,17 +39,38 @@ interface HeaderProps {
 
 const navLinks = [
   { href: '/search', label: 'Search' },
-  { href: '/for-agents', label: 'For Agents' },
-  { href: '/for-landlords', label: 'For Landlords' },
   { href: '/pricing', label: 'Pricing' },
+  { href: '/blog', label: 'Blog' },
   { href: '/about', label: 'About' },
+]
+
+const portalLinks = [
+  { href: '/tenant', label: 'Tenant Portal' },
+  { href: '/agent', label: 'Agent Portal' },
+  { href: '/landlord', label: 'Landlord Portal' },
+  { href: '/admin', label: 'Site Admin' },
 ]
 
 export function Header({ isLoggedIn = false, user }: HeaderProps) {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
 
   return (
-    <header className="sticky top-0 z-50 w-full border-b-4 border-foreground bg-background">
+    <>
+      {/* Portal Navigation Bar */}
+      <div className="w-full bg-foreground text-background text-xs">
+        <div className="container mx-auto flex items-center justify-center gap-6 px-4 py-1.5">
+          {portalLinks.map((link) => (
+            <Link
+              key={link.href}
+              href={link.href}
+              className="hover:underline font-medium"
+            >
+              {link.label}
+            </Link>
+          ))}
+        </div>
+      </div>
+      <header className="sticky top-0 z-50 w-full border-b-4 border-foreground bg-background">
       <div className="container mx-auto flex h-16 items-center justify-between px-4">
         {/* Logo */}
         <Link href="/" className="flex items-center gap-2">
@@ -90,13 +111,13 @@ export function Header({ isLoggedIn = false, user }: HeaderProps) {
                 </DropdownMenuTrigger>
                 <DropdownMenuContent align="end" className="w-48 border-2 border-foreground">
                   <DropdownMenuItem asChild>
-                    <Link href="/dashboard" className="flex items-center gap-2">
+                    <Link href="/tenant/dashboard" className="flex items-center gap-2">
                       <User className="h-4 w-4" />
                       Dashboard
                     </Link>
                   </DropdownMenuItem>
                   <DropdownMenuItem asChild>
-                    <Link href="/settings" className="flex items-center gap-2">
+                    <Link href="/tenant/settings" className="flex items-center gap-2">
                       <Settings className="h-4 w-4" />
                       Settings
                     </Link>
@@ -114,7 +135,7 @@ export function Header({ isLoggedIn = false, user }: HeaderProps) {
                   <Link href="/login">Log in</Link>
                 </Button>
                 <Button asChild className="border-2 border-foreground">
-                  <Link href="/signup">Sign Up</Link>
+                  <Link href="/register">Sign Up</Link>
                 </Button>
               </>
             )}
@@ -162,14 +183,14 @@ export function Header({ isLoggedIn = false, user }: HeaderProps) {
                         </div>
                       </div>
                       <Link
-                        href="/dashboard"
+                        href="/tenant/dashboard"
                         className="px-4 py-3 text-lg font-medium hover:bg-accent transition-colors"
                         onClick={() => setMobileMenuOpen(false)}
                       >
                         Dashboard
                       </Link>
                       <Link
-                        href="/settings"
+                        href="/tenant/settings"
                         className="px-4 py-3 text-lg font-medium hover:bg-accent transition-colors"
                         onClick={() => setMobileMenuOpen(false)}
                       >
@@ -187,7 +208,7 @@ export function Header({ isLoggedIn = false, user }: HeaderProps) {
                         </Link>
                       </Button>
                       <Button asChild className="border-2 border-foreground">
-                        <Link href="/signup" onClick={() => setMobileMenuOpen(false)}>
+                        <Link href="/register" onClick={() => setMobileMenuOpen(false)}>
                           Sign Up
                         </Link>
                       </Button>
@@ -200,5 +221,6 @@ export function Header({ isLoggedIn = false, user }: HeaderProps) {
         </div>
       </div>
     </header>
+    </>
   )
 }

@@ -301,7 +301,7 @@ export default function HomePage() {
                 className="border-2 border-primary-foreground bg-transparent hover:bg-primary-foreground hover:text-primary text-lg px-8"
                 asChild
               >
-                <Link href="/for-landlords">List Your Property</Link>
+                <Link href="/pricing">List Your Property</Link>
               </Button>
             </div>
           </div>

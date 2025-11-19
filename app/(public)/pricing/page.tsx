@@ -31,7 +31,7 @@ const pricingTiers = [
     icon: Users,
     popular: false,
     cta: 'Get Started Free',
-    ctaLink: '/auth/signup?role=tenant',
+    ctaLink: '/register?role=tenant',
     features: [
       { text: 'Create verified profile', included: true },
       { text: 'Apply to unlimited listings', included: true },
@@ -50,7 +50,7 @@ const pricingTiers = [
     icon: Building2,
     popular: true,
     cta: 'Start Free Trial',
-    ctaLink: '/auth/signup?role=agent',
+    ctaLink: '/register?role=agent',
     features: [
       { text: 'Unified applicant dashboard', included: true },
       { text: 'CRM access (denied applicants)', included: true },

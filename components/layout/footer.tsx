@@ -5,19 +5,18 @@ import { Separator } from '@/components/ui/separator'
 const footerLinks = {
   company: [
     { href: '/about', label: 'About' },
-    { href: '/careers', label: 'Careers' },
-    { href: '/press', label: 'Press' },
+    { href: '/blog', label: 'Blog' },
+    { href: '/pricing', label: 'Pricing' },
     { href: '/contact', label: 'Contact' },
   ],
-  platform: [
-    { href: '/for-tenants', label: 'For Tenants' },
-    { href: '/for-agents', label: 'For Agents' },
-    { href: '/for-landlords', label: 'For Landlords' },
+  resources: [
+    { href: '/search', label: 'Search Listings' },
+    { href: '/faq', label: 'FAQ' },
   ],
   legal: [
-    { href: '/terms', label: 'Terms of Service' },
-    { href: '/privacy', label: 'Privacy Policy' },
-    { href: '/fair-housing', label: 'Fair Housing' },
+    { href: '/legal/terms', label: 'Terms of Service' },
+    { href: '/legal/privacy', label: 'Privacy Policy' },
+    { href: '/legal/fair-housing', label: 'Fair Housing' },
   ],
 }
 
@@ -77,11 +76,11 @@ export function Footer() {
             </ul>
           </div>
 
-          {/* Platform Links */}
+          {/* Resources Links */}
           <div>
-            <h3 className="font-bold text-sm uppercase tracking-wider mb-4">Platform</h3>
+            <h3 className="font-bold text-sm uppercase tracking-wider mb-4">Resources</h3>
             <ul className="space-y-3">
-              {footerLinks.platform.map((link) => (
+              {footerLinks.resources.map((link) => (
                 <li key={link.href}>
                   <Link
                     href={link.href}

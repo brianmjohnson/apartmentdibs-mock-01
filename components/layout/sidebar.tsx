@@ -42,44 +42,53 @@ interface SidebarProps {
 
 const navItems: Record<string, NavItem[]> = {
   tenant: [
-    { href: '/dashboard', label: 'Dashboard', icon: Home },
-    { href: '/dashboard/search', label: 'Search', icon: Search },
-    { href: '/dashboard/applications', label: 'Applications', icon: FileText },
-    { href: '/dashboard/messages', label: 'Messages', icon: MessageSquare },
-    { href: '/dashboard/documents', label: 'Documents', icon: FileText },
+    { href: '/tenant/dashboard', label: 'Dashboard', icon: Home },
+    { href: '/tenant/applications', label: 'Applications', icon: FileText },
+    { href: '/tenant/saved-listings', label: 'Saved Listings', icon: Search },
+    { href: '/tenant/payments', label: 'Payments', icon: BarChart3 },
+    { href: '/tenant/profile', label: 'Profile', icon: Users },
   ],
   agent: [
-    { href: '/dashboard', label: 'Dashboard', icon: Home },
-    { href: '/dashboard/listings', label: 'Listings', icon: Building },
-    { href: '/dashboard/leads', label: 'Leads', icon: Users },
-    { href: '/dashboard/applications', label: 'Applications', icon: FileText },
-    { href: '/dashboard/messages', label: 'Messages', icon: MessageSquare },
-    { href: '/dashboard/analytics', label: 'Analytics', icon: BarChart3 },
+    { href: '/agent/dashboard', label: 'Dashboard', icon: Home },
+    { href: '/agent/listings', label: 'Listings', icon: Building },
+    { href: '/agent/applicants', label: 'Applicants', icon: Users },
+    { href: '/agent/crm', label: 'CRM', icon: FileText },
+    { href: '/agent/messages', label: 'Messages', icon: MessageSquare },
+    { href: '/agent/analytics', label: 'Analytics', icon: BarChart3 },
   ],
   landlord: [
-    { href: '/dashboard', label: 'Dashboard', icon: Home },
-    { href: '/properties', label: 'Properties', icon: Building },
-    { href: '/listings', label: 'Listings', icon: FileText },
-    { href: '/dashboard/financials', label: 'Financials', icon: BarChart3 },
-    { href: '/dashboard/messages', label: 'Messages', icon: MessageSquare },
+    { href: '/landlord/dashboard', label: 'Dashboard', icon: Home },
+    { href: '/landlord/properties', label: 'Properties', icon: Building },
+    { href: '/landlord/listings', label: 'Listings', icon: FileText },
+    { href: '/landlord/leases', label: 'Leases', icon: FileText },
+    { href: '/landlord/payments', label: 'Payments', icon: BarChart3 },
+    { href: '/landlord/maintenance', label: 'Maintenance', icon: Settings },
   ],
   admin: [
-    { href: '/dashboard', label: 'Dashboard', icon: Home },
-    { href: '/users', label: 'Users', icon: Users },
-    { href: '/listings', label: 'Listings', icon: Building },
-    { href: '/compliance', label: 'Compliance', icon: Shield },
-    { href: '/support', label: 'Support', icon: Headphones },
-    { href: '/analytics', label: 'Analytics', icon: BarChart3 },
+    { href: '/admin/dashboard', label: 'Dashboard', icon: Home },
+    { href: '/admin/users', label: 'Users', icon: Users },
+    { href: '/admin/listings', label: 'Listings', icon: Building },
+    { href: '/admin/compliance', label: 'Compliance', icon: Shield },
+    { href: '/admin/support', label: 'Support', icon: Headphones },
+    { href: '/admin/analytics', label: 'Analytics', icon: BarChart3 },
   ],
 }
 
 const secondaryItems: Record<string, NavItem[]> = {
-  default: [
-    { href: '/dashboard/settings', label: 'Settings', icon: Settings },
-    { href: '/dashboard/help', label: 'Help & Support', icon: HelpCircle },
+  tenant: [
+    { href: '/tenant/settings', label: 'Settings', icon: Settings },
+    { href: '/faq', label: 'Help & Support', icon: HelpCircle },
+  ],
+  agent: [
+    { href: '/agent/settings', label: 'Settings', icon: Settings },
+    { href: '/faq', label: 'Help & Support', icon: HelpCircle },
+  ],
+  landlord: [
+    { href: '/landlord/settings', label: 'Settings', icon: Settings },
+    { href: '/faq', label: 'Help & Support', icon: HelpCircle },
   ],
   admin: [
-    { href: '/settings', label: 'Settings', icon: Settings },
+    { href: '/admin/settings', label: 'Settings', icon: Settings },
   ],
 }
 
@@ -88,7 +97,7 @@ export function Sidebar({ persona = 'tenant' }: SidebarProps) {
   const [collapsed, setCollapsed] = useState(false)
 
   const primaryNav = navItems[persona] || navItems.tenant
-  const secondaryNav = secondaryItems[persona] || secondaryItems.default
+  const secondaryNav = secondaryItems[persona] || secondaryItems.tenant
 
   return (
     <TooltipProvider delayDuration={0}>
