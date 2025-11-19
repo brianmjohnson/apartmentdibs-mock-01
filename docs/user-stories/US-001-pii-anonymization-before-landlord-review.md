@@ -593,6 +593,298 @@ Before Selection:          After Selection:
              opacity 0→1, filter blur(8px)→blur(0)
 ```
 
+### Framer Motion Micro-Animations
+
+**Component Library Update:**
+
+- Add `framer-motion` as the animation library
+- Wrap React components with `motion.*` components
+- Reference: https://www.framer.com/motion/
+- Installation: `pnpm add framer-motion`
+
+**Animation Specifications:**
+
+1. **PII Reveal Transition** (`components/tenant-profile/RevealedProfile.tsx`)
+
+   - Replace: `<div>` wrapper with `<motion.div>`
+   - Animation: Blur and fade transition
+   - Properties:
+     ```typescript
+     initial={{ opacity: 0, filter: 'blur(8px)' }}
+     animate={{ opacity: 1, filter: 'blur(0px)' }}
+     transition={{ duration: 0.6, ease: 'easeOut' }}
+     ```
+   - Trigger: When `piiRevealed` state changes to `true`
+   - Additional effect: Stagger child elements for progressive reveal
+     ```typescript
+     <motion.div variants={containerVariants} initial="hidden" animate="visible">
+       <motion.div variants={itemVariants}>{name}</motion.div>
+       <motion.div variants={itemVariants}>{email}</motion.div>
+       <motion.div variants={itemVariants}>{phone}</motion.div>
+     </motion.div>
+     ```
+   - Variant definitions:
+     ```typescript
+     const containerVariants = {
+       hidden: { opacity: 0 },
+       visible: {
+         opacity: 1,
+         transition: {
+           staggerChildren: 0.1,
+         },
+       },
+     }
+     const itemVariants = {
+       hidden: { opacity: 0, filter: 'blur(8px)', y: 10 },
+       visible: { opacity: 1, filter: 'blur(0px)', y: 0 },
+     }
+     ```
+
+2. **Anonymized Badge** (`components/application/ApplicationCard.tsx`)
+
+   - Replace: `<Badge>` wrapper with `<motion.div>`
+   - Animation: Scale in with spring bounce
+   - Properties:
+     ```typescript
+     initial={{ scale: 0.8, opacity: 0 }}
+     animate={{ scale: 1, opacity: 1 }}
+     transition={{ type: 'spring', stiffness: 200, damping: 15, delay: 0.2 }}
+     ```
+   - Trigger: On component mount
+   - Icon animation: Add pulse effect to lock icon
+     ```typescript
+     <motion.span
+       animate={{ scale: [1, 1.1, 1] }}
+       transition={{ duration: 2, repeat: Infinity, repeatDelay: 3 }}
+     >
+       🔒
+     </motion.span>
+     ```
+
+3. **Applicant Card Hover States** (`components/application/ApplicationCard.tsx`)
+
+   - Replace: Card container `<div>` with `<motion.div>`
+   - Animation: Lift and shadow on hover
+   - Properties:
+     ```typescript
+     whileHover={{ y: -4, scale: 1.01 }}
+     transition={{ type: 'spring', stiffness: 300, damping: 20 }}
+     ```
+   - Additional: Shimmer effect on card border
+     ```typescript
+     <motion.div
+       className="border rounded-lg"
+       whileHover={{
+         boxShadow: '0 8px 16px rgba(0,0,0,0.1)',
+       }}
+     />
+     ```
+   - Tap feedback for mobile:
+     ```typescript
+     whileTap={{ scale: 0.98 }}
+     ```
+
+4. **Selection Confirmation Dialog** (`components/application/SelectApplicantDialog.tsx`)
+
+   - Replace: Dialog content wrapper with `<motion.div>`
+   - Animation: Scale up from center with backdrop fade
+   - Properties:
+     ```typescript
+     // Dialog content
+     initial={{ scale: 0.9, opacity: 0, y: 20 }}
+     animate={{ scale: 1, opacity: 1, y: 0 }}
+     exit={{ scale: 0.95, opacity: 0, y: 10 }}
+     transition={{ type: 'spring', stiffness: 300, damping: 25 }}
+     ```
+   - Backdrop animation:
+     ```typescript
+     // Dialog overlay
+     initial={{ opacity: 0 }}
+     animate={{ opacity: 1 }}
+     exit={{ opacity: 0 }}
+     transition={{ duration: 0.2 }}
+     ```
+   - Button states within dialog:
+     ```typescript
+     <motion.button whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }} />
+     ```
+
+5. **Success Notification Banner** (`components/application/PiiRevealNotice.tsx`)
+
+   - Replace: Banner container with `<motion.div>`
+   - Animation: Slide in from top with bounce
+   - Properties:
+     ```typescript
+     initial={{ y: -100, opacity: 0 }}
+     animate={{ y: 0, opacity: 1 }}
+     exit={{ y: -100, opacity: 0 }}
+     transition={{ type: 'spring', stiffness: 200, damping: 20 }}
+     ```
+   - Auto-dismiss animation:
+     ```typescript
+     // After 5 seconds
+     animate={{ y: 0, opacity: 1 }}
+     exit={{ opacity: 0, x: 300 }}
+     transition={{ duration: 0.3, ease: 'easeIn' }}
+     ```
+   - Success icon animation:
+     ```typescript
+     <motion.div
+       initial={{ scale: 0, rotate: -180 }}
+       animate={{ scale: 1, rotate: 0 }}
+       transition={{ type: 'spring', stiffness: 300, damping: 15, delay: 0.2 }}
+     >
+       ✓
+     </motion.div>
+     ```
+
+6. **Profile Card Loading Skeleton → Content Transition** (`components/tenant-profile/ObfuscatedProfile.tsx`)
+
+   - Replace: Profile container with `<AnimatePresence>` wrapper
+   - Animation: Crossfade between skeleton and content
+   - Properties:
+     ```typescript
+     // Skeleton
+     <motion.div
+       key="skeleton"
+       initial={{ opacity: 1 }}
+       exit={{ opacity: 0 }}
+       transition={{ duration: 0.3 }}
+     >
+       {/* Skeleton content */}
+     </motion.div>
+
+     // Actual content
+     <motion.div
+       key="content"
+       initial={{ opacity: 0 }}
+       animate={{ opacity: 1 }}
+       transition={{ duration: 0.4, delay: 0.1 }}
+     >
+       {/* Profile data */}
+     </motion.div>
+     ```
+   - Skeleton shimmer effect:
+     ```typescript
+     <motion.div
+       className="skeleton-item"
+       animate={{
+         backgroundPosition: ['200% 0', '-200% 0'],
+       }}
+       transition={{
+         duration: 1.5,
+         repeat: Infinity,
+         ease: 'linear',
+       }}
+       style={{
+         background:
+           'linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%)',
+         backgroundSize: '200% 100%',
+       }}
+     />
+     ```
+
+7. **Credit Band Color Transitions** (`components/tenant-profile/CreditBand.tsx`)
+
+   - Replace: Credit band display `<div>` with `<motion.div>`
+   - Animation: Color morph and scale pulse on mount
+   - Properties:
+     ```typescript
+     initial={{ scale: 0.9, opacity: 0 }}
+     animate={{ scale: 1, opacity: 1 }}
+     transition={{ type: 'spring', stiffness: 200, damping: 15 }}
+     ```
+   - Color-specific glow effect:
+     ```typescript
+     <motion.div
+       animate={{
+         boxShadow: [
+           '0 0 0 rgba(34, 197, 94, 0)',
+           '0 0 12px rgba(34, 197, 94, 0.3)', // Green glow for excellent
+           '0 0 0 rgba(34, 197, 94, 0)',
+         ],
+       }}
+       transition={{
+         duration: 2,
+         repeat: Infinity,
+         repeatDelay: 3,
+       }}
+     />
+     ```
+   - Score range text reveal:
+     ```typescript
+     <motion.span
+       initial={{ opacity: 0, x: -10 }}
+       animate={{ opacity: 1, x: 0 }}
+       transition={{ delay: 0.3, duration: 0.4 }}
+     >
+       740-760
+     </motion.span>
+     ```
+
+**Shared Animation Variants** (create in `lib/animations/variants.ts`):
+
+```typescript
+export const fadeIn = {
+  initial: { opacity: 0 },
+  animate: { opacity: 1 },
+  exit: { opacity: 0 },
+}
+
+export const slideUpFadeIn = {
+  initial: { opacity: 0, y: 20 },
+  animate: { opacity: 1, y: 0 },
+  exit: { opacity: 0, y: -20 },
+}
+
+export const scaleIn = {
+  initial: { scale: 0.9, opacity: 0 },
+  animate: { scale: 1, opacity: 1 },
+  exit: { scale: 0.9, opacity: 0 },
+}
+
+export const blurFadeIn = {
+  initial: { opacity: 0, filter: 'blur(8px)' },
+  animate: { opacity: 1, filter: 'blur(0px)' },
+  exit: { opacity: 0, filter: 'blur(8px)' },
+}
+```
+
+**Animation Performance Guidelines:**
+
+- Use `layout` prop for automatic layout animations when elements resize
+- Enable hardware acceleration with `will-change` CSS property
+- Prefer `transform` and `opacity` animations over layout-affecting properties
+- Use `AnimatePresence` for exit animations
+- Add `layoutId` for shared element transitions between routes
+- Reduce motion for users with `prefers-reduced-motion` setting:
+  ```typescript
+  const shouldReduceMotion = useReducedMotion()
+  const transition = shouldReduceMotion ? { duration: 0 } : { duration: 0.6 }
+  ```
+
+**Accessibility Considerations:**
+
+- All animations respect `prefers-reduced-motion: reduce`
+- Animations do not interfere with screen readers
+- Focusable elements maintain keyboard navigation during animations
+- Color transitions maintain WCAG contrast ratios
+- Success/error states use both animation AND color/icon changes
+
+**Implementation Checklist:**
+
+- [ ] Install `framer-motion` package
+- [ ] Create shared variants file at `lib/animations/variants.ts`
+- [ ] Update `RevealedProfile.tsx` with PII reveal animation
+- [ ] Update `ApplicationCard.tsx` with badge and hover animations
+- [ ] Update `SelectApplicantDialog.tsx` with dialog entrance/exit
+- [ ] Create `PiiRevealNotice.tsx` with success banner animation
+- [ ] Update `ObfuscatedProfile.tsx` with skeleton transition
+- [ ] Create `CreditBand.tsx` with color band animations
+- [ ] Add `useReducedMotion` hook for accessibility
+- [ ] Test all animations on mobile devices
+- [ ] Verify performance (60fps target)
+
 ### Mock Data Updates Needed
 
 Add `status: 'selected'` state handling and PII reveal fields to:

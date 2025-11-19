@@ -1,11 +1,17 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
+import { motion, AnimatePresence } from 'framer-motion'
 import { CheckCircle, Mail, ArrowRight, X, Clock, FileText, Phone } from 'lucide-react'
 import { Card, CardContent } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { formatDate } from '@/lib/mock-data/landlord'
+import { useReducedMotion } from '@/lib/hooks/use-reduced-motion'
+import { slideFromTop, slideToRight, bouncySpring, quickEaseIn } from '@/lib/animations/variants'
 
+/**
+ * @story US-001 - PII Anonymization Before Landlord Review
+ */
 interface PiiRevealNoticeProps {
   applicantName: string
   applicantId: string
@@ -14,6 +20,8 @@ interface PiiRevealNoticeProps {
   onContactApplicant?: () => void
   onCreateLease?: () => void
   className?: string
+  autoDismiss?: boolean
+  autoDismissDelay?: number
 }
 
 export function PiiRevealNotice({
@@ -24,30 +32,60 @@ export function PiiRevealNotice({
   onContactApplicant,
   onCreateLease,
   className = '',
+  autoDismiss = false,
+  autoDismissDelay = 5000,
 }: PiiRevealNoticeProps) {
   const [isDismissed, setIsDismissed] = useState(false)
+  const shouldReduceMotion = useReducedMotion()
 
-  if (isDismissed) return null
+  useEffect(() => {
+    if (autoDismiss) {
+      const timer = setTimeout(() => {
+        handleDismiss()
+      }, autoDismissDelay)
+      return () => clearTimeout(timer)
+    }
+  }, [autoDismiss, autoDismissDelay])
 
   const handleDismiss = () => {
     setIsDismissed(true)
-    onDismiss?.()
+    if (onDismiss) {
+      setTimeout(() => onDismiss(), shouldReduceMotion ? 0 : 300)
+    }
   }
 
   return (
-    <Card
-      className={`border-2 border-green-300 bg-green-50 dark:bg-green-900/20 ${className}`}
-      role="alert"
-      aria-label="PII Revealed notification"
-    >
-      <CardContent className="py-4">
-        <div className="flex items-start gap-4">
-          {/* Success Icon */}
-          <div className="shrink-0">
-            <div className="flex h-10 w-10 items-center justify-center rounded-full bg-green-100 dark:bg-green-800">
-              <CheckCircle className="h-6 w-6 text-green-600 dark:text-green-400" />
-            </div>
-          </div>
+    <AnimatePresence mode="wait">
+      {!isDismissed && (
+        <motion.div
+          initial={{ y: -100, opacity: 0 }}
+          animate={{ y: 0, opacity: 1 }}
+          exit={autoDismiss ? { opacity: 0, x: 300 } : { y: -100, opacity: 0 }}
+          transition={
+            shouldReduceMotion ? { duration: 0 } : { type: 'spring', stiffness: 200, damping: 20 }
+          }
+          className={className}
+        >
+          <Card
+            className="border-2 border-green-300 bg-green-50 dark:bg-green-900/20"
+            role="alert"
+            aria-label="PII Revealed notification"
+          >
+            <CardContent className="py-4">
+              <div className="flex items-start gap-4">
+                {/* Success Icon */}
+                <motion.div
+                  className="shrink-0"
+                  initial={shouldReduceMotion ? {} : { scale: 0, rotate: -180 }}
+                  animate={shouldReduceMotion ? {} : { scale: 1, rotate: 0 }}
+                  transition={
+                    shouldReduceMotion ? { duration: 0 } : { ...bouncySpring, delay: 0.2 }
+                  }
+                >
+                  <div className="flex h-10 w-10 items-center justify-center rounded-full bg-green-100 dark:bg-green-800">
+                    <CheckCircle className="h-6 w-6 text-green-600 dark:text-green-400" />
+                  </div>
+                </motion.div>
 
           {/* Content */}
           <div className="min-w-0 flex-1">
@@ -94,21 +132,24 @@ export function PiiRevealNotice({
             </div>
           </div>
 
-          {/* Dismiss Button */}
-          {onDismiss && (
-            <Button
-              variant="ghost"
-              size="icon"
-              className="h-6 w-6 shrink-0 text-green-600 hover:bg-green-100 hover:text-green-800"
-              onClick={handleDismiss}
-              aria-label="Dismiss notification"
-            >
-              <X className="h-4 w-4" />
-            </Button>
-          )}
-        </div>
-      </CardContent>
-    </Card>
+                {/* Dismiss Button */}
+                {onDismiss && (
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    className="h-6 w-6 shrink-0 text-green-600 hover:bg-green-100 hover:text-green-800"
+                    onClick={handleDismiss}
+                    aria-label="Dismiss notification"
+                  >
+                    <X className="h-4 w-4" />
+                  </Button>
+                )}
+              </div>
+            </CardContent>
+          </Card>
+        </motion.div>
+      )}
+    </AnimatePresence>
   )
 }
 

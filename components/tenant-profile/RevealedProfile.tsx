@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react'
 import Image from 'next/image'
+import { motion } from 'framer-motion'
 import {
   User,
   Mail,
@@ -24,7 +25,12 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { LandlordApplicant, formatDate } from '@/lib/mock-data/landlord'
 import { CreditBand } from './CreditBand'
 import { EmploymentTenure } from './EmploymentTenure'
+import { useReducedMotion } from '@/lib/hooks/use-reduced-motion'
+import { staggerContainer, staggerItem, smoothTransition } from '@/lib/animations/variants'
 
+/**
+ * @story US-001 - PII Anonymization Before Landlord Review
+ */
 interface RevealedProfileProps {
   applicant: LandlordApplicant
   showAnimation?: boolean
@@ -37,14 +43,15 @@ export function RevealedProfile({
   className = '',
 }: RevealedProfileProps) {
   const [isRevealed, setIsRevealed] = useState(!showAnimation)
+  const shouldReduceMotion = useReducedMotion()
 
   useEffect(() => {
     if (showAnimation) {
       // Trigger reveal animation after mount
-      const timer = setTimeout(() => setIsRevealed(true), 100)
+      const timer = setTimeout(() => setIsRevealed(true), shouldReduceMotion ? 0 : 100)
       return () => clearTimeout(timer)
     }
-  }, [showAnimation])
+  }, [showAnimation, shouldReduceMotion])
 
   if (!applicant.revealedData) {
     return (
@@ -63,52 +70,67 @@ export function RevealedProfile({
     .join('')
     .toUpperCase()
 
+  const transition = shouldReduceMotion ? { duration: 0 } : smoothTransition
+
   return (
-    <Card
-      className={`border-foreground border-2 transition-all duration-500 ${
-        isRevealed ? 'blur-0 opacity-100' : 'opacity-0 blur-sm'
-      } ${className}`}
+    <motion.div
+      variants={staggerContainer}
+      initial="hidden"
+      animate={isRevealed ? 'visible' : 'hidden'}
+      transition={transition}
+      className={className}
     >
-      <CardHeader>
-        <div className="flex items-start gap-4">
-          {/* Profile Photo */}
-          <Avatar className="border-foreground h-20 w-20 border-2">
-            <AvatarImage src={revealedData.photoUrl} alt={`Photo of ${revealedData.name}`} />
-            <AvatarFallback className="text-lg font-bold">{initials}</AvatarFallback>
-          </Avatar>
+      <Card className="border-foreground border-2">
+        <CardHeader>
+          <div className="flex items-start gap-4">
+            {/* Profile Photo */}
+            <motion.div variants={staggerItem} transition={transition}>
+              <Avatar className="border-foreground h-20 w-20 border-2">
+                <AvatarImage src={revealedData.photoUrl} alt={`Photo of ${revealedData.name}`} />
+                <AvatarFallback className="text-lg font-bold">{initials}</AvatarFallback>
+              </Avatar>
+            </motion.div>
 
-          {/* Name and Contact */}
-          <div className="flex-1">
-            <CardTitle className="flex items-center gap-2 text-2xl">
-              {revealedData.name}
-              <Badge variant="outline" className="border-green-300 bg-green-100 text-green-800">
-                Selected
-              </Badge>
-            </CardTitle>
-            <CardDescription className="mt-1">{applicant.displayId} - PII Revealed</CardDescription>
+            {/* Name and Contact */}
+            <div className="flex-1">
+              <motion.div variants={staggerItem} transition={transition}>
+                <CardTitle className="flex items-center gap-2 text-2xl">
+                  {revealedData.name}
+                  <Badge variant="outline" className="border-green-300 bg-green-100 text-green-800">
+                    Selected
+                  </Badge>
+                </CardTitle>
+                <CardDescription className="mt-1">
+                  {applicant.displayId} - PII Revealed
+                </CardDescription>
+              </motion.div>
 
-            {/* Contact Info */}
-            <div className="mt-3 space-y-1">
-              <div className="flex items-center gap-2 text-sm">
-                <Mail className="text-muted-foreground h-4 w-4" />
-                <a href={`mailto:${revealedData.email}`} className="hover:underline">
-                  {revealedData.email}
-                </a>
-              </div>
-              <div className="flex items-center gap-2 text-sm">
-                <Phone className="text-muted-foreground h-4 w-4" />
-                <a href={`tel:${revealedData.phone}`} className="hover:underline">
-                  {revealedData.phone}
-                </a>
-              </div>
+              {/* Contact Info */}
+              <motion.div variants={staggerItem} transition={transition} className="mt-3 space-y-1">
+                <div className="flex items-center gap-2 text-sm">
+                  <Mail className="text-muted-foreground h-4 w-4" />
+                  <a href={`mailto:${revealedData.email}`} className="hover:underline">
+                    {revealedData.email}
+                  </a>
+                </div>
+                <div className="flex items-center gap-2 text-sm">
+                  <Phone className="text-muted-foreground h-4 w-4" />
+                  <a href={`tel:${revealedData.phone}`} className="hover:underline">
+                    {revealedData.phone}
+                  </a>
+                </div>
+              </motion.div>
             </div>
           </div>
-        </div>
-      </CardHeader>
+        </CardHeader>
 
       <CardContent className="space-y-6">
         {/* Address and Employer */}
-        <div className="grid gap-4 md:grid-cols-2">
+        <motion.div
+          variants={staggerItem}
+          transition={transition}
+          className="grid gap-4 md:grid-cols-2"
+        >
           <div className="bg-muted rounded-md p-3">
             <div className="mb-1 flex items-center gap-2">
               <MapPin className="text-muted-foreground h-4 w-4" />
@@ -124,12 +146,12 @@ export function RevealedProfile({
             </div>
             <p className="text-sm font-medium">{revealedData.employer}</p>
           </div>
-        </div>
+        </motion.div>
 
         <Separator />
 
         {/* Financial Details */}
-        <div>
+        <motion.div variants={staggerItem} transition={transition}>
           <h4 className="mb-3 flex items-center gap-2 font-semibold">
             <CreditCard className="h-4 w-4" />
             Financial Details
@@ -168,7 +190,7 @@ export function RevealedProfile({
               />
             </div>
           </div>
-        </div>
+        </motion.div>
 
         <Separator />
 
@@ -252,11 +274,16 @@ export function RevealedProfile({
 
         {/* Reveal Timestamp */}
         {applicant.piiRevealedAt && (
-          <p className="text-muted-foreground text-center text-xs">
+          <motion.p
+            variants={staggerItem}
+            transition={transition}
+            className="text-muted-foreground text-center text-xs"
+          >
             PII revealed on {formatDate(applicant.piiRevealedAt)}
-          </p>
+          </motion.p>
         )}
       </CardContent>
     </Card>
+    </motion.div>
   )
 }

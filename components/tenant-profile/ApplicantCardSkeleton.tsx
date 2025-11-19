@@ -1,10 +1,38 @@
 'use client'
 
+import { motion } from 'framer-motion'
 import { Skeleton } from '@/components/ui/skeleton'
+import { useReducedMotion } from '@/lib/hooks/use-reduced-motion'
 
+/**
+ * @story US-001 - PII Anonymization Before Landlord Review
+ */
 export function ApplicantCardSkeleton() {
+  const shouldReduceMotion = useReducedMotion()
+
+  const shimmerVariants = shouldReduceMotion
+    ? {}
+    : {
+        animate: {
+          backgroundPosition: ['200% 0', '-200% 0'],
+        },
+        transition: {
+          duration: 1.5,
+          repeat: Infinity,
+          ease: 'linear',
+        },
+      }
+
+  const SkeletonWrapper = shouldReduceMotion ? 'div' : motion.div
+
   return (
-    <div className="border-border border-2 p-4">
+    <motion.div
+      className="border-border border-2 p-4"
+      initial={shouldReduceMotion ? {} : { opacity: 0 }}
+      animate={shouldReduceMotion ? {} : { opacity: 1 }}
+      exit={shouldReduceMotion ? {} : { opacity: 0 }}
+      transition={shouldReduceMotion ? {} : { duration: 0.3 }}
+    >
       <div className="space-y-4">
         {/* Header with avatar */}
         <div className="flex items-start gap-4">
@@ -43,7 +71,7 @@ export function ApplicantCardSkeleton() {
           <Skeleton className="h-10 w-10" />
         </div>
       </div>
-    </div>
+    </motion.div>
   )
 }
 
