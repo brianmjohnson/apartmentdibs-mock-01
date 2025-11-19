@@ -34,6 +34,57 @@ Build type-safe, accessible, performant UIs using generated TanStack Query hooks
 
 ---
 
+## ⚠️ CRITICAL: Generated Hooks - DO NOT CREATE CUSTOM HOOKS
+
+**ZenStack generates ALL TanStack Query hooks automatically. You almost NEVER need to create custom hooks!**
+
+### Before Creating ANY Custom Hook, STOP and Check:
+
+**1. Search for existing generated hooks**:
+```bash
+rg "ModelName" lib/hooks/generated/tanstack-query/
+```
+
+**2. If hooks don't exist, regenerate**:
+```bash
+pnpm zenstack generate && pnpm prisma generate
+```
+
+This command MUST be run after ANY modification to zmodel files. The initial project setup handles this automatically, but after any zmodel changes the backend developer must run it.
+
+**3. Verify hooks are available**:
+```bash
+ls lib/hooks/generated/tanstack-query/
+```
+
+### Anti-Pattern: "I can't find the hook"
+
+❌ **WRONG thinking**: "I don't see useFindManyProperty, I'll create a custom hook"
+✅ **CORRECT approach**:
+1. Run `rg "Property" lib/hooks/generated/`
+2. If not found, ask backend developer to run `pnpm zenstack generate && pnpm prisma generate`
+3. Check again - the hooks WILL exist
+
+**The generated hooks include**:
+- `useFindMany[Model]` - List records
+- `useFindUnique[Model]` - Single record
+- `useCreate[Model]` - Create record
+- `useUpdate[Model]` - Update record
+- `useDelete[Model]` - Delete record
+- `useInfiniteFindMany[Model]` - Paginated/infinite scroll
+- `useSuspenseFindMany[Model]` - React Suspense compatible
+
+### The ONLY Valid Reasons for Custom Hooks
+
+Custom hooks are justified ONLY for:
+1. **Combining multiple queries** - Aggregating data from multiple models
+2. **Complex transformations** - Heavy data processing not suitable for components
+3. **Shared UI logic** - Reusable stateful logic (not data fetching)
+
+**If you're creating a hook for basic CRUD operations, you are making a mistake. Use the generated hooks!**
+
+---
+
 ## Coding Standards
 
 ### HTML Entity Characters in JSX
