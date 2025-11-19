@@ -852,9 +852,20 @@ function PropertyForm() {
 - **Always include `FormMessage`** for validation errors
 - **Set `defaultValues`** in useForm to avoid uncontrolled input warnings
 - **Use `z.infer<typeof schema>`** for type-safe form data
-- **Disable submit button** while `isPending` to prevent double submission
+- **Disable submit button** while `isPending` to prevent double submission, with animated `LoaderCircle` icon (https://lucide.dev/icons/loader-circle) visible only while processing
 - **Reset form** on successful submission when appropriate
 - **Handle errors** with toast notifications or inline messages
+
+**Example - Submit button with loading state**:
+
+```typescript
+import { LoaderCircle } from 'lucide-react'
+
+<Button type="submit" disabled={isPending}>
+  {isPending && <LoaderCircle className="mr-2 h-4 w-4 animate-spin" />}
+  {isPending ? 'Creating...' : 'Create Property'}
+</Button>
+```
 
 ---
 
