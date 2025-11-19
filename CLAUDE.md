@@ -211,10 +211,17 @@ Before implementing any feature:
 **Validation**: Run `./scripts/diagnose-web-environment.sh`
 **Bootstrap**: See `docs/GETTING_STARTED.md`
 
+**Required Environment Variables** (for local testing via web automation):
+- `NEON_DATABASE_URL` - Postgres connection URL (pooled)
+- `NEON_DATABASE_URL_UNPOOLED` - Postgres direct connection URL
+- `UPSTASH_KV_URL` - Redis/KV store URL
+- `VERCEL_BLOB_READ_WRITE_TOKEN` - Vercel Blob storage token
+
 **Cloud Environment** (Claude Code on the web):
 - **SessionStart Hook**: `.claude/settings.json` - Auto-installs CLI tools in cloud sessions
-- **CLI Tools Installed**: GitHub CLI (gh), Vercel CLI, Neon CLI, PostHog CLI
+- **CLI Tools Installed**: GitHub CLI (gh), Vercel CLI, Neon CLI, PostHog CLI, Upstash CLI
 - **Script**: `scripts/install-cli-tools.sh` (only runs in `CLAUDE_CODE_REMOTE=true`)
+- **Env Pull**: Automatically runs `vercel env pull --environment=preview` to setup environment variables
 
 ## Testing Requirements
 
