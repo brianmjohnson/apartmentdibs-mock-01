@@ -1,0 +1,367 @@
+/**
+ * Concierge Service Models
+ * US-018: Concierge Service for Technology-Averse Landlords
+ *
+ * Key features:
+ * - Dedicated phone support with assigned account manager
+ * - Admin proxy actions on landlord's behalf
+ * - Document scanning service for mail-in documents
+ * - Proactive check-in scheduling
+ * - Call history tracking
+ */
+
+import "base.zmodel"
+import "auth.zmodel"
+import "listing.zmodel"
+
+/**
+ * Concierge Tier Enum
+ */
+enum ConciergeTier {
+  STANDARD           // Basic support
+  PREMIUM            // Dedicated manager, priority support
+  ENTERPRISE         // Custom SLA, dedicated team
+}
+
+/**
+ * Call Topic Enum
+ */
+enum ConciergeCallTopic {
+  ONBOARDING         // Initial setup assistance
+  LISTING_CREATION   // Help creating listing
+  APPLICANT_REVIEW   // Walking through applicants
+  DOCUMENT_HELP      // Document upload assistance
+  TECHNICAL_SUPPORT  // Technical issues
+  LEASE_SIGNING      // Lease generation/signing
+  BILLING            // Payment/subscription
+  GENERAL            // General questions
+}
+
+/**
+ * Proxy Action Type Enum
+ */
+enum ProxyActionType {
+  CREATE_LISTING     // Created listing on behalf
+  UPDATE_LISTING     // Updated listing
+  UPLOAD_DOCUMENT    // Uploaded document
+  SET_CRITERIA       // Set screening criteria
+  SELECT_APPLICANT   // Selected applicant
+  REJECT_APPLICANT   // Rejected applicant
+  SEND_MESSAGE       // Sent message
+  GENERATE_LEASE     // Generated lease
+}
+
+/**
+ * Concierge Subscription Model
+ * Landlord's concierge service subscription
+ */
+model ConciergeSubscription extends BaseModel {
+  // Foreign key to landlord
+  landlordId            String @unique
+  landlord              User @relation(name: "concierge_subscription", fields: [landlordId], references: [id], onDelete: Cascade)
+
+  // Subscription details
+  tier                  ConciergeTier @default(STANDARD)
+  isActive              Boolean @default(true)
+
+  // Billing
+  monthlyFee            Decimal?   // $499/year = $41.58/month
+  perListingFee         Decimal?   // $99/listing
+
+  // Start/end dates
+  startDate             DateTime
+  endDate               DateTime?
+
+  // Assigned account manager
+  accountManagerId      String?
+  accountManager        ConciergeAgent? @relation(name: "managed_subscriptions", fields: [accountManagerId], references: [id])
+
+  // Contact preferences
+  preferredContactPhone String?    // PII - personal information
+  preferredCallTimes    String?    // e.g., "9am-5pm EST"
+  timezone              String?
+
+  // Relations
+  calls                 ConciergeCall[]
+  proxyActions          ConciergeProxyAction[]
+  scannedDocuments      ScannedDocument[]
+  proactiveCheckins     ProactiveCheckin[]  @relation(name: "proactive_checkins")
+
+  @@index([landlordId])
+  @@index([accountManagerId])
+  @@index([isActive])
+
+  // Access control
+  // Landlord can create their subscription
+  @@allow('create', auth().id == landlordId)
+
+  // Landlord can read their subscription
+  @@allow('read', auth() == landlord)
+
+  // Account manager can read
+  @@allow('read', accountManager != null && auth().role == 'admin')
+
+  // Admin can read all
+  @@allow('read', auth().role == 'admin')
+
+  // Landlord can update preferences
+  @@allow('update', auth() == landlord)
+
+  // Admin can update (assign manager, update tier)
+  @@allow('update', auth().role == 'admin')
+
+  // Admin can delete
+  @@allow('delete', auth().role == 'admin')
+}
+
+/**
+ * Concierge Agent Model
+ * Support representative/account manager
+ */
+model ConciergeAgent extends BaseModel {
+  // Agent user account
+  userId                String @unique
+  user                  User @relation(name: "concierge_agent_profile", fields: [userId], references: [id], onDelete: Cascade)
+
+  // Agent details
+  displayName           String
+  phoneExtension        String?
+  maxAccounts           Int @default(50)  // Max concurrent managed accounts
+
+  // Availability
+  isAvailable           Boolean @default(true)
+  availableHours        String?    // e.g., "9am-5pm EST"
+
+  // Specializations
+  specializations       String[]   // e.g., ["NYC", "commercial", "spanish"]
+
+  // Performance tracking
+  totalCalls            Int @default(0)
+  averageRating         Float?
+
+  // Relations
+  managedSubscriptions  ConciergeSubscription[] @relation(name: "managed_subscriptions")
+  calls                 ConciergeCall[]
+  proxyActions          ConciergeProxyAction[]
+
+  @@index([userId])
+  @@index([isAvailable])
+
+  // Access control - Admin only
+  @@allow('all', auth().role == 'admin')
+}
+
+/**
+ * Concierge Call Model
+ * Tracks support calls with landlords
+ */
+model ConciergeCall extends BaseModel {
+  // Subscription link
+  subscriptionId        String
+  subscription          ConciergeSubscription @relation(fields: [subscriptionId], references: [id], onDelete: Cascade)
+
+  // Agent who handled call
+  agentId               String?
+  agent                 ConciergeAgent? @relation(fields: [agentId], references: [id])
+
+  // Call details
+  topic                 ConciergeCallTopic
+  direction             String     // "inbound", "outbound"
+
+  // Timing
+  scheduledAt           DateTime?  // For outbound/scheduled calls
+  startedAt             DateTime?
+  endedAt               DateTime?
+  durationSeconds       Int?
+
+  // Notes and summary
+  summary               String?
+  internalNotes         String?
+
+  // Outcome
+  resolved              Boolean @default(false)
+  followUpRequired      Boolean @default(false)
+  followUpDate          DateTime?
+
+  // Rating
+  landlordRating        Int?       // 1-5 stars
+  landlordFeedback      String?
+
+  // Related actions taken
+  actionsPerformed      String[]   // List of ProxyActionType values
+
+  @@index([subscriptionId, createdAt])
+  @@index([agentId])
+  @@index([topic])
+
+  // Access control
+  // Admin/agents can create
+  @@allow('create', auth().role == 'admin')
+
+  // Landlord can read their calls
+  @@allow('read', auth() == subscription.landlord)
+
+  // Agent can read their calls
+  @@allow('read', agentId != null && auth().role == 'admin')
+
+  // Admin can read all
+  @@allow('read', auth().role == 'admin')
+
+  // Agent can update
+  @@allow('update', auth().role == 'admin')
+
+  // No deletes (audit trail)
+  @@deny('delete', true)
+}
+
+/**
+ * Concierge Proxy Action Model
+ * Actions performed by agents on landlord's behalf
+ */
+model ConciergeProxyAction extends BaseModel {
+  // Subscription link
+  subscriptionId        String
+  subscription          ConciergeSubscription @relation(fields: [subscriptionId], references: [id], onDelete: Cascade)
+
+  // Agent who performed action
+  agentId               String
+  agent                 ConciergeAgent @relation(fields: [agentId], references: [id])
+
+  // Action details
+  actionType            ProxyActionType
+  description           String
+
+  // Related entities
+  listingId             String?
+  applicationId         String?
+
+  // Audit details
+  actionData            ProxyActionData? @json
+
+  // Landlord confirmation
+  confirmedByLandlord   Boolean @default(false)
+  confirmedAt           DateTime?
+
+  @@index([subscriptionId, createdAt])
+  @@index([agentId])
+  @@index([actionType])
+
+  // Access control
+  // Agents can create
+  @@allow('create', auth().role == 'admin')
+
+  // Landlord can read actions on their account
+  @@allow('read', auth() == subscription.landlord)
+
+  // Admin can read all
+  @@allow('read', auth().role == 'admin')
+
+  // Landlord can confirm
+  @@allow('update', auth() == subscription.landlord)
+
+  // No deletes (audit trail)
+  @@deny('delete', true)
+}
+
+/**
+ * Proxy Action Data Type
+ * Audit details for proxy actions
+ */
+type ProxyActionData {
+  // Before/after for updates
+  beforeState           String?    // JSON string
+  afterState            String?    // JSON string
+
+  // Specific fields changed
+  fieldsModified        String[]
+
+  // Call reference
+  callId                String?
+
+  // Additional notes
+  agentNotes            String?
+}
+
+/**
+ * Scanned Document Model
+ * Documents mailed in and scanned by concierge team
+ */
+model ScannedDocument extends BaseModel {
+  // Subscription link
+  subscriptionId        String
+  subscription          ConciergeSubscription @relation(fields: [subscriptionId], references: [id], onDelete: Cascade)
+
+  // Target listing (if applicable)
+  listingId             String?
+  listing               Listing? @relation(name: "scanned_documents", fields: [listingId], references: [id])
+
+  // Document details
+  documentType          String     // e.g., "lease_addendum", "inspection_report"
+  originalFileName      String?
+  scannedUrl            String     // URL to scanned document
+
+  // Processing
+  receivedAt            DateTime   // When physical document received
+  scannedAt             DateTime?  // When digitized
+  processedById         String?    // Agent who processed
+
+  // Status
+  attachedToListing     Boolean @default(false)
+  attachedAt            DateTime?
+
+  // Notes
+  processingNotes       String?
+
+  @@index([subscriptionId])
+  @@index([listingId])
+
+  // Access control
+  // Admin can create
+  @@allow('create', auth().role == 'admin')
+
+  // Landlord can read their documents
+  @@allow('read', auth() == subscription.landlord)
+
+  // Admin can read all
+  @@allow('read', auth().role == 'admin')
+
+  // Admin can update
+  @@allow('update', auth().role == 'admin')
+
+  // No deletes
+  @@deny('delete', true)
+}
+
+/**
+ * Proactive Check-in Model
+ * Scheduled outreach triggers
+ */
+model ProactiveCheckin extends BaseModel {
+  // Subscription link
+  subscriptionId        String
+  subscription          ConciergeSubscription @relation(name: "proactive_checkins", fields: [subscriptionId], references: [id], onDelete: Cascade)
+
+  // Trigger type
+  triggerType           String     // "new_applicants", "deadline", "decision_needed", "lease_ready"
+  triggerEntityType     String?    // "listing", "application"
+  triggerEntityId       String?
+
+  // Scheduling
+  scheduledFor          DateTime
+  priority              Int @default(2) // 1=high, 2=medium, 3=low
+
+  // Status
+  completed             Boolean @default(false)
+  completedAt           DateTime?
+  callId                String?    // Link to resulting call
+
+  // Notes
+  context               String?    // Why this check-in was scheduled
+
+  @@index([subscriptionId])
+  @@index([scheduledFor])
+  @@index([completed])
+
+  // Access control - Admin only
+  @@allow('all', auth().role == 'admin')
+}

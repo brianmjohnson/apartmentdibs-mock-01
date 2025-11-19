@@ -17,6 +17,11 @@ import "adverse-action.zmodel"
 import "crm.zmodel"
 import "reminder.zmodel"
 import "messaging.zmodel"
+import "group-application.zmodel"
+import "onboarding.zmodel"
+import "prequalification.zmodel"
+import "notification.zmodel"
+import "lease.zmodel"
 
 /**
  * PII Data Type
@@ -189,6 +194,23 @@ model TenantProfile extends BaseModel {
 
   // Messaging relations (US-009)
   messageThreads       MessageThread[]
+
+  // Group application relations (US-011)
+  primaryGroupApplications GroupApplication[] @relation(name: "primary_group_applications")
+  groupMemberships     GroupMember[]       @relation(name: "group_memberships")
+
+  // Onboarding relations (US-012)
+  onboardingChecklist  OnboardingChecklist? @relation(name: "onboarding_checklist")
+
+  // Pre-qualification relations (US-013)
+  budgetPrequalification BudgetPrequalification? @relation(name: "budget_prequalification")
+
+  // Notification relations (US-014)
+  notificationPreferences TenantNotificationPreference? @relation(name: "notification_preferences")
+  notifications        Notification[]      @relation(name: "notifications")
+
+  // Lease relations (US-017)
+  leaseSignatures      LeaseSignature[]    @relation(name: "lease_signatures")
 
   @@index([userId])
   @@index([tier, validUntil])

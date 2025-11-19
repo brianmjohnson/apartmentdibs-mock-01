@@ -1,0 +1,278 @@
+/**
+ * Risk Score Models
+ * US-015: Data-Driven Risk Scores (Predict Default Probability)
+ *
+ * Key features:
+ * - ML-based default probability prediction
+ * - Multi-factor risk analysis
+ * - Transparent factor breakdown
+ * - Historical accuracy tracking
+ * - Comparative risk analysis
+ */
+
+import "base.zmodel"
+import "auth.zmodel"
+import "tenant.zmodel"
+import "listing.zmodel"
+
+/**
+ * Risk Level Enum
+ * Categorized risk levels
+ */
+enum RiskLevel {
+  VERY_LOW             // 0-2% default probability
+  LOW                  // 2-4% default probability
+  MODERATE             // 4-7% default probability
+  HIGH                 // 7-10% default probability
+  VERY_HIGH            // 10%+ default probability
+}
+
+/**
+ * Risk Factor Category Enum
+ */
+enum RiskFactorCategory {
+  CREDIT               // Credit score and history
+  INCOME               // Income stability and ratio
+  EMPLOYMENT           // Employment tenure and type
+  RENTAL_HISTORY       // Previous rental track record
+  REFERENCES           // Reference quality
+  BACKGROUND           // Background check results
+}
+
+/**
+ * Risk Factor Impact Enum
+ */
+enum RiskFactorImpact {
+  VERY_POSITIVE        // Significantly reduces risk
+  POSITIVE             // Reduces risk
+  NEUTRAL              // No significant impact
+  NEGATIVE             // Increases risk
+  VERY_NEGATIVE        // Significantly increases risk
+}
+
+/**
+ * Risk Score Model
+ * Main risk assessment for a tenant application
+ */
+model RiskScore extends BaseModel {
+  // Foreign key to application
+  applicationId         String @unique
+  application           Application @relation(name: "risk_score", fields: [applicationId], references: [id], onDelete: Cascade)
+
+  // Overall risk assessment
+  defaultProbability    Float      // e.g., 0.025 = 2.5%
+  riskLevel             RiskLevel
+
+  // Confidence
+  confidenceScore       Float      // 0-1, based on data completeness
+  confidenceInterval    String?    // e.g., "2.0% - 3.0%"
+
+  // Model information
+  modelVersion          String     // e.g., "v2.3"
+  calculatedAt          DateTime @default(now())
+
+  // Comparison metrics
+  percentileRank        Int?       // Compared to all applicants (1-100)
+  comparedToAverage     String?    // e.g., "1.5% below average"
+
+  // Factor breakdown (detailed)
+  factorBreakdown       RiskFactorBreakdown? @json
+
+  // Relations
+  factors               RiskFactor[]
+  outcome               RiskScoreOutcome?   @relation(name: "outcome")
+
+  @@index([applicationId])
+  @@index([riskLevel])
+  @@index([defaultProbability])
+
+  // Access control
+  // System creates risk scores
+  @@allow('create', auth().role == 'admin')
+
+  // Landlord can read for their listings
+  @@allow('read', auth() == application.listing.landlord)
+
+  // Admin can read all
+  @@allow('read', auth().role == 'admin')
+
+  // System can update
+  @@allow('update', auth().role == 'admin')
+
+  // No deletes (audit trail)
+  @@deny('delete', true)
+}
+
+/**
+ * Risk Factor Breakdown Type
+ * Detailed breakdown of how score was calculated
+ */
+type RiskFactorBreakdown {
+  // Category weights
+  creditWeight          Float      // e.g., 0.25
+  incomeWeight          Float
+  employmentWeight      Float
+  rentalHistoryWeight   Float
+  referencesWeight      Float
+  backgroundWeight      Float
+
+  // Category scores (0-100)
+  creditScore           Float
+  incomeScore           Float
+  employmentScore       Float
+  rentalHistoryScore    Float
+  referencesScore       Float
+  backgroundScore       Float
+
+  // Key positive factors
+  positiveFactors       String[]
+  // Key negative factors
+  negativeFactors       String[]
+}
+
+/**
+ * Risk Factor Model
+ * Individual factor contributing to risk score
+ */
+model RiskFactor extends BaseModel {
+  // Foreign key to risk score
+  riskScoreId           String
+  riskScore             RiskScore @relation(fields: [riskScoreId], references: [id], onDelete: Cascade)
+
+  // Factor details
+  category              RiskFactorCategory
+  name                  String     // e.g., "Employment Tenure"
+  description           String     // e.g., "5+ years at current employer"
+
+  // Impact
+  impact                RiskFactorImpact
+  contributionWeight    Float      // How much it contributes to overall score
+
+  // Values
+  rawValue              String?    // e.g., "5"
+  normalizedValue       Float?     // 0-100 normalized score
+  benchmarkComparison   String?    // e.g., "Above average"
+
+  @@index([riskScoreId])
+  @@index([category])
+  @@index([impact])
+
+  // Access control
+  // System creates factors
+  @@allow('create', auth().role == 'admin')
+
+  // Landlord can read factors
+  @@allow('read', auth() == riskScore.application.listing.landlord)
+
+  // Admin can read all
+  @@allow('read', auth().role == 'admin')
+
+  // No updates or deletes
+  @@deny('update', true)
+  @@deny('delete', true)
+}
+
+/**
+ * Risk Score Outcome Model
+ * Tracks actual outcomes for model training
+ */
+model RiskScoreOutcome extends BaseModel {
+  // Foreign key to risk score
+  riskScoreId           String @unique
+  riskScore             RiskScore @relation(name: "outcome", fields: [riskScoreId], references: [id], onDelete: Cascade)
+
+  // Outcome tracking (recorded after lease term)
+  leaseStartDate        DateTime?
+  leaseEndDate          DateTime?
+
+  // Payment performance
+  onTimePayments        Int @default(0)
+  latePayments          Int @default(0)
+  missedPayments        Int @default(0)
+
+  // Default occurred
+  defaulted             Boolean @default(false)
+  defaultDate           DateTime?
+  defaultReason         String?
+
+  // Eviction
+  evictionFiled         Boolean @default(false)
+  evictionDate          DateTime?
+
+  // Actual outcome
+  actualDefaultRate     Float?     // 0 or 1 for individual, or percentage for aggregate
+
+  // Model accuracy for this prediction
+  predictionAccurate    Boolean?
+
+  @@index([riskScoreId])
+  @@index([defaulted])
+
+  // Access control
+  // System creates outcomes
+  @@allow('create', auth().role == 'admin')
+
+  // Landlord can update outcomes for their tenants
+  @@allow('update', auth() == riskScore.application.listing.landlord)
+
+  // Admin can update
+  @@allow('update', auth().role == 'admin')
+
+  // Admin can read
+  @@allow('read', auth().role == 'admin')
+
+  // Landlord can read their outcomes
+  @@allow('read', auth() == riskScore.application.listing.landlord)
+}
+
+/**
+ * Risk Model Accuracy Model
+ * Aggregate accuracy tracking for risk model
+ */
+model RiskModelAccuracy extends BaseModel {
+  // Model version
+  modelVersion          String @unique
+
+  // Sample size
+  totalPredictions      Int @default(0)
+  predictionsWithOutcome Int @default(0)
+
+  // Accuracy metrics
+  overallAccuracy       Float?     // Percentage of correct predictions
+  rocAuc                Float?     // ROC-AUC score
+  precisionScore        Float?
+  recallScore           Float?
+  f1Score               Float?
+
+  // Calibration
+  predictedVsActual     RiskModelCalibration? @json
+
+  // Time period
+  periodStart           DateTime
+  periodEnd             DateTime
+
+  @@index([modelVersion])
+
+  // Access control
+  // Admin only
+  @@allow('all', auth().role == 'admin')
+}
+
+/**
+ * Risk Model Calibration Type
+ * How well predictions match actual outcomes
+ */
+type RiskModelCalibration {
+  // Buckets: predicted probability -> actual rate
+  bucket_0_2            CalibrationBucket?   // 0-2% predicted
+  bucket_2_4            CalibrationBucket?
+  bucket_4_7            CalibrationBucket?
+  bucket_7_10           CalibrationBucket?
+  bucket_10_plus        CalibrationBucket?
+}
+
+type CalibrationBucket {
+  predictedRate         Float
+  actualRate            Float
+  sampleSize            Int
+}

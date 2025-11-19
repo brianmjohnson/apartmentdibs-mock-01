@@ -1,0 +1,251 @@
+/**
+ * Budget Pre-Qualification Models
+ * US-013: Transparent Budget Pre-Qualification
+ *
+ * Key features:
+ * - Pre-qualification calculator without profile
+ * - Listing match indicators (green/yellow/red)
+ * - Hard vs soft criteria display
+ * - Qualification improvement tips
+ */
+
+import "base.zmodel"
+import "auth.zmodel"
+import "tenant.zmodel"
+import "listing.zmodel"
+
+/**
+ * Qualification Status Enum
+ * Visual indicator for listing match
+ */
+enum QualificationStatus {
+  QUALIFIED          // Green - meets all requirements
+  PARTIALLY_QUALIFIED // Yellow - meets most requirements
+  NOT_QUALIFIED      // Red - doesn't meet key requirements
+}
+
+/**
+ * Criteria Type Enum
+ * Distinguishes hard requirements from soft preferences
+ */
+enum CriteriaType {
+  HARD               // Must meet (deal-breaker)
+  SOFT               // Preferred but negotiable
+}
+
+/**
+ * Budget Pre-Qualification Model
+ * Stores user's pre-qualification assessment
+ */
+model BudgetPrequalification extends BaseModel {
+  // Optional link to tenant profile (can be anonymous)
+  tenantProfileId       String? @unique
+  tenantProfile         TenantProfile? @relation(name: "budget_prequalification", fields: [tenantProfileId], references: [id], onDelete: Cascade)
+
+  // Anonymous session ID for non-authenticated users
+  sessionId             String? @unique
+
+  // Income information
+  annualIncome          Int        // in cents
+  incomeType            String?    // W2, self-employed, etc.
+  incomeVerified        Boolean @default(false)
+
+  // Credit information
+  estimatedCreditBand   String?    // e.g., "700-749"
+  actualCreditScore     Int?       @omit // Only available if verified
+
+  // Background
+  hasEvictionHistory    Boolean @default(false)
+  evictionYearsAgo      Int?
+
+  // Calculated results
+  maxQualifiedRent      Int        // Maximum rent they qualify for (in cents)
+  incomeToRentMultiplier Float @default(3.0) // Standard is 3x, NYC is 40x annual
+
+  // Location context
+  city                  String?
+  state                 String?
+
+  // Timestamp
+  calculatedAt          DateTime @default(now())
+
+  // Relations
+  listingMatches        ListingQualificationMatch[]
+
+  @@index([tenantProfileId])
+  @@index([sessionId])
+  @@index([maxQualifiedRent])
+
+  // Access control
+  // Anyone can create a pre-qualification
+  @@allow('create', true)
+
+  // User can read their own pre-qualification
+  @@allow('read', tenantProfile != null && auth() == tenantProfile.user)
+
+  // Session owner can read (anonymous)
+  @@allow('read', sessionId != null)
+
+  // User can update their own pre-qualification
+  @@allow('update', tenantProfile != null && auth() == tenantProfile.user)
+
+  // User can delete their own pre-qualification
+  @@allow('delete', tenantProfile != null && auth() == tenantProfile.user)
+}
+
+/**
+ * Listing Qualification Match Model
+ * Stores qualification result for a specific listing
+ */
+model ListingQualificationMatch extends BaseModel {
+  // Pre-qualification link
+  prequalificationId    String
+  prequalification      BudgetPrequalification @relation(fields: [prequalificationId], references: [id], onDelete: Cascade)
+
+  // Listing link
+  listingId             String
+  listing               Listing @relation(name: "qualification_matches", fields: [listingId], references: [id], onDelete: Cascade)
+
+  // Overall status
+  status                QualificationStatus
+
+  // Detailed results
+  matchDetails          QualificationMatchDetails @json
+
+  // Improvement tips
+  improvementTips       QualificationTip[] @json
+
+  // Calculated at
+  calculatedAt          DateTime @default(now())
+
+  @@unique([prequalificationId, listingId])
+  @@index([listingId])
+  @@index([status])
+
+  // Access control
+  // System creates matches
+  @@allow('create', auth() != null)
+
+  // User can read matches for their pre-qualification
+  @@allow('read', auth() == prequalification.tenantProfile.user)
+
+  // Anonymous can read via session
+  @@allow('read', prequalification.sessionId != null)
+
+  // Admin can read all
+  @@allow('read', auth().role == 'admin')
+
+  // System can update
+  @@allow('update', auth().role == 'admin')
+
+  // User can delete their matches
+  @@allow('delete', auth() == prequalification.tenantProfile.user)
+}
+
+/**
+ * Qualification Match Details Type
+ * Breakdown of qualification criteria
+ */
+type QualificationMatchDetails {
+  // Income qualification
+  incomeQualified       Boolean
+  incomeRatio           Float      // Actual ratio (e.g., 3.5x)
+  requiredRatio         Float      // Required ratio (e.g., 3.0x)
+  incomeGap             Int?       // Shortfall in cents
+
+  // Credit qualification
+  creditQualified       Boolean
+  creditBandMet         Boolean
+  requiredCreditBand    String?
+
+  // Background qualification
+  backgroundQualified   Boolean
+  evictionCheckPassed   Boolean
+
+  // Specific gaps
+  gaps                  QualificationGap[]
+
+  // Listing criteria breakdown
+  hardCriteria          ListingCriteria[]
+  softCriteria          ListingCriteria[]
+}
+
+/**
+ * Qualification Gap Type
+ * Specific gap in qualification
+ */
+type QualificationGap {
+  criteriaName          String     // e.g., "Income Requirement"
+  required              String     // e.g., "3.0x monthly rent"
+  actual                String     // e.g., "2.8x monthly rent"
+  severity              String     // "critical", "moderate", "minor"
+}
+
+/**
+ * Listing Criteria Type
+ * Individual criteria for a listing
+ */
+type ListingCriteria {
+  name                  String
+  description           String
+  type                  String     // "HARD" or "SOFT"
+  met                   Boolean
+}
+
+/**
+ * Qualification Tip Type
+ * Actionable suggestions to improve qualification
+ */
+type QualificationTip {
+  title                 String
+  description           String
+  actionType            String     // "co-signer", "extra-deposit", "alternative-listings"
+  actionUrl             String?
+  priority              Int        // 1 = highest priority
+}
+
+/**
+ * Listing Screening Criteria Model
+ * Landlord's screening requirements for a listing
+ */
+model ListingScreeningCriteria extends BaseModel {
+  // Foreign key to listing
+  listingId             String @unique
+  listing               Listing @relation(name: "screening_criteria", fields: [listingId], references: [id], onDelete: Cascade)
+
+  // Income requirements
+  minIncomeMultiplier   Float @default(3.0)    // e.g., 3x monthly rent
+  acceptsCoSigner       Boolean @default(true)
+  coSignerIncomeMultiplier Float @default(5.0)
+
+  // Credit requirements
+  minCreditScore        Int?
+  acceptsGuarantor      Boolean @default(true)
+  acceptsExtraDeposit   Boolean @default(false)
+  extraDepositMonths    Int?
+
+  // Background requirements
+  noEvictionsYears      Int @default(7)
+  noCriminalHistory     Boolean @default(true)
+
+  // Soft preferences
+  preferredLeaseTermMonths Int @default(12)
+  preferredMoveInDays   Int @default(30)
+  petsAllowed           Boolean @default(false)
+  smokingAllowed        Boolean @default(false)
+
+  @@index([listingId])
+
+  // Access control
+  // Landlord can create criteria for their listing
+  @@allow('create', auth() == listing.landlord)
+
+  // Anyone can read (for matching)
+  @@allow('read', true)
+
+  // Landlord can update
+  @@allow('update', auth() == listing.landlord)
+
+  // Landlord can delete
+  @@allow('delete', auth() == listing.landlord)
+}

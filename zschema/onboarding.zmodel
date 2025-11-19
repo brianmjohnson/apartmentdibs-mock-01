@@ -1,0 +1,270 @@
+/**
+ * Onboarding Models
+ * US-012: Adaptive Onboarding Checklist (Smart Progress Tracking)
+ *
+ * Key features:
+ * - Personalized checklist based on user type (W-2, Self-employed, Student, etc.)
+ * - Progress tracking with time estimates
+ * - Dynamic step addition/removal based on answers
+ * - Contextual help resources per step
+ */
+
+import "base.zmodel"
+import "auth.zmodel"
+import "tenant.zmodel"
+
+/**
+ * User Type Enum
+ * Determines required onboarding steps
+ */
+enum OnboardingUserType {
+  W2_EMPLOYEE         // Salaried employee with W-2
+  SELF_EMPLOYED       // Self-employed/contractor
+  STUDENT             // Student with guarantor
+  RETIRED             // Retired with fixed income
+  UNEMPLOYED          // Unemployed (may need guarantor)
+}
+
+/**
+ * Onboarding Step Type Enum
+ * Categories of onboarding steps
+ */
+enum OnboardingStepType {
+  // Personal information
+  PERSONAL_INFO
+  CONTACT_INFO
+  PHOTO_UPLOAD
+
+  // Employment
+  EMPLOYMENT_TYPE
+  EMPLOYMENT_VERIFICATION
+
+  // Income verification
+  PAY_STUBS
+  TAX_RETURNS
+  BANK_STATEMENTS
+  FINANCIAL_AID_LETTER
+  RETIREMENT_INCOME
+
+  // Identity
+  ID_VERIFICATION
+  SSN_VERIFICATION
+
+  // Background
+  BACKGROUND_CHECK_CONSENT
+
+  // Pet info
+  PET_INFO
+  VACCINATION_RECORDS
+
+  // References
+  LANDLORD_REFERENCES
+  PERSONAL_REFERENCES
+
+  // Co-applicant
+  GUARANTOR_INFO
+
+  // Credit
+  CREDIT_CHECK_CONSENT
+
+  // Final
+  REVIEW_SUBMIT
+}
+
+/**
+ * Step Status Enum
+ */
+enum OnboardingStepStatus {
+  NOT_STARTED
+  IN_PROGRESS
+  COMPLETED
+  SKIPPED
+}
+
+/**
+ * Onboarding Checklist Model
+ * Main checklist entity for a user
+ */
+model OnboardingChecklist extends BaseModel {
+  // Foreign key to tenant profile
+  tenantProfileId       String @unique
+  tenantProfile         TenantProfile @relation(name: "onboarding_checklist", fields: [tenantProfileId], references: [id], onDelete: Cascade)
+
+  // User type (determines required steps)
+  userType              OnboardingUserType?
+
+  // Assessment answers (determines checklist)
+  assessmentAnswers     OnboardingAssessmentAnswers? @json
+
+  // Progress tracking
+  totalSteps            Int @default(0)
+  completedSteps        Int @default(0)
+  skippedSteps          Int @default(0)
+
+  // Time estimates (in minutes)
+  estimatedTimeRemaining Int @default(0)
+  totalTimeSpent         Int @default(0)
+
+  // Status
+  isComplete            Boolean @default(false)
+  completedAt           DateTime?
+
+  // Relations
+  steps                 OnboardingStep[]
+
+  @@index([tenantProfileId])
+  @@index([userType])
+  @@index([isComplete])
+
+  // Access control
+  // User can create their own checklist
+  @@allow('create', auth() == tenantProfile.user)
+
+  // User can read their own checklist
+  @@allow('read', auth() == tenantProfile.user)
+
+  // Admin can read all checklists
+  @@allow('read', auth().role == 'admin')
+
+  // User can update their own checklist
+  @@allow('update', auth() == tenantProfile.user)
+
+  // Admin can update (for system operations)
+  @@allow('update', auth().role == 'admin')
+
+  // User can delete their own checklist
+  @@allow('delete', auth() == tenantProfile.user)
+}
+
+/**
+ * Onboarding Assessment Answers Type
+ * Stores user's answers to initial assessment questions
+ */
+type OnboardingAssessmentAnswers {
+  // Employment type
+  employmentType        String     // W2, self-employed, student, retired, unemployed
+
+  // Pet ownership
+  hasPets               Boolean
+  petCount              Int?
+
+  // Co-applicants
+  hasCoApplicants       Boolean
+  coApplicantCount      Int?
+
+  // Recent relocation
+  recentlyRelocated     Boolean    // Affects reference requirements
+
+  // Additional factors
+  hasGuarantor          Boolean
+  receivesFinancialAid  Boolean
+  hasRetirementIncome   Boolean
+}
+
+/**
+ * Onboarding Step Model
+ * Individual step in the checklist
+ */
+model OnboardingStep extends BaseModel {
+  // Foreign key to checklist
+  checklistId           String
+  checklist             OnboardingChecklist @relation(fields: [checklistId], references: [id], onDelete: Cascade)
+
+  // Step details
+  stepType              OnboardingStepType
+  order                 Int        // Display order
+
+  // Status tracking
+  status                OnboardingStepStatus @default(NOT_STARTED)
+
+  // Time tracking
+  estimatedMinutes      Int @default(5)
+  actualMinutes         Int?
+  startedAt             DateTime?
+  completedAt           DateTime?
+
+  // Requirements
+  isRequired            Boolean @default(true)
+  canSkip               Boolean @default(false)
+  skipReason            String?
+
+  // Help resources
+  helpResources         OnboardingHelpResource? @json
+
+  // Step-specific data
+  stepData              OnboardingStepData? @json
+
+  @@unique([checklistId, stepType])
+  @@index([checklistId, order])
+  @@index([status])
+
+  // Access control
+  // User can create steps in their checklist
+  @@allow('create', auth() == checklist.tenantProfile.user)
+
+  // Admin can create steps (for system-generated checklists)
+  @@allow('create', auth().role == 'admin')
+
+  // User can read their own steps
+  @@allow('read', auth() == checklist.tenantProfile.user)
+
+  // Admin can read all steps
+  @@allow('read', auth().role == 'admin')
+
+  // User can update their own steps
+  @@allow('update', auth() == checklist.tenantProfile.user)
+
+  // Admin can update (for system operations)
+  @@allow('update', auth().role == 'admin')
+
+  // User can delete their own steps
+  @@allow('delete', auth() == checklist.tenantProfile.user)
+}
+
+/**
+ * Help Resource Type
+ * Contextual help for each step
+ */
+type OnboardingHelpResource {
+  // FAQ items
+  faqs                  OnboardingFaq[]
+
+  // Video tutorial
+  videoUrl              String?
+  videoTitle            String?
+
+  // Article/guide
+  articleUrl            String?
+  articleTitle          String?
+
+  // Chat support
+  chatSupportEnabled    Boolean
+}
+
+/**
+ * FAQ Type
+ */
+type OnboardingFaq {
+  question              String
+  answer                String
+}
+
+/**
+ * Step Data Type
+ * Flexible storage for step-specific information
+ */
+type OnboardingStepData {
+  // Document upload info
+  documentUrls          String[]
+  documentNames         String[]
+
+  // Form data
+  formData              String?    // JSON string for step-specific form data
+
+  // Verification result
+  verificationStatus    String?
+  verificationMessage   String?
+
+  // Notes
+  userNotes             String?
+}

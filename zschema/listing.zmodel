@@ -14,6 +14,12 @@ import "crm.zmodel"
 import "syndication.zmodel"
 import "reminder.zmodel"
 import "messaging.zmodel"
+import "group-application.zmodel"
+import "prequalification.zmodel"
+import "notification.zmodel"
+import "risk-score.zmodel"
+import "lease.zmodel"
+import "concierge.zmodel"
 
 /**
  * Listing Status Enum
@@ -71,6 +77,16 @@ model Listing extends BaseModel {
 
   // Messaging relations (US-009)
   messageThreads       MessageThread[]
+
+  // Group application relations (US-011)
+  groupApplications    GroupApplication[]  @relation(name: "group_applications")
+
+  // Pre-qualification relations (US-013)
+  qualificationMatches ListingQualificationMatch[] @relation(name: "qualification_matches")
+  screeningCriteria    ListingScreeningCriteria? @relation(name: "screening_criteria")
+
+  // Concierge relations (US-018)
+  scannedDocuments     ScannedDocument[]   @relation(name: "scanned_documents")
 
   @@index([landlordId])
   @@index([status])
@@ -149,6 +165,16 @@ model Application extends BaseModel {
   // Reminder relations (US-008)
   reminders               DocumentReminder[]
   missingDocumentsTracker MissingDocumentsTracker?
+
+  // Notification relations (US-014)
+  applicationEvents       ApplicationEvent[]  @relation(name: "application_events")
+  engagementSignals       LandlordEngagementSignal? @relation(name: "engagement_signals")
+
+  // Risk score relations (US-015)
+  riskScore               RiskScore?          @relation(name: "risk_score")
+
+  // Lease relations (US-017)
+  lease                   Lease?              @relation(name: "lease")
 
   @@unique([listingId, tenantProfileId])
   @@index([listingId])

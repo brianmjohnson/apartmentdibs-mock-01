@@ -1,0 +1,212 @@
+/**
+ * Group Application Models
+ * US-011: Group Application for Roommates (Shared Household Screening)
+ *
+ * Key features:
+ * - Primary applicant creates group and invites co-applicants
+ * - Track invitation status and member completion
+ * - Combined household metrics for landlord review
+ * - Group pricing ($99.99 for 2-4 applicants)
+ */
+
+import "base.zmodel"
+import "auth.zmodel"
+import "tenant.zmodel"
+import "listing.zmodel"
+
+/**
+ * Group Application Status Enum
+ * Tracks the lifecycle of a group application
+ */
+enum GroupApplicationStatus {
+  FORMING        // Members being invited
+  INCOMPLETE     // Not all members have completed profiles
+  READY          // All members ready, can submit
+  SUBMITTED      // Submitted to listing
+  UNDER_REVIEW   // Landlord reviewing
+  SELECTED       // Group selected
+  REJECTED       // Group rejected
+  WITHDRAWN      // Primary applicant withdrew
+}
+
+/**
+ * Group Member Invitation Status Enum
+ */
+enum GroupMemberInvitationStatus {
+  PENDING        // Invitation sent, awaiting response
+  ACCEPTED       // Member accepted and linked profile
+  DECLINED       // Member declined invitation
+  EXPIRED        // Invitation expired
+}
+
+/**
+ * Group Member Role Enum
+ */
+enum GroupMemberRole {
+  PRIMARY        // Created the group, manages invitations
+  CO_APPLICANT   // Invited member
+}
+
+/**
+ * Payment Split Type Enum
+ */
+enum PaymentSplitType {
+  PRIMARY_PAYS   // Primary applicant pays full amount
+  SPLIT_EVENLY   // Split evenly among all members
+}
+
+/**
+ * Group Application Model
+ * Container for roommate applications
+ */
+model GroupApplication extends BaseModel {
+  // Primary applicant who created the group
+  primaryApplicantId    String
+  primaryApplicant      TenantProfile @relation(name: "primary_group_applications", fields: [primaryApplicantId], references: [id], onDelete: Cascade)
+
+  // Target listing (optional until submission)
+  listingId             String?
+  listing               Listing? @relation(name: "group_applications", fields: [listingId], references: [id])
+
+  // Group status
+  status                GroupApplicationStatus @default(FORMING)
+
+  // Group name/label for organization
+  groupName             String?
+
+  // Payment
+  paymentSplitType      PaymentSplitType @default(PRIMARY_PAYS)
+  totalAmount           Decimal?   // $99.99 for 2-4 applicants
+  paymentCompletedAt    DateTime?
+
+  // Validity period (90 days for all profiles)
+  validUntil            DateTime?
+
+  // Submission tracking
+  submittedAt           DateTime?
+
+  // Combined household metrics (calculated)
+  householdMetrics      GroupHouseholdMetrics? @json
+
+  // Relations
+  members               GroupMember[]
+
+  @@index([primaryApplicantId])
+  @@index([listingId])
+  @@index([status])
+
+  // Access control
+  // Primary applicant can create groups
+  @@allow('create', auth() == primaryApplicant.user)
+
+  // Members can read their group
+  @@allow('read', members?[tenantProfile.user == auth()])
+
+  // Primary applicant can read their groups
+  @@allow('read', auth() == primaryApplicant.user)
+
+  // Landlord can read groups submitted to their listings
+  @@allow('read', listing != null && auth() == listing.landlord)
+
+  // Primary applicant can update
+  @@allow('update', auth() == primaryApplicant.user)
+
+  // Landlord can update status (select, reject)
+  @@allow('update', listing != null && auth() == listing.landlord)
+
+  // Primary applicant can delete if not submitted
+  @@allow('delete', auth() == primaryApplicant.user && status in ['FORMING', 'INCOMPLETE', 'READY'])
+}
+
+/**
+ * Group Household Metrics Type
+ * Combined metrics for landlord evaluation
+ */
+type GroupHouseholdMetrics {
+  // Combined financial
+  totalHouseholdIncome    Int        // Sum of all members' income in cents
+  incomeToRentRatio       Float      // Combined income / rent
+
+  // Credit summary
+  lowestCreditBand        String     // Weakest link credit band
+  averageCreditBand       String     // Average across members
+
+  // Employment
+  employmentStability     String     // e.g., "All employed 2+ years"
+
+  // Rental history
+  rentalHistorySummary    String     // e.g., "Combined 10+ years, no evictions"
+
+  // Background
+  allBackgroundPassed     Boolean    // All members passed background check
+
+  // Pets
+  totalPets               Int
+  petDetails              String?
+
+  // Occupants
+  totalOccupants          Int
+}
+
+/**
+ * Group Member Model
+ * Links tenant profiles to group applications
+ */
+model GroupMember extends BaseModel {
+  // Group association
+  groupId               String
+  group                 GroupApplication @relation(fields: [groupId], references: [id], onDelete: Cascade)
+
+  // Tenant profile (nullable until invitation accepted)
+  tenantProfileId       String?
+  tenantProfile         TenantProfile? @relation(name: "group_memberships", fields: [tenantProfileId], references: [id])
+
+  // Role in the group
+  role                  GroupMemberRole @default(CO_APPLICANT)
+
+  // Invitation details
+  invitationEmail       String?    // PII - personal information
+  invitationPhone       String?    // PII - personal information
+  invitationStatus      GroupMemberInvitationStatus @default(PENDING)
+  invitationSentAt      DateTime?
+  invitationExpiresAt   DateTime?
+
+  // Response tracking
+  respondedAt           DateTime?
+  joinedAt              DateTime?
+
+  // Profile completion status
+  profileComplete       Boolean @default(false)
+
+  // Payment tracking (for split payments)
+  paymentAmount         Decimal?
+  paymentCompletedAt    DateTime?
+
+  @@unique([groupId, invitationEmail])
+  @@unique([groupId, tenantProfileId])
+  @@index([groupId])
+  @@index([tenantProfileId])
+  @@index([invitationStatus])
+
+  // Access control
+  // Primary applicant can create members (invite)
+  @@allow('create', auth() == group.primaryApplicant.user)
+
+  // Members can read their own membership
+  @@allow('read', tenantProfile != null && auth() == tenantProfile.user)
+
+  // Primary applicant can read all members
+  @@allow('read', auth() == group.primaryApplicant.user)
+
+  // Landlord can read members for submitted groups
+  @@allow('read', group.listing != null && auth() == group.listing.landlord)
+
+  // Invited user can update (accept/decline)
+  @@allow('update', tenantProfile != null && auth() == tenantProfile.user)
+
+  // Primary applicant can update (resend, remove)
+  @@allow('update', auth() == group.primaryApplicant.user)
+
+  // Primary applicant can remove members before submission
+  @@allow('delete', auth() == group.primaryApplicant.user && group.status in ['FORMING', 'INCOMPLETE', 'READY'])
+}

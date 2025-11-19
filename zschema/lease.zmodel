@@ -1,0 +1,293 @@
+/**
+ * Lease Models
+ * US-017: Digital Lease Generation (State-Compliant Templates)
+ *
+ * Key features:
+ * - Auto-generation from tenant/property data
+ * - State-compliant templates
+ * - Custom clause support
+ * - Digital signature integration (DocuSign/HelloSign)
+ * - Secure lease storage
+ */
+
+import "base.zmodel"
+import "auth.zmodel"
+import "tenant.zmodel"
+import "listing.zmodel"
+
+/**
+ * Lease Status Enum
+ */
+enum LeaseStatus {
+  DRAFT              // Being prepared
+  PENDING_SIGNATURES // Sent for signatures
+  PARTIALLY_SIGNED   // Some parties signed
+  FULLY_SIGNED       // All parties signed
+  ACTIVE             // Lease is active
+  EXPIRED            // Lease term ended
+  TERMINATED         // Early termination
+  RENEWED            // Renewed (new lease created)
+}
+
+/**
+ * Signature Status Enum
+ */
+enum SignatureStatus {
+  PENDING            // Awaiting signature
+  VIEWED             // Document viewed
+  SIGNED             // Signed
+  DECLINED           // Declined to sign
+}
+
+/**
+ * Lease Template Model
+ * State-compliant lease templates
+ */
+model LeaseTemplate extends BaseModel {
+  // Template identification
+  name                  String
+  state                 String     // e.g., "NY", "CA"
+  city                  String?    // For city-specific requirements
+  version               String     @default("1.0")
+
+  // Template content
+  templateUrl           String     // URL to template document
+  templateFormat        String     @default("pdf") // pdf, docx
+
+  // Required addendums/disclosures
+  requiredAddendums     String[]   // e.g., ["lead_paint", "mold_disclosure"]
+
+  // Compliance info
+  lastReviewedAt        DateTime?
+  isCompliant           Boolean @default(true)
+  complianceNotes       String?
+
+  // Status
+  isActive              Boolean @default(true)
+  effectiveDate         DateTime
+  expirationDate        DateTime?
+
+  // Relations
+  leases                Lease[]
+
+  @@unique([state, city, version])
+  @@index([state])
+  @@index([isActive])
+
+  // Access control
+  // Admin manages templates
+  @@allow('create', auth().role == 'admin')
+  @@allow('read', true)  // Anyone can read templates
+  @@allow('update', auth().role == 'admin')
+  @@allow('delete', auth().role == 'admin')
+}
+
+/**
+ * Lease Model
+ * Generated lease document
+ */
+model Lease extends BaseModel {
+  // Application link
+  applicationId         String @unique
+  application           Application @relation(name: "lease", fields: [applicationId], references: [id], onDelete: Cascade)
+
+  // Template used
+  templateId            String
+  template              LeaseTemplate @relation(fields: [templateId], references: [id])
+
+  // Landlord who created
+  landlordId            String
+  landlord              User @relation(name: "landlord_leases", fields: [landlordId], references: [id])
+
+  // Status
+  status                LeaseStatus @default(DRAFT)
+
+  // Lease terms
+  leaseTerms            LeaseTerms @json
+
+  // Custom clauses added by landlord
+  customClauses         LeaseCustomClause[] @json
+
+  // Generated document
+  generatedDocumentUrl  String?    // URL to generated PDF
+  generatedAt           DateTime?
+
+  // E-signature integration
+  esignProvider         String?    // docusign, hellosign
+  esignEnvelopeId       String?    // External envelope ID
+  esignStatus           String?    // Provider-specific status
+
+  // Signature tracking
+  sentForSignatureAt    DateTime?
+  fullySignedAt         DateTime?
+
+  // Final signed document
+  signedDocumentUrl     String?
+
+  // Renewal reference
+  previousLeaseId       String? @unique
+  previousLease         Lease? @relation(name: "lease_renewal", fields: [previousLeaseId], references: [id])
+  renewedLease          Lease? @relation(name: "lease_renewal")
+
+  // Relations
+  signatures            LeaseSignature[]
+
+  @@index([applicationId])
+  @@index([landlordId])
+  @@index([status])
+
+  // Access control
+  // Landlord can create leases
+  @@allow('create', auth() == application.listing.landlord)
+
+  // Landlord can read their leases
+  @@allow('read', auth() == landlord)
+
+  // Tenant can read their lease
+  @@allow('read', auth() == application.tenantProfile.user)
+
+  // Admin can read all
+  @@allow('read', auth().role == 'admin')
+
+  // Landlord can update before signing
+  @@allow('update', auth() == landlord && status in ['DRAFT', 'PENDING_SIGNATURES'])
+
+  // Admin can update (for signature status sync)
+  @@allow('update', auth().role == 'admin')
+
+  // Cannot delete signed leases
+  @@allow('delete', auth() == landlord && status == 'DRAFT')
+}
+
+/**
+ * Lease Terms Type
+ * All terms populated in the lease
+ */
+type LeaseTerms {
+  // Property details
+  propertyAddress       String
+  propertyCity          String
+  propertyState         String
+  propertyZip           String
+  unitNumber            String?
+
+  // Tenant information (from revealed PII)
+  tenantNames           String[]
+  tenantEmails          String[]
+  tenantPhones          String[]
+
+  // Landlord information
+  landlordName          String
+  landlordAddress       String
+  landlordEmail         String
+  landlordPhone         String
+
+  // Financial terms
+  monthlyRent           Int        // in cents
+  securityDeposit       Int        // in cents
+  lateFeeAmount         Int?       // in cents
+  lateFeeGraceDays      Int?
+
+  // Lease duration
+  leaseStartDate        String     // ISO date
+  leaseEndDate          String     // ISO date
+  leaseTermMonths       Int
+
+  // Move-in details
+  moveInDate            String?    // ISO date
+  moveInFee             Int?       // in cents
+
+  // Utilities
+  utilitiesIncluded     String[]   // e.g., ["water", "trash"]
+  tenantUtilities       String[]   // e.g., ["electric", "gas", "internet"]
+
+  // Pets
+  petsAllowed           Boolean
+  petDeposit            Int?
+  petRent               Int?       // Monthly pet rent in cents
+  petRestrictions       String?
+
+  // Parking
+  parkingIncluded       Boolean
+  parkingSpaces         Int?
+  parkingFee            Int?
+
+  // Other terms
+  smokingAllowed        Boolean
+  guestPolicy           String?
+  alterationPolicy      String?
+}
+
+/**
+ * Lease Custom Clause Type
+ * Custom clauses added by landlord
+ */
+type LeaseCustomClause {
+  title                 String     // e.g., "Snow Removal"
+  content               String     // Full clause text
+  category              String?    // e.g., "Maintenance", "Rules"
+  complianceWarning     String?    // Warning if potentially non-compliant
+}
+
+/**
+ * Lease Signature Model
+ * Tracks individual signatures on lease
+ */
+model LeaseSignature extends BaseModel {
+  // Lease link
+  leaseId               String
+  lease                 Lease @relation(fields: [leaseId], references: [id], onDelete: Cascade)
+
+  // Signer identification
+  signerType            String     // "landlord", "tenant", "co-tenant"
+  signerName            String     // PII - personal information
+  signerEmail           String     // PII - personal information
+
+  // Tenant profile link (if tenant)
+  tenantProfileId       String?
+  tenantProfile         TenantProfile? @relation(name: "lease_signatures", fields: [tenantProfileId], references: [id])
+
+  // Signature status
+  status                SignatureStatus @default(PENDING)
+
+  // E-signature details
+  esignRecipientId      String?    // Provider's recipient ID
+  signatureImageUrl     String?    // URL to signature image (encrypted)
+
+  // Tracking
+  sentAt                DateTime?
+  viewedAt              DateTime?
+  signedAt              DateTime?
+  declinedAt            DateTime?
+  declineReason         String?
+
+  // IP and device info for audit
+  signedFromIp          String?    // PII - personal information
+  signedFromDevice      String?
+
+  @@unique([leaseId, signerEmail])
+  @@index([leaseId])
+  @@index([status])
+
+  // Access control
+  // System creates signatures
+  @@allow('create', auth().role == 'admin')
+
+  // Landlord can create (when generating lease)
+  @@allow('create', auth() == lease.landlord)
+
+  // Signer can read their signature
+  @@allow('read', tenantProfile != null && auth() == tenantProfile.user)
+
+  // Landlord can read all signatures
+  @@allow('read', auth() == lease.landlord)
+
+  // Signer can update (sign/decline)
+  @@allow('update', tenantProfile != null && auth() == tenantProfile.user)
+
+  // Admin can update (for webhook sync)
+  @@allow('update', auth().role == 'admin')
+
+  // No deletes
+  @@deny('delete', true)
+}

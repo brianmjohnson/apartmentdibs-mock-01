@@ -18,6 +18,13 @@ import "crm.zmodel"
 import "syndication.zmodel"
 import "reminder.zmodel"
 import "messaging.zmodel"
+import "group-application.zmodel"
+import "onboarding.zmodel"
+import "prequalification.zmodel"
+import "notification.zmodel"
+import "risk-score.zmodel"
+import "lease.zmodel"
+import "concierge.zmodel"
 
 /**
  * User Model - Core authentication entity
@@ -85,6 +92,13 @@ model User {
   messageTemplates        MessageTemplate[] @relation(name: "message_templates")
   quickReplies            QuickReply[]      @relation(name: "quick_replies")
   messageNotificationPreference MessageNotificationPreference? @relation(name: "message_notification_preferences")
+
+  // Lease relations (US-017)
+  landlordLeases          Lease[]           @relation(name: "landlord_leases")
+
+  // Concierge relations (US-018)
+  conciergeSubscription   ConciergeSubscription? @relation(name: "concierge_subscription")
+  conciergeAgentProfile   ConciergeAgent?   @relation(name: "concierge_agent_profile")
 
   // Access control policies
   @@allow('create', true)  // Anyone can create account (sign up)

@@ -1,0 +1,287 @@
+/**
+ * Notification Models
+ * US-014: Application Status Notifications (Reduce Waiting Anxiety)
+ *
+ * Key features:
+ * - Real-time application status updates
+ * - Multi-channel notifications (push, email, SMS)
+ * - Landlord engagement signals
+ * - Configurable notification preferences
+ * - Application timeline tracking
+ */
+
+import "base.zmodel"
+import "auth.zmodel"
+import "tenant.zmodel"
+import "listing.zmodel"
+
+/**
+ * Notification Channel Enum
+ */
+enum NotificationChannel {
+  PUSH               // Push notification
+  EMAIL              // Email
+  SMS                // SMS/Text
+  IN_APP             // In-app notification
+}
+
+/**
+ * Email Digest Frequency Enum
+ */
+enum EmailDigestFrequency {
+  IMMEDIATE          // Send immediately
+  DAILY              // Daily digest
+  WEEKLY             // Weekly digest
+  NONE               // No email
+}
+
+/**
+ * Application Event Type Enum
+ * All possible events in application lifecycle
+ */
+enum ApplicationEventType {
+  // Submission
+  APPLICATION_SUBMITTED
+  APPLICATION_RECEIVED
+
+  // Documents
+  DOCUMENTS_UPLOADED
+  DOCUMENTS_INCOMPLETE
+  DOCUMENTS_COMPLETE
+
+  // Verification
+  VERIFICATION_STARTED
+  VERIFICATION_COMPLETED
+  VERIFICATION_FAILED
+
+  // Landlord activity
+  LANDLORD_VIEWED
+  LANDLORD_REVIEWED
+  PROFILE_FAVORITED
+
+  // Status changes
+  UNDER_REVIEW
+  SHORTLISTED
+  FINALIST
+
+  // Decision
+  SELECTED
+  REJECTED
+  WAITLISTED
+
+  // Other
+  REMINDER_SENT
+  MESSAGE_RECEIVED
+  DEADLINE_APPROACHING
+}
+
+/**
+ * Tenant Notification Preference Model
+ * User's notification settings
+ */
+model TenantNotificationPreference extends BaseModel {
+  // Foreign key to tenant profile
+  tenantProfileId       String @unique
+  tenantProfile         TenantProfile @relation(name: "notification_preferences", fields: [tenantProfileId], references: [id], onDelete: Cascade)
+
+  // Channel preferences
+  pushEnabled           Boolean @default(true)
+  emailEnabled          Boolean @default(true)
+  smsEnabled            Boolean @default(false)
+
+  // Email digest
+  emailDigestFrequency  EmailDigestFrequency @default(IMMEDIATE)
+
+  // Quiet hours
+  quietHoursEnabled     Boolean @default(false)
+  quietHoursStart       String?  // e.g., "22:00"
+  quietHoursEnd         String?  // e.g., "08:00"
+  quietHoursTimezone    String?  // e.g., "America/New_York"
+
+  // Event-specific preferences
+  eventPreferences      NotificationEventPreferences? @json
+
+  @@index([tenantProfileId])
+
+  // Access control
+  @@allow('create', auth() == tenantProfile.user)
+  @@allow('read', auth() == tenantProfile.user)
+  @@allow('update', auth() == tenantProfile.user)
+  @@allow('delete', auth() == tenantProfile.user)
+}
+
+/**
+ * Event Preferences Type
+ * Channel settings per event type
+ */
+type NotificationEventPreferences {
+  // Which events to notify for each channel
+  pushEvents            String[]   // Event type names
+  emailEvents           String[]
+  smsEvents             String[]
+}
+
+/**
+ * Application Event Model
+ * Individual events in application lifecycle
+ */
+model ApplicationEvent extends BaseModel {
+  // Foreign key to application
+  applicationId         String
+  application           Application @relation(name: "application_events", fields: [applicationId], references: [id], onDelete: Cascade)
+
+  // Event details
+  eventType             ApplicationEventType
+  description           String
+
+  // Event metadata
+  metadata              ApplicationEventMetadata? @json
+
+  // Notification tracking
+  notificationsSent     Boolean @default(false)
+  notificationsSentAt   DateTime?
+
+  // Relations
+  notifications           Notification[]      @relation(name: "event_notifications")
+
+  @@index([applicationId, createdAt])
+  @@index([eventType])
+
+  // Access control
+  // System can create events
+  @@allow('create', auth().role == 'admin')
+
+  // Landlord can create events for their listings
+  @@allow('create', auth() == application.listing.landlord)
+
+  // Tenant can read their application events
+  @@allow('read', auth() == application.tenantProfile.user)
+
+  // Landlord can read events for their listings
+  @@allow('read', auth() == application.listing.landlord)
+
+  // No updates or deletes (audit trail)
+  @@deny('update', true)
+  @@deny('delete', true)
+}
+
+/**
+ * Application Event Metadata Type
+ */
+type ApplicationEventMetadata {
+  // Actor information
+  actorId               String?
+  actorType             String?    // "landlord", "system", "tenant"
+
+  // Related entity
+  relatedEntityType     String?
+  relatedEntityId       String?
+
+  // Status change details
+  previousStatus        String?
+  newStatus             String?
+
+  // View details
+  viewCount             Int?
+  viewDuration          Int?       // seconds
+
+  // Decision details
+  decisionReason        String?
+  estimatedDecisionDate String?    // ISO date
+
+  // Additional context
+  additionalInfo        String?
+}
+
+/**
+ * Notification Model
+ * Sent notification record
+ */
+model Notification extends BaseModel {
+  // Recipient
+  recipientId           String
+  recipient             TenantProfile @relation(name: "notifications", fields: [recipientId], references: [id], onDelete: Cascade)
+
+  // Source event
+  applicationEventId    String?
+  applicationEvent      ApplicationEvent? @relation(name: "event_notifications", fields: [applicationEventId], references: [id])
+
+  // Notification details
+  title                 String
+  body                  String
+  channel               NotificationChannel
+
+  // Delivery tracking
+  sentAt                DateTime?
+  deliveredAt           DateTime?
+  readAt                DateTime?
+  clickedAt             DateTime?
+
+  // Status
+  status                String @default("pending") // pending, sent, delivered, failed
+
+  // Error tracking
+  errorMessage          String?
+  retryCount            Int @default(0)
+
+  @@index([recipientId, createdAt])
+  @@index([applicationEventId])
+  @@index([channel])
+  @@index([status])
+
+  // Access control
+  // System can create notifications
+  @@allow('create', auth().role == 'admin')
+
+  // Recipient can read their notifications
+  @@allow('read', auth() == recipient.user)
+
+  // Recipient can update (mark as read)
+  @@allow('update', auth() == recipient.user)
+
+  // Admin can update (for retry, status)
+  @@allow('update', auth().role == 'admin')
+
+  // No deletes
+  @@deny('delete', true)
+}
+
+/**
+ * Landlord Engagement Signal Model
+ * Tracks landlord activity on application (anonymized signals)
+ */
+model LandlordEngagementSignal extends BaseModel {
+  // Foreign key to application
+  applicationId         String @unique
+  application           Application @relation(name: "engagement_signals", fields: [applicationId], references: [id], onDelete: Cascade)
+
+  // Engagement metrics (anonymized)
+  viewCount             Int @default(0)
+  lastViewedAt          DateTime?
+
+  // Finalist status
+  isFinalist            Boolean @default(false)
+  finalistRank          Int?       // Position in shortlist (1-5)
+
+  // Expected decision
+  expectedDecisionDate  DateTime?
+
+  // Comparison info
+  totalApplicants       Int @default(0)
+
+  @@index([applicationId])
+
+  // Access control
+  // System/landlord can create
+  @@allow('create', auth().role == 'admin')
+  @@allow('create', auth() == application.listing.landlord)
+
+  // Tenant can read their engagement signals
+  @@allow('read', auth() == application.tenantProfile.user)
+
+  // Landlord can update
+  @@allow('update', auth() == application.listing.landlord)
+
+  // Admin can update
+  @@allow('update', auth().role == 'admin')
+}
