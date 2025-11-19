@@ -1,0 +1,160 @@
+/**
+ * Audit Models
+ * Immutable audit trail for compliance logging (per ADR-017)
+ *
+ * Key features:
+ * - Append-only logs (no update, no delete)
+ * - Cryptographic hash chain for tamper evidence
+ * - 3-year retention for FCRA compliance
+ * - Export capability for legal discovery
+ */
+
+import "base.zmodel"
+import "auth.zmodel"
+
+/**
+ * PII Access Action Type Enum
+ * Types of actions that can be logged
+ */
+enum PiiAccessActionType {
+  VIEW_ATTEMPT       // Attempted to view PII (may be blocked)
+  SELECTION          // Landlord selected applicant
+  REVEAL             // PII was revealed after selection
+  DENIED             // Access was denied (before selection)
+  EXPORT             // Data was exported
+}
+
+/**
+ * Request Metadata Type
+ * Additional context for audit entries
+ */
+type AuditRequestMetadata {
+  ipAddress           String?
+  userAgent           String?
+  endpoint            String?
+  requestId           String?
+}
+
+/**
+ * PII Access Log Model
+ * Immutable audit trail for all PII access attempts
+ *
+ * Note: Database triggers will be added via migration to prevent
+ * UPDATE and DELETE operations at the database level (per ADR-017)
+ */
+model PiiAccessLog {
+  id                  String      @id @default(uuid(7))
+  createdAt           DateTime    @default(now())
+
+  // Who performed the action
+  userId              String
+  user                User        @relation(name: "pii_access_logs", fields: [userId], references: [id])
+  userRole            String      // user, landlord, agent, admin
+
+  // What was accessed
+  applicantId         String      // TenantProfile.applicantId
+
+  // Action details
+  actionType          PiiAccessActionType
+  accessGranted       Boolean
+  denialReason        String?
+
+  // Request context
+  requestMetadata     AuditRequestMetadata @json
+
+  // Hash chain for tamper evidence (per ADR-017)
+  previousHash        String?     // SHA-256 of previous entry
+  entryHash           String      // SHA-256 of this entry
+
+  @@index([applicantId, createdAt])
+  @@index([userId, createdAt])
+  @@index([actionType, createdAt])
+  @@index([createdAt])
+
+  // Access Control - Immutable logs
+
+  // Anyone can create logs (system creates them)
+  @@allow('create', true)
+
+  // Only admins can read logs
+  @@allow('read', auth().role == 'admin')
+
+  // Nobody can update - logs are immutable
+  // Database trigger will also enforce this (per ADR-017)
+  @@deny('update', true)
+
+  // Nobody can delete - logs must be retained 3 years
+  // Database trigger will also enforce this (per ADR-017)
+  @@deny('delete', true)
+}
+
+/**
+ * Applicant Selection Log Model
+ * Tracks landlord selections for compliance and analytics
+ */
+model ApplicantSelectionLog {
+  id                  String      @id @default(uuid(7))
+  createdAt           DateTime    @default(now())
+
+  // Selection details
+  listingId           String
+  applicantId         String      // TenantProfile.applicantId
+
+  // Who made the selection
+  selectedById        String
+  selectedBy          User        @relation(name: "selection_logs", fields: [selectedById], references: [id])
+
+  // Outcome
+  selectionRank       Int?        // 1st choice, 2nd choice, etc.
+  wasAccepted         Boolean?    // Did tenant accept?
+
+  // Timing
+  piiRevealedAt       DateTime?
+  applicationStartedAt DateTime?
+
+  // Hash chain
+  previousHash        String?
+  entryHash           String
+
+  @@index([listingId, createdAt])
+  @@index([applicantId, createdAt])
+  @@index([selectedById, createdAt])
+
+  // Immutable log
+  @@allow('create', true)
+  @@allow('read', auth().role == 'admin')
+  @@deny('update', true)
+  @@deny('delete', true)
+}
+
+/**
+ * Profile View Log Model
+ * Tracks when landlords view obfuscated profiles (for analytics)
+ */
+model ProfileViewLog {
+  id                  String      @id @default(uuid(7))
+  createdAt           DateTime    @default(now())
+
+  // What was viewed
+  applicantId         String      // TenantProfile.applicantId
+  listingId           String?
+
+  // Who viewed
+  viewerId            String
+  viewer              User        @relation(name: "profile_view_logs", fields: [viewerId], references: [id])
+  viewerRole          String      // landlord, agent
+
+  // View context
+  viewDurationMs      Int?        // How long they viewed the profile
+  wasShortlisted      Boolean     @default(false)
+
+  @@index([applicantId, createdAt])
+  @@index([viewerId, createdAt])
+  @@index([listingId, createdAt])
+
+  // Log access control
+  @@allow('create', true)
+  @@allow('read', auth().role == 'admin' || auth().id == viewerId)
+  @@deny('update', true)
+  @@deny('delete', true)
+}

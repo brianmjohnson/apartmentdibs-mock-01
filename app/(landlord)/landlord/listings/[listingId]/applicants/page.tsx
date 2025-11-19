@@ -2,13 +2,14 @@
 
 import { use, useState } from 'react'
 import { useSearchParams } from 'next/navigation'
-import { ArrowLeft, CheckCircle, XCircle, AlertTriangle } from 'lucide-react'
+import { ArrowLeft, CheckCircle, XCircle, AlertTriangle, Lock, User, Eye } from 'lucide-react'
 import Link from 'next/link'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Label } from '@/components/ui/label'
 import { Textarea } from '@/components/ui/textarea'
+import { Skeleton } from '@/components/ui/skeleton'
 import {
   Select,
   SelectContent,
@@ -30,6 +31,8 @@ import {
   formatCurrency,
   formatDate,
   getApplicantStatusColor,
+  getCreditBandColor,
+  getCreditBandLabel,
   denialReasonOptions,
   LandlordApplicant
 } from '@/lib/mock-data/landlord'
@@ -159,94 +162,143 @@ export default function ApplicantsPage({ params }: ApplicantsPageProps) {
           </CardDescription>
         </CardHeader>
         <CardContent>
-          <div className="space-y-4">
-            {shortlistedApplicants.map((applicant) => (
-              <div
-                key={applicant.id}
-                className="p-4 border-2 border-border"
-              >
-                <div className="space-y-4">
-                  <div className="flex items-center justify-between">
-                    <div>
-                      <p className="font-bold text-lg">{applicant.displayId}</p>
-                      <p className="text-sm text-muted-foreground">
-                        Applied {formatDate(applicant.appliedAt)}
-                      </p>
-                    </div>
-                    <Badge
-                      variant="outline"
-                      className={`${getApplicantStatusColor(applicant.status)} border-2`}
-                    >
-                      {applicant.status}
-                    </Badge>
-                  </div>
+          {shortlistedApplicants.length === 0 ? (
+            <div className="text-center py-8">
+              <div className="mx-auto h-16 w-16 rounded-full bg-muted flex items-center justify-center mb-4">
+                <User className="h-8 w-8 text-muted-foreground" />
+              </div>
+              <h3 className="font-semibold text-lg mb-2">No Shortlisted Applicants</h3>
+              <p className="text-muted-foreground text-sm">
+                Your agent will shortlist qualified applicants for your review.
+                All applicants are shown anonymously to ensure fair evaluation.
+              </p>
+            </div>
+          ) : (
+            <div className="space-y-4">
+              {shortlistedApplicants.map((applicant) => (
+                <div
+                  key={applicant.id}
+                  className="p-4 border-2 border-border"
+                >
+                  <div className="space-y-4">
+                    <div className="flex items-start gap-4">
+                      {/* Anonymous Avatar */}
+                      <div className="h-14 w-14 rounded-full bg-muted border-2 border-dashed border-muted-foreground flex items-center justify-center shrink-0">
+                        <User className="h-7 w-7 text-muted-foreground" />
+                      </div>
 
-                  {/* Applicant Details */}
-                  <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-sm">
-                    <div>
-                      <p className="text-muted-foreground">Income Ratio</p>
-                      <p className="font-bold">{applicant.incomeRatio}x</p>
+                      <div className="flex-1 min-w-0">
+                        <div className="flex items-center justify-between">
+                          <div>
+                            <div className="flex items-center gap-2">
+                              <p className="font-bold text-lg">{applicant.displayId}</p>
+                              <Badge
+                                variant="outline"
+                                className="border-2 border-muted-foreground text-muted-foreground text-xs"
+                              >
+                                <Lock className="h-3 w-3 mr-1" />
+                                Anonymized
+                              </Badge>
+                            </div>
+                            <p className="text-sm text-muted-foreground">
+                              Applied {formatDate(applicant.appliedAt)}
+                            </p>
+                          </div>
+                          <Badge
+                            variant="outline"
+                            className={`${getApplicantStatusColor(applicant.status)} border-2`}
+                          >
+                            {applicant.status}
+                          </Badge>
+                        </div>
+                      </div>
                     </div>
-                    <div>
-                      <p className="text-muted-foreground">Credit Band</p>
-                      <p className="font-bold">{applicant.creditBand}</p>
-                    </div>
-                    <div>
-                      <p className="text-muted-foreground">Employment</p>
-                      <p className="font-bold">{applicant.employmentTenure}</p>
-                    </div>
-                    <div>
-                      <p className="text-muted-foreground">Move-in Date</p>
-                      <p className="font-bold">{formatDate(applicant.moveInDate)}</p>
-                    </div>
-                  </div>
 
-                  <div className="flex flex-wrap gap-2">
-                    <Badge variant="outline" className="border-2">
-                      {applicant.employmentType}
-                    </Badge>
-                    <Badge variant="outline" className="border-2">
-                      {applicant.occupants} occupant{applicant.occupants !== 1 ? 's' : ''}
-                    </Badge>
-                    {applicant.pets ? (
+                    {/* Applicant Details */}
+                    <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-sm">
+                      <div>
+                        <p className="text-muted-foreground">Income Ratio</p>
+                        <p className={`font-bold ${applicant.incomeRatio >= 4 ? 'text-green-600' : ''}`}>
+                          {applicant.incomeRatio}x
+                        </p>
+                      </div>
+                      <div>
+                        <p className="text-muted-foreground">Credit Band</p>
+                        <div className="flex items-center gap-2">
+                          <p className="font-bold">{applicant.creditBand}</p>
+                          <Badge
+                            variant="outline"
+                            className={`${getCreditBandColor(applicant.creditBand)} border text-xs`}
+                          >
+                            {getCreditBandLabel(applicant.creditBand)}
+                          </Badge>
+                        </div>
+                      </div>
+                      <div>
+                        <p className="text-muted-foreground">Employment</p>
+                        <p className="font-bold">{applicant.employmentTenure}</p>
+                      </div>
+                      <div>
+                        <p className="text-muted-foreground">Move-in Date</p>
+                        <p className="font-bold">{formatDate(applicant.moveInDate)}</p>
+                      </div>
+                    </div>
+
+                    <div className="flex flex-wrap gap-2">
                       <Badge variant="outline" className="border-2">
-                        Pet: {applicant.petDetails || 'Yes'}
+                        {applicant.employmentType}
                       </Badge>
-                    ) : (
                       <Badge variant="outline" className="border-2">
-                        No Pets
+                        {applicant.occupants} occupant{applicant.occupants !== 1 ? 's' : ''}
                       </Badge>
-                    )}
-                  </div>
+                      {applicant.pets ? (
+                        <Badge variant="outline" className="border-2">
+                          Pet: {applicant.petDetails || 'Yes'}
+                        </Badge>
+                      ) : (
+                        <Badge variant="outline" className="border-2">
+                          No Pets
+                        </Badge>
+                      )}
+                    </div>
 
-                  {/* Competitive Edge */}
-                  <div className="p-3 bg-muted/50 border-2 border-border">
-                    <p className="text-xs text-muted-foreground mb-1">Competitive Edge</p>
-                    <p className="text-sm">{applicant.competitiveEdge}</p>
-                  </div>
+                    {/* Competitive Edge */}
+                    <div className="p-3 bg-muted/50 border-2 border-border">
+                      <p className="text-xs text-muted-foreground mb-1">Competitive Edge</p>
+                      <p className="text-sm">{applicant.competitiveEdge}</p>
+                    </div>
 
-                  {/* Actions */}
-                  <div className="flex gap-2 pt-2">
-                    <Button
-                      className="flex-1 border-2 border-foreground"
-                      onClick={() => handleSelectApplicant(applicant)}
-                    >
-                      <CheckCircle className="mr-2 h-4 w-4" />
-                      Select Applicant
-                    </Button>
-                    <Button
-                      variant="outline"
-                      className="flex-1 border-2"
-                      onClick={() => handleDenyApplicant(applicant)}
-                    >
-                      <XCircle className="mr-2 h-4 w-4" />
-                      Deny
-                    </Button>
+                    {/* Actions */}
+                    <div className="flex gap-2 pt-2">
+                      <Link href={`/landlord/applicant/${applicant.id}`} className="flex-1">
+                        <Button
+                          variant="outline"
+                          className="w-full border-2"
+                        >
+                          <Eye className="mr-2 h-4 w-4" />
+                          View Details
+                        </Button>
+                      </Link>
+                      <Button
+                        className="flex-1 border-2 border-foreground"
+                        onClick={() => handleSelectApplicant(applicant)}
+                      >
+                        <CheckCircle className="mr-2 h-4 w-4" />
+                        Select
+                      </Button>
+                      <Button
+                        variant="outline"
+                        className="border-2"
+                        onClick={() => handleDenyApplicant(applicant)}
+                      >
+                        <XCircle className="h-4 w-4" />
+                      </Button>
+                    </div>
                   </div>
                 </div>
-              </div>
-            ))}
-          </div>
+              ))}
+            </div>
+          )}
         </CardContent>
       </Card>
 

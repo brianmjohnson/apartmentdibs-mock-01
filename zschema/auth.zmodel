@@ -7,6 +7,9 @@
  */
 
 import "base.zmodel"
+import "tenant.zmodel"
+import "listing.zmodel"
+import "audit.zmodel"
 
 /**
  * User Model - Core authentication entity
@@ -33,6 +36,18 @@ model User {
   sessions      Session[]
   members       Member[]
   profile       Profile?
+
+  // Tenant/Landlord relations
+  tenantProfile           TenantProfile?    @relation(name: "tenant_profile")
+  revealedProfiles        TenantProfile[]   @relation(name: "revealed_profiles")
+  landlordListings        Listing[]         @relation(name: "landlord_listings")
+  selectedApplications    Application[]     @relation(name: "selected_applications")
+  rejectedApplications    Application[]     @relation(name: "rejected_applications")
+
+  // Audit log relations
+  piiAccessLogs           PiiAccessLog[]    @relation(name: "pii_access_logs")
+  selectionLogs           ApplicantSelectionLog[] @relation(name: "selection_logs")
+  profileViewLogs         ProfileViewLog[]  @relation(name: "profile_view_logs")
 
   // Access control policies
   @@allow('create', true)  // Anyone can create account (sign up)

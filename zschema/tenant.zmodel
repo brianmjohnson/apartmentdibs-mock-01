@@ -1,0 +1,200 @@
+/**
+ * Tenant Profile Models
+ * Core model for US-001 PII Anonymization Before Landlord Review
+ *
+ * Key features:
+ * - Encrypted PII data (name, photo, DOB, address, employer)
+ * - Obfuscated data (income ratio, credit band, employment tenure)
+ * - PII reveal tracking for post-selection access
+ * - Access control policies for blind evaluation
+ */
+
+import "base.zmodel"
+import "auth.zmodel"
+import "listing.zmodel"
+
+/**
+ * PII Data Type
+ * Encrypted at rest using AES-256-GCM (per ADR-013)
+ * Only revealed after landlord selection
+ */
+type TenantPiiData {
+  // Personal Information
+  firstName         String
+  lastName          String
+  photoUrl          String?
+  dateOfBirth       String    // ISO date string
+
+  // Contact Information
+  email             String
+  phone             String
+
+  // Address
+  currentAddress    String
+  city              String
+  state             String
+  zipCode           String
+
+  // Employment
+  employerName      String
+  jobTitle          String
+  employerAddress   String?
+
+  // Financial
+  annualIncome      Int       // in cents
+
+  // References
+  references        TenantReference[]
+}
+
+/**
+ * Reference Type
+ * Contact information for tenant references
+ */
+type TenantReference {
+  name              String
+  relationship      String
+  phone             String
+  email             String?
+}
+
+/**
+ * Obfuscated Data Type
+ * Always visible to landlords during blind evaluation
+ * Contains computed/anonymized fields
+ */
+type TenantObfuscatedData {
+  // Financial qualifications
+  incomeToRentRatio Float     // e.g., 4.1
+  creditBand        String    // e.g., "740-760"
+
+  // Employment
+  employmentTenure  String    // e.g., "3+ years"
+  employmentType    String    // e.g., "Full-time"
+
+  // Rental history
+  rentalHistory     String    // e.g., "5+ years, no evictions"
+
+  // Background
+  backgroundCheck   String    // e.g., "Pass"
+
+  // Optional competitive advantages
+  competitiveEdge   String?   // e.g., "Offers 6-month prepay"
+
+  // Pet information
+  hasPets           Boolean
+  petDescription    String?
+
+  // Occupants
+  occupantCount     Int
+}
+
+/**
+ * Credit Band Enum
+ * Standardized credit score bands
+ */
+enum CreditBand {
+  EXCELLENT_800_PLUS     // 800+
+  VERY_GOOD_740_799      // 740-799
+  GOOD_670_739           // 670-739
+  FAIR_580_669           // 580-669
+  POOR_BELOW_580         // Below 580
+}
+
+/**
+ * Verification Status Enum
+ * Tracks verification state for each document type
+ */
+enum VerificationStatus {
+  PENDING
+  IN_PROGRESS
+  VERIFIED
+  FAILED
+  EXPIRED
+}
+
+/**
+ * Tenant Profile Model
+ * Core profile for rental applications with PII anonymization
+ */
+model TenantProfile extends BaseModel {
+  // Foreign key to user
+  userId               String    @unique
+  user                 User      @relation(name: "tenant_profile", fields: [userId], references: [id], onDelete: Cascade)
+
+  // Anonymous identifier shown to landlords
+  applicantId          String    @unique // e.g., "Applicant #2847"
+
+  // PII Data - Encrypted at rest (per ADR-013)
+  // Contains all personally identifiable information
+  // @omit prevents this from being returned in queries by default
+  piiData              TenantPiiData @json @omit
+
+  // Obfuscated Data - Always visible during blind evaluation
+  obfuscatedData       TenantObfuscatedData @json
+
+  // Credit information
+  creditScore          Int?      @omit  // Only revealed after selection
+  creditBand           CreditBand?
+
+  // Verification statuses
+  incomeVerified       VerificationStatus @default(PENDING)
+  employmentVerified   VerificationStatus @default(PENDING)
+  identityVerified     VerificationStatus @default(PENDING)
+  backgroundVerified   VerificationStatus @default(PENDING)
+
+  // Document URLs (stored in Vercel Blob)
+  payStubUrls          String[]  @omit  // Only revealed after selection
+  idDocumentUrls       String[]  @omit  // Only revealed after selection
+  employmentLetterUrl  String?
+
+  // Scrubbed versions of documents (PII redacted)
+  scrubbedPayStubUrls  String[]
+  scrubbedIdUrls       String[]
+
+  // Personal notes (NER-scrubbed version)
+  personalNotes        String?   @omit  // Only revealed after selection
+  scrubbedNotes        String?
+
+  // PII Reveal tracking (per ADR-014)
+  piiRevealedAt        DateTime?
+  piiRevealedToUserId  String?
+  piiRevealedToUser    User?     @relation(name: "revealed_profiles", fields: [piiRevealedToUserId], references: [id])
+
+  // Profile status
+  isComplete           Boolean   @default(false)
+  completedAt          DateTime?
+
+  // Relations
+  applications         Application[]
+
+  @@index([userId])
+  @@index([applicantId])
+  @@index([piiRevealedAt])
+
+  // Access Control Policies (per ADR-014)
+  //
+  // Note: PII fields use @omit to prevent default inclusion in queries.
+  // Service layer must explicitly select omitted fields when authorized.
+  // Authorization check: auth() == user OR piiRevealedToUserId == auth().id
+
+  // Tenant can always create their own profile
+  @@allow('create', auth() != null && auth().id == userId)
+
+  // Tenant can always read their own full profile
+  @@allow('read', auth() == user)
+
+  // Landlords/agents can read profiles (obfuscated data via @omit protection)
+  // PII fields are @omit, so they won't be returned unless explicitly selected
+  // Service layer checks piiRevealedToUserId before selecting PII fields
+  @@allow('read', true)
+
+  // Tenant can update their own profile
+  @@allow('update', auth() == user)
+
+  // Admin can update any profile (for system operations like PII reveal)
+  @@allow('update', auth().role == 'admin')
+
+  // Tenant can delete their profile
+  @@allow('delete', auth() == user)
+}

@@ -1,0 +1,132 @@
+/**
+ * Listing Models
+ * Property listings and rental applications
+ */
+
+import "base.zmodel"
+import "auth.zmodel"
+import "tenant.zmodel"
+
+/**
+ * Listing Status Enum
+ * Tracks the lifecycle of a rental listing
+ */
+enum ListingStatus {
+  DRAFT
+  ACTIVE
+  PENDING
+  RENTED
+  CLOSED
+}
+
+/**
+ * Listing Model
+ * Represents a rental property listing
+ */
+model Listing extends BaseModel {
+  // Foreign keys
+  landlordId      String
+  landlord        User       @relation(name: "landlord_listings", fields: [landlordId], references: [id], onDelete: Cascade)
+
+  // Basic listing info
+  title           String
+  description     String?
+  address         String
+  city            String
+  state           String
+  zipCode         String
+
+  // Rental details
+  monthlyRent     Decimal
+  securityDeposit Decimal?
+  availableDate   DateTime
+  leaseTerm       Int        @default(12) // months
+
+  // Property details
+  bedrooms        Int
+  bathrooms       Float
+  sqft            Int?
+
+  // Status
+  status          ListingStatus @default(DRAFT)
+
+  // Relations
+  applications    Application[]
+
+  @@index([landlordId])
+  @@index([status])
+  @@index([city, state])
+
+  // Access control
+  @@allow('create', auth() != null)
+  @@allow('read', true) // Public listings
+  @@allow('update', auth() == landlord)
+  @@allow('delete', auth() == landlord)
+}
+
+/**
+ * Application Status Enum
+ * Tracks the application lifecycle
+ */
+enum ApplicationStatus {
+  PENDING
+  UNDER_REVIEW
+  SHORTLISTED
+  SELECTED
+  REJECTED
+  WITHDRAWN
+}
+
+/**
+ * Application Model
+ * Links tenant profiles to listings
+ */
+model Application extends BaseModel {
+  // Foreign keys
+  listingId         String
+  listing           Listing       @relation(fields: [listingId], references: [id], onDelete: Cascade)
+
+  tenantProfileId   String
+  tenantProfile     TenantProfile @relation(fields: [tenantProfileId], references: [id], onDelete: Cascade)
+
+  // Application status
+  status            ApplicationStatus @default(PENDING)
+
+  // Selection tracking
+  selectedAt        DateTime?
+  selectedById      String?
+  selectedBy        User?         @relation(name: "selected_applications", fields: [selectedById], references: [id])
+
+  // Rejection tracking
+  rejectedAt        DateTime?
+  rejectedById      String?
+  rejectedBy        User?         @relation(name: "rejected_applications", fields: [rejectedById], references: [id])
+  rejectionReason   String?
+
+  // Notes
+  internalNotes     String?  // For landlord/agent internal use
+
+  @@unique([listingId, tenantProfileId])
+  @@index([listingId])
+  @@index([tenantProfileId])
+  @@index([status])
+
+  // Access control
+  // Tenant can create applications
+  @@allow('create', auth() == tenantProfile.user)
+
+  // Tenant can read their own applications
+  @@allow('read', auth() == tenantProfile.user)
+
+  // Landlord can read applications for their listings
+  @@allow('read', auth() == listing.landlord)
+
+  // Landlord can update status (select, reject, etc.)
+  @@allow('update', auth() == listing.landlord)
+
+  // Tenant can withdraw their application
+  @@allow('update', auth() == tenantProfile.user && status == 'PENDING')
+
+  // Tenant can delete pending applications
+  @@allow('delete', auth() == tenantProfile.user && status == 'PENDING')
+}

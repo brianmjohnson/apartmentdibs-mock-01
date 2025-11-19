@@ -156,6 +156,45 @@ export interface LandlordApplicant {
   occupants: number;
   moveInDate: string;
   competitiveEdge: string;
+  // PII reveal fields for post-selection
+  piiRevealed?: boolean;
+  piiRevealedAt?: string;
+  // PII data revealed after selection
+  revealedData?: {
+    name: string;
+    email: string;
+    phone: string;
+    address: string;
+    employer: string;
+    exactCreditScore: number;
+    photoUrl?: string;
+  };
+  // Rental history and background for display
+  rentalHistory?: string;
+  backgroundCheck?: 'Pass' | 'Fail' | 'Pending';
+}
+
+// Credit band color mapping utility
+export function getCreditBandColor(creditBand: string): string {
+  const score = parseInt(creditBand.split('-')[0]);
+  if (score >= 800) {
+    return 'bg-green-100 text-green-800 border-green-300'; // Excellent
+  } else if (score >= 740) {
+    return 'bg-blue-100 text-blue-800 border-blue-300'; // Good
+  } else if (score >= 680) {
+    return 'bg-yellow-100 text-yellow-800 border-yellow-300'; // Fair
+  } else {
+    return 'bg-red-100 text-red-800 border-red-300'; // Poor
+  }
+}
+
+// Credit band label utility
+export function getCreditBandLabel(creditBand: string): string {
+  const score = parseInt(creditBand.split('-')[0]);
+  if (score >= 800) return 'Excellent';
+  if (score >= 740) return 'Good';
+  if (score >= 680) return 'Fair';
+  return 'Poor';
 }
 
 export interface LandlordActivity {
@@ -568,7 +607,9 @@ export const mockLandlordApplicants: LandlordApplicant[] = [
     pets: false,
     occupants: 2,
     moveInDate: "2025-12-01",
-    competitiveEdge: "Excellent references from previous landlord, stable employment"
+    competitiveEdge: "Excellent references from previous landlord, stable employment",
+    rentalHistory: "5+ years, no evictions",
+    backgroundCheck: "Pass"
   },
   {
     id: "landlord-app-2",
@@ -583,7 +624,9 @@ export const mockLandlordApplicants: LandlordApplicant[] = [
     pets: false,
     occupants: 1,
     moveInDate: "2025-12-15",
-    competitiveEdge: "High income ratio, excellent credit history"
+    competitiveEdge: "High income ratio, excellent credit history",
+    rentalHistory: "8+ years, no evictions",
+    backgroundCheck: "Pass"
   },
   {
     id: "landlord-app-3",
@@ -599,7 +642,38 @@ export const mockLandlordApplicants: LandlordApplicant[] = [
     petDetails: "1 cat",
     occupants: 2,
     moveInDate: "2025-12-01",
-    competitiveEdge: "Willing to sign 2-year lease, great communication"
+    competitiveEdge: "Willing to sign 2-year lease, great communication",
+    rentalHistory: "4+ years, no evictions",
+    backgroundCheck: "Pass"
+  },
+  // Selected applicant example with revealed PII
+  {
+    id: "landlord-app-7",
+    listingId: "landlord-listing-1",
+    displayId: "Applicant #3401",
+    incomeRatio: 4.5,
+    creditBand: "760-780",
+    employmentTenure: "4+ years",
+    employmentType: "Full-time W2",
+    status: "selected",
+    appliedAt: "2025-11-05",
+    pets: false,
+    occupants: 1,
+    moveInDate: "2025-12-01",
+    competitiveEdge: "Offered 2 months upfront, excellent references",
+    rentalHistory: "6+ years, no evictions",
+    backgroundCheck: "Pass",
+    piiRevealed: true,
+    piiRevealedAt: "2025-11-18T14:30:00Z",
+    revealedData: {
+      name: "Maya Chen",
+      email: "maya.chen@email.com",
+      phone: "(555) 867-5309",
+      address: "456 Oak Street, Apt 2B, Brooklyn, NY 11201",
+      employer: "TechCorp Inc.",
+      exactCreditScore: 768,
+      photoUrl: "/images/avatars/maya-chen.jpg"
+    }
   },
   // Applicants for listing 2
   {
@@ -615,7 +689,9 @@ export const mockLandlordApplicants: LandlordApplicant[] = [
     pets: false,
     occupants: 2,
     moveInDate: "2025-12-01",
-    competitiveEdge: "Flexible move-in date"
+    competitiveEdge: "Flexible move-in date",
+    rentalHistory: "3+ years, no evictions",
+    backgroundCheck: "Pass"
   },
   {
     id: "landlord-app-5",
@@ -631,7 +707,9 @@ export const mockLandlordApplicants: LandlordApplicant[] = [
     petDetails: "1 small dog (15 lbs)",
     occupants: 1,
     moveInDate: "2025-12-15",
-    competitiveEdge: "Excellent rental history, professional references"
+    competitiveEdge: "Excellent rental history, professional references",
+    rentalHistory: "7+ years, no evictions",
+    backgroundCheck: "Pass"
   },
   {
     id: "landlord-app-6",
@@ -646,9 +724,15 @@ export const mockLandlordApplicants: LandlordApplicant[] = [
     pets: false,
     occupants: 3,
     moveInDate: "2026-01-01",
-    competitiveEdge: "Looking for long-term rental"
+    competitiveEdge: "Looking for long-term rental",
+    rentalHistory: "2+ years, no evictions",
+    backgroundCheck: "Pass"
   }
 ];
+
+export function getApplicantById(applicantId: string): LandlordApplicant | undefined {
+  return mockLandlordApplicants.find(applicant => applicant.id === applicantId);
+}
 
 export const mockLandlordActivities: LandlordActivity[] = [
   {
