@@ -1,0 +1,246 @@
+/**
+ * Syndication Models
+ * US-007: Listing Syndication to 6+ Platforms (One-Click)
+ *
+ * Key features:
+ * - Auto-syndication to multiple platforms
+ * - Status tracking per platform
+ * - Unified editing with automatic updates
+ * - De-listing management
+ */
+
+import "base.zmodel"
+import "auth.zmodel"
+import "listing.zmodel"
+
+/**
+ * Syndication Platform Enum
+ * External platforms for listing syndication
+ */
+enum SyndicationPlatform {
+  ZILLOW              // Zillow Rental Manager
+  APARTMENTS_DOT_COM  // Apartments.com
+  CRAIGSLIST          // Craigslist
+  FACEBOOK            // Facebook Marketplace
+  STREETEASY          // StreetEasy (NYC)
+  GOOGLE              // Google Search (Schema.org)
+  TRULIA              // Trulia
+  HOTPADS             // HotPads
+  REALTOR             // Realtor.com
+}
+
+/**
+ * Syndication Status Enum
+ * Status of syndication to a specific platform
+ */
+enum SyndicationStatus {
+  PENDING             // Queued for syndication
+  PROCESSING          // Currently syndicating
+  PUBLISHED           // Successfully published
+  FAILED              // Failed to syndicate
+  UPDATE_PENDING      // Update queued
+  DELISTING           // Delisting in progress
+  DELISTED            // Successfully removed
+}
+
+/**
+ * Listing Syndication Model
+ * Tracks syndication status per platform for each listing
+ */
+model ListingSyndication extends BaseModel {
+  // Foreign key to listing
+  listingId           String
+  listing             Listing @relation(fields: [listingId], references: [id], onDelete: Cascade)
+
+  // Platform
+  platform            SyndicationPlatform
+
+  // Syndication status
+  status              SyndicationStatus @default(PENDING)
+
+  // External references
+  externalListingId   String?   // Platform's listing ID
+  externalUrl         String?   // URL on the platform
+  externalStatus      String?   // Platform-specific status
+
+  // Timing
+  queuedAt            DateTime @default(now())
+  publishedAt         DateTime?
+  lastUpdatedAt       DateTime?
+  delistedAt          DateTime?
+
+  // Performance metrics
+  views               Int @default(0)
+  inquiries           Int @default(0)
+  lastSyncedAt        DateTime?
+
+  // Error handling
+  errorCode           String?
+  errorMessage        String?
+  retryCount          Int @default(0)
+  lastRetryAt         DateTime?
+
+  // Configuration
+  isEnabled           Boolean @default(true)
+  autoRenew           Boolean @default(true) // For platforms like Craigslist
+
+  // Relations
+  logs                SyndicationLog[]
+
+  @@unique([listingId, platform])
+  @@index([listingId, status])
+  @@index([platform, status])
+  @@index([status])
+
+  // Access control
+  // Landlord can create syndications for their listings
+  @@allow('create', auth() == listing.landlord)
+
+  // Landlord can read their syndication status
+  @@allow('read', auth() == listing.landlord)
+
+  // Admin can read all
+  @@allow('read', auth().role == 'admin')
+
+  // Landlord can enable/disable platforms
+  @@allow('update', auth() == listing.landlord)
+
+  // System can update status
+  @@allow('update', auth().role == 'admin')
+
+  // No deletion (keep history)
+  @@deny('delete', true)
+}
+
+/**
+ * Syndication Config Model
+ * Agent/landlord preferences for syndication
+ */
+model SyndicationConfig extends BaseModel {
+  // Owner of this config
+  userId              String @unique
+  user                User @relation(name: "syndication_config", fields: [userId], references: [id], onDelete: Cascade)
+
+  // Default platforms to enable
+  defaultPlatforms    SyndicationPlatform[]
+
+  // Platform-specific settings
+  platformSettings    SyndicationPlatformSettings @json
+
+  // Auto-syndication preferences
+  autoSyndicate       Boolean @default(true)  // Auto-syndicate on publish
+  autoDelistOnRented  Boolean @default(true)  // Auto-delist when marked rented
+  autoRenewCraigslist Boolean @default(true)  // Auto-renew Craigslist every 30 days
+
+  // Notification preferences
+  notifyOnPublish     Boolean @default(true)
+  notifyOnError       Boolean @default(true)
+
+  // Access control
+  @@allow('create', auth() != null && auth().id == userId)
+  @@allow('read', auth() == user)
+  @@allow('update', auth() == user)
+  @@allow('delete', auth() == user)
+}
+
+/**
+ * Platform Settings Type
+ * Configuration for individual platforms
+ */
+type SyndicationPlatformSettings {
+  // Zillow
+  zillowApiKey        String?
+  zillowEmail         String?
+
+  // Apartments.com
+  apartmentsEmail     String?
+  apartmentsFeedUrl   String?
+
+  // Craigslist
+  craigslistRegion    String?
+  craigslistEmail     String?
+
+  // Facebook
+  facebookPageId      String?
+  facebookAccessToken String?
+
+  // StreetEasy
+  streetEasyApiKey    String?
+  streetEasyBrokerId  String?
+
+  // Custom fields per platform
+  customSettings      String?   // JSON for additional settings
+}
+
+/**
+ * Syndication Log Model
+ * Audit log for syndication operations
+ */
+model SyndicationLog extends BaseModel {
+  // Foreign key to syndication record
+  syndicationId       String
+  syndication         ListingSyndication @relation(fields: [syndicationId], references: [id], onDelete: Cascade)
+
+  // Operation type
+  operationType       SyndicationOperationType
+
+  // Status change
+  previousStatus      SyndicationStatus?
+  newStatus           SyndicationStatus
+
+  // Details
+  message             String?
+  metadata            SyndicationLogMetadata? @json
+
+  // API response
+  responseCode        Int?
+  responseBody        String?
+
+  @@index([syndicationId, createdAt])
+  @@index([operationType])
+
+  // Access control
+  // System creates logs
+  @@allow('create', auth().role == 'admin')
+
+  // Landlord can read logs for their syndications
+  @@allow('read', auth() == syndication.listing.landlord)
+
+  // Admin can read all
+  @@allow('read', auth().role == 'admin')
+
+  // No updates or deletes
+  @@deny('update', true)
+  @@deny('delete', true)
+}
+
+/**
+ * Syndication Operation Type Enum
+ */
+enum SyndicationOperationType {
+  CREATE              // Initial publish
+  UPDATE              // Content update
+  RENEW               // Renewal (Craigslist)
+  DELIST              // Remove from platform
+  RETRY               // Retry after failure
+  SYNC                // Metrics sync
+}
+
+/**
+ * Syndication Log Metadata Type
+ */
+type SyndicationLogMetadata {
+  // Changed fields
+  changedFields       String[]
+
+  // Error details
+  errorType           String?
+  errorDetails        String?
+
+  // Performance data
+  viewsDelta          Int?
+  inquiriesDelta      Int?
+
+  // Additional context
+  triggeredBy         String?   // user, system, cron
+}

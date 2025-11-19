@@ -1,0 +1,134 @@
+/**
+ * Dashboard Models
+ * US-005: Unified Applicant Dashboard with Real-Time Status
+ *
+ * Key features:
+ * - Application notes for agent/landlord internal use
+ * - Supports timeline tracking and communication history
+ */
+
+import "base.zmodel"
+import "auth.zmodel"
+import "listing.zmodel"
+
+/**
+ * Application Note Model
+ * Internal notes on applications for agent/landlord use
+ */
+model ApplicationNote extends BaseModel {
+  // Foreign key to application
+  applicationId       String
+  application         Application @relation(fields: [applicationId], references: [id], onDelete: Cascade)
+
+  // Author
+  authorId            String
+  author              User @relation(name: "application_notes", fields: [authorId], references: [id], onDelete: Cascade)
+
+  // Note content
+  content             String
+
+  // Note type for categorization
+  noteType            ApplicationNoteType @default(GENERAL)
+
+  // Whether this note is pinned to top
+  isPinned            Boolean @default(false)
+
+  @@index([applicationId, createdAt])
+  @@index([authorId])
+
+  // Access control
+  // Only listing landlord or application author can create notes
+  @@allow('create', auth() == application.listing.landlord)
+
+  // Notes visible to listing landlord
+  @@allow('read', auth() == application.listing.landlord)
+
+  // Author can read their own notes
+  @@allow('read', auth() == author)
+
+  // Author can update their own notes
+  @@allow('update', auth() == author)
+
+  // Author can delete their own notes
+  @@allow('delete', auth() == author)
+}
+
+/**
+ * Application Note Type Enum
+ * Categories for different types of notes
+ */
+enum ApplicationNoteType {
+  GENERAL             // General observations
+  FOLLOW_UP           // Follow-up required
+  LANDLORD_FEEDBACK   // Feedback from landlord
+  COMMUNICATION       // Communication record
+  VERIFICATION        // Verification notes
+}
+
+/**
+ * Dashboard Activity Model
+ * Tracks important events for the applicant dashboard timeline
+ */
+model DashboardActivity extends BaseModel {
+  // Foreign key to application
+  applicationId       String
+  application         Application @relation(fields: [applicationId], references: [id], onDelete: Cascade)
+
+  // Activity type
+  activityType        DashboardActivityType
+
+  // Description of the activity
+  description         String
+
+  // Optional metadata
+  metadata            DashboardActivityMetadata? @json
+
+  @@index([applicationId, createdAt])
+  @@index([activityType])
+
+  // Access control
+  // System can create activities
+  @@allow('create', auth().role == 'admin')
+
+  // Landlord can read activities for their listings
+  @@allow('read', auth() == application.listing.landlord)
+
+  // Tenant can read activities for their applications
+  @@allow('read', auth() == application.tenantProfile.user)
+
+  // No updates or deletes allowed (audit trail)
+  @@deny('update', true)
+  @@deny('delete', true)
+}
+
+/**
+ * Dashboard Activity Type Enum
+ */
+enum DashboardActivityType {
+  APPLICATION_SUBMITTED
+  DOCUMENTS_UPLOADED
+  DOCUMENTS_COMPLETE
+  VERIFICATION_STARTED
+  VERIFICATION_COMPLETED
+  LANDLORD_VIEWED
+  STATUS_CHANGED
+  NOTE_ADDED
+  MESSAGE_SENT
+  REMINDER_SENT
+}
+
+/**
+ * Dashboard Activity Metadata Type
+ */
+type DashboardActivityMetadata {
+  // Previous and new values for status changes
+  previousStatus      String?
+  newStatus           String?
+
+  // Reference to related entity
+  referenceType       String?   // note, message, document, etc.
+  referenceId         String?
+
+  // Additional context
+  additionalInfo      String?
+}

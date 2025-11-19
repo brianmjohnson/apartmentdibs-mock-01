@@ -222,6 +222,12 @@ components/
 - US-004: Audit Trail (messages logged)
 - US-008: Automated Document Reminders
 
+### Architecture Decisions
+
+- [ADR-017: Immutable Audit Trail](../adr/ADR-017-immutable-audit-trail-for-compliance.md) - Message archival for compliance
+- [ADR-018: Multi-Channel Notification Delivery](../adr/ADR-018-multi-channel-notification-delivery.md) - Notification when offline
+- [ADR-021: Real-Time Communication with Pusher](../adr/ADR-021-real-time-communication-with-websocket.md) - Real-time message delivery
+
 ---
 
 **Last Updated**: 2025-11-19

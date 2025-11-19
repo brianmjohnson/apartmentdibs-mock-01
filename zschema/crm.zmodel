@@ -1,0 +1,254 @@
+/**
+ * CRM Models
+ * US-006: CRM Auto-Matching of Denied Applicants to New Listings
+ *
+ * Key features:
+ * - Automatic CRM entry on denial
+ * - Smart matching algorithm
+ * - Lead staleness management
+ * - Conversion tracking
+ */
+
+import "base.zmodel"
+import "auth.zmodel"
+import "tenant.zmodel"
+import "listing.zmodel"
+
+/**
+ * CRM Lead Preferences Type
+ * Captures applicant preferences for matching
+ */
+type CrmLeadPreferences {
+  // Budget
+  budgetMin           Int       // Minimum budget in cents
+  budgetMax           Int       // Maximum budget in cents
+
+  // Location
+  neighborhoods       String[]  // Preferred neighborhoods
+  cities              String[]  // Preferred cities
+  states              String[]  // Preferred states
+
+  // Property requirements
+  minBedrooms         Int?
+  minBathrooms        Float?
+  minSqft             Int?
+
+  // Must-haves
+  mustHaves           String[]  // e.g., "parking", "pet-friendly", "laundry"
+
+  // Nice-to-haves
+  niceToHaves         String[]
+
+  // Move-in window
+  moveInStart         String?   // ISO date
+  moveInEnd           String?   // ISO date
+
+  // Pet information
+  hasPets             Boolean
+  petTypes            String[]
+
+  // Other preferences
+  maxCommuteMinutes   Int?
+  preferredAmenities  String[]
+}
+
+/**
+ * CRM Lead Status Enum
+ */
+enum CrmLeadStatus {
+  ACTIVE              // Actively looking
+  CONTACTED           // Recently contacted
+  APPLIED             // Applied to a matched listing
+  CONVERTED           // Signed a lease
+  EXPIRED             // Lead expired
+  ARCHIVED            // Manually archived
+}
+
+/**
+ * CRM Lead Model
+ * Tracks denied applicants for future matching
+ */
+model CrmLead extends BaseModel {
+  // Agent who owns this lead
+  agentId             String
+  agent               User @relation(name: "crm_leads", fields: [agentId], references: [id], onDelete: Cascade)
+
+  // Original tenant profile
+  tenantProfileId     String
+  tenantProfile       TenantProfile @relation(fields: [tenantProfileId], references: [id], onDelete: Cascade)
+
+  // Original application that was denied
+  originalApplicationId String? @unique
+  originalApplication Application? @relation(name: "crm_lead_origin", fields: [originalApplicationId], references: [id])
+
+  // Lead status
+  status              CrmLeadStatus @default(ACTIVE)
+
+  // Preferences for matching
+  preferences         CrmLeadPreferences @json
+
+  // Verification validity (from original application)
+  verificationExpiresAt DateTime?
+
+  // Lead expiration
+  expiresAt           DateTime
+
+  // Contact tracking
+  contactedCount      Int @default(0)
+  lastContactedAt     DateTime?
+
+  // Conversion tracking
+  convertedAt         DateTime?
+  convertedListingId  String?
+
+  // Notes
+  notes               String?
+
+  // Relations
+  matches             LeadMatch[]
+
+  @@unique([agentId, tenantProfileId])
+  @@index([agentId, status])
+  @@index([expiresAt])
+  @@index([status])
+
+  // Access control
+  // Agent can create leads
+  @@allow('create', auth() != null)
+
+  // Agent can read their own leads
+  @@allow('read', auth() == agent)
+
+  // Admin can read all leads
+  @@allow('read', auth().role == 'admin')
+
+  // Agent can update their leads
+  @@allow('update', auth() == agent)
+
+  // Agent can delete their leads
+  @@allow('delete', auth() == agent)
+}
+
+/**
+ * Lead Match Model
+ * Tracks matches between CRM leads and new listings
+ */
+model LeadMatch extends BaseModel {
+  // Foreign keys
+  crmLeadId           String
+  crmLead             CrmLead @relation(fields: [crmLeadId], references: [id], onDelete: Cascade)
+
+  listingId           String
+  listing             Listing @relation(fields: [listingId], references: [id], onDelete: Cascade)
+
+  // Match quality
+  matchScore          Float     // 0-100 relevance score
+  matchReasons        MatchReasons @json
+
+  // Status tracking
+  status              LeadMatchStatus @default(PENDING)
+
+  // Outreach tracking
+  notifiedAt          DateTime?
+  notificationChannel String?   // email, sms, push
+  openedAt            DateTime?
+  appliedAt           DateTime?
+
+  // Result tracking
+  resultApplicationId String?
+
+  @@unique([crmLeadId, listingId])
+  @@index([crmLeadId, status])
+  @@index([listingId])
+  @@index([matchScore])
+
+  // Access control
+  // System creates matches
+  @@allow('create', auth().role == 'admin')
+
+  // Agent can read matches for their leads
+  @@allow('read', auth() == crmLead.agent)
+
+  // System/Agent can update matches
+  @@allow('update', auth() == crmLead.agent || auth().role == 'admin')
+
+  // No manual deletion
+  @@deny('delete', true)
+}
+
+/**
+ * Lead Match Status Enum
+ */
+enum LeadMatchStatus {
+  PENDING             // Match found, not yet notified
+  NOTIFIED            // Lead has been notified
+  OPENED              // Lead opened the notification
+  APPLIED             // Lead applied to the listing
+  DECLINED            // Lead declined the match
+  EXPIRED             // Match expired without action
+}
+
+/**
+ * Match Reasons Type
+ * Details why a lead matched a listing
+ */
+type MatchReasons {
+  // Individual match scores
+  budgetMatch         Float?    // 0-100
+  locationMatch       Float?    // 0-100
+  amenitiesMatch      Float?    // 0-100
+  sizeMatch           Float?    // 0-100
+  moveInMatch         Float?    // 0-100
+
+  // Details
+  matchedNeighborhoods String[]
+  matchedMustHaves    String[]
+  matchedNiceToHaves  String[]
+  missingMustHaves    String[]
+}
+
+/**
+ * CRM Analytics Model
+ * Tracks CRM performance metrics for agents
+ */
+model CrmAnalytics extends BaseModel {
+  // Agent
+  agentId             String @unique
+  agent               User @relation(name: "crm_analytics", fields: [agentId], references: [id], onDelete: Cascade)
+
+  // Period
+  periodStart         DateTime
+  periodEnd           DateTime
+
+  // Lead metrics
+  leadsCreated        Int @default(0)
+  leadsContacted      Int @default(0)
+  leadsApplied        Int @default(0)
+  leadsConverted      Int @default(0)
+
+  // Efficiency metrics
+  avgDaysToFillCrm    Float?    // Average days to fill via CRM
+  avgDaysToFillNew    Float?    // Average days to fill via new leads
+  conversionRate      Float?    // leadsConverted / leadsContacted
+
+  // Revenue impact
+  commissionsFromCrm  Int?      // In cents
+
+  @@index([agentId, periodStart])
+
+  // Access control
+  // System creates analytics
+  @@allow('create', auth().role == 'admin')
+
+  // Agent can read their own analytics
+  @@allow('read', auth() == agent)
+
+  // Admin can read all
+  @@allow('read', auth().role == 'admin')
+
+  // System updates analytics
+  @@allow('update', auth().role == 'admin')
+
+  // No deletion
+  @@deny('delete', true)
+}

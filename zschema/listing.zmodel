@@ -9,6 +9,11 @@ import "tenant.zmodel"
 import "adverse-action.zmodel"
 import "compliance.zmodel"
 import "verification.zmodel"
+import "dashboard.zmodel"
+import "crm.zmodel"
+import "syndication.zmodel"
+import "reminder.zmodel"
+import "messaging.zmodel"
 
 /**
  * Listing Status Enum
@@ -57,6 +62,15 @@ model Listing extends BaseModel {
   applications         Application[]
   adverseActionLetters AdverseActionLetter[]
   complianceLogs       ComplianceLog[]
+
+  // CRM relations (US-006)
+  leadMatches          LeadMatch[]
+
+  // Syndication relations (US-007)
+  syndications         ListingSyndication[]
+
+  // Messaging relations (US-009)
+  messageThreads       MessageThread[]
 
   @@index([landlordId])
   @@index([status])
@@ -124,6 +138,17 @@ model Application extends BaseModel {
 
   // Relations
   adverseActionLetter AdverseActionLetter?
+
+  // Dashboard relations (US-005)
+  notes                   ApplicationNote[]
+  activities              DashboardActivity[]
+
+  // CRM relations (US-006)
+  crmLeadOrigin           CrmLead? @relation(name: "crm_lead_origin")
+
+  // Reminder relations (US-008)
+  reminders               DocumentReminder[]
+  missingDocumentsTracker MissingDocumentsTracker?
 
   @@unique([listingId, tenantProfileId])
   @@index([listingId])

@@ -1,0 +1,314 @@
+/**
+ * Messaging Models
+ * US-009: In-App Messaging with Applicants
+ *
+ * Key features:
+ * - In-app message threads
+ * - Multi-channel notifications
+ * - File sharing
+ * - Message templates
+ * - Search and archival
+ */
+
+import "base.zmodel"
+import "auth.zmodel"
+import "tenant.zmodel"
+import "listing.zmodel"
+
+/**
+ * Message Thread Status Enum
+ */
+enum ThreadStatus {
+  ACTIVE              // Active conversation
+  ARCHIVED            // Archived by user
+  CLOSED              // Closed (lease signed/denied)
+}
+
+/**
+ * Message Thread Model
+ * Represents a conversation between agent and applicant
+ */
+model MessageThread extends BaseModel {
+  // Participants
+  agentId             String
+  agent               User @relation(name: "agent_threads", fields: [agentId], references: [id], onDelete: Cascade)
+
+  tenantProfileId     String
+  tenantProfile       TenantProfile @relation(fields: [tenantProfileId], references: [id], onDelete: Cascade)
+
+  // Associated listing (optional, some conversations may be general)
+  listingId           String?
+  listing             Listing? @relation(fields: [listingId], references: [id], onDelete: SetNull)
+
+  // Thread status
+  status              ThreadStatus @default(ACTIVE)
+
+  // Subject/title
+  subject             String?
+
+  // Last activity
+  lastMessageAt       DateTime @default(now())
+  lastMessagePreview  String?
+
+  // Read tracking
+  agentLastReadAt     DateTime?
+  tenantLastReadAt    DateTime?
+  agentUnreadCount    Int @default(0)
+  tenantUnreadCount   Int @default(0)
+
+  // Relations
+  messages            Message[]
+
+  @@unique([agentId, tenantProfileId, listingId])
+  @@index([agentId, status, lastMessageAt])
+  @@index([tenantProfileId, status])
+  @@index([listingId])
+  @@index([lastMessageAt])
+
+  // Access control
+  // Agent or tenant can create thread
+  @@allow('create', auth() != null)
+
+  // Agent can read their threads
+  @@allow('read', auth() == agent)
+
+  // Tenant can read their threads
+  @@allow('read', auth() == tenantProfile.user)
+
+  // Participants can update (archive, mark read)
+  @@allow('update', auth() == agent || auth() == tenantProfile.user)
+
+  // No deletion (compliance requirement)
+  @@deny('delete', true)
+}
+
+/**
+ * Message Status Enum
+ */
+enum MessageStatus {
+  SENDING             // Being sent
+  SENT                // Sent to server
+  DELIVERED           // Delivered to recipient
+  READ                // Read by recipient
+  FAILED              // Failed to send
+}
+
+/**
+ * Message Model
+ * Individual message in a thread
+ */
+model Message extends BaseModel {
+  // Foreign key to thread
+  threadId            String
+  thread              MessageThread @relation(fields: [threadId], references: [id], onDelete: Cascade)
+
+  // Sender
+  senderId            String
+  sender              User @relation(name: "sent_messages", fields: [senderId], references: [id], onDelete: Cascade)
+  senderType          MessageSenderType
+
+  // Content
+  content             String
+
+  // Attachments
+  attachments         MessageAttachment[] @json
+
+  // Status
+  status              MessageStatus @default(SENT)
+
+  // Read receipt
+  readAt              DateTime?
+
+  // Template used (if any)
+  templateId          String?
+  template            MessageTemplate? @relation(fields: [templateId], references: [id])
+
+  // Notifications sent
+  emailNotificationSent Boolean @default(false)
+  smsNotificationSent   Boolean @default(false)
+  pushNotificationSent  Boolean @default(false)
+
+  // Metadata
+  metadata            MessageMetadata? @json
+
+  @@index([threadId, createdAt])
+  @@index([senderId])
+  @@index([status])
+
+  // Access control
+  // Thread participants can create messages
+  @@allow('create', auth() == thread.agent || auth() == thread.tenantProfile.user)
+
+  // Participants can read
+  @@allow('read', auth() == thread.agent || auth() == thread.tenantProfile.user)
+
+  // Admin can read for compliance
+  @@allow('read', auth().role == 'admin')
+
+  // Only status can be updated (for read receipts)
+  @@allow('update', auth() == thread.agent || auth() == thread.tenantProfile.user)
+
+  // No deletion (compliance - 3 year retention)
+  @@deny('delete', true)
+}
+
+/**
+ * Message Sender Type Enum
+ */
+enum MessageSenderType {
+  AGENT
+  TENANT
+  SYSTEM              // System-generated messages
+}
+
+/**
+ * Message Attachment Type
+ */
+type MessageAttachment {
+  id                  String
+  fileName            String
+  fileType            String    // image/jpeg, application/pdf, etc.
+  fileSize            Int       // In bytes
+  fileUrl             String    // Vercel Blob URL
+  thumbnailUrl        String?   // For images
+}
+
+/**
+ * Message Metadata Type
+ */
+type MessageMetadata {
+  // Client info
+  deviceType          String?   // mobile, desktop, tablet
+  platform            String?   // ios, android, web
+
+  // Location
+  ipAddress           String?
+
+  // Notification delivery
+  emailDeliveredAt    DateTime?
+  smsDeliveredAt      DateTime?
+  pushDeliveredAt     DateTime?
+
+  // Template variables used
+  templateVariables   String?   // JSON of variables
+}
+
+/**
+ * Message Template Model
+ * Reusable message templates for agents
+ */
+model MessageTemplate extends BaseModel {
+  // Owner
+  userId              String
+  user                User @relation(name: "message_templates", fields: [userId], references: [id], onDelete: Cascade)
+
+  // Template details
+  name                String
+  category            MessageTemplateCategory
+  content             String
+
+  // Variables in template
+  variables           String[]  // e.g., ["applicantName", "listingAddress"]
+
+  // Usage tracking
+  usageCount          Int @default(0)
+  lastUsedAt          DateTime?
+
+  // Sharing
+  isShared            Boolean @default(false)  // Shared with team
+
+  // Relations
+  messages            Message[]
+
+  @@index([userId, category])
+  @@index([isShared])
+
+  // Access control
+  @@allow('create', auth() != null)
+  @@allow('read', auth() == user || isShared)
+  @@allow('update', auth() == user)
+  @@allow('delete', auth() == user)
+}
+
+/**
+ * Message Template Category Enum
+ */
+enum MessageTemplateCategory {
+  GREETING            // Initial contact
+  FOLLOW_UP           // Follow-up messages
+  DOCUMENT_REQUEST    // Request for documents
+  SHOWING_SCHEDULE    // Showing scheduling
+  STATUS_UPDATE       // Application status
+  LEASE_INFO          // Lease information
+  CUSTOM              // Custom templates
+}
+
+/**
+ * Message Quick Reply Model
+ * Suggested quick replies based on context
+ */
+model QuickReply extends BaseModel {
+  // Content
+  text                String
+  category            MessageTemplateCategory
+
+  // Display order
+  sortOrder           Int @default(0)
+
+  // Targeting
+  isGlobal            Boolean @default(true)  // Available to all
+  userId              String?                  // Owner if not global
+  user                User? @relation(name: "quick_replies", fields: [userId], references: [id])
+
+  // Usage tracking
+  usageCount          Int @default(0)
+
+  @@index([category, sortOrder])
+  @@index([userId])
+
+  // Access control
+  // Anyone can read global replies
+  @@allow('read', isGlobal || auth() == user)
+
+  // Admins can create global replies
+  @@allow('create', auth().role == 'admin' || (auth() != null && !isGlobal))
+
+  // Owner can update their replies
+  @@allow('update', auth() == user || auth().role == 'admin')
+
+  // Owner can delete their replies
+  @@allow('delete', auth() == user || auth().role == 'admin')
+}
+
+/**
+ * Notification Preference Model
+ * User preferences for message notifications
+ */
+model MessageNotificationPreference extends BaseModel {
+  // User
+  userId              String @unique
+  user                User @relation(name: "message_notification_preferences", fields: [userId], references: [id], onDelete: Cascade)
+
+  // Channel preferences
+  emailEnabled        Boolean @default(true)
+  smsEnabled          Boolean @default(false)  // Must opt-in
+  pushEnabled         Boolean @default(true)
+
+  // Timing
+  quietHoursStart     String?   // e.g., "22:00"
+  quietHoursEnd       String?   // e.g., "08:00"
+  timezone            String @default("America/New_York")
+
+  // Urgency settings
+  urgentOnlySms       Boolean @default(true)  // Only SMS for urgent
+
+  // Digest preferences
+  emailDigestEnabled  Boolean @default(false)
+  digestFrequency     String?   // hourly, daily, weekly
+
+  // Access control
+  @@allow('create', auth() != null && auth().id == userId)
+  @@allow('read', auth() == user)
+  @@allow('update', auth() == user)
+  @@allow('delete', auth() == user)
+}

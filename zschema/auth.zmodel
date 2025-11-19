@@ -13,6 +13,11 @@ import "audit.zmodel"
 import "adverse-action.zmodel"
 import "compliance.zmodel"
 import "verification.zmodel"
+import "dashboard.zmodel"
+import "crm.zmodel"
+import "syndication.zmodel"
+import "reminder.zmodel"
+import "messaging.zmodel"
 
 /**
  * User Model - Core authentication entity
@@ -60,6 +65,26 @@ model User {
   complianceRulesReviewed ComplianceRule[]  @relation(name: "compliance_rules_reviewed")
   complianceLogs          ComplianceLog[]   @relation(name: "compliance_logs")
   complianceOverrideAttempts ComplianceOverrideAttempt[] @relation(name: "compliance_override_attempts")
+
+  // Dashboard relations (US-005)
+  applicationNotes        ApplicationNote[] @relation(name: "application_notes")
+
+  // CRM relations (US-006)
+  crmLeads                CrmLead[]         @relation(name: "crm_leads")
+  crmAnalytics            CrmAnalytics?     @relation(name: "crm_analytics")
+
+  // Syndication relations (US-007)
+  syndicationConfig       SyndicationConfig? @relation(name: "syndication_config")
+
+  // Reminder relations (US-008)
+  reminderSettings        ReminderSettings? @relation(name: "reminder_settings")
+
+  // Messaging relations (US-009)
+  agentThreads            MessageThread[]   @relation(name: "agent_threads")
+  sentMessages            Message[]         @relation(name: "sent_messages")
+  messageTemplates        MessageTemplate[] @relation(name: "message_templates")
+  quickReplies            QuickReply[]      @relation(name: "quick_replies")
+  messageNotificationPreference MessageNotificationPreference? @relation(name: "message_notification_preferences")
 
   // Access control policies
   @@allow('create', true)  // Anyone can create account (sign up)

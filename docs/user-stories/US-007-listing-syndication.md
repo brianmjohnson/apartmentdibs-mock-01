@@ -209,6 +209,11 @@ components/
 - Facebook Graph API access
 - StreetEasy API access
 
+### Architecture Decisions
+
+- [ADR-022: Background Job Queue with QStash](../adr/ADR-022-background-job-queue-architecture.md) - Async syndication processing
+- [ADR-023: External API Integration Patterns](../adr/ADR-023-external-api-integration-patterns.md) - Platform adapters with circuit breakers
+
 ---
 
 **Last Updated**: 2025-11-19

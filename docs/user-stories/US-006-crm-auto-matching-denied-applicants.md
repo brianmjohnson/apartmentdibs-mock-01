@@ -225,6 +225,11 @@ components/
 
 - US-005: Unified Applicant Dashboard
 
+### Architecture Decisions
+
+- [ADR-003: Redis Caching Strategy](../adr/ADR-003-redis-caching-strategy.md) - Cache matching results
+- [ADR-018: Multi-Channel Notification Delivery](../adr/ADR-018-multi-channel-notification-delivery.md) - Send outreach via SMS/email
+
 ---
 
 **Last Updated**: 2025-11-19

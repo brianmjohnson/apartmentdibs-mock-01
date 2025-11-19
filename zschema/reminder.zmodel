@@ -1,0 +1,274 @@
+/**
+ * Reminder Models
+ * US-008: Automated Document Collection Reminders
+ *
+ * Key features:
+ * - Automated reminder sequences
+ * - Multi-channel delivery (email, SMS)
+ * - Configurable reminder settings per agent
+ * - Tracking and analytics
+ */
+
+import "base.zmodel"
+import "auth.zmodel"
+import "tenant.zmodel"
+import "listing.zmodel"
+
+/**
+ * Document Type Enum
+ * Types of documents that may be missing
+ */
+enum DocumentType {
+  PAY_STUB
+  BANK_STATEMENT
+  EMPLOYMENT_LETTER
+  CREDIT_AUTHORIZATION
+  ID_DOCUMENT
+  TAX_RETURN
+  RENTAL_REFERENCE
+  PET_DOCUMENTATION
+  OTHER
+}
+
+/**
+ * Reminder Channel Enum
+ */
+enum ReminderChannel {
+  EMAIL
+  SMS
+  PUSH
+  IN_APP
+}
+
+/**
+ * Reminder Status Enum
+ */
+enum ReminderStatus {
+  SCHEDULED           // Queued for delivery
+  SENT                // Successfully sent
+  DELIVERED           // Confirmed delivery
+  OPENED              // Recipient opened
+  CLICKED             // Recipient clicked a link
+  FAILED              // Delivery failed
+  CANCELLED           // Cancelled before send
+}
+
+/**
+ * Document Reminder Model
+ * Tracks individual reminders sent to applicants
+ */
+model DocumentReminder extends BaseModel {
+  // Foreign key to tenant profile
+  tenantProfileId     String
+  tenantProfile       TenantProfile @relation(fields: [tenantProfileId], references: [id], onDelete: Cascade)
+
+  // Associated application (if any)
+  applicationId       String?
+  application         Application? @relation(fields: [applicationId], references: [id], onDelete: SetNull)
+
+  // Reminder details
+  reminderType        ReminderType @default(MISSING_DOCUMENTS)
+  channel             ReminderChannel
+  status              ReminderStatus @default(SCHEDULED)
+
+  // Sequence tracking
+  sequenceNumber      Int         // 1, 2, 3, etc.
+  sequenceDay         Int         // Day 1, 3, 5, 7
+
+  // Missing documents this reminder is for
+  missingDocuments    DocumentType[]
+
+  // Content
+  subject             String?     // For email
+  content             String      // Message body
+  templateId          String?     // Reference to template used
+
+  // Timing
+  scheduledAt         DateTime
+  sentAt              DateTime?
+  deliveredAt         DateTime?
+  openedAt            DateTime?
+  clickedAt           DateTime?
+
+  // Delivery tracking
+  externalMessageId   String?     // SendGrid/Twilio message ID
+  deliveryMetadata    ReminderDeliveryMetadata? @json
+
+  // Error handling
+  errorCode           String?
+  errorMessage        String?
+  retryCount          Int @default(0)
+
+  @@index([tenantProfileId, status])
+  @@index([applicationId])
+  @@index([scheduledAt])
+  @@index([status])
+
+  // Access control
+  // System creates reminders
+  @@allow('create', auth().role == 'admin')
+
+  // Tenant can read their reminders
+  @@allow('read', auth() == tenantProfile.user)
+
+  // Landlord can read reminders for their applicants
+  @@allow('read', auth() != null && application != null && auth() == application.listing.landlord)
+
+  // Admin can read all
+  @@allow('read', auth().role == 'admin')
+
+  // System updates status
+  @@allow('update', auth().role == 'admin')
+
+  // No deletion
+  @@deny('delete', true)
+}
+
+/**
+ * Reminder Type Enum
+ */
+enum ReminderType {
+  MISSING_DOCUMENTS   // Documents are missing
+  EXPIRING_PROFILE    // Profile about to expire
+  INCOMPLETE_PROFILE  // Profile not complete
+  VERIFICATION_NEEDED // Verification required
+  FINAL_NOTICE        // Last reminder before expiration
+}
+
+/**
+ * Reminder Delivery Metadata Type
+ */
+type ReminderDeliveryMetadata {
+  // Email metadata
+  emailFrom           String?
+  emailTo             String?
+  emailBounced        Boolean?
+
+  // SMS metadata
+  smsTo               String?
+  smsParts            Int?
+
+  // Push metadata
+  pushDeviceId        String?
+  pushPlatform        String?   // ios, android, web
+
+  // Tracking
+  userAgent           String?
+  ipAddress           String?
+}
+
+/**
+ * Reminder Settings Model
+ * Agent/landlord preferences for automated reminders
+ */
+model ReminderSettings extends BaseModel {
+  // Owner of these settings
+  userId              String @unique
+  user                User @relation(name: "reminder_settings", fields: [userId], references: [id], onDelete: Cascade)
+
+  // Enable/disable reminders
+  remindersEnabled    Boolean @default(true)
+
+  // Reminder schedule (days after application)
+  reminderSchedule    Int[] @default([1, 3, 5, 7])
+
+  // Channels to use
+  enabledChannels     ReminderChannel[]
+
+  // Application expiration
+  applicationExpirationDays Int @default(14)
+
+  // Final notice timing
+  finalNoticeDays     Int @default(2) // Days before expiration
+
+  // Custom message templates
+  customTemplates     ReminderTemplates? @json
+
+  // Notification preferences
+  notifyOnStuck       Boolean @default(true)  // Notify when applicant stuck
+  stuckThresholdDays  Int @default(5)         // Days to consider "stuck"
+
+  // Access control
+  @@allow('create', auth() != null && auth().id == userId)
+  @@allow('read', auth() == user)
+  @@allow('update', auth() == user)
+  @@allow('delete', auth() == user)
+}
+
+/**
+ * Reminder Templates Type
+ * Custom message templates per reminder type
+ */
+type ReminderTemplates {
+  // Day 1 - Gentle reminder
+  day1Email           String?
+  day1Sms             String?
+
+  // Day 3 - Follow-up
+  day3Email           String?
+  day3Sms             String?
+
+  // Day 5 - Urgent
+  day5Email           String?
+  day5Sms             String?
+
+  // Day 7 - Final
+  day7Email           String?
+  day7Sms             String?
+
+  // Subject lines
+  emailSubjectPrefix  String?
+
+  // Signature
+  emailSignature      String?
+}
+
+/**
+ * Missing Documents Tracker Model
+ * Tracks which documents are missing for each application
+ */
+model MissingDocumentsTracker extends BaseModel {
+  // Foreign key to application
+  applicationId       String @unique
+  application         Application @relation(fields: [applicationId], references: [id], onDelete: Cascade)
+
+  // Missing documents
+  missingDocuments    DocumentType[]
+
+  // Required documents (based on listing/agent requirements)
+  requiredDocuments   DocumentType[]
+
+  // Tracking
+  firstDetectedAt     DateTime @default(now())
+  lastCheckedAt       DateTime @default(now())
+  completedAt         DateTime?
+
+  // Reminder status
+  remindersCount      Int @default(0)
+  lastReminderAt      DateTime?
+  nextReminderAt      DateTime?
+
+  // Intervention needed
+  needsIntervention   Boolean @default(false)
+  interventionReason  String?
+
+  @@index([applicationId])
+  @@index([needsIntervention])
+  @@index([nextReminderAt])
+
+  // Access control
+  // System creates tracker
+  @@allow('create', auth().role == 'admin')
+
+  // Landlord can read for their listings
+  @@allow('read', auth() == application.listing.landlord)
+
+  // Tenant can read their own
+  @@allow('read', auth() == application.tenantProfile.user)
+
+  // System updates
+  @@allow('update', auth().role == 'admin')
+
+  // No deletion
+  @@deny('delete', true)
+}

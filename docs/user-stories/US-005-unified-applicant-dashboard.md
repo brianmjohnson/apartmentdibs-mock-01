@@ -243,6 +243,11 @@ components/
 - US-006: CRM Auto-Matching
 - US-008: Automated Document Collection Reminders
 
+### Architecture Decisions
+
+- [ADR-003: Redis Caching Strategy](../adr/ADR-003-redis-caching-strategy.md) - Cache applicant counts per status
+- [ADR-021: Real-Time Communication with Pusher](../adr/ADR-021-real-time-communication-with-websocket.md) - WebSocket for real-time dashboard updates
+
 ---
 
 ## Testing Requirements

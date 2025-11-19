@@ -202,6 +202,12 @@ components/
 - SendGrid for email
 - Twilio for SMS
 
+### Architecture Decisions
+
+- [ADR-004: Email Templating with Resend](../adr/ADR-004-email-templating-with-resend.md) - Reminder email templates
+- [ADR-018: Multi-Channel Notification Delivery](../adr/ADR-018-multi-channel-notification-delivery.md) - Multi-channel reminders
+- [ADR-022: Background Job Queue with QStash](../adr/ADR-022-background-job-queue-architecture.md) - Scheduled reminder jobs
+
 ---
 
 **Last Updated**: 2025-11-19
