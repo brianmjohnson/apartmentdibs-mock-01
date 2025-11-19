@@ -414,6 +414,9 @@ test('landlord can deny applicant with adverse action letter', async ({ page }) 
 - **Business Plan**: `docs/Business_Plan_and_GTM.md` - Compliance value proposition
 - **FCRA Reference**: 15 USC 1681m(a) - Adverse action requirements
 - **Template**: Letter templates stored in `lib/templates/adverse-action/`
+- **ADR-018**: Multi-Channel Notification Delivery - Email, SMS, certified mail delivery architecture
+- **ADR-004**: Email Templating with Resend - Email delivery foundation
+- **ADR-017**: Immutable Audit Trail - Delivery tracking and compliance logging
 
 ---
 

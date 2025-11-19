@@ -171,5 +171,14 @@ components/
 
 ---
 
+## Related Documentation
+
+- **ADR-020**: Reusable Tenant Profile Architecture - Profile model, snapshot pattern, one-tap apply
+- **ADR-013**: PII Encryption - Profile data encryption
+- **ADR-014**: Row-Level Security - Profile access control
+- **California AB 2493**: PTSR requirements for profile export
+
+---
+
 **Last Updated**: 2025-11-19
 **Assigned To**: Backend Developer, Frontend Developer

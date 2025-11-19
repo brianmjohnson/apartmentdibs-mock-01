@@ -1,0 +1,246 @@
+/**
+ * Adverse Action Models
+ * US-002: Automated Adverse Action Notices
+ *
+ * Key features:
+ * - FCRA-compliant adverse action letters
+ * - Multi-channel delivery (email, SMS, certified mail) per ADR-018
+ * - Delivery tracking and retry logic
+ * - 3-year retention for compliance
+ */
+
+import "base.zmodel"
+import "auth.zmodel"
+import "listing.zmodel"
+import "tenant.zmodel"
+
+/**
+ * Denial Reason Enum
+ * Pre-vetted compliance-safe options for adverse action letters
+ */
+enum DenialReason {
+  HIGHER_INCOME_RATIO            // "Another applicant had higher income-to-rent ratio"
+  HIGHER_CREDIT_SCORE            // "Another applicant had higher credit score"
+  LONGER_LEASE_TERM              // "Another applicant offered longer lease term"
+  INCOME_BELOW_THRESHOLD         // "Applicant's income-to-rent ratio below my threshold"
+  CREDIT_BELOW_THRESHOLD         // "Applicant's credit score below my threshold"
+  EVICTION_HISTORY               // "Applicant had eviction history within my restriction period"
+  RENTAL_HISTORY_INSUFFICIENT    // "Insufficient rental history"
+  EMPLOYMENT_VERIFICATION_FAILED // "Employment verification failed"
+  BACKGROUND_CHECK_ISSUE         // "Background check revealed disqualifying factor"
+  APPLICATION_INCOMPLETE         // "Application incomplete or missing required documents"
+  OTHER_COMPLIANCE_SAFE          // "Other (compliance-reviewed reason)"
+}
+
+/**
+ * Delivery Channel Enum
+ * Methods for delivering adverse action notices
+ */
+enum DeliveryChannel {
+  EMAIL
+  SMS
+  CERTIFIED_MAIL
+}
+
+/**
+ * Delivery Status Enum
+ * Status of delivery attempts
+ */
+enum DeliveryStatus {
+  PENDING
+  QUEUED
+  SENT
+  DELIVERED
+  BOUNCED
+  FAILED
+  OPENED
+}
+
+/**
+ * Letter Content Type
+ * Template data for generating adverse action letters
+ */
+type AdverseActionLetterContent {
+  // Header
+  header                String
+
+  // Applicant info
+  applicantName         String
+  applicantId           String
+  propertyAddress       String
+
+  // Denial details
+  denialReasons         String[]
+  primaryReason         String
+
+  // Credit bureau info (if applicable)
+  creditUsed            Boolean
+  creditBureauName      String?
+  creditBureauContact   String?
+
+  // Standard FCRA language
+  disputeRights         String
+  fairHousingNotice     String
+
+  // Landlord info
+  landlordName          String
+  companyName           String?
+
+  // Generated timestamp
+  generatedAt           String
+}
+
+/**
+ * Recipient Address Type
+ * For certified mail delivery
+ */
+type RecipientAddress {
+  street                String
+  city                  String
+  state                 String
+  zipCode               String
+}
+
+/**
+ * Adverse Action Letter Model
+ * FCRA-compliant adverse action notices
+ */
+model AdverseActionLetter extends BaseModel {
+  // Foreign keys
+  applicationId         String        @unique
+  application           Application   @relation(fields: [applicationId], references: [id], onDelete: Cascade)
+
+  listingId             String
+  listing               Listing       @relation(fields: [listingId], references: [id])
+
+  landlordId            String
+  landlord              User          @relation(name: "adverse_action_letters", fields: [landlordId], references: [id])
+
+  tenantProfileId       String
+  tenantProfile         TenantProfile @relation(fields: [tenantProfileId], references: [id])
+
+  // Denial details
+  denialReasons         DenialReason[]
+  primaryDenialReason   DenialReason
+  customReasonText      String?       // For OTHER_COMPLIANCE_SAFE
+
+  // Validation
+  reasonValidated       Boolean       @default(false)
+  validationErrors      String[]      @default([])
+
+  // Letter content
+  letterContent         AdverseActionLetterContent @json
+  letterPdfUrl          String?       // Vercel Blob storage
+
+  // Generation timing
+  generatedAt           DateTime      @default(now())
+  mustSendBy            DateTime      // FCRA deadline (24 hours from denial)
+
+  // Recipient contact info
+  recipientEmail        String        @omit
+  recipientPhone        String?       @omit
+  recipientAddress      RecipientAddress? @json @omit
+
+  // Credit bureau info
+  creditUsedInDecision  Boolean       @default(false)
+  creditBureauName      String?
+  creditBureauContact   String?
+
+  // Delivery tracking
+  deliveryLogs          DeliveryLog[]
+  allDeliveriesComplete Boolean       @default(false)
+  finalDeliveryStatus   DeliveryStatus?
+
+  // Archive
+  archivedAt            DateTime?
+  retentionUntil        DateTime      // 3 years from creation
+
+  // Hash for tamper evidence
+  contentHash           String        // SHA-256 of letter content
+
+  @@index([landlordId, createdAt])
+  @@index([listingId])
+  @@index([tenantProfileId])
+  @@index([generatedAt])
+  @@index([retentionUntil])
+
+  // Access control
+  // Landlord who owns the listing can create adverse action letters
+  @@allow('create', auth() == landlord)
+
+  // Landlord can read their own letters
+  @@allow('read', auth() == landlord)
+
+  // Tenant can read adverse action letters sent to them
+  @@allow('read', auth() == tenantProfile.user)
+
+  // Admin can read all letters for compliance audits
+  @@allow('read', auth().role == 'admin')
+
+  // Limited updates (e.g., marking delivery complete)
+  @@allow('update', auth() == landlord || auth().role == 'admin')
+
+  // Cannot delete - retained for 3 years for compliance
+  @@deny('delete', true)
+}
+
+/**
+ * Delivery Log Model
+ * Tracks all delivery attempts for adverse action letters
+ */
+model DeliveryLog extends BaseModel {
+  // Foreign key to letter
+  adverseActionLetterId String
+  adverseActionLetter   AdverseActionLetter @relation(fields: [adverseActionLetterId], references: [id], onDelete: Cascade)
+
+  // Delivery details
+  channel               DeliveryChannel
+  status                DeliveryStatus @default(PENDING)
+
+  // External service tracking
+  externalId            String?       // SendGrid/Twilio/Lob ID
+  externalStatus        String?       // Provider-specific status
+
+  // Timing
+  queuedAt              DateTime?
+  sentAt                DateTime?
+  deliveredAt           DateTime?
+  openedAt              DateTime?
+  failedAt              DateTime?
+
+  // Error tracking
+  errorMessage          String?
+  retryCount            Int           @default(0)
+  maxRetries            Int           @default(3)
+  nextRetryAt           DateTime?
+
+  // Certified mail specific
+  trackingNumber        String?
+  certifiedMailStatus   String?
+
+  // Webhook data
+  webhookPayload        String?       // Raw webhook data from provider
+
+  @@index([adverseActionLetterId, channel])
+  @@index([status, channel])
+  @@index([sentAt])
+
+  // Access control
+  // System creates logs
+  @@allow('create', true)
+
+  // Landlord can read delivery status for their letters
+  @@allow('read', auth() == adverseActionLetter.landlord)
+
+  // Tenant can see delivery status
+  @@allow('read', auth() == adverseActionLetter.tenantProfile.user)
+
+  // Admin can read all
+  @@allow('read', auth().role == 'admin')
+
+  // System can update (webhook handlers)
+  @@allow('update', auth().role == 'admin')
+
+  // Cannot delete delivery records
+  @@deny('delete', true)
+}

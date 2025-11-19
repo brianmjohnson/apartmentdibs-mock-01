@@ -1,0 +1,262 @@
+/**
+ * Verification Models
+ * US-010: Reusable Profile (One-Tap Apply)
+ *
+ * Key features:
+ * - Profile verification tracking per ADR-020
+ * - Multiple verification types with different validity periods
+ * - Provider integration tracking
+ * - Expiration and renewal management
+ */
+
+import "base.zmodel"
+import "auth.zmodel"
+import "tenant.zmodel"
+
+/**
+ * Verification Type Enum
+ * Types of verifications that can be performed
+ */
+enum VerificationType {
+  CREDIT              // Credit report (30 days validity)
+  INCOME              // Income verification (60 days)
+  EMPLOYMENT          // Employment verification (60 days)
+  IDENTITY            // ID verification (1 year)
+  BACKGROUND          // Background check (90 days)
+  RENTAL_HISTORY      // Rental history verification (90 days)
+  BANK_ACCOUNT        // Bank account verification (30 days)
+}
+
+/**
+ * Verification Provider Enum
+ * External providers for verifications
+ */
+enum VerificationProvider {
+  TRANSUNION          // Credit reports
+  PLAID               // Income/bank verification
+  CHECKR              // Background checks
+  TRUEWORK            // Employment verification
+  ONFIDO              // Identity verification
+  INTERNAL            // Internal verification
+}
+
+/**
+ * Profile Tier Enum
+ * Subscription tiers with different validity periods
+ */
+enum ProfileTier {
+  BASIC               // 60 days validity
+  PREMIUM             // 90 days validity
+}
+
+/**
+ * Verification Data Type
+ * Additional data returned from verification provider
+ */
+type VerificationData {
+  // Provider-specific fields
+  score                 Int?          // Credit score, risk score, etc.
+  band                  String?       // Score band (e.g., "740-760")
+  reportId              String?       // Provider's report ID
+  reportUrl             String?       // URL to full report
+
+  // Employment specific
+  employerVerified      Boolean?
+  titleVerified         Boolean?
+  incomeVerified        Boolean?
+  tenureYears           Float?
+
+  // Income specific
+  monthlyIncome         Int?          // In cents
+  incomeStreams         Int?
+  averageBalance        Int?          // In cents
+
+  // Identity specific
+  idType                String?       // Passport, driver's license, etc.
+  idVerified            Boolean?
+
+  // Background specific
+  criminalRecords       Int?
+  evictionRecords       Int?
+  sexOffenderCheck      Boolean?
+}
+
+/**
+ * Profile Verification Model
+ * Tracks individual verification status for tenant profiles
+ */
+model ProfileVerification extends BaseModel {
+  // Foreign key to tenant profile
+  tenantProfileId       String
+  tenantProfile         TenantProfile @relation(fields: [tenantProfileId], references: [id], onDelete: Cascade)
+
+  // Verification details
+  verificationType      VerificationType
+  provider              VerificationProvider
+  status                VerificationStatus @default(PENDING)
+
+  // Timing
+  initiatedAt           DateTime      @default(now())
+  verifiedAt            DateTime?
+  expiresAt             DateTime      // Based on verification type
+
+  // External tracking
+  externalId            String?       // Provider's verification ID
+  externalStatus        String?       // Provider-specific status
+
+  // Verification data (encrypted sensitive fields)
+  verificationData      VerificationData? @json
+
+  // Cost tracking
+  costCents             Int?          // Cost of this verification
+
+  // Error handling
+  errorCode             String?
+  errorMessage          String?
+  retryCount            Int           @default(0)
+
+  // Webhook data
+  webhookPayload        String?       // Raw webhook from provider
+
+  @@unique([tenantProfileId, verificationType])
+  @@index([tenantProfileId, status])
+  @@index([verificationType, status])
+  @@index([expiresAt])
+
+  // Access control
+  // Tenant can create verifications for their profile
+  @@allow('create', auth() == tenantProfile.user)
+
+  // Tenant can read their own verifications
+  @@allow('read', auth() == tenantProfile.user)
+
+  // Landlords can read verification status (not full data) for applicants
+  // This is handled at service layer by selecting only status fields
+  @@allow('read', true)
+
+  // Tenant can retry failed verifications
+  @@allow('update', auth() == tenantProfile.user && status in ['FAILED', 'EXPIRED'])
+
+  // System can update via webhooks
+  @@allow('update', auth().role == 'admin')
+
+  // Tenant can delete pending verifications
+  @@allow('delete', auth() == tenantProfile.user && status == 'PENDING')
+}
+
+/**
+ * Application Snapshot Data Type
+ * Immutable copy of profile data at application submission
+ */
+type ApplicationSnapshotData {
+  // Personal info (as shown on application)
+  fullName              String
+  email                 String
+  phone                 String
+
+  // Financial
+  monthlyIncome         Int           // In cents
+  creditScore           Int?
+  creditBand            String?
+
+  // Employment
+  employerName          String?
+  jobTitle              String?
+  employmentTenure      String?
+
+  // References
+  references            TenantReference[]
+
+  // Rental history
+  rentalHistory         RentalHistoryEntry[]
+
+  // Documents
+  documents             ApplicationDocument[]
+
+  // Verifications at time of submission
+  verifications         VerificationSnapshot[]
+}
+
+/**
+ * Rental History Entry Type
+ * Individual rental history record
+ */
+type RentalHistoryEntry {
+  address               String
+  landlordName          String
+  landlordPhone         String?
+  landlordEmail         String?
+  moveInDate            String        // ISO date
+  moveOutDate           String?       // ISO date, null if current
+  monthlyRent           Int           // In cents
+  reasonForLeaving      String?
+}
+
+/**
+ * Application Document Type
+ * Document reference in application snapshot
+ */
+type ApplicationDocument {
+  type                  String        // pay_stub, bank_statement, id, tax_return
+  fileId                String        // Vercel Blob ID
+  fileName              String
+  uploadedAt            String        // ISO date
+}
+
+/**
+ * Verification Snapshot Type
+ * Verification state at time of application
+ */
+type VerificationSnapshot {
+  type                  String        // VerificationType as string
+  provider              String        // VerificationProvider as string
+  status                String        // VerificationStatus as string
+  verifiedAt            String?       // ISO date
+  expiresAt             String        // ISO date
+}
+
+/**
+ * Profile Export Log Model
+ * Tracks when profiles are exported (for PTSR compliance)
+ */
+model ProfileExportLog extends BaseModel {
+  // Foreign key to tenant profile
+  tenantProfileId       String
+  tenantProfile         TenantProfile @relation(fields: [tenantProfileId], references: [id], onDelete: Cascade)
+
+  // Export details
+  exportFormat          String        // pdf, json, qr
+  exportedAt            DateTime      @default(now())
+
+  // Generated content
+  exportFileUrl         String?       // Vercel Blob URL
+  qrCodeUrl             String?       // QR code image URL
+  verificationUrl       String        // URL for third-party verification
+
+  // Expiration (exported profiles expire)
+  expiresAt             DateTime
+
+  // Access tracking
+  accessCount           Int           @default(0)
+  lastAccessedAt        DateTime?
+
+  @@index([tenantProfileId, exportedAt])
+  @@index([verificationUrl])
+  @@index([expiresAt])
+
+  // Access control
+  // Tenant can export their profile
+  @@allow('create', auth() == tenantProfile.user)
+
+  // Tenant can read their exports
+  @@allow('read', auth() == tenantProfile.user)
+
+  // Admin can read all
+  @@allow('read', auth().role == 'admin')
+
+  // Update access count (system)
+  @@allow('update', auth().role == 'admin')
+
+  // Cannot delete export logs
+  @@deny('delete', true)
+}

@@ -6,6 +6,9 @@
 import "base.zmodel"
 import "auth.zmodel"
 import "tenant.zmodel"
+import "adverse-action.zmodel"
+import "compliance.zmodel"
+import "verification.zmodel"
 
 /**
  * Listing Status Enum
@@ -51,7 +54,9 @@ model Listing extends BaseModel {
   status          ListingStatus @default(DRAFT)
 
   // Relations
-  applications    Application[]
+  applications         Application[]
+  adverseActionLetters AdverseActionLetter[]
+  complianceLogs       ComplianceLog[]
 
   @@index([landlordId])
   @@index([status])
@@ -92,6 +97,17 @@ model Application extends BaseModel {
   // Application status
   status            ApplicationStatus @default(PENDING)
 
+  // Submission tracking (US-010)
+  submittedAt       DateTime?
+
+  // Snapshot of profile data at submission (immutable)
+  snapshotData      ApplicationSnapshotData? @json
+
+  // Verification references (for landlord to re-verify if needed)
+  creditReportId    String?
+  backgroundCheckId String?
+  employmentVerificationId String?
+
   // Selection tracking
   selectedAt        DateTime?
   selectedById      String?
@@ -105,6 +121,9 @@ model Application extends BaseModel {
 
   // Notes
   internalNotes     String?  // For landlord/agent internal use
+
+  // Relations
+  adverseActionLetter AdverseActionLetter?
 
   @@unique([listingId, tenantProfileId])
   @@index([listingId])

@@ -449,6 +449,8 @@ test('platform blocks discriminatory criminal history filter in NYC', async ({ p
 - **NYC Fair Chance Act**: NYC Admin Code 5-204
 - **California AB 2493**: PTSR requirements
 - **Federal Fair Housing Act**: 42 USC 3601-3619
+- **ADR-019**: Compliance Rule Engine Architecture - JSONB-based rule engine with geocoding
+- **ADR-017**: Immutable Audit Trail - Compliance check logging
 
 ---
 

@@ -239,5 +239,13 @@ WebSite schema with SearchAction for Google Sitelinks Search Box
 
 ---
 
+## Related Documentation
+
+- **ADR-005**: PostHog Feature Flags and A/B Testing - Hero text, CTA colors, layout A/B testing
+- **Google Places API**: Location autocomplete for search bar
+- **Schema.org**: WebSite + SearchAction structured data for SEO
+
+---
+
 **Last Updated**: 2025-11-19
 **Assigned To**: Frontend Developer, UI Designer

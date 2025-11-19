@@ -12,6 +12,8 @@
 import "base.zmodel"
 import "auth.zmodel"
 import "listing.zmodel"
+import "verification.zmodel"
+import "adverse-action.zmodel"
 
 /**
  * PII Data Type
@@ -125,6 +127,11 @@ model TenantProfile extends BaseModel {
   // Anonymous identifier shown to landlords
   applicantId          String    @unique // e.g., "Applicant #2847"
 
+  // Profile tier and validity (US-010)
+  tier                 ProfileTier @default(BASIC)
+  validUntil           DateTime?   // Profile expiration date
+  profileStatus        String      @default("incomplete") // incomplete, pending_verification, verified, expired
+
   // PII Data - Encrypted at rest (per ADR-013)
   // Contains all personally identifiable information
   // @omit prevents this from being returned in queries by default
@@ -167,8 +174,12 @@ model TenantProfile extends BaseModel {
 
   // Relations
   applications         Application[]
+  verifications        ProfileVerification[]
+  exportLogs           ProfileExportLog[]
+  adverseActionLetters AdverseActionLetter[]
 
   @@index([userId])
+  @@index([tier, validUntil])
   @@index([applicantId])
   @@index([piiRevealedAt])
 

@@ -1,0 +1,226 @@
+/**
+ * Compliance Models
+ * US-003: Location-Aware Fair Housing Compliance
+ *
+ * Key features:
+ * - JSONB-based rule engine per ADR-019
+ * - Jurisdiction hierarchy (Federal > State > County > City)
+ * - Dynamic screening criteria adjustment
+ * - Educational content for blocked filters
+ * - Override attempt tracking for compliance evidence
+ */
+
+import "base.zmodel"
+import "auth.zmodel"
+import "listing.zmodel"
+
+/**
+ * Jurisdiction Level Enum
+ * Hierarchy for rule precedence (most specific wins)
+ */
+enum JurisdictionLevel {
+  FEDERAL
+  STATE
+  COUNTY
+  CITY
+}
+
+/**
+ * Rule Type Enum
+ * Categories of compliance rules
+ */
+enum RuleType {
+  CRIMINAL_HISTORY      // Criminal background restrictions
+  CREDIT_MINIMUM        // Credit score requirements
+  INCOME_REQUIREMENT    // Income-to-rent ratio rules
+  PTSR_ACCEPTANCE       // Portable Tenant Screening Report
+  FEE_CAP               // Application fee limits
+  COSIGNER_OVERRIDE     // Co-signer allowances
+  SOURCE_OF_INCOME      // Income source discrimination
+  FAMILIAL_STATUS       // Family-related protections
+  DISABILITY            // Disability accommodations
+  OTHER                 // Other compliance rules
+}
+
+/**
+ * Enforcement Type Enum
+ * How the rule should be enforced
+ */
+enum EnforcementType {
+  BLOCK_FILTER         // Completely block the filter
+  ADJUST_FILTER        // Adjust to compliant alternative
+  REQUIRE_FIELD        // Require a field to be set
+  CAP_VALUE            // Cap maximum value
+  WARN_ONLY            // Show warning but allow
+}
+
+/**
+ * Enforcement Logic Type
+ * JSONB structure for rule enforcement
+ */
+type EnforcementLogic {
+  type                  String        // EnforcementType as string
+  field                 String        // Field being regulated
+  condition             String        // JSON string of condition object
+  adjustedValue         String?       // New value if adjusted
+  message               String        // User-facing message
+}
+
+/**
+ * Education Content Type
+ * Information about the law for user education
+ */
+type EducationContent {
+  lawName               String        // e.g., "NYC Fair Chance Act"
+  citation              String        // e.g., "NYC Admin Code 8-107(11-a)"
+  explanation           String        // Plain English explanation
+  sourceUrl             String        // Link to official law text
+}
+
+/**
+ * Compliance Rule Model
+ * Jurisdiction-specific fair housing rules
+ */
+model ComplianceRule extends BaseModel {
+  // Jurisdiction info
+  jurisdiction          String        // e.g., "New York City", "California", "Federal"
+  jurisdictionLevel     JurisdictionLevel
+
+  // Rule details
+  ruleType              RuleType
+  ruleDescription       String        // Human-readable description
+
+  // Enforcement logic (JSONB for flexibility)
+  enforcementLogic      EnforcementLogic @json
+
+  // Educational content
+  educationContent      EducationContent @json
+
+  // Effective dates
+  effectiveDate         DateTime
+  endDate               DateTime?     // NULL if currently active
+
+  // Metadata
+  version               Int           @default(1)
+  isActive              Boolean       @default(true)
+
+  // Created by legal team
+  createdById           String?
+  createdBy             User?         @relation(name: "compliance_rules_created", fields: [createdById], references: [id])
+
+  // Last reviewed
+  lastReviewedAt        DateTime?
+  lastReviewedById      String?
+  lastReviewedBy        User?         @relation(name: "compliance_rules_reviewed", fields: [lastReviewedById], references: [id])
+
+  // Relations
+  complianceLogs        ComplianceLog[]
+
+  @@index([jurisdiction, ruleType, effectiveDate])
+  @@index([jurisdictionLevel, isActive])
+  @@index([ruleType, isActive])
+
+  // Access control
+  // Only admin/legal team can create rules
+  @@allow('create', auth().role == 'admin')
+
+  // Anyone can read rules (needed for enforcement)
+  @@allow('read', true)
+
+  // Only admin/legal team can update
+  @@allow('update', auth().role == 'admin')
+
+  // Only admin can delete (should use endDate instead)
+  @@allow('delete', auth().role == 'admin')
+}
+
+/**
+ * Compliance Log Model
+ * Audit trail for all compliance checks
+ */
+model ComplianceLog extends BaseModel {
+  // Check context
+  address               String        // Property address checked
+  jurisdictions         String[]      // Jurisdictions that applied
+
+  // User who triggered check
+  userId                String
+  user                  User          @relation(name: "compliance_logs", fields: [userId], references: [id])
+
+  // Listing context (optional)
+  listingId             String?
+  listing               Listing?      @relation(fields: [listingId], references: [id])
+
+  // Check details (JSONB for flexibility)
+  criteriaChecked       String        // JSON of screening criteria submitted
+  violationsFound       String        // JSON of violations detected
+  adjustmentsApplied    String?       // JSON of auto-adjustments made
+
+  // Rule references
+  rulesEvaluated        String[]      // IDs of rules that were checked
+  rulesViolated         String[]      // IDs of rules that were violated
+
+  // Related rule (for single-rule logs)
+  complianceRuleId      String?
+  complianceRule        ComplianceRule? @relation(fields: [complianceRuleId], references: [id])
+
+  // Outcome
+  passed                Boolean       // Did check pass without violations?
+  wasAutoAdjusted       Boolean       @default(false)
+
+  // Hash for tamper evidence
+  entryHash             String
+  previousHash          String?
+
+  @@index([userId, createdAt])
+  @@index([address, createdAt])
+  @@index([listingId, createdAt])
+  @@index([passed, createdAt])
+
+  // Access control - Immutable log
+  @@allow('create', true)
+  @@allow('read', auth().role == 'admin' || auth().id == userId)
+  @@deny('update', true)
+  @@deny('delete', true)
+}
+
+/**
+ * Compliance Override Attempt Model
+ * Tracks when users try to bypass compliance rules
+ * Evidence of willful violation if later sued
+ */
+model ComplianceOverrideAttempt extends BaseModel {
+  // Who attempted
+  userId                String
+  user                  User          @relation(name: "compliance_override_attempts", fields: [userId], references: [id])
+
+  // What was attempted
+  ruleId                String
+  ruleType              RuleType
+  jurisdiction          String
+
+  // Context
+  address               String        // Property address
+  listingId             String?
+
+  // Attempt details
+  attemptedValue        String?       // What they tried to set
+  blockedMessage        String        // Message shown to user
+
+  // Outcome
+  blocked               Boolean       @default(true)
+  escalatedToCompliance Boolean       @default(false)
+
+  // Hash for tamper evidence
+  entryHash             String
+
+  @@index([userId, createdAt])
+  @@index([ruleId, createdAt])
+  @@index([jurisdiction, createdAt])
+
+  // Access control - Immutable log
+  @@allow('create', true)
+  @@allow('read', auth().role == 'admin')
+  @@deny('update', true)
+  @@deny('delete', true)
+}

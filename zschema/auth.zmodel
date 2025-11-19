@@ -10,6 +10,9 @@ import "base.zmodel"
 import "tenant.zmodel"
 import "listing.zmodel"
 import "audit.zmodel"
+import "adverse-action.zmodel"
+import "compliance.zmodel"
+import "verification.zmodel"
 
 /**
  * User Model - Core authentication entity
@@ -48,6 +51,15 @@ model User {
   piiAccessLogs           PiiAccessLog[]    @relation(name: "pii_access_logs")
   selectionLogs           ApplicantSelectionLog[] @relation(name: "selection_logs")
   profileViewLogs         ProfileViewLog[]  @relation(name: "profile_view_logs")
+
+  // Adverse action relations
+  adverseActionLetters    AdverseActionLetter[] @relation(name: "adverse_action_letters")
+
+  // Compliance relations
+  complianceRulesCreated  ComplianceRule[]  @relation(name: "compliance_rules_created")
+  complianceRulesReviewed ComplianceRule[]  @relation(name: "compliance_rules_reviewed")
+  complianceLogs          ComplianceLog[]   @relation(name: "compliance_logs")
+  complianceOverrideAttempts ComplianceOverrideAttempt[] @relation(name: "compliance_override_attempts")
 
   // Access control policies
   @@allow('create', true)  // Anyone can create account (sign up)
