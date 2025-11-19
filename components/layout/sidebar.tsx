@@ -56,9 +56,8 @@ const navItems: Record<string, NavItem[]> = {
   ],
   landlord: [
     { href: '/dashboard', label: 'Dashboard', icon: Home },
-    { href: '/dashboard/properties', label: 'Properties', icon: Building },
-    { href: '/dashboard/tenants', label: 'Tenants', icon: Users },
-    { href: '/dashboard/applications', label: 'Applications', icon: FileText },
+    { href: '/properties', label: 'Properties', icon: Building },
+    { href: '/listings', label: 'Listings', icon: FileText },
     { href: '/dashboard/financials', label: 'Financials', icon: BarChart3 },
     { href: '/dashboard/messages', label: 'Messages', icon: MessageSquare },
   ],

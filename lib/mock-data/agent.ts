@@ -700,3 +700,435 @@ export function getActivityIcon(type: AgentActivity['type']): string {
       return 'Activity';
   }
 }
+
+// CRM Lead Types and Data
+export interface CRMLead {
+  id: string;
+  displayId: string;
+  originalListingId: string;
+  originalListingAddress: string;
+  denialDate: string;
+  denialReason: string;
+  incomeRatio: number;
+  creditBand: string;
+  employmentTenure: string;
+  matchingListings: number;
+  matchScore: number;
+  lastOutreach: string | null;
+  budgetMin: number;
+  budgetMax: number;
+  preferredBeds: number;
+  preferredNeighborhoods: string[];
+}
+
+export const mockCRMLeads: CRMLead[] = [
+  {
+    id: 'crm-001',
+    displayId: 'Applicant #2301',
+    originalListingId: 'agent-listing-1',
+    originalListingAddress: '123 Main St, Brooklyn, NY',
+    denialDate: '2025-10-28',
+    denialReason: 'Higher qualified applicant selected',
+    incomeRatio: 4.2,
+    creditBand: '720-740',
+    employmentTenure: '3+ years',
+    matchingListings: 3,
+    matchScore: 92,
+    lastOutreach: null,
+    budgetMin: 2500,
+    budgetMax: 3200,
+    preferredBeds: 2,
+    preferredNeighborhoods: ['Brooklyn Heights', 'Park Slope', 'Cobble Hill']
+  },
+  {
+    id: 'crm-002',
+    displayId: 'Applicant #2156',
+    originalListingId: 'agent-listing-2',
+    originalListingAddress: '456 Bedford Ave, Brooklyn, NY',
+    denialDate: '2025-10-15',
+    denialReason: 'Unit rented to another applicant',
+    incomeRatio: 3.8,
+    creditBand: '700-720',
+    employmentTenure: '2-3 years',
+    matchingListings: 2,
+    matchScore: 85,
+    lastOutreach: '2025-11-01',
+    budgetMin: 4000,
+    budgetMax: 5000,
+    preferredBeds: 3,
+    preferredNeighborhoods: ['Williamsburg', 'Bedford-Stuyvesant']
+  },
+  {
+    id: 'crm-003',
+    displayId: 'Applicant #2089',
+    originalListingId: 'agent-listing-3',
+    originalListingAddress: '789 Park Place, Brooklyn, NY',
+    denialDate: '2025-10-20',
+    denialReason: 'Listing removed from market',
+    incomeRatio: 5.1,
+    creditBand: '760-780',
+    employmentTenure: '5+ years',
+    matchingListings: 4,
+    matchScore: 96,
+    lastOutreach: null,
+    budgetMin: 2000,
+    budgetMax: 2800,
+    preferredBeds: 1,
+    preferredNeighborhoods: ['Crown Heights', 'Prospect Heights', 'Park Slope']
+  },
+  {
+    id: 'crm-004',
+    displayId: 'Applicant #2445',
+    originalListingId: 'agent-listing-1',
+    originalListingAddress: '123 Main St, Brooklyn, NY',
+    denialDate: '2025-11-01',
+    denialReason: 'Pet policy mismatch',
+    incomeRatio: 4.0,
+    creditBand: '680-700',
+    employmentTenure: '1-2 years',
+    matchingListings: 5,
+    matchScore: 88,
+    lastOutreach: '2025-11-10',
+    budgetMin: 2500,
+    budgetMax: 3500,
+    preferredBeds: 2,
+    preferredNeighborhoods: ['Park Slope', 'Prospect Heights']
+  },
+  {
+    id: 'crm-005',
+    displayId: 'Applicant #2567',
+    originalListingId: 'agent-listing-4',
+    originalListingAddress: '321 Atlantic Ave, Brooklyn, NY',
+    denialDate: '2025-11-05',
+    denialReason: 'Higher qualified applicant selected',
+    incomeRatio: 4.5,
+    creditBand: '740-760',
+    employmentTenure: '3+ years',
+    matchingListings: 3,
+    matchScore: 91,
+    lastOutreach: null,
+    budgetMin: 3500,
+    budgetMax: 4200,
+    preferredBeds: 2,
+    preferredNeighborhoods: ['Boerum Hill', 'Cobble Hill', 'Brooklyn Heights']
+  }
+];
+
+// Calendar Event Types and Data
+export interface CalendarEvent {
+  id: string;
+  type: 'showing' | 'lease_signing' | 'follow_up';
+  title: string;
+  propertyAddress: string;
+  applicantId: string;
+  date: string;
+  time: string;
+  duration: number;
+  notes?: string;
+}
+
+export const mockCalendarEvents: CalendarEvent[] = [
+  {
+    id: 'event-001',
+    type: 'showing',
+    title: 'Property Showing',
+    propertyAddress: '123 Main St, Unit 4B',
+    applicantId: 'Applicant #2847',
+    date: '2025-11-20',
+    time: '10:00 AM',
+    duration: 30,
+    notes: 'First-time viewing, interested in the layout'
+  },
+  {
+    id: 'event-002',
+    type: 'showing',
+    title: 'Property Showing',
+    propertyAddress: '456 Bedford Ave, PH2',
+    applicantId: 'Applicant #2934',
+    date: '2025-11-20',
+    time: '2:00 PM',
+    duration: 45,
+    notes: 'Second viewing, bringing partner'
+  },
+  {
+    id: 'event-003',
+    type: 'lease_signing',
+    title: 'Lease Signing',
+    propertyAddress: '789 Park Place',
+    applicantId: 'Applicant #2812',
+    date: '2025-11-21',
+    time: '11:00 AM',
+    duration: 60,
+    notes: 'Bring two forms of ID'
+  },
+  {
+    id: 'event-004',
+    type: 'follow_up',
+    title: 'Follow-up Call',
+    propertyAddress: '321 Atlantic Ave, Suite 5A',
+    applicantId: 'Applicant #2956',
+    date: '2025-11-22',
+    time: '3:00 PM',
+    duration: 15,
+    notes: 'Discuss move-in date flexibility'
+  },
+  {
+    id: 'event-005',
+    type: 'showing',
+    title: 'Property Showing',
+    propertyAddress: '888 Clinton St',
+    applicantId: 'Applicant #2089',
+    date: '2025-11-25',
+    time: '9:00 AM',
+    duration: 30,
+    notes: 'CRM lead - invited to apply'
+  },
+  {
+    id: 'event-006',
+    type: 'lease_signing',
+    title: 'Lease Signing',
+    propertyAddress: '555 Prospect Ave, 3F',
+    applicantId: 'Applicant #2903',
+    date: '2025-11-19',
+    time: '4:00 PM',
+    duration: 60,
+    notes: 'Final walkthrough before signing'
+  }
+];
+
+// Message Types and Data
+export interface Message {
+  id: string;
+  sender: 'agent' | 'applicant' | 'landlord';
+  content: string;
+  timestamp: string;
+}
+
+export interface Conversation {
+  id: string;
+  type: 'applicant' | 'landlord';
+  name: string;
+  propertyAddress: string;
+  lastMessage: string;
+  lastMessageTime: string;
+  unreadCount: number;
+  messages: Message[];
+}
+
+export const mockConversations: Conversation[] = [
+  {
+    id: 'conv-001',
+    type: 'applicant',
+    name: 'Applicant #2847',
+    propertyAddress: '123 Main St, Unit 4B',
+    lastMessage: 'Thank you for the update. I look forward to hearing back.',
+    lastMessageTime: '2025-11-19T10:30:00Z',
+    unreadCount: 2,
+    messages: [
+      {
+        id: 'm1',
+        sender: 'agent',
+        content: 'Thank you for your application! We have received your documents and are currently reviewing them.',
+        timestamp: '2025-11-18T09:00:00Z'
+      },
+      {
+        id: 'm2',
+        sender: 'applicant',
+        content: 'Thank you! Please let me know if you need any additional information from me.',
+        timestamp: '2025-11-18T10:30:00Z'
+      },
+      {
+        id: 'm3',
+        sender: 'agent',
+        content: 'Could you please provide an additional pay stub from your current employer?',
+        timestamp: '2025-11-18T14:00:00Z'
+      },
+      {
+        id: 'm4',
+        sender: 'applicant',
+        content: 'Of course! I have attached my latest pay stub to this message.',
+        timestamp: '2025-11-19T08:00:00Z'
+      },
+      {
+        id: 'm5',
+        sender: 'applicant',
+        content: 'Thank you for the update. I look forward to hearing back.',
+        timestamp: '2025-11-19T10:30:00Z'
+      }
+    ]
+  },
+  {
+    id: 'conv-002',
+    type: 'applicant',
+    name: 'Applicant #2934',
+    propertyAddress: '456 Bedford Ave, PH2',
+    lastMessage: 'Yes, 2 PM works perfectly for me. See you then!',
+    lastMessageTime: '2025-11-18T16:00:00Z',
+    unreadCount: 0,
+    messages: [
+      {
+        id: 'm1',
+        sender: 'agent',
+        content: 'Hi! Your application for 456 Bedford Ave has been shortlisted. Would you like to schedule a second viewing?',
+        timestamp: '2025-11-17T11:00:00Z'
+      },
+      {
+        id: 'm2',
+        sender: 'applicant',
+        content: 'That\'s great news! Yes, I would love to see the apartment again. I\'d like to bring my partner this time.',
+        timestamp: '2025-11-17T13:00:00Z'
+      },
+      {
+        id: 'm3',
+        sender: 'agent',
+        content: 'Perfect! How does November 20th at 2 PM work for you both?',
+        timestamp: '2025-11-18T09:00:00Z'
+      },
+      {
+        id: 'm4',
+        sender: 'applicant',
+        content: 'Yes, 2 PM works perfectly for me. See you then!',
+        timestamp: '2025-11-18T16:00:00Z'
+      }
+    ]
+  },
+  {
+    id: 'conv-003',
+    type: 'landlord',
+    name: 'Michael Chen',
+    propertyAddress: '789 Park Place',
+    lastMessage: 'I approve Applicant #2812 for the lease. Please proceed.',
+    lastMessageTime: '2025-11-17T14:00:00Z',
+    unreadCount: 1,
+    messages: [
+      {
+        id: 'm1',
+        sender: 'agent',
+        content: 'Hi Michael, I have 3 shortlisted applicants for 789 Park Place. The top candidate is Applicant #2812 with a 3.5x income ratio and 680-700 credit band.',
+        timestamp: '2025-11-16T10:00:00Z'
+      },
+      {
+        id: 'm2',
+        sender: 'landlord',
+        content: 'Thanks Jessica. What about their rental history?',
+        timestamp: '2025-11-16T11:30:00Z'
+      },
+      {
+        id: 'm3',
+        sender: 'agent',
+        content: 'They have 5+ years of rental history with no evictions. Previous landlord provided excellent references.',
+        timestamp: '2025-11-16T12:00:00Z'
+      },
+      {
+        id: 'm4',
+        sender: 'landlord',
+        content: 'I approve Applicant #2812 for the lease. Please proceed.',
+        timestamp: '2025-11-17T14:00:00Z'
+      }
+    ]
+  }
+];
+
+// Agent Settings Types and Data
+export interface AgentSettings {
+  account: {
+    name: string;
+    email: string;
+    phone: string;
+    company: string;
+    licenseNumber: string;
+    website: string;
+    bio: string;
+  };
+  billing: {
+    currentPlan: string;
+    planPrice: number;
+    billingCycle: 'monthly' | 'annual';
+    nextBillingDate: string;
+    paymentMethod: {
+      type: string;
+      last4: string;
+      brand: string;
+      expiry: string;
+    };
+  };
+  notifications: {
+    applications: { email: boolean; sms: boolean; push: boolean };
+    crm: { email: boolean; sms: boolean; push: boolean };
+    landlord: { email: boolean; sms: boolean; push: boolean };
+  };
+}
+
+export const mockAgentSettings: AgentSettings = {
+  account: {
+    name: 'Jessica Martinez',
+    email: 'jessica@brooklynre.com',
+    phone: '(718) 555-0123',
+    company: 'Brooklyn Real Estate Co.',
+    licenseNumber: 'NYS-2024-78542',
+    website: 'https://brooklynre.com',
+    bio: 'Experienced real estate agent specializing in Brooklyn rentals with 8+ years in the market.'
+  },
+  billing: {
+    currentPlan: 'Professional',
+    planPrice: 99,
+    billingCycle: 'monthly',
+    nextBillingDate: '2025-12-19',
+    paymentMethod: {
+      type: 'card',
+      last4: '4242',
+      brand: 'Visa',
+      expiry: '12/26'
+    }
+  },
+  notifications: {
+    applications: { email: true, sms: true, push: true },
+    crm: { email: true, sms: false, push: true },
+    landlord: { email: true, sms: true, push: true }
+  }
+};
+
+// Team Member Types
+export interface TeamMember {
+  id: string;
+  name: string;
+  email: string;
+  role: 'owner' | 'admin' | 'member';
+  status: 'active' | 'pending';
+  joinedAt: string;
+}
+
+export const mockTeamMembers: TeamMember[] = [
+  {
+    id: '1',
+    name: 'Jessica Martinez',
+    email: 'jessica@brooklynre.com',
+    role: 'owner',
+    status: 'active',
+    joinedAt: '2023-01-15'
+  },
+  {
+    id: '2',
+    name: 'Michael Chen',
+    email: 'michael@brooklynre.com',
+    role: 'admin',
+    status: 'active',
+    joinedAt: '2024-03-20'
+  },
+  {
+    id: '3',
+    name: 'Sarah Williams',
+    email: 'sarah@brooklynre.com',
+    role: 'member',
+    status: 'active',
+    joinedAt: '2024-06-10'
+  },
+  {
+    id: '4',
+    name: 'David Kim',
+    email: 'david@brooklynre.com',
+    role: 'member',
+    status: 'pending',
+    joinedAt: '2025-11-15'
+  }
+];
