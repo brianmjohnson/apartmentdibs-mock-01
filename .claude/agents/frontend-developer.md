@@ -92,6 +92,101 @@ Custom hooks are justified ONLY for:
 
 ---
 
+## User Story Documentation
+
+**CRITICAL**: All code artifacts MUST include user-story references in their documentation for traceability.
+
+### Documentation Format
+
+Use JSDoc comments with `@story` tags to link code to requirements:
+
+```typescript
+/**
+ * Brief description of what this does.
+ *
+ * @story US-XXX - Story title
+ * @story US-YYY - Additional story if applicable
+ */
+```
+
+### What to Document
+
+| Artifact | Location | Example |
+|----------|----------|---------|
+| Components | Above component function | `@story US-012 - Tenant Profile Management` |
+| Pages | Above default export | `@story US-005 - Instant Showing Scheduling` |
+| Custom hooks | Above hook function | `@story US-023 - Document Upload` |
+| Types/Interfaces | Above type definition | `@story US-015 - Income Verification` |
+| Utility functions | Above function | `@story US-031 - SEO Optimization` |
+
+### Examples
+
+**Component**:
+
+```typescript
+/**
+ * Calendar component for scheduling property showings.
+ * Displays available time slots and handles booking.
+ *
+ * @story US-005 - Instant Showing Scheduling
+ * @story US-006 - Smart Tour Bundling
+ */
+export function ShowingCalendar({ propertyId }: ShowingCalendarProps) {
+  // ...
+}
+```
+
+**Page**:
+
+```typescript
+/**
+ * Tenant dashboard displaying applications, saved listings, and notifications.
+ *
+ * @story US-011 - Portable Tenant Profile
+ * @story US-012 - Tenant Profile Management
+ */
+export default function TenantDashboardPage() {
+  // ...
+}
+```
+
+**Type/Interface**:
+
+```typescript
+/**
+ * Form data for tenant verification documents.
+ *
+ * @story US-015 - Income Verification
+ * @story US-016 - Background Check Integration
+ */
+interface VerificationFormData {
+  documentType: string
+  files: File[]
+}
+```
+
+**Custom Hook** (only when justified per guidelines):
+
+```typescript
+/**
+ * Manages tour bundle selection and optimization.
+ *
+ * @story US-006 - Smart Tour Bundling
+ */
+function useTourBundle(listings: Listing[]) {
+  // ...
+}
+```
+
+### Benefits
+
+- **Implementation review**: Verify code matches requirements
+- **Quality analysis**: Ensure acceptance criteria coverage
+- **Impact assessment**: Identify affected stories during changes
+- **Onboarding**: New developers understand feature context
+
+---
+
 ## Coding Standards
 
 ### HTML Entity Characters in JSX

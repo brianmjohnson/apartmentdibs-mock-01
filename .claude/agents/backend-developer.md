@@ -31,6 +31,142 @@ Implement backend functionality using ZenStack-generated Tanstack Query and tRPC
 
 ---
 
+## User Story Documentation
+
+**CRITICAL**: All code artifacts MUST include user-story references in their documentation for traceability.
+
+### Documentation Format
+
+Use comments with `@story` tags to link code to requirements:
+
+**ZModel files**:
+
+```zmodel
+/// Brief description of the model.
+///
+/// @story US-XXX - Story title
+/// @story US-YYY - Additional story if applicable
+model MyModel extends BaseModel {
+  // fields
+}
+```
+
+**TypeScript files**:
+
+```typescript
+/**
+ * Brief description.
+ *
+ * @story US-XXX - Story title
+ */
+```
+
+### What to Document
+
+| Artifact | Location | Example |
+|----------|----------|---------|
+| Models | Above model definition | `@story US-011 - Portable Tenant Profile` |
+| Enums | Above enum definition | `@story US-007 - Quick Apply` |
+| Types (JSON) | Above type definition | `@story US-023 - Document Upload` |
+| Custom tRPC routes | Above procedure | `@story US-019 - Subscription Tiers` |
+| Service functions | Above function | `@story US-016 - Background Check Integration` |
+| Utility functions | Above function | `@story US-031 - SEO Optimization` |
+
+### Examples
+
+**ZModel - Model**:
+
+```zmodel
+/// Tenant profile with portable verification data.
+/// Contains documents, verification status, and rental history.
+///
+/// @story US-011 - Portable Tenant Profile
+/// @story US-012 - Tenant Profile Management
+model TenantProfile extends BaseModel {
+  userId            String   @unique
+  user              User     @relation(fields: [userId], references: [id])
+
+  verificationStatus VerificationStatus @default(PENDING)
+  documents         Document[]
+
+  @@allow('read', auth() == user)
+  @@allow('update', auth() == user)
+}
+```
+
+**ZModel - Enum**:
+
+```zmodel
+/// Status of tenant verification process.
+///
+/// @story US-015 - Income Verification
+/// @story US-016 - Background Check Integration
+enum VerificationStatus {
+  PENDING
+  IN_PROGRESS
+  VERIFIED
+  FAILED
+}
+```
+
+**ZModel - Type (JSON)**:
+
+```zmodel
+/// Metadata for uploaded verification documents.
+///
+/// @story US-023 - Document Upload
+type DocumentMetadata {
+  fileName    String
+  fileSize    Int
+  mimeType    String
+  uploadedAt  DateTime
+}
+```
+
+**Custom tRPC Route**:
+
+```typescript
+/**
+ * Process subscription upgrade with prorated billing.
+ *
+ * @story US-019 - Subscription Tiers
+ * @story US-020 - Usage-Based Pricing
+ */
+export const subscriptionRouter = router({
+  upgrade: protectedProcedure
+    .input(upgradeSchema)
+    .mutation(async ({ ctx, input }) => {
+      // Complex billing logic
+    }),
+})
+```
+
+**Service Function**:
+
+```typescript
+/**
+ * Initiates background check through third-party provider.
+ *
+ * @story US-016 - Background Check Integration
+ */
+export async function initiateBackgroundCheck(
+  tenantId: string,
+  checkType: BackgroundCheckType
+): Promise<BackgroundCheckResult> {
+  // External API integration
+}
+```
+
+### Benefits
+
+- **Implementation review**: Verify code matches requirements
+- **Quality analysis**: Ensure acceptance criteria coverage
+- **Impact assessment**: Identify affected stories during changes
+- **Compliance**: Track data handling per story requirements
+- **Migration planning**: Understand which stories are affected by schema changes
+
+---
+
 ## ⚠️ CRITICAL: Generated Routes - DO NOT CREATE CUSTOM ROUTES
 
 **ZenStack generates ALL tRPC routes automatically. You almost NEVER need to create custom routes!**
