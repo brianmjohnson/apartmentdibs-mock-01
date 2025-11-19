@@ -36,27 +36,65 @@ Build type-safe, accessible, performant UIs using generated TanStack Query hooks
 
 ## Coding Standards
 
-### Apostrophes in JSX
+### HTML Entity Characters in JSX
 
-**ALWAYS escape apostrophes** to avoid `react/no-unescaped-entities` errors:
+**ALWAYS escape HTML entity characters** to avoid `react/no-unescaped-entities` and rendering errors:
+
+| Character | Entity | Description |
+|-----------|--------|-------------|
+| `'` | `&apos;` | Apostrophe/single quote |
+| `"` | `&quot;` | Double quote |
+| `&` | `&amp;` | Ampersand |
+| `<` | `&lt;` | Less than |
+| `>` | `&gt;` | Greater than |
+| `` ` `` | `&#96;` | Backtick |
 
 ❌ **WRONG**:
 ```typescript
 <p>Don't use unescaped apostrophes</p>
-<h1>It's going to cause an error</h1>
+<p>Use "quotes" properly</p>
+<p>Tom & Jerry</p>
+<p>x < y and y > z</p>
 ```
 
 ✅ **CORRECT**:
 ```typescript
 <p>Don&apos;t use unescaped apostrophes</p>
-<h1>It&apos;s not going to cause an error</h1>
+<p>Use &quot;quotes&quot; properly</p>
+<p>Tom &amp; Jerry</p>
+<p>x &lt; y and y &gt; z</p>
 ```
 
-**Valid escape options**:
+**Additional escape options for apostrophes**:
 - `&apos;` - Recommended (most readable)
 - `&lsquo;` - Left single quote
 - `&rsquo;` - Right single quote
 - `&#39;` - Numeric character reference
+
+### Third-Party Images
+
+**ALWAYS download external images** to `/public/images/` instead of linking directly:
+
+❌ **WRONG** - External dependencies can break, cause CORS issues, or trigger rate limits:
+```typescript
+<Image src="https://images.unsplash.com/photo-abc123" alt="Apartment" />
+```
+
+✅ **CORRECT** - Download first, then reference locally:
+```bash
+# Download image to public folder
+curl -L "https://images.unsplash.com/photo-abc123" -o public/images/apartment-hero.jpg
+```
+
+```typescript
+<Image src="/images/apartment-hero.jpg" alt="Apartment" />
+```
+
+**Benefits**:
+- No external network requests at runtime
+- Consistent availability and performance
+- No CORS or rate limiting issues
+- Images included in build optimization
 
 ### Unused Variables
 
@@ -434,6 +472,62 @@ import { WishlistSchema } from '@/lib/generated/schema/zod'
 - [ ] Responsive design (mobile-first)
 - [ ] Types from generated schemas
 - [ ] Component tests written
+
+---
+
+## Story Completion & Push Process
+
+When working on multiple user stories, **push after completing each story** to create atomic commits per story.
+
+### After Completing Each Story
+
+**1. Run Validation**:
+```bash
+pnpm test              # All tests passing
+pnpm lint              # Lint checks passed
+tsc --noEmit && pnpm build  # Build successful
+```
+
+**2. Commit the Story**:
+```bash
+git add .
+git commit -m "feat: implement US-XXX - [story title]
+
+- Completed acceptance criteria
+- Added components/tests
+- Integrated with backend
+
+🤖 Generated with [Claude Code](https://claude.com/claude-code)
+
+Co-Authored-By: Claude <noreply@anthropic.com>"
+```
+
+**3. Push After Build Succeeds**:
+```bash
+git push
+```
+
+**4. Monitor Deployment**:
+- Use `vercel build` locally to reproduce any CI/CD failures
+- Monitor GitHub PR comments for feedback
+- Fix issues before starting next story
+
+### Why Push Per Story
+
+- **Atomic commits**: Each commit = one complete story
+- **Easier rollback**: Can revert specific stories
+- **Better review**: Reviewers can see story-by-story progress
+- **Faster feedback**: Catch issues early
+
+### Multi-Story Workflow
+
+```
+Story 1 → Implement → Validate → Commit → Push → Monitor
+Story 2 → Implement → Validate → Commit → Push → Monitor
+Story 3 → Implement → Validate → Commit → Push → Monitor
+```
+
+**Do NOT batch multiple stories into one commit.**
 
 ---
 
