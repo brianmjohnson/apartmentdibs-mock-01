@@ -127,6 +127,19 @@ if command_exists vercel; then
   fi
 fi
 
+# Generate ZenStack and Prisma files (required for development)
+echo ""
+echo "🔧 Generating ZenStack and Prisma files..."
+if command_exists pnpm; then
+  if pnpm zenstack generate && pnpm prisma generate 2>&1; then
+    echo "✅ ZenStack and Prisma files generated successfully"
+  else
+    echo "⚠️  Code generation failed (may need to run manually after dependencies are installed)"
+  fi
+else
+  echo "⚠️  pnpm not found, skipping code generation"
+fi
+
 echo ""
 echo "✅ CLI tools installation complete!"
 echo ""
