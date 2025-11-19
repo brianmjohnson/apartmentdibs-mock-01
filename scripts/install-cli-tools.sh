@@ -116,6 +116,17 @@ if [ -f "$HOME/.bashrc" ]; then
   fi
 fi
 
+# Pull environment variables from Vercel (if Vercel CLI is available)
+if command_exists vercel; then
+  echo ""
+  echo "🔐 Pulling environment variables from Vercel..."
+  if vercel env pull --environment=preview 2>&1; then
+    echo "✅ Environment variables pulled successfully"
+  else
+    echo "⚠️  Could not pull environment variables (may need to run 'vercel login' first)"
+  fi
+fi
+
 echo ""
 echo "✅ CLI tools installation complete!"
 echo ""
