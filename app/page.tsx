@@ -261,9 +261,9 @@ export default function HomePage() {
             {/* Testimonial */}
             <div className="mt-16 max-w-2xl mx-auto text-center">
               <blockquote className="text-lg md:text-xl italic text-muted-foreground mb-4">
-                "ApartmentDibs made finding my apartment so much easier. I created my profile once
+                &ldquo;ApartmentDibs made finding my apartment so much easier. I created my profile once
                 and applied to 15 listings in one afternoon. No more filling out the same forms
-                over and over!"
+                over and over!&rdquo;
               </blockquote>
               <div className="flex items-center justify-center gap-3">
                 <div className="h-10 w-10 bg-primary text-primary-foreground flex items-center justify-center font-bold">
