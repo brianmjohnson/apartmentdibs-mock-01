@@ -554,38 +554,307 @@ export default function WishlistsPage() {
 
 ### Form Pattern
 
+@see https://ui.shadcn.com/docs/components/form
+
+**ALWAYS use shadcn/ui form components** for building forms. These provide consistent styling, accessibility, and validation integration.
+
+#### Required Imports
+
+```typescript
+import { useForm } from 'react-hook-form'
+import { zodResolver } from '@hookform/resolvers/zod'
+import { z } from 'zod'
+import {
+  Form,
+  FormControl,
+  FormDescription,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from '@/components/ui/form'
+import { Input } from '@/components/ui/input'
+import { Button } from '@/components/ui/button'
+import { Checkbox } from '@/components/ui/checkbox'
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
+import { Textarea } from '@/components/ui/textarea'
+```
+
+#### Component Hierarchy
+
+```
+<Form>                    - Provides form context (react-hook-form)
+  <form>                  - Native form element with onSubmit
+    <FormField>           - Connects field to form state
+      <FormItem>          - Container with proper spacing
+        <FormLabel>       - Accessible label
+        <FormControl>     - Wraps the input element
+          <Input />       - The actual input
+        </FormControl>
+        <FormDescription> - Helper text below input
+        <FormMessage />   - Validation error message
+      </FormItem>
+    </FormField>
+  </form>
+</Form>
+```
+
+#### Form Field Examples
+
+**Text Input**:
+
+```typescript
+<FormField
+  control={form.control}
+  name="name"
+  render={({ field }) => (
+    <FormItem>
+      <FormLabel>Name</FormLabel>
+      <FormControl>
+        <Input placeholder="Enter name" {...field} />
+      </FormControl>
+      <FormDescription>
+        This will be displayed publicly.
+      </FormDescription>
+      <FormMessage />
+    </FormItem>
+  )}
+/>
+```
+
+**Select**:
+
+```typescript
+<FormField
+  control={form.control}
+  name="propertyType"
+  render={({ field }) => (
+    <FormItem>
+      <FormLabel>Property Type</FormLabel>
+      <Select onValueChange={field.onChange} defaultValue={field.value}>
+        <FormControl>
+          <SelectTrigger>
+            <SelectValue placeholder="Select type" />
+          </SelectTrigger>
+        </FormControl>
+        <SelectContent>
+          <SelectItem value="apartment">Apartment</SelectItem>
+          <SelectItem value="house">House</SelectItem>
+          <SelectItem value="condo">Condo</SelectItem>
+        </SelectContent>
+      </Select>
+      <FormMessage />
+    </FormItem>
+  )}
+/>
+```
+
+**Checkbox**:
+
+```typescript
+<FormField
+  control={form.control}
+  name="isPublic"
+  render={({ field }) => (
+    <FormItem className="flex flex-row items-start space-x-3 space-y-0">
+      <FormControl>
+        <Checkbox
+          checked={field.value}
+          onCheckedChange={field.onChange}
+        />
+      </FormControl>
+      <div className="space-y-1 leading-none">
+        <FormLabel>Make public</FormLabel>
+        <FormDescription>
+          Allow others to view this listing.
+        </FormDescription>
+      </div>
+    </FormItem>
+  )}
+/>
+```
+
+**Textarea**:
+
+```typescript
+<FormField
+  control={form.control}
+  name="description"
+  render={({ field }) => (
+    <FormItem>
+      <FormLabel>Description</FormLabel>
+      <FormControl>
+        <Textarea
+          placeholder="Describe your property..."
+          className="resize-none"
+          {...field}
+        />
+      </FormControl>
+      <FormDescription>
+        Max 500 characters.
+      </FormDescription>
+      <FormMessage />
+    </FormItem>
+  )}
+/>
+```
+
+#### Complete Form Example
+
 ```typescript
 const formSchema = z.object({
-  name: z.string().min(1, 'Name required'),
-  isPublic: z.boolean().default(false)
+  name: z.string().min(1, 'Name is required'),
+  email: z.string().email('Invalid email address'),
+  propertyType: z.string().min(1, 'Please select a property type'),
+  description: z.string().max(500, 'Description too long').optional(),
+  isPublic: z.boolean().default(false),
 })
 
-function WishlistForm() {
-  const form = useForm({
-    resolver: zodResolver(formSchema)
+type FormData = z.infer<typeof formSchema>
+
+function PropertyForm() {
+  const form = useForm<FormData>({
+    resolver: zodResolver(formSchema),
+    defaultValues: {
+      name: '',
+      email: '',
+      propertyType: '',
+      description: '',
+      isPublic: false,
+    },
   })
 
-  const { mutate } = useCreateWishlist()
+  const { mutate, isPending } = useCreateProperty()
+
+  function onSubmit(data: FormData) {
+    mutate({ data }, {
+      onSuccess: () => {
+        form.reset()
+        toast.success('Property created')
+      },
+      onError: (error) => {
+        toast.error(error.message)
+      },
+    })
+  }
 
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(data => mutate(data))}>
-        <FormField name="name" render={({ field }) => (
-          <FormItem>
-            <FormLabel>Wishlist Name</FormLabel>
-            <FormControl>
-              <Input {...field} />
-            </FormControl>
-            <FormMessage />
-          </FormItem>
-        )} />
+      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+        <FormField
+          control={form.control}
+          name="name"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Property Name</FormLabel>
+              <FormControl>
+                <Input placeholder="Enter property name" {...field} />
+              </FormControl>
+              <FormDescription>
+                A descriptive name for your property.
+              </FormDescription>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
 
-        <Button type="submit">Create</Button>
+        <FormField
+          control={form.control}
+          name="email"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Contact Email</FormLabel>
+              <FormControl>
+                <Input type="email" placeholder="you@example.com" {...field} />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+
+        <FormField
+          control={form.control}
+          name="propertyType"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Property Type</FormLabel>
+              <Select onValueChange={field.onChange} defaultValue={field.value}>
+                <FormControl>
+                  <SelectTrigger>
+                    <SelectValue placeholder="Select a type" />
+                  </SelectTrigger>
+                </FormControl>
+                <SelectContent>
+                  <SelectItem value="apartment">Apartment</SelectItem>
+                  <SelectItem value="house">House</SelectItem>
+                  <SelectItem value="condo">Condo</SelectItem>
+                </SelectContent>
+              </Select>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+
+        <FormField
+          control={form.control}
+          name="description"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Description</FormLabel>
+              <FormControl>
+                <Textarea
+                  placeholder="Describe your property..."
+                  className="resize-none"
+                  {...field}
+                />
+              </FormControl>
+              <FormDescription>
+                Optional. Max 500 characters.
+              </FormDescription>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+
+        <FormField
+          control={form.control}
+          name="isPublic"
+          render={({ field }) => (
+            <FormItem className="flex flex-row items-start space-x-3 space-y-0 rounded-md border p-4">
+              <FormControl>
+                <Checkbox
+                  checked={field.value}
+                  onCheckedChange={field.onChange}
+                />
+              </FormControl>
+              <div className="space-y-1 leading-none">
+                <FormLabel>Public Listing</FormLabel>
+                <FormDescription>
+                  Make this property visible to all users.
+                </FormDescription>
+              </div>
+            </FormItem>
+          )}
+        />
+
+        <Button type="submit" disabled={isPending}>
+          {isPending ? 'Creating...' : 'Create Property'}
+        </Button>
       </form>
     </Form>
   )
 }
 ```
+
+#### Form Best Practices
+
+- **Always use `FormDescription`** to provide helpful context
+- **Always include `FormMessage`** for validation errors
+- **Set `defaultValues`** in useForm to avoid uncontrolled input warnings
+- **Use `z.infer<typeof schema>`** for type-safe form data
+- **Disable submit button** while `isPending` to prevent double submission
+- **Reset form** on successful submission when appropriate
+- **Handle errors** with toast notifications or inline messages
 
 ---
 
