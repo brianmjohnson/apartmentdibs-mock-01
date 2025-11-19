@@ -357,6 +357,244 @@ export function useObfuscatedProfile(applicantId: string) {
 
 ---
 
+## UI Designer Review
+
+**Review Date**: 2025-11-19
+**Reviewer**: UI Designer Agent
+
+### Mockup Coverage Summary
+
+The existing frontend mockups in the `app/` directory provide **substantial coverage** of the PII anonymization requirements. The core obfuscation display is well-implemented, but several UI elements need to be added for complete story fulfillment.
+
+### Implemented UI Elements (Complete)
+
+**Landlord Applicants Page** (`/landlord/listings/[listingId]/applicants/page.tsx`):
+- Anonymous ID display (e.g., "Applicant #3421")
+- Income ratio display (e.g., "4.2x")
+- Credit band display (e.g., "740-760")
+- Employment tenure display (e.g., "3+ years")
+- Employment type badge
+- Occupants and pets badges
+- Competitive edge display
+- Fair Housing Reminder info card
+- Select/Deny confirmation dialogs with reasons
+- No PII visible (names, photos, addresses hidden)
+
+**Agent Applicant Detail Page** (`/agent/applicants/[applicantId]/page.tsx`):
+- "Obfuscated Profile" section with clear header
+- Visual indicators for strong metrics (green badges)
+- Rental history summary ("5+ years, no evictions")
+- Background check status ("Pass")
+- Competitive edge highlight
+- Internal notes and communication history
+- Shortlist/Deny action buttons
+
+**Agent All Applicants Page** (`/agent/applicants/page.tsx`):
+- Table view with obfuscated data
+- displayId, income ratio, credit band columns
+- Status/listing/date filters
+- Action buttons for detail view
+
+**Tenant Profile Page** (`/tenant/profile/page.tsx`):
+- Full PII visible to profile owner
+- Verification status for all categories
+- Document management
+- Profile completion progress
+
+**Mock Data Structure** (`/lib/mock-data/landlord.ts`, `/lib/mock-data/agent.ts`):
+- LandlordApplicant interface with obfuscated fields
+- Applicant interface matches story requirements
+- displayId format matches "Applicant #XXXX" pattern
+
+### Missing UI Elements (Needs Implementation)
+
+#### Priority 1: Critical for Story Completion
+
+1. **RevealedProfile Component** - MISSING
+   - **Location**: `components/tenant-profile/RevealedProfile.tsx`
+   - **Purpose**: Display full PII after landlord selection
+   - **Requirements**:
+     - Full name, photo, contact information
+     - Current address, employer name
+     - Complete credit history
+     - All reference information
+     - Visual transition animation (blur to clear)
+
+2. **Landlord Individual Applicant Detail Page** - MISSING
+   - **Location**: `app/(landlord)/landlord/applicant/[applicantId]/page.tsx`
+   - **Purpose**: Detailed view of single applicant (pre/post selection)
+   - **Requirements**:
+     - Obfuscated view by default
+     - Transitions to RevealedProfile after selection
+     - Selection confirmation flow
+     - Audit trail visibility
+
+3. **PiiRevealNotice Component** - MISSING
+   - **Location**: `components/application/PiiRevealNotice.tsx`
+   - **Purpose**: Notification when PII is unlocked
+   - **Requirements**:
+     - Success message banner
+     - Email notification confirmation
+     - Next steps guidance
+     - Timestamp of reveal
+
+4. **"Anonymized" Badge** - MISSING
+   - **Purpose**: Clear visual indicator on all obfuscated profiles
+   - **Locations to add**:
+     - Landlord applicants list page
+     - Agent applicant detail page
+     - Landlord applicant detail page
+   - **Design**: Use `Badge` with muted styling, lock icon
+
+5. **Anonymous Avatar Placeholder** - MISSING
+   - **Purpose**: Visual placeholder where photo would appear
+   - **Design**: Generic user silhouette with muted background
+   - **Implementation**: Add to applicant cards in landlord view
+
+#### Priority 2: Important for UX Quality
+
+6. **Credit Band Color Coding** - PARTIAL
+   - **Current**: Agent page has green badges for strong metrics
+   - **Missing**: Explicit color bands in landlord view
+   - **Design Spec**:
+     - 800+: Green (Excellent)
+     - 740-799: Blue (Good)
+     - 680-739: Yellow (Fair)
+     - Below 680: Red (Poor)
+
+7. **ProfileComparison Component** - MISSING
+   - **Location**: `components/tenant-profile/ProfileComparison.tsx`
+   - **Purpose**: Side-by-side comparison of shortlisted applicants
+   - **Requirements**:
+     - 2-3 applicants side-by-side
+     - Highlight differences in metrics
+     - Selection buttons for each
+
+8. **Specific Empty States** - MISSING
+   - "No applications yet" with explanation of anonymous process
+   - "Waiting for selection" state for tenant applications page
+   - "All applicants denied" state with guidance
+
+9. **Loading States** - MISSING
+   - Skeleton loaders for profile cards
+   - Progress indicator for document processing
+   - Optimistic UI update on selection
+
+#### Priority 3: Accessibility & Polish
+
+10. **Screen Reader Accessibility**
+    - Add `aria-label="Anonymized applicant profile"` to profile sections
+    - Announce credit bands with context (e.g., "Credit band 740 to 760, rated Good")
+    - Keyboard navigation verification needed
+
+11. **CreditBand Component** - TO CREATE
+    - **Location**: `components/tenant-profile/CreditBand.tsx`
+    - **Purpose**: Reusable credit score band display with colors
+    - **Features**: Color coding, accessible labels, score range
+
+12. **EmploymentTenure Component** - TO CREATE
+    - **Location**: `components/tenant-profile/EmploymentTenure.tsx`
+    - **Purpose**: Consistent employment tenure display
+    - **Features**: Icon, duration text, stability indicator
+
+### Route Corrections Needed
+
+The story specifies these routes but the actual mockups use different paths:
+
+| Story Specification | Actual Mockup Path | Status |
+|---------------------|-------------------|--------|
+| `/agent/applications/[listingId]` | `/agent/listings/[listingId]/applicants` | Different path |
+| `/landlord/applications/[listingId]` | `/landlord/listings/[listingId]/applicants` | Different path |
+| `/landlord/applicant/[applicantId]` | Not implemented | MISSING |
+
+**Recommendation**: Update story to match actual route structure OR create redirect routes.
+
+### Component Creation Checklist
+
+Components that need to be created for story completion:
+
+- [ ] `components/tenant-profile/RevealedProfile.tsx`
+- [ ] `components/tenant-profile/ProfileComparison.tsx`
+- [ ] `components/tenant-profile/CreditBand.tsx`
+- [ ] `components/tenant-profile/EmploymentTenure.tsx`
+- [ ] `components/application/PiiRevealNotice.tsx`
+- [ ] `app/(landlord)/landlord/applicant/[applicantId]/page.tsx`
+
+### Visual Design Specifications
+
+**Anonymous Avatar Placeholder**:
+```
+┌─────────┐
+│   ┌─┐   │
+│  (   )  │  ← Generic silhouette
+│   └─┘   │
+│  ╱   ╲  │
+└─────────┘
+bg-muted, border-dashed
+```
+
+**Anonymized Badge**:
+```
+┌───────────────┐
+│ 🔒 Anonymized │  ← Lock icon + text
+└───────────────┘
+Badge variant="outline" with muted colors
+```
+
+**PII Reveal Transition**:
+```
+Before Selection:          After Selection:
+┌─────────────────┐       ┌─────────────────┐
+│ Applicant #2847 │  →    │ Maya Chen       │
+│ ▓▓▓▓▓▓▓▓▓▓▓▓▓▓ │       │ maya@email.com  │
+│ Credit: 740-760 │       │ Credit: 752     │
+└─────────────────┘       └─────────────────┘
+                    ↑
+             CSS transition:
+             opacity 0→1, filter blur(8px)→blur(0)
+```
+
+### Mock Data Updates Needed
+
+Add `status: 'selected'` state handling and PII reveal fields to:
+- `LandlordApplicant` interface in `/lib/mock-data/landlord.ts`
+
+```typescript
+// Add to LandlordApplicant interface
+piiRevealed?: boolean;
+piiRevealedAt?: string;
+// Add PII data for revealed state
+revealedData?: {
+  name: string;
+  email: string;
+  phone: string;
+  address: string;
+  employer: string;
+  exactCreditScore: number;
+};
+```
+
+### Summary
+
+**Overall Mockup Completeness**: 70%
+
+**Breakdown**:
+- Core obfuscation display: 95% complete
+- Selection workflow: 80% complete
+- Post-selection PII reveal: 0% complete (critical gap)
+- Accessibility compliance: 40% complete
+- Polish/loading states: 30% complete
+
+**Recommended Priority Order**:
+1. Create landlord applicant detail page with reveal mechanism
+2. Create RevealedProfile and PiiRevealNotice components
+3. Add "Anonymized" badge and anonymous avatar to existing views
+4. Implement credit band color coding
+5. Add loading/empty states
+6. Verify accessibility requirements
+
+---
+
 ## Analytics Tracking
 
 **Events to Track**:
@@ -391,8 +629,11 @@ This story blocks several other features:
 
 ### Blocked By
 - US-002: User authentication (must have accounts to create profiles)
-- ADR for NER library selection
-- ADR for encryption/KMS approach
+- ADR-013: PII Encryption with AES-256-GCM (APPROVED)
+- ADR-014: PostgreSQL Row-Level Security for PII Access Control (APPROVED)
+- ADR-015: NER Library Selection for PII Detection (APPROVED)
+- ADR-016: Caching Strategy for Obfuscated Tenant Profiles (APPROVED)
+- ADR-017: Immutable Audit Trail for Compliance Logging (APPROVED)
 
 ### Related Stories
 - US-002: Automated Adverse Action Notices - Uses selection event
@@ -545,7 +786,7 @@ test('PII reveals after selection', async ({ page }) => {
 ## Open Questions
 
 - [x] **Which NER library should we use?**
-  - **Answer**: To be determined by Architecture ADR (spaCy recommended for accuracy vs. performance balance)
+  - **Answer**: Compromise.js with custom regex patterns (see ADR-015). Chosen for serverless compatibility, JavaScript-native implementation, and extensibility with custom patterns.
 
 - [ ] **Should we allow tenants to preview their anonymized profile?**
   - **Answer**: TBD - Good UX but adds complexity
@@ -564,6 +805,8 @@ test('PII reveals after selection', async ({ page }) => {
 | 2025-11-19 | Product Manager | Initial story creation from consolidated User_Stories.md |
 | 2025-11-19 | Product Manager | Added RICE scoring and technical specifications |
 | 2025-11-19 | - | Approved - ready for architecture review |
+| 2025-11-19 | UI Designer Agent | Added UI Designer Review section with mockup analysis (70% complete, critical gaps identified) |
+| 2025-11-19 | Architecture Agent | Created 5 ADRs for architectural decisions (ADR-013 through ADR-017) |
 
 ### Discussion Notes
 
@@ -579,7 +822,12 @@ test('PII reveals after selection', async ({ page }) => {
 - **Business Plan**: `docs/Business_Plan_and_GTM.md` - Competitive analysis, market opportunity
 - **Customer Journey**: `docs/Customer_Journey_Map.md` - Maya persona pain points
 - **Sitemap**: `docs/NextJS_Sitemap.md` - Route structure for tenant/landlord dashboards
-- **ADRs**: Pending - NER library selection, encryption approach
+- **ADRs**:
+  - `docs/adr/ADR-013-pii-encryption-with-aes-256-gcm.md` - PII encryption strategy
+  - `docs/adr/ADR-014-postgresql-row-level-security-for-pii-access.md` - Database access control
+  - `docs/adr/ADR-015-ner-library-selection-for-pii-detection.md` - NER library selection
+  - `docs/adr/ADR-016-caching-obfuscated-tenant-profiles.md` - Profile caching strategy
+  - `docs/adr/ADR-017-immutable-audit-trail-for-compliance.md` - Audit trail implementation
 - **Fair Housing**: Research on FHA requirements and recent settlements
 
 ---
