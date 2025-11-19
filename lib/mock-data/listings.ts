@@ -28,9 +28,9 @@ export const mockListings: Listing[] = [
   {
     id: "listing-1",
     images: [
-      "https://images.unsplash.com/photo-1502672260266-1c1ef2d93688?w=800&h=600&fit=crop",
-      "https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?w=800&h=600&fit=crop",
-      "https://images.unsplash.com/photo-1484154218962-a197022b25ba?w=800&h=600&fit=crop",
+      "/images/listings/listing-1-1.jpg",
+      "/images/listings/listing-1-2.jpg",
+      "/images/listings/listing-1-3.jpg",
     ],
     price: 3000,
     address: "123 Main St",
@@ -57,9 +57,9 @@ export const mockListings: Listing[] = [
   {
     id: "listing-2",
     images: [
-      "https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?w=800&h=600&fit=crop",
-      "https://images.unsplash.com/photo-1560185893-a55cbc8c57e8?w=800&h=600&fit=crop",
-      "https://images.unsplash.com/photo-1560185127-6ed189bf02f4?w=800&h=600&fit=crop",
+      "/images/listings/listing-2-1.jpg",
+      "/images/listings/listing-2-2.jpg",
+      "/images/listings/listing-2-3.jpg",
     ],
     price: 2500,
     address: "456 Park Ave",
@@ -86,9 +86,9 @@ export const mockListings: Listing[] = [
   {
     id: "listing-3",
     images: [
-      "https://images.unsplash.com/photo-1493809842364-78817add7ffb?w=800&h=600&fit=crop",
-      "https://images.unsplash.com/photo-1502672023488-70e25813eb80?w=800&h=600&fit=crop",
-      "https://images.unsplash.com/photo-1560185007-cde436f6a4d0?w=800&h=600&fit=crop",
+      "/images/listings/listing-3-1.jpg",
+      "/images/listings/listing-3-2.jpg",
+      "/images/listings/listing-3-3.jpg",
     ],
     price: 4200,
     address: "789 Bedford Ave",
@@ -115,9 +115,9 @@ export const mockListings: Listing[] = [
   {
     id: "listing-4",
     images: [
-      "https://images.unsplash.com/photo-1560448205-4d9b3e6bb6db?w=800&h=600&fit=crop",
-      "https://images.unsplash.com/photo-1507089947368-19c1da9775ae?w=800&h=600&fit=crop",
-      "https://images.unsplash.com/photo-1560185008-a33f0e68da9b?w=800&h=600&fit=crop",
+      "/images/listings/listing-4-1.jpg",
+      "/images/listings/listing-4-2.jpg",
+      "/images/listings/listing-4-3.jpg",
     ],
     price: 1800,
     address: "234 Flatbush Ave",
@@ -144,9 +144,9 @@ export const mockListings: Listing[] = [
   {
     id: "listing-5",
     images: [
-      "https://images.unsplash.com/photo-1536376072261-38c75010e6c9?w=800&h=600&fit=crop",
-      "https://images.unsplash.com/photo-1560449017-7c4c6c7d3b90?w=800&h=600&fit=crop",
-      "https://images.unsplash.com/photo-1556909114-f6e7ad7d3136?w=800&h=600&fit=crop",
+      "/images/listings/listing-5-1.jpg",
+      "/images/listings/listing-5-2.jpg",
+      "/images/listings/listing-5-3.jpg",
     ],
     price: 3500,
     address: "567 Atlantic Ave",
@@ -173,9 +173,9 @@ export const mockListings: Listing[] = [
   {
     id: "listing-6",
     images: [
-      "https://images.unsplash.com/photo-1484101403633-562f891dc89a?w=800&h=600&fit=crop",
-      "https://images.unsplash.com/photo-1560185893-39ff0c334587?w=800&h=600&fit=crop",
-      "https://images.unsplash.com/photo-1560449752-3fd4bdbe7df0?w=800&h=600&fit=crop",
+      "/images/listings/listing-6-1.jpg",
+      "/images/listings/listing-6-2.jpg",
+      "/images/listings/listing-6-3.jpg",
     ],
     price: 2200,
     address: "890 Nostrand Ave",
@@ -202,9 +202,9 @@ export const mockListings: Listing[] = [
   {
     id: "listing-7",
     images: [
-      "https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=800&h=600&fit=crop",
-      "https://images.unsplash.com/photo-1560185127-bdf5e1bca76a?w=800&h=600&fit=crop",
-      "https://images.unsplash.com/photo-1560448075-cbc16bb4af8e?w=800&h=600&fit=crop",
+      "/images/listings/listing-7-1.jpg",
+      "/images/listings/listing-7-2.jpg",
+      "/images/listings/listing-7-3.jpg",
     ],
     price: 5500,
     address: "111 Columbia Heights",
@@ -231,9 +231,9 @@ export const mockListings: Listing[] = [
   {
     id: "listing-8",
     images: [
-      "https://images.unsplash.com/photo-1512917774080-9991f1c4c750?w=800&h=600&fit=crop",
-      "https://images.unsplash.com/photo-1560449017-e507598f4c4c?w=800&h=600&fit=crop",
-      "https://images.unsplash.com/photo-1556909212-d5b604d0c90d?w=800&h=600&fit=crop",
+      "/images/listings/listing-8-1.jpg",
+      "/images/listings/listing-8-2.jpg",
+      "/images/listings/listing-8-3.jpg",
     ],
     price: 2800,
     address: "432 DeKalb Ave",
@@ -260,9 +260,9 @@ export const mockListings: Listing[] = [
   {
     id: "listing-9",
     images: [
-      "https://images.unsplash.com/photo-1567496898669-ee935f5f647a?w=800&h=600&fit=crop",
-      "https://images.unsplash.com/photo-1560185127-d5e9ee67e9c8?w=800&h=600&fit=crop",
-      "https://images.unsplash.com/photo-1560448082-6e6e9a4f1a8f?w=800&h=600&fit=crop",
+      "/images/listings/listing-9-1.jpg",
+      "/images/listings/listing-9-2.jpg",
+      "/images/listings/listing-9-3.jpg",
     ],
     price: 3800,
     address: "765 Wythe Ave",
@@ -289,9 +289,9 @@ export const mockListings: Listing[] = [
   {
     id: "listing-10",
     images: [
-      "https://images.unsplash.com/photo-1574362848149-11496d93a7c7?w=800&h=600&fit=crop",
-      "https://images.unsplash.com/photo-1560185893-01c9c82bb3e8?w=800&h=600&fit=crop",
-      "https://images.unsplash.com/photo-1560448083-cabb96c29b5c?w=800&h=600&fit=crop",
+      "/images/listings/listing-10-1.jpg",
+      "/images/listings/listing-10-2.jpg",
+      "/images/listings/listing-10-3.jpg",
     ],
     price: 1950,
     address: "298 Knickerbocker Ave",

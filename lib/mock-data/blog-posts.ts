@@ -74,11 +74,11 @@ Every decision is logged, creating a defensible record of fair housing complianc
 
 Understanding and following fair housing laws isn't just about avoiding lawsuits—it's about creating a more equitable housing market for everyone. ApartmentDibs is committed to making this easier for landlords while protecting tenants from discrimination.
     `.trim(),
-    featuredImage: "https://images.unsplash.com/photo-1560518883-ce09059eeffa?w=1200&h=630&fit=crop",
+    featuredImage: "/images/blog/fair-housing.jpg",
     category: "Fair Housing",
     author: {
       name: "Sarah Johnson",
-      avatar: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=150&h=150&fit=crop",
+      avatar: "/images/avatars/avatar-1.jpg",
       role: "Fair Housing Expert"
     },
     publishedAt: "2025-11-15",
@@ -160,11 +160,11 @@ Create your portable screening report once and apply to multiple listings withou
 
 Renting your first apartment doesn't have to be stressful. With the right preparation and knowledge, you can find a great place that fits your needs and budget.
     `.trim(),
-    featuredImage: "https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?w=1200&h=630&fit=crop",
+    featuredImage: "/images/blog/first-time-renters.jpg",
     category: "Renting Tips",
     author: {
       name: "Michael Chen",
-      avatar: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150&h=150&fit=crop",
+      avatar: "/images/avatars/avatar-2.jpg",
       role: "Content Writer"
     },
     publishedAt: "2025-11-10",
@@ -255,11 +255,11 @@ With ApartmentDibs:
 
 A strong rental application demonstrates reliability and responsibility. Take the time to prepare your materials thoroughly, and you'll significantly improve your chances of securing your ideal apartment.
     `.trim(),
-    featuredImage: "https://images.unsplash.com/photo-1554224155-6726b3ff858f?w=1200&h=630&fit=crop",
+    featuredImage: "/images/blog/rental-application.jpg",
     category: "Renting Tips",
     author: {
       name: "Emily Rodriguez",
-      avatar: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=150&h=150&fit=crop",
+      avatar: "/images/avatars/avatar-3.jpg",
       role: "Tenant Success Manager"
     },
     publishedAt: "2025-11-08",
@@ -344,11 +344,11 @@ Portable screening reports represent a major shift toward a more efficient, tena
 
 Create your portable screening report on ApartmentDibs and start applying to apartments immediately. Your verified profile makes you a more attractive candidate to landlords while saving you time and money.
     `.trim(),
-    featuredImage: "https://images.unsplash.com/photo-1554224154-26032ffc0d07?w=1200&h=630&fit=crop",
+    featuredImage: "/images/blog/credit-score.jpg",
     category: "Product News",
     author: {
       name: "David Park",
-      avatar: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=150&h=150&fit=crop",
+      avatar: "/images/avatars/avatar-4.jpg",
       role: "Product Manager"
     },
     publishedAt: "2025-11-05",
@@ -440,11 +440,11 @@ We currently have over 500 active listings in Brooklyn, from studios to 3+ bedro
 
 Start your Brooklyn apartment search on ApartmentDibs today.
     `.trim(),
-    featuredImage: "https://images.unsplash.com/photo-1555680202-c86f0e12f086?w=1200&h=630&fit=crop",
+    featuredImage: "/images/blog/lease-agreement.jpg",
     category: "Market Updates",
     author: {
       name: "Jessica Martinez",
-      avatar: "https://images.unsplash.com/photo-1580489944761-15a19d654956?w=150&h=150&fit=crop",
+      avatar: "/images/avatars/avatar-5.jpg",
       role: "Market Analyst"
     },
     publishedAt: "2025-11-01",
@@ -575,11 +575,11 @@ Fair housing compliance isn't just about avoiding lawsuits—it's about creating
 
 Join ApartmentDibs today and let our platform handle compliance for you.
     `.trim(),
-    featuredImage: "https://images.unsplash.com/photo-1560520653-9e0e4c89eb11?w=1200&h=630&fit=crop",
+    featuredImage: "/images/blog/moving-guide.jpg",
     category: "Fair Housing",
     author: {
       name: "Robert Thompson",
-      avatar: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=150&h=150&fit=crop",
+      avatar: "/images/avatars/avatar-6.jpg",
       role: "Legal Compliance Advisor"
     },
     publishedAt: "2025-10-28",
@@ -742,11 +742,11 @@ Be cautious if:
 
 A thorough viewing helps you avoid surprises after moving in. Take your time, ask questions, and trust your instincts. When you find the right apartment, having your ApartmentDibs profile ready means you can apply immediately.
     `.trim(),
-    featuredImage: "https://images.unsplash.com/photo-1560185007-c5ca9d2c014d?w=1200&h=630&fit=crop",
+    featuredImage: "/images/blog/pet-friendly.jpg",
     category: "Renting Tips",
     author: {
       name: "Amanda Lee",
-      avatar: "https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=150&h=150&fit=crop",
+      avatar: "/images/avatars/avatar-7.jpg",
       role: "Real Estate Advisor"
     },
     publishedAt: "2025-10-20",
