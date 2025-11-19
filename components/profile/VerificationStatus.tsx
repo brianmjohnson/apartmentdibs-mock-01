@@ -3,12 +3,7 @@
 import { CheckCircle, Clock, XCircle, AlertCircle, RefreshCw } from 'lucide-react'
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipProvider,
-  TooltipTrigger,
-} from '@/components/ui/tooltip'
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip'
 
 type VerificationState = 'pending' | 'in_progress' | 'verified' | 'failed' | 'expired'
 
@@ -28,7 +23,10 @@ interface VerificationStatusProps {
   className?: string
 }
 
-const statusConfig: Record<VerificationState, { icon: React.ReactNode; color: string; label: string }> = {
+const statusConfig: Record<
+  VerificationState,
+  { icon: React.ReactNode; color: string; label: string }
+> = {
   pending: {
     icon: <Clock className="h-4 w-4" />,
     color: 'text-muted-foreground',
@@ -61,7 +59,7 @@ export function VerificationStatus({ items, className }: VerificationStatusProps
   const totalCount = items.length
 
   return (
-    <Card className={`border-2 border-foreground ${className || ''}`}>
+    <Card className={`border-foreground border-2 ${className || ''}`}>
       <CardHeader>
         <CardTitle className="text-lg">Verification Status</CardTitle>
         <CardDescription>
@@ -77,15 +75,15 @@ export function VerificationStatus({ items, className }: VerificationStatusProps
             return (
               <div
                 key={item.id}
-                className="flex items-center justify-between p-3 bg-muted/50 rounded-md border border-border"
+                className="bg-muted/50 border-border flex items-center justify-between rounded-md border p-3"
               >
                 <div className="flex-1">
                   <div className="flex items-center gap-2">
-                    <p className="font-medium text-sm">{item.name}</p>
+                    <p className="text-sm font-medium">{item.name}</p>
                     <TooltipProvider>
                       <Tooltip>
                         <TooltipTrigger>
-                          <AlertCircle className="h-3 w-3 text-muted-foreground" />
+                          <AlertCircle className="text-muted-foreground h-3 w-3" />
                         </TooltipTrigger>
                         <TooltipContent>
                           <p className="max-w-xs">{item.description}</p>
@@ -94,17 +92,13 @@ export function VerificationStatus({ items, className }: VerificationStatusProps
                     </TooltipProvider>
                   </div>
                   {item.verifiedAt && item.status === 'verified' && (
-                    <p className="text-xs text-muted-foreground">
-                      Verified: {item.verifiedAt}
-                    </p>
+                    <p className="text-muted-foreground text-xs">Verified: {item.verifiedAt}</p>
                   )}
                   {item.expiresAt && item.status === 'verified' && (
-                    <p className="text-xs text-muted-foreground">
-                      Expires: {item.expiresAt}
-                    </p>
+                    <p className="text-muted-foreground text-xs">Expires: {item.expiresAt}</p>
                   )}
                   {item.errorMessage && (
-                    <p className="text-xs text-destructive">{item.errorMessage}</p>
+                    <p className="text-destructive text-xs">{item.errorMessage}</p>
                   )}
                 </div>
 
@@ -113,7 +107,7 @@ export function VerificationStatus({ items, className }: VerificationStatusProps
                     <Button
                       size="sm"
                       variant="outline"
-                      className="h-7 text-xs border border-foreground"
+                      className="border-foreground h-7 border text-xs"
                       onClick={item.onRetry}
                     >
                       Retry

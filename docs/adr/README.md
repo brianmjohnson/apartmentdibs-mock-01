@@ -11,12 +11,14 @@ An Architecture Decision Record (ADR) documents an important architectural decis
 Create an ADR when making decisions about:
 
 ### Technology Choices
+
 - Selecting libraries or frameworks
 - Choosing databases or storage solutions
 - Picking testing frameworks
 - Selecting build tools or bundlers
 
 ### Architecture Patterns
+
 - State management strategy
 - Authentication/authorization approach
 - API design patterns
@@ -24,12 +26,14 @@ Create an ADR when making decisions about:
 - Caching strategies
 
 ### Infrastructure
+
 - Deployment platforms
 - CI/CD pipelines
 - Monitoring and logging
 - Service integrations
 
 ### Significant Changes
+
 - Breaking changes to existing patterns
 - Major refactoring decisions
 - Deprecating existing approaches
@@ -37,6 +41,7 @@ Create an ADR when making decisions about:
 ## When NOT to Create an ADR
 
 Don't create ADRs for:
+
 - Trivial implementation details
 - Temporary solutions (mark as TODO instead)
 - Decisions easily reversible
@@ -63,6 +68,7 @@ DRAFT → APPROVED → DEPRECATED → SUPERSEDED
 ### Step 1: Determine if ADR is Needed
 
 Ask these questions:
+
 1. Is this decision significant and long-lasting?
 2. Will future developers need to understand why we made this choice?
 3. Does this affect multiple parts of the system?
@@ -82,6 +88,7 @@ ls docs/adr/*.md | grep -E '[0-9]' | tail -n 1
 ```
 
 Format: `NNN-kebab-case-title.md`
+
 - Example: `003-state-management-zustand.md`
 
 ### Step 3: Use the Template
@@ -95,46 +102,59 @@ cp docs/adr/template.md docs/adr/003-your-decision.md
 ### Step 4: Fill in the Sections
 
 #### Title
+
 Clear, specific description:
+
 - ✅ "Use Zustand for Client State Management"
 - ❌ "State Management"
 
 #### Status
+
 Start as `DRAFT` if awaiting approval, or `APPROVED` if already decided.
 
 #### Date
+
 Date of decision (not creation):
+
 - `YYYY-MM-DD`
 
 #### Author
+
 Your name and email:
+
 - `John Doe <john@example.com>`
 
 #### Context
+
 **What problem are we solving?**
 
 Explain:
+
 - Current situation
 - Why we need to make this decision
 - Constraints or requirements
 - Relevant background
 
 Example:
+
 ```markdown
 ## Context
 
 Our application needs client-side state management for:
+
 - User preferences (theme, locale, sidebar state)
 - Shopping cart data (before checkout)
 - Real-time notifications (WebSocket data)
 
 Current situation:
+
 - Using React Context for some state
 - Props drilling in many components
 - No persistent state across sessions
 - Performance issues with frequent re-renders
 
 Requirements:
+
 - TypeScript support
 - Small bundle size
 - Easy to test
@@ -143,26 +163,31 @@ Requirements:
 ```
 
 #### Decision
+
 **What approach are we taking and why?**
 
 Be specific:
+
 - State the decision clearly
 - Explain why this approach
 - How it solves the problem
 
 Example:
+
 ```markdown
 ## Decision
 
 We will use **Zustand** for client-side state management.
 
 Implementation approach:
+
 - Create separate stores for different domains (user, cart, notifications)
 - Use middleware for persistence (localStorage/sessionStorage)
 - Integrate with React via hooks
 - Combine with tRPC for server state
 
 Why Zustand:
+
 1. **Simplicity**: Minimal boilerplate, easy to learn
 2. **Performance**: Fine-grained reactivity, no unnecessary re-renders
 3. **TypeScript**: Excellent type inference
@@ -172,15 +197,18 @@ Why Zustand:
 ```
 
 #### Consequences
+
 **What becomes easier or more difficult?**
 
 List both positive and negative:
 
 Example:
+
 ```markdown
 ## Consequences
 
 ### Positive
+
 - **Simpler code**: Less boilerplate than Redux
 - **Better performance**: Component re-renders only when relevant state changes
 - **Smaller bundle**: Zustand is ~1KB vs Redux ~3KB
@@ -189,56 +217,69 @@ Example:
 - **Persistent state**: Middleware makes localStorage integration simple
 
 ### Negative
+
 - **Less structure**: More freedom can lead to inconsistent patterns
 - **Smaller community**: Fewer examples than Redux/MobX
 - **No time-travel**: While DevTools work, replay isn't native
 - **Learning curve**: Team needs to learn new library
 
 ### Neutral
+
 - **Different from previous projects**: Team used Redux before
 - **Migration needed**: Will need to migrate Context-based code
 ```
 
 #### Alternatives Considered
+
 **What other options were evaluated?**
 
 List at least 2-3 alternatives:
 
 Example:
+
 ```markdown
 ## Alternatives Considered
 
 ### Alternative 1: Redux Toolkit
+
 **Pros**:
+
 - Industry standard, large community
 - Excellent DevTools
 - Time-travel debugging
 - Team familiar with Redux
 
 **Cons**:
+
 - More boilerplate even with Toolkit
 - Larger bundle size (~3KB)
 - Overkill for our state needs
 - Steeper learning curve for new developers
 
 ### Alternative 2: Jotai
+
 **Pros**:
+
 - Atomic state management
 - Even smaller than Zustand
 - Modern approach
 
 **Cons**:
+
 - Less mature than Zustand
 - Smaller community
 - Different paradigm from what team knows
 
 ### Alternative 3: React Context + useReducer
+
 **Pros**:
+
 - No additional dependencies
 - Already using in some places
 - Team familiar
 
 **Cons**:
+
 - Performance issues with frequent updates
 - Requires more boilerplate
 - No built-in persistence
@@ -247,9 +288,11 @@ Example:
 ```
 
 #### Related
+
 Link to related ADRs, docs, issues:
 
 Example:
+
 ```markdown
 ## Related
 
@@ -262,6 +305,7 @@ Example:
 ### Step 5: HITL Review
 
 If created by Claude Code:
+
 1. ADR is marked as DRAFT
 2. HITL file created for approval
 3. Human reviews in batch
@@ -282,18 +326,22 @@ If created by Claude Code:
 ### Common Feedback
 
 **Missing Context**:
+
 - "Why are we solving this now?"
 - "What prompted this decision?"
 
 **Vague Decision**:
+
 - "Be more specific about implementation"
 - "Define boundaries of this decision"
 
 **Unbalanced Consequences**:
+
 - "What are the downsides?"
 - "This seems too optimistic"
 
 **Insufficient Alternatives**:
+
 - "What else did we consider?"
 - "Why not approach X?"
 
@@ -302,11 +350,13 @@ If created by Claude Code:
 ### When to Update
 
 **Don't update ADRs** unless:
+
 - Fixing typos or clarity
 - Adding links to related ADRs
 - Updating status
 
 **Create new ADR** instead when:
+
 - Changing the decision
 - Addressing new requirements
 - Learning new information
@@ -316,6 +366,7 @@ If created by Claude Code:
 When an approach is no longer recommended:
 
 1. Update ADR file:
+
    ```markdown
    **Status**: DEPRECATED
    **Date**: 2025-01-20
@@ -348,32 +399,38 @@ When replacing an old decision:
 ### Scenario: Choosing State Management
 
 **Day 1: Research Phase**
+
 - Product manager creates US-015 (User Preferences)
 - Backend developer notes need for client state
 - Creates `docs/research/state-management-options.md`
 
 **Day 2: Proposal**
+
 - Architecture agent identifies need for ADR
 - Creates `docs/adr/003-state-management-zustand.md` (DRAFT)
 - Creates HITL request in batch
 
 **Day 3: Review**
+
 - Human reviews HITL batch
 - Questions: "Why not Redux Toolkit?"
 - Marks NEEDS_REVISION with feedback
 
 **Day 4: Revision**
+
 - Architecture agent adds Redux Toolkit to alternatives
 - Explains why Zustand is better fit
 - Updates HITL file
 
 **Day 5: Approval**
+
 - Human reviews revision
 - Marks APPROVED
 - ADR status changed to APPROVED
 - Implementation begins
 
 **3 Months Later: Revisit**
+
 - Team has outgrown Zustand
 - Create ADR-007 (Redux Toolkit)
 - Mark ADR-003 as SUPERSEDED
@@ -384,16 +441,19 @@ When replacing an old decision:
 ### Writing Style
 
 **Be Honest**:
+
 - Acknowledge trade-offs
 - Don't oversell a decision
 - Be clear about uncertainties
 
 **Be Specific**:
+
 - Avoid vague language
 - Provide examples
 - Link to resources
 
 **Be Concise**:
+
 - One decision per ADR
 - Focus on "why" not "how"
 - Implementation details go in code comments
@@ -417,6 +477,7 @@ Only lists positives, ignores downsides
 → Be specific about what you're doing
 
 ✅ **The Good ADR**:
+
 - Clear problem statement
 - Specific decision
 - Honest consequences
@@ -433,6 +494,7 @@ Only lists positives, ignores downsides
 ### Example Titles
 
 Good ADR titles:
+
 - "Use Zustand for Client-Side State Management"
 - "Implement Multi-Tenancy with Organization Model"
 - "Deploy to Vercel with Neon for Database"
@@ -440,6 +502,7 @@ Good ADR titles:
 - "Cache tRPC Queries with TanStack Query"
 
 Poor ADR titles:
+
 - "State Management" (too vague)
 - "Fix Performance Issues" (not a decision)
 - "Update Authentication" (not specific)
@@ -480,6 +543,7 @@ A: Minimal code examples are fine for clarity. Detailed implementation goes in t
 ## Summary
 
 ADRs help us:
+
 - ✅ Document significant decisions
 - ✅ Understand why we made choices
 - ✅ Avoid repeating past mistakes

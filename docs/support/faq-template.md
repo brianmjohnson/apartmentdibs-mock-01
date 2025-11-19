@@ -9,6 +9,7 @@
 ## How to Use This Template
 
 **For Support Triage Agent**:
+
 1. Identify common questions from support tickets
 2. Add new FAQ entries in the appropriate category
 3. Keep answers concise and actionable
@@ -16,6 +17,7 @@
 5. Update existing answers when product changes
 
 **For Users**:
+
 - Use Ctrl+F / Cmd+F to search for keywords
 - Check the relevant category for your question
 - Follow the step-by-step solutions
@@ -41,6 +43,7 @@
 **Problem**: Want to sign up for [COMPANY NAME]
 
 **Solution**:
+
 1. Go to [SIGNUP URL]
 2. Choose one of these options:
    - Sign up with email and password
@@ -58,6 +61,7 @@
 **Problem**: Cannot log in due to forgotten password
 
 **Solution**:
+
 1. Go to [LOGIN URL]
 2. Click "Forgot password?"
 3. Enter your email address
@@ -78,6 +82,7 @@
 **Problem**: Need to update the email associated with account
 
 **Solution**:
+
 1. Log in to your account
 2. Go to Settings > Account
 3. Click "Change email"
@@ -96,6 +101,7 @@
 **Solution**:
 
 **To upgrade**:
+
 1. Go to Settings > Billing
 2. Click "Upgrade plan"
 3. Choose your new plan
@@ -105,6 +111,7 @@
 7. You will be charged the prorated difference
 
 **To downgrade**:
+
 1. Go to Settings > Billing
 2. Click "Change plan"
 3. Select a lower tier plan
@@ -119,6 +126,7 @@
 **Problem**: Want to stop my paid subscription
 
 **Solution**:
+
 1. Go to Settings > Billing
 2. Click "Cancel subscription"
 3. (Optional) Provide feedback on why you're canceling
@@ -137,6 +145,7 @@
 **Problem**: Want to delete account and all data
 
 **Solution**:
+
 1. Cancel any active subscriptions first (see 1.5)
 2. Go to Settings > Account
 3. Scroll to "Danger Zone"
@@ -155,12 +164,14 @@
 **Problem**: Duplicate charges on credit card
 
 **Possible causes**:
+
 1. **Pending vs. Posted**: Bank may show pending authorization + final charge
 2. **Failed payment retry**: Previous payment failed, new attempt succeeded
 3. **Multiple subscriptions**: Check if you have multiple accounts
 4. **Actual duplicate**: System error (rare)
 
 **Solution**:
+
 1. Check your billing history: Settings > Billing > Billing History
 2. If duplicate confirmed, email [BILLING EMAIL] with:
    - Your account email
@@ -175,6 +186,7 @@
 **Problem**: Need receipt for accounting/expense report
 
 **Solution**:
+
 1. Go to Settings > Billing
 2. Click "Billing History"
 3. Find the transaction
@@ -193,6 +205,7 @@
 **Problem**: Don't know how to use [specific feature]
 
 **Solution**:
+
 1. [Step-by-step instructions]
 2. [Include screenshots if helpful]
 3. [Common gotchas]
@@ -207,14 +220,15 @@
 
 **Solution**:
 
-| Feature | Plan A | Plan B |
-|---------|--------|--------|
+| Feature     | Plan A  | Plan B  |
+| ----------- | ------- | ------- |
 | [Feature 1] | [Limit] | [Limit] |
-| [Feature 2] | ❌ | ✅ |
-| [Feature 3] | ❌ | ✅ |
-| **Price** | $X/mo | $Y/mo |
+| [Feature 2] | ❌      | ✅      |
+| [Feature 3] | ❌      | ✅      |
+| **Price**   | $X/mo   | $Y/mo   |
 
 **Best for**:
+
 - **Plan A**: [Use case]
 - **Plan B**: [Use case]
 
@@ -228,11 +242,11 @@
 
 **Solution**:
 
-| Limit Type | Free | Pro | Enterprise |
-|-----------|------|-----|------------|
-| [Metric 1] | [Amount] | [Amount] | Unlimited |
-| [Metric 2] | [Amount] | [Amount] | Unlimited |
-| [Metric 3] | [Amount] | [Amount] | Custom |
+| Limit Type | Free     | Pro      | Enterprise |
+| ---------- | -------- | -------- | ---------- |
+| [Metric 1] | [Amount] | [Amount] | Unlimited  |
+| [Metric 2] | [Amount] | [Amount] | Unlimited  |
+| [Metric 3] | [Amount] | [Amount] | Custom     |
 
 **Exceeded limit?**: You will receive an email warning at 80% usage. Upgrade to continue using.
 
@@ -243,6 +257,7 @@
 **Problem**: Want to download all my data
 
 **Solution**:
+
 1. Go to Settings > Data Export
 2. Click "Request export"
 3. You will receive an email when ready (usually within 24 hours)
@@ -262,6 +277,7 @@
 **Problem**: Need to collaborate with others
 
 **Solution**:
+
 1. Open the [resource] you want to share
 2. Click the "Share" button
 3. Enter team member's email address
@@ -285,6 +301,7 @@
 **Solution**:
 
 **Quick fixes (try in order)**:
+
 1. **Refresh the page**: Ctrl+R / Cmd+R
 2. **Clear browser cache**:
    - Chrome: Ctrl+Shift+Delete > Clear cached images and files
@@ -296,6 +313,7 @@
 6. **Disable browser extensions**: Especially ad blockers, privacy tools
 
 **Still having issues?**
+
 - Check our [Status Page](STATUS_PAGE_URL) for outages
 - Report issue to [SUPPORT EMAIL] with:
   - Browser and version
@@ -313,15 +331,16 @@
 
 **Common errors**:
 
-| Error | Meaning | Fix |
-|-------|---------|-----|
-| "Session expired" | Logged out | Log in again |
-| "Permission denied" | Don't have access | Request access from owner |
-| "Quota exceeded" | Hit plan limit | Upgrade plan or delete old data |
-| "Network error" | Connection issue | Check internet, try again |
-| "Server error (500)" | Server problem | Wait 5 minutes and retry |
+| Error                | Meaning           | Fix                             |
+| -------------------- | ----------------- | ------------------------------- |
+| "Session expired"    | Logged out        | Log in again                    |
+| "Permission denied"  | Don't have access | Request access from owner       |
+| "Quota exceeded"     | Hit plan limit    | Upgrade plan or delete old data |
+| "Network error"      | Connection issue  | Check internet, try again       |
+| "Server error (500)" | Server problem    | Wait 5 minutes and retry        |
 
 **Other errors**:
+
 1. Take a screenshot of the error message
 2. Note what you were doing when it occurred
 3. Try the action again
@@ -365,18 +384,21 @@
 **Solution**:
 
 **Immediate actions**:
+
 1. Don't close the tab
 2. Copy your content to clipboard (Ctrl+A, Ctrl+C)
 3. Refresh the page
 4. If content is gone, paste from clipboard
 
 **Common causes**:
+
 - **Session expired**: Log in again
 - **Network issue**: Check connection
 - **Conflict**: Someone else edited at same time
 - **Browser cache**: Clear cache and reload
 
 **Prevention**:
+
 - Save frequently (Ctrl+S if supported)
 - Keep only one tab open per resource
 - Check for "Saved" indicator before closing
@@ -388,6 +410,7 @@
 **Problem**: Hotkeys/shortcuts don't respond
 
 **Solution**:
+
 1. Check if you're focused on the right element (click in the editor/workspace)
 2. Try refreshing the page
 3. Check for browser extension conflicts (disable extensions)
@@ -408,6 +431,7 @@
 **Solution**:
 
 **Security measures**:
+
 - ✅ Encryption in transit (TLS/SSL)
 - ✅ Encryption at rest (database encryption)
 - ✅ Regular security audits
@@ -427,6 +451,7 @@
 **Problem**: Want to add extra security to account
 
 **Solution**:
+
 1. Go to Settings > Security
 2. Click "Enable 2FA"
 3. Choose method:
@@ -447,6 +472,7 @@
 **Solution**:
 
 **Who has access**:
+
 - ✅ **You**: Full access to your data
 - ✅ **People you share with**: Access you granted (view/edit/admin)
 - ✅ **Organization admins** (if in org): May have access per org policy
@@ -468,11 +494,13 @@
 **Solution**:
 
 **DO**:
+
 - ✅ Email [SECURITY EMAIL] with details
 - ✅ Include steps to reproduce
 - ✅ Allow us to respond before public disclosure
 
 **DON'T**:
+
 - ❌ Post publicly (Twitter, forums, etc.)
 - ❌ Exploit the vulnerability
 - ❌ Access other users' data
@@ -490,6 +518,7 @@
 **Problem**: Want to integrate with external service
 
 **Solution**:
+
 1. Go to Settings > Integrations
 2. Find [SERVICE NAME]
 3. Click "Connect"
@@ -499,6 +528,7 @@
 7. Integration is now active
 
 **Supported integrations**:
+
 - [Service 1]
 - [Service 2]
 - [Service 3]
@@ -512,6 +542,7 @@
 **Problem**: Want to remove connected service
 
 **Solution**:
+
 1. Go to Settings > Integrations
 2. Find the connected service
 3. Click "Disconnect" or "Revoke access"
@@ -531,6 +562,7 @@
 **Solution**:
 
 **Current status**:
+
 - [If yes] ✅ Available for iOS and Android
   - iOS: [App Store link]
   - Android: [Play Store link]
@@ -549,6 +581,7 @@
 **Solution**:
 
 **Current status**:
+
 - [If yes] ✅ Available for Windows, Mac, Linux:
   - Download: [DESKTOP APP URL]
 - [If no] ❌ No desktop app, but web app works great:
@@ -577,10 +610,12 @@ If this FAQ doesn't solve your issue:
 ## How to Contribute
 
 **Found an error or have a suggestion?**
+
 - Email [SUPPORT EMAIL] with subject: "FAQ Update"
 - Include: Section number, proposed change
 
 **Agent maintenance**:
+
 - Review support tickets monthly for common issues
 - Add new FAQ entries for repeat questions
 - Update existing answers when product changes

@@ -14,6 +14,7 @@ This proposal outlines a comprehensive plan to convert the projects_template rep
 **Goal**: Enable agents to use GitHub Issues as living, trackable contracts while maintaining the existing Markdown-based documentation system.
 
 **Key Benefits**:
+
 - Bi-directional sync between User Stories (Markdown) and GitHub Issues
 - HITL workflow integrated with GitHub issue comments and labels
 - Better visibility and tracking through GitHub Projects
@@ -40,12 +41,14 @@ This proposal outlines a comprehensive plan to convert the projects_template rep
 ### What Works Well
 
 **Markdown-Based Documentation** ✅:
+
 - User Stories in `docs/user-stories/US-XXX.md`
 - ADRs in `docs/adr/NNN-title.md`
 - HITL files in `docs/hitl/hitl-YYYY-MM-DD-NNN-*.md`
 - Session Summaries in `docs/sessions/`
 
 **Benefits**:
+
 - Version controlled (git history)
 - Full-text searchable
 - Offline accessible
@@ -55,17 +58,20 @@ This proposal outlines a comprehensive plan to convert the projects_template rep
 ### Current Limitations
 
 **Tracking & Visibility** ⚠️:
+
 - No native kanban board view (stories are just files)
 - No built-in state machine (have to manually update status in Markdown)
 - Hard to see "what's in progress" at a glance
 - No notifications when story status changes
 
 **Collaboration** ⚠️:
+
 - HITL approvals require file editing (not comment-based)
 - No @mentions or assignees
 - Hard to link discussions to specific decisions
 
 **Onboarding** ⚠️:
+
 - New contributors don't know what template structure to follow
 - No guided forms for creating User Stories, ADRs, HITLs
 
@@ -76,6 +82,7 @@ This proposal outlines a comprehensive plan to convert the projects_template rep
 ### Hybrid Approach: Markdown + GitHub Issues
 
 **Philosophy**:
+
 - **Markdown files remain source of truth** for detailed documentation
 - **GitHub Issues provide tracking, state management, and collaboration**
 - **Bi-directional sync** keeps both in sync
@@ -102,11 +109,11 @@ graph TB
 
 **Example Mapping**:
 
-| Markdown File | GitHub Issue | Sync Method |
-|---------------|--------------|-------------|
-| `US-042.md` | Issue #123 | Title, body (summary + link), labels, milestone |
-| `ADR-003.md` | Discussion #45 | GitHub Discussion for architecture decisions |
-| `hitl-*.md` | Issue comment | HITL decisions become comments on related issue |
+| Markdown File | GitHub Issue   | Sync Method                                     |
+| ------------- | -------------- | ----------------------------------------------- |
+| `US-042.md`   | Issue #123     | Title, body (summary + link), labels, milestone |
+| `ADR-003.md`  | Discussion #45 | GitHub Discussion for architecture decisions    |
+| `hitl-*.md`   | Issue comment  | HITL decisions become comments on related issue |
 
 ---
 
@@ -115,11 +122,13 @@ graph TB
 ### 1. Enable Template Repository
 
 **In GitHub Settings**:
+
 ```
 Settings → General → Template repository → ✅ Enable
 ```
 
 **Benefits**:
+
 - "Use this template" button on repository home page
 - New projects start with clean git history
 - Customizable files that auto-populate (e.g., README.md with project name)
@@ -131,6 +140,7 @@ Settings → General → Template repository → ✅ Enable
 **Create Standardized Label Taxonomy**:
 
 #### Story Type Labels
+
 - `type: feature` 🟦 - New functionality (US-XXX)
 - `type: bug` 🟥 - Bug fix
 - `type: refactor` 🟨 - Code improvement
@@ -138,12 +148,14 @@ Settings → General → Template repository → ✅ Enable
 - `type: chore` ⚙️ - Maintenance task
 
 #### Priority Labels (RICE-aligned)
+
 - `priority: P0` 🔴 - Critical/MVP (RICE > 100)
 - `priority: P1` 🟠 - Important (RICE 50-100)
 - `priority: P2` 🟡 - Nice to have (RICE 25-50)
 - `priority: P3` ⚪ - Future (RICE < 25)
 
 #### Status Labels
+
 - `status: draft` ⚫ - Initial creation
 - `status: ready` 🟢 - Ready for implementation
 - `status: in-progress` 🔵 - Currently being worked on
@@ -152,12 +164,14 @@ Settings → General → Template repository → ✅ Enable
 - `status: done` ✅ - Completed
 
 #### HITL Labels
+
 - `hitl: needs-review` 🟠 - Awaiting human decision
 - `hitl: approved` 🟢 - Human approved
 - `hitl: needs-revision` 🟡 - Changes requested
 - `hitl: rejected` 🔴 - Not approved
 
 #### Agent Labels
+
 - `agent: product-manager` 🎯 - Product Manager Agent created
 - `agent: architecture` 🏗️ - Architecture Agent created
 - `agent: frontend` 💻 - Frontend Developer Agent
@@ -167,6 +181,7 @@ Settings → General → Template repository → ✅ Enable
 - `agent: market-analyst` 📊 - Market Analyst Agent
 
 #### Domain Labels
+
 - `domain: auth` 🔐 - Authentication/authorization
 - `domain: ui` 🎨 - User interface
 - `domain: api` 🔌 - API/backend
@@ -180,8 +195,10 @@ Settings → General → Template repository → ✅ Enable
 **Create Project Boards**:
 
 #### Board 1: Product Development
+
 **View**: Kanban
 **Columns**:
+
 1. **Backlog** (Draft stories)
 2. **Ready** (Approved, not started)
 3. **In Progress** (Active development)
@@ -189,12 +206,14 @@ Settings → General → Template repository → ✅ Enable
 5. **Done** (Completed)
 
 **Automation Rules**:
+
 - Issue opened → Move to "Backlog"
 - Label `status: ready` → Move to "Ready"
 - Label `status: in-progress` → Move to "In Progress"
 - Issue closed → Move to "Done"
 
 #### Board 2: HITL Review Queue
+
 **View**: Table
 **Columns**: Issue, Agent, Type, Priority, HITL Status, Comments
 
@@ -205,13 +224,14 @@ Settings → General → Template repository → ✅ Enable
 ### 4. Issue Templates
 
 #### Template 1: User Story
+
 **File**: `.github/ISSUE_TEMPLATE/user-story.yml`
 
 ```yaml
 name: User Story
 description: Create a new user story for product development
-title: "[US] "
-labels: ["type: feature", "status: draft", "agent: product-manager"]
+title: '[US] '
+labels: ['type: feature', 'status: draft', 'agent: product-manager']
 body:
   - type: markdown
     attributes:
@@ -224,7 +244,7 @@ body:
     attributes:
       label: User Role
       description: Who is this for?
-      placeholder: "e.g., Power User, First-time Visitor, Admin"
+      placeholder: 'e.g., Power User, First-time Visitor, Admin'
     validations:
       required: true
 
@@ -233,7 +253,7 @@ body:
     attributes:
       label: I want to...
       description: What capability or action?
-      placeholder: "e.g., export my data as CSV"
+      placeholder: 'e.g., export my data as CSV'
     validations:
       required: true
 
@@ -242,7 +262,7 @@ body:
     attributes:
       label: So that...
       description: What's the benefit or value?
-      placeholder: "e.g., I can analyze it in Excel"
+      placeholder: 'e.g., I can analyze it in Excel'
     validations:
       required: true
 
@@ -276,12 +296,13 @@ body:
     attributes:
       label: Additional Context
       description: Any mockups, related stories, or background?
-      placeholder: "Links, screenshots, related US-XXX references"
+      placeholder: 'Links, screenshots, related US-XXX references'
     validations:
       required: false
 ```
 
 **Upon Submission**:
+
 1. GitHub creates issue with `type: feature` and `status: draft` labels
 2. GitHub Integration Agent detects new issue
 3. Agent creates `docs/user-stories/US-XXX.md` from template
@@ -292,6 +313,7 @@ body:
 ---
 
 #### Template 2: Architecture Decision Record
+
 **File**: `.github/ISSUE_TEMPLATE/adr.yml`
 
 Creates a GitHub Discussion (not issue) for architecture decisions.
@@ -299,8 +321,8 @@ Creates a GitHub Discussion (not issue) for architecture decisions.
 ```yaml
 name: Architecture Decision (ADR)
 description: Propose an architectural decision for discussion
-title: "[ADR] "
-labels: ["type: architecture", "agent: architecture"]
+title: '[ADR] '
+labels: ['type: architecture', 'agent: architecture']
 body:
   - type: markdown
     attributes:
@@ -313,7 +335,7 @@ body:
     attributes:
       label: Decision Title
       description: What are we deciding?
-      placeholder: "e.g., Use Zustand for Client State Management"
+      placeholder: 'e.g., Use Zustand for Client State Management'
     validations:
       required: true
 
@@ -322,7 +344,7 @@ body:
     attributes:
       label: Context
       description: Why do we need to make this decision?
-      placeholder: "Current situation, requirements, constraints..."
+      placeholder: 'Current situation, requirements, constraints...'
     validations:
       required: true
 
@@ -340,6 +362,7 @@ body:
 ```
 
 **Upon Submission**:
+
 1. Creates GitHub Discussion
 2. Architecture Agent creates `docs/adr/NNN-title.md` (DRAFT status)
 3. Agent posts link to ADR in discussion
@@ -349,13 +372,14 @@ body:
 ---
 
 #### Template 3: HITL Decision Request
+
 **File**: `.github/ISSUE_TEMPLATE/hitl.yml`
 
 ```yaml
 name: HITL Decision
 description: Request human approval for a decision
-title: "[HITL] "
-labels: ["hitl: needs-review"]
+title: '[HITL] '
+labels: ['hitl: needs-review']
 body:
   - type: dropdown
     id: decision-type
@@ -397,6 +421,7 @@ body:
 ```
 
 **Upon Submission**:
+
 1. Creates issue with `hitl: needs-review` label
 2. Appears in "HITL Review Queue" project board
 3. Human reviews and adds decision as comment
@@ -410,6 +435,7 @@ body:
 ### Bidirectional Sync Workflow
 
 **Agent Creates User Story**:
+
 ```typescript
 // Product Manager Agent workflow
 
@@ -439,7 +465,7 @@ As a power user, I want to export my data as CSV, so that I can analyze it in Ex
 
 See full spec for detailed criteria.
   `,
-  labels: ['type: feature', 'priority: P0', 'status: ready', 'agent: product-manager']
+  labels: ['type: feature', 'priority: P0', 'status: ready', 'agent: product-manager'],
 })
 
 // 3. Link issue number in US-042.md frontmatter
@@ -447,6 +473,7 @@ await updateUserStory('US-042.md', { githubIssue: issue.number })
 ```
 
 **Human Comments on GitHub Issue**:
+
 ```typescript
 // GitHub Integration Agent (webhook listener)
 
@@ -461,11 +488,13 @@ github.on('issue_comment.created', async (event) => {
 
     // Update US-042.md with comment in "Discussions" section
     await appendToUserStory(usFile, {
-      discussions: [{
-        author: event.comment.user.login,
-        date: event.comment.created_at,
-        content: comment
-      }]
+      discussions: [
+        {
+          author: event.comment.user.login,
+          date: event.comment.created_at,
+          content: comment,
+        },
+      ],
     })
 
     // If comment contains HITL decision keywords
@@ -477,6 +506,7 @@ github.on('issue_comment.created', async (event) => {
 ```
 
 **Agent Updates User Story Status**:
+
 ```typescript
 // Backend Developer Agent marks US-042 as in-progress
 
@@ -487,13 +517,13 @@ await updateUserStory('US-042.md', { status: 'In Progress' })
 const issueNumber = await getLinkedIssue('US-042.md')
 await octokit.issues.update({
   issue_number: issueNumber,
-  labels: ['type: feature', 'priority: P0', 'status: in-progress']
+  labels: ['type: feature', 'priority: P0', 'status: in-progress'],
 })
 
 // 3. Assign agent (optional)
 await octokit.issues.addAssignees({
   issue_number: issueNumber,
-  assignees: ['backend-developer-agent'] // Bot account
+  assignees: ['backend-developer-agent'], // Bot account
 })
 ```
 
@@ -515,7 +545,7 @@ export class GitHubIntegrationService {
       title: `[${us.id}] ${us.title}`,
       body: this.generateIssueBody(us),
       labels: this.mapLabels(us),
-      milestone: this.getMilestone(us.priority)
+      milestone: this.getMilestone(us.priority),
     })
 
     return issue.data.number
@@ -529,7 +559,7 @@ export class GitHubIntegrationService {
 
     await octokit.issues.update({
       issue_number: issueNumber,
-      labels: this.getLabelsForStatus(status)
+      labels: this.getLabelsForStatus(status),
     })
   }
 
@@ -564,6 +594,7 @@ export class GitHubIntegrationService {
 ### Current HITL Workflow
 
 **Today**:
+
 1. Agent creates `docs/hitl/REVIEW_BATCH_2025-11-16_user-stories.md`
 2. Human opens file, reads decisions, updates status fields
 3. Human runs `pnpm hitl:resume`
@@ -576,20 +607,24 @@ export class GitHubIntegrationService {
 ### Proposed: GitHub-Enhanced HITL
 
 **New Workflow**:
+
 1. Agent creates GitHub issue with `hitl: needs-review` label
 2. Issue appears in **HITL Review Queue** project board
 3. Human reviews issue, adds comment with decision:
+
    ```
    **Decision**: APPROVED
 
    Reasoning: RICE score of 120 justifies P0 priority. Let's build this.
    ```
+
 4. GitHub webhook triggers `github-integration-agent.md`
 5. Agent parses comment, updates `US-042.md` status to "Approved"
 6. Agent moves issue to "Ready" column
 7. Agent closes HITL issue, applies `hitl: approved` label
 
 **Benefits**:
+
 - Native GitHub notifications (@mentions work)
 - Comment-based decisions (more natural than file editing)
 - Full audit trail in issue timeline
@@ -602,13 +637,14 @@ export class GitHubIntegrationService {
 
 **Board View** (table mode):
 
-| Issue | Type | Priority | Agent | Decision | Status |
-|-------|------|----------|-------|----------|--------|
-| #123 | User Story | P0 | Product Manager | Export data feature | 🟠 Needs Review |
-| #124 | ADR | N/A | Architecture | Zustand state mgmt | 🟠 Needs Review |
-| #125 | Tech Spec | P1 | Backend | API contract | 🟠 Needs Review |
+| Issue | Type       | Priority | Agent           | Decision            | Status          |
+| ----- | ---------- | -------- | --------------- | ------------------- | --------------- |
+| #123  | User Story | P0       | Product Manager | Export data feature | 🟠 Needs Review |
+| #124  | ADR        | N/A      | Architecture    | Zustand state mgmt  | 🟠 Needs Review |
+| #125  | Tech Spec  | P1       | Backend         | API contract        | 🟠 Needs Review |
 
 **Human Workflow**:
+
 1. Open "HITL Review Queue" board
 2. Filter by `hitl: needs-review`
 3. For each issue:
@@ -626,23 +662,27 @@ export class GitHubIntegrationService {
 ### Files to Include in Template
 
 #### 1. `.github/ISSUE_TEMPLATE/` (4 templates)
+
 - `user-story.yml` - User Story creation
 - `adr.yml` - Architecture Decision proposal
 - `hitl.yml` - HITL decision request
 - `bug.yml` - Bug report (standard)
 
 #### 2. `.github/workflows/` (GitHub Actions)
+
 - `github-integration.yml` - Webhook handler for issue sync
 - `hitl-processor.yml` - Process HITL decisions from comments
 - `session-summary.yml` - Auto-generate session summary on PR merge
 
 #### 3. `.github/` (Other configs)
+
 - `CODEOWNERS` - Auto-assign agents to files
 - `PULL_REQUEST_TEMPLATE.md` - PR template (already exists in agent)
 - `dependabot.yml` - Automated dependency updates
 - `labels.yml` - Label definitions (for label-sync action)
 
 #### 4. Template-Specific Files
+
 - `TEMPLATE_README.md` - Instructions for using the template
 - `TEMPLATE_SETUP.md` - Checklist for new project setup
 - `.github/TEMPLATE_VARIABLES.md` - Variables to replace (project name, etc.)
@@ -696,6 +736,7 @@ echo "✅ Project initialized! Run 'pnpm dev' to start development"
 ## Implementation Roadmap
 
 ### Phase 1: Foundation (Week 1)
+
 **Goal**: GitHub Template Repository Setup
 
 - [ ] Enable template repository in GitHub settings
@@ -711,9 +752,11 @@ echo "✅ Project initialized! Run 'pnpm dev' to start development"
 ---
 
 ### Phase 2: GitHub Integration Agent (Week 2)
+
 **Goal**: Bidirectional sync between Markdown and GitHub
 
 **Tasks**:
+
 - [ ] Create `github-integration-agent.md` agent
 - [ ] Implement `lib/services/github-integration.ts` service
 - [ ] Create GitHub webhook handler (Vercel serverless function)
@@ -726,9 +769,11 @@ echo "✅ Project initialized! Run 'pnpm dev' to start development"
 ---
 
 ### Phase 3: HITL GitHub Integration (Week 3)
+
 **Goal**: HITL decisions via GitHub comments
 
 **Tasks**:
+
 - [ ] Update HITL process to support GitHub issues
 - [ ] Implement comment parser (detect APPROVED/REJECTED/NEEDS_REVISION)
 - [ ] Update `hitl-resume.ts` to read GitHub comments
@@ -741,9 +786,11 @@ echo "✅ Project initialized! Run 'pnpm dev' to start development"
 ---
 
 ### Phase 4: Project Board Automation (Week 4)
+
 **Goal**: Automated kanban workflow
 
 **Tasks**:
+
 - [ ] Configure project board automation rules
 - [ ] Create GitHub Actions for status transitions
 - [ ] Implement milestone auto-assignment based on priority
@@ -755,9 +802,11 @@ echo "✅ Project initialized! Run 'pnpm dev' to start development"
 ---
 
 ### Phase 5: Documentation & Rollout (Week 5)
+
 **Goal**: Document and release
 
 **Tasks**:
+
 - [ ] Update all agent docs to reference GitHub integration
 - [ ] Create video tutorial for template usage
 - [ ] Write migration guide (existing projects → template)
@@ -772,21 +821,25 @@ echo "✅ Project initialized! Run 'pnpm dev' to start development"
 ## Success Metrics
 
 ### Adoption Metrics
+
 - ✅ Template repository has "Use this template" enabled
 - ✅ 5+ projects created from template in first month
 - ✅ 90% of new user stories created via GitHub issue template (not manual files)
 
 ### Workflow Efficiency
+
 - ✅ HITL decision time reduced 50% (file editing → commenting)
 - ✅ Issue creation time reduced 60% (guided template → manual Markdown)
 - ✅ 100% of user stories have corresponding GitHub issues
 
 ### Collaboration Metrics
+
 - ✅ 80% of HITL decisions happen via GitHub comments
 - ✅ Average response time to HITL < 24 hours (notifications work)
 - ✅ 3+ humans actively reviewing issues (not just 1 founder)
 
 ### Agent Efficiency
+
 - ✅ Agents reference GitHub issues in commit messages
 - ✅ Agents auto-close issues when PRs merge
 - ✅ Agents update issue status in real-time (not batch)
@@ -796,11 +849,14 @@ echo "✅ Project initialized! Run 'pnpm dev' to start development"
 ## Open Questions
 
 ### 1. GitHub Bot Account or Personal Account?
+
 **Option A**: Create dedicated bot account (@project-agent)
+
 - Pros: Clear agent vs human identity, separate permissions
 - Cons: Requires paid seat if private repo
 
 **Option B**: Use founder's account with "[Agent]" prefix in comments
+
 - Pros: No extra cost, simpler setup
 - Cons: Less clear who's commenting
 
@@ -809,11 +865,14 @@ echo "✅ Project initialized! Run 'pnpm dev' to start development"
 ---
 
 ### 2. Should ADRs be GitHub Discussions or Issues?
+
 **Option A**: GitHub Discussions (designed for Q&A/decisions)
+
 - Pros: Better threading, polls, can convert to issue later
 - Cons: Separate from issues, different API
 
 **Option B**: GitHub Issues with `type: adr` label
+
 - Pros: Unified workflow, same API
 - Cons: Issues aren't as threaded
 
@@ -822,11 +881,14 @@ echo "✅ Project initialized! Run 'pnpm dev' to start development"
 ---
 
 ### 3. How to Handle Session Summaries?
+
 **Option A**: Auto-post summary as GitHub Release notes
+
 - Pros: Native GitHub feature, discoverable
 - Cons: Releases imply deployments
 
 **Option B**: Keep as Markdown in `docs/sessions/`
+
 - Pros: Existing workflow works
 - Cons: Not visible in GitHub timeline
 
@@ -835,11 +897,14 @@ echo "✅ Project initialized! Run 'pnpm dev' to start development"
 ---
 
 ### 4. Private vs Public Template?
+
 **Option A**: Public template repository
+
 - Pros: Maximum reach, community contributions
 - Cons: Exposes template structure to competitors
 
 **Option B**: Private template for clients
+
 - Pros: Proprietary asset, can charge for access
 - Cons: Limited reach
 
@@ -850,15 +915,18 @@ echo "✅ Project initialized! Run 'pnpm dev' to start development"
 ## Cost-Benefit Analysis
 
 ### Setup Costs
+
 - **Engineering Time**: 4-5 weeks (80-100 hours)
 - **GitHub Actions**: Free tier sufficient for most projects
 - **Bot Account**: $4/mo if private repo (optional)
 
 ### Ongoing Costs
+
 - **Maintenance**: 2-4 hours/month
 - **GitHub API Rate Limits**: Free tier = 5,000 req/hour (sufficient)
 
 ### Benefits
+
 - **Reduced Onboarding Time**: 50% faster (templates guide users)
 - **Improved Collaboration**: 3-5x more participants (GitHub UX better than file editing)
 - **Better Visibility**: 100% of work visible in GitHub (not just code changes)
@@ -872,9 +940,11 @@ echo "✅ Project initialized! Run 'pnpm dev' to start development"
 ## Risks & Mitigations
 
 ### Risk 1: Sync Conflicts (Markdown vs GitHub)
+
 **Scenario**: Human edits US-042.md directly, GitHub issue becomes stale
 
 **Mitigation**:
+
 - Make GitHub issue primary for status/comments
 - Markdown remains source of truth for specifications
 - Scheduled sync job (every 6 hours) reconciles differences
@@ -883,9 +953,11 @@ echo "✅ Project initialized! Run 'pnpm dev' to start development"
 ---
 
 ### Risk 2: GitHub API Rate Limits
+
 **Scenario**: Heavy agent activity hits 5,000 req/hour limit
 
 **Mitigation**:
+
 - Cache issue data locally (PostgreSQL)
 - Only sync on actual changes (not polling)
 - Use webhooks instead of polling (real-time, no rate limit)
@@ -894,9 +966,11 @@ echo "✅ Project initialized! Run 'pnpm dev' to start development"
 ---
 
 ### Risk 3: Template Drift
+
 **Scenario**: Template repository gets updates, existing projects fall behind
 
 **Mitigation**:
+
 - Version the template (v1, v2, v3)
 - Provide migration guides for major versions
 - Use GitHub Actions to notify when template updates available
@@ -905,9 +979,11 @@ echo "✅ Project initialized! Run 'pnpm dev' to start development"
 ---
 
 ### Risk 4: Broken Automation
+
 **Scenario**: GitHub webhook fails, sync stops working
 
 **Mitigation**:
+
 - Health check endpoint (ping every 15 min)
 - Alert if webhook fails 3x in a row
 - Manual sync command (`pnpm sync:github`) as fallback
@@ -920,6 +996,7 @@ echo "✅ Project initialized! Run 'pnpm dev' to start development"
 ### Story: US-042 "Data Export Feature"
 
 **Step 1**: Human files GitHub issue using template
+
 ```
 Title: [US-042] User can export data as CSV
 Type: User Story
@@ -930,6 +1007,7 @@ So that: I can analyze it in Excel
 ```
 
 **Step 2**: GitHub Integration Agent creates Markdown
+
 ```bash
 # Agent detects issue creation via webhook
 # Creates docs/user-stories/US-042.md with full template
@@ -938,17 +1016,20 @@ So that: I can analyze it in Excel
 ```
 
 **Step 3**: Product Manager Agent adds RICE Score
+
 ```markdown
 ## RICE Scoring
+
 - Reach: 500 users/month (50% of active users)
 - Impact: 3 (High - enables new workflow)
 - Confidence: 80% (validated by user research)
 - Effort: 3 points (1 sprint)
-**Score**: (500 × 3 × 0.8) / 3 = 400
-**Priority**: P0
+  **Score**: (500 × 3 × 0.8) / 3 = 400
+  **Priority**: P0
 ```
 
 **Step 4**: Agent updates GitHub issue
+
 ```
 # Adds comment: "RICE Score calculated: 400 (P0 priority)"
 # Updates labels: priority: P0
@@ -956,6 +1037,7 @@ So that: I can analyze it in Excel
 ```
 
 **Step 5**: Human reviews and approves via comment
+
 ```
 @project-founder commented:
 APPROVED
@@ -964,6 +1046,7 @@ This is critical for power users. Let's build it in Sprint 3.
 ```
 
 **Step 6**: GitHub Integration Agent processes approval
+
 ```bash
 # Detects "APPROVED" in comment
 # Updates US-042.md: status: "Approved"
@@ -974,6 +1057,7 @@ This is critical for power users. Let's build it in Sprint 3.
 ```
 
 **Step 7**: Architecture Agent creates ADR
+
 ```
 # Creates GitHub Discussion: "[ADR] CSV Export Format"
 # Creates docs/adr/007-csv-export-format.md
@@ -981,6 +1065,7 @@ This is critical for power users. Let's build it in Sprint 3.
 ```
 
 **Step 8**: Backend + Frontend agents implement
+
 ```
 # Agents assign themselves to US-042 issue
 # Update labels: status: in-progress
@@ -989,6 +1074,7 @@ This is critical for power users. Let's build it in Sprint 3.
 ```
 
 **Step 9**: QA Review
+
 ```
 # Quality Reviewer adds checklist comment
 # All acceptance criteria verified
@@ -996,6 +1082,7 @@ This is critical for power users. Let's build it in Sprint 3.
 ```
 
 **Step 10**: PR Merged
+
 ```
 # Issue auto-closed (via "Closes #42")
 # Label: status: done
@@ -1009,6 +1096,7 @@ This is critical for power users. Let's build it in Sprint 3.
 This GitHub Template Integration transforms the projects_template from a **file-based development system** into a **living, collaborative, agent-driven platform** while preserving the strengths of Markdown documentation.
 
 **Key Achievements**:
+
 1. ✅ GitHub Issues provide tracking and collaboration
 2. ✅ Markdown files remain source of truth for detailed specs
 3. ✅ Agents and humans collaborate via GitHub native features
@@ -1016,6 +1104,7 @@ This GitHub Template Integration transforms the projects_template from a **file-
 5. ✅ HITL workflow integrated with GitHub comments and labels
 
 **Next Steps**:
+
 1. Review this proposal (HITL approval)
 2. Prioritize phases (recommend starting with Phase 1)
 3. Create implementation epic with detailed tasks
@@ -1026,6 +1115,7 @@ This GitHub Template Integration transforms the projects_template from a **file-
 **Status**: DRAFT → Awaiting HITL Review
 
 **Related**:
+
 - `docs/PHILOSOPHY.md` - Agentic First principles
 - `docs/AGENT_HIRING_CHECKLIST.md` - Agent ecosystem
 - `.claude/agents/github-integration-agent.md` - To be created

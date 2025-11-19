@@ -55,7 +55,7 @@ export default function TicketDetailsPage() {
             Back to Support Queue
           </Button>
         </Link>
-        <Card className="border-2 border-foreground">
+        <Card className="border-foreground border-2">
           <CardContent className="py-8 text-center">
             <p className="text-muted-foreground">Ticket not found</p>
           </CardContent>
@@ -76,11 +76,11 @@ export default function TicketDetailsPage() {
 
       <div className="grid gap-6 lg:grid-cols-3">
         {/* Main Content */}
-        <div className="lg:col-span-2 space-y-6">
+        <div className="space-y-6 lg:col-span-2">
           {/* Ticket Header */}
-          <Card className="border-2 border-foreground">
+          <Card className="border-foreground border-2">
             <CardHeader>
-              <div className="flex flex-col md:flex-row md:items-start md:justify-between gap-4">
+              <div className="flex flex-col gap-4 md:flex-row md:items-start md:justify-between">
                 <div>
                   <CardTitle className="text-xl">{ticket.subject}</CardTitle>
                   <CardDescription className="mt-2">
@@ -104,12 +104,12 @@ export default function TicketDetailsPage() {
               </div>
             </CardHeader>
             <CardContent>
-              <div className="p-4 border-2 border-border bg-muted/20 rounded-md">
+              <div className="border-border bg-muted/20 rounded-md border-2 p-4">
                 <p className="text-sm">{ticket.description}</p>
               </div>
               {ticket.attachments && ticket.attachments.length > 0 && (
                 <div className="mt-4">
-                  <p className="text-sm font-medium mb-2">Attachments</p>
+                  <p className="mb-2 text-sm font-medium">Attachments</p>
                   <div className="flex flex-wrap gap-2">
                     {ticket.attachments.map((attachment, index) => (
                       <Badge key={index} variant="outline" className="border">
@@ -123,7 +123,7 @@ export default function TicketDetailsPage() {
           </Card>
 
           {/* Conversation Thread */}
-          <Card className="border-2 border-foreground">
+          <Card className="border-foreground border-2">
             <CardHeader>
               <CardTitle>Conversation</CardTitle>
               <CardDescription>Messages between user and support</CardDescription>
@@ -133,30 +133,36 @@ export default function TicketDetailsPage() {
                 messages.map((message) => (
                   <div
                     key={message.id}
-                    className={`p-4 border-2 ${
+                    className={`border-2 p-4 ${
                       message.isInternal
                         ? 'border-yellow-300 bg-yellow-50 dark:bg-yellow-900/20'
                         : message.sender === 'support'
-                        ? 'border-blue-300 bg-blue-50 dark:bg-blue-900/20'
-                        : 'border-border'
+                          ? 'border-blue-300 bg-blue-50 dark:bg-blue-900/20'
+                          : 'border-border'
                     }`}
                   >
-                    <div className="flex items-start justify-between gap-2 mb-2">
+                    <div className="mb-2 flex items-start justify-between gap-2">
                       <div className="flex items-center gap-2">
-                        <p className="font-medium text-sm">{message.senderName}</p>
+                        <p className="text-sm font-medium">{message.senderName}</p>
                         {message.isInternal && (
-                          <Badge variant="outline" className="border-yellow-400 text-yellow-700 text-xs">
-                            <Lock className="h-3 w-3 mr-1" />
+                          <Badge
+                            variant="outline"
+                            className="border-yellow-400 text-xs text-yellow-700"
+                          >
+                            <Lock className="mr-1 h-3 w-3" />
                             Internal
                           </Badge>
                         )}
                         {message.sender === 'support' && !message.isInternal && (
-                          <Badge variant="outline" className="border-blue-300 text-blue-700 text-xs">
+                          <Badge
+                            variant="outline"
+                            className="border-blue-300 text-xs text-blue-700"
+                          >
                             Support
                           </Badge>
                         )}
                       </div>
-                      <p className="text-xs text-muted-foreground">
+                      <p className="text-muted-foreground text-xs">
                         {formatDateTime(message.timestamp)}
                       </p>
                     </div>
@@ -164,7 +170,7 @@ export default function TicketDetailsPage() {
                   </div>
                 ))
               ) : (
-                <p className="text-center text-muted-foreground py-4">
+                <p className="text-muted-foreground py-4 text-center">
                   No messages in this conversation yet
                 </p>
               )}
@@ -190,7 +196,7 @@ export default function TicketDetailsPage() {
                       Internal note (not visible to user)
                     </Label>
                   </div>
-                  <Button className="border-2 border-foreground">
+                  <Button className="border-foreground border-2">
                     <Send className="mr-2 h-4 w-4" />
                     Send Reply
                   </Button>
@@ -203,14 +209,14 @@ export default function TicketDetailsPage() {
         {/* Sidebar */}
         <div className="space-y-6">
           {/* User Info */}
-          <Card className="border-2 border-foreground">
+          <Card className="border-foreground border-2">
             <CardHeader>
               <CardTitle className="text-sm">User Information</CardTitle>
             </CardHeader>
             <CardContent className="space-y-3">
               <div>
                 <p className="text-sm font-medium">{ticket.userName}</p>
-                <div className="flex items-center gap-1 text-sm text-muted-foreground mt-1">
+                <div className="text-muted-foreground mt-1 flex items-center gap-1 text-sm">
                   <Mail className="h-3 w-3" />
                   {ticket.userEmail}
                 </div>
@@ -225,7 +231,7 @@ export default function TicketDetailsPage() {
           </Card>
 
           {/* Actions */}
-          <Card className="border-2 border-foreground">
+          <Card className="border-foreground border-2">
             <CardHeader>
               <CardTitle className="text-sm">Actions</CardTitle>
             </CardHeader>
@@ -233,7 +239,7 @@ export default function TicketDetailsPage() {
               <div>
                 <Label className="text-sm">Assign to</Label>
                 <Select defaultValue={ticket.assignedTo || undefined}>
-                  <SelectTrigger className="border-2 mt-1">
+                  <SelectTrigger className="mt-1 border-2">
                     <SelectValue placeholder="Select team member" />
                   </SelectTrigger>
                   <SelectContent>
@@ -251,7 +257,7 @@ export default function TicketDetailsPage() {
               <div>
                 <Label className="text-sm">Status</Label>
                 <Select defaultValue={ticket.status}>
-                  <SelectTrigger className="border-2 mt-1">
+                  <SelectTrigger className="mt-1 border-2">
                     <SelectValue />
                   </SelectTrigger>
                   <SelectContent>
@@ -266,7 +272,7 @@ export default function TicketDetailsPage() {
               <div>
                 <Label className="text-sm">Priority</Label>
                 <Select defaultValue={ticket.priority}>
-                  <SelectTrigger className="border-2 mt-1">
+                  <SelectTrigger className="mt-1 border-2">
                     <SelectValue />
                   </SelectTrigger>
                   <SelectContent>
@@ -292,7 +298,7 @@ export default function TicketDetailsPage() {
           </Card>
 
           {/* Ticket Details */}
-          <Card className="border-2 border-foreground">
+          <Card className="border-foreground border-2">
             <CardHeader>
               <CardTitle className="text-sm">Details</CardTitle>
             </CardHeader>

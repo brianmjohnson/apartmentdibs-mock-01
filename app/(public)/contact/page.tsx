@@ -56,9 +56,7 @@ export default function ContactPage() {
     message: '',
   })
 
-  const handleInputChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
-  ) => {
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target
     setFormData((prev) => ({ ...prev, [name]: value }))
   }
@@ -96,14 +94,12 @@ export default function ContactPage() {
   return (
     <div className="flex flex-col">
       {/* Hero Section */}
-      <section className="relative bg-background border-b-4 border-foreground">
+      <section className="bg-background border-foreground relative border-b-4">
         <div className="absolute inset-0 bg-[linear-gradient(45deg,transparent_25%,rgba(0,0,0,0.02)_25%,rgba(0,0,0,0.02)_50%,transparent_50%,transparent_75%,rgba(0,0,0,0.02)_75%)] bg-[length:4px_4px]" />
-        <div className="container mx-auto px-4 py-20 md:py-32 relative">
-          <div className="max-w-4xl mx-auto text-center">
-            <h1 className="text-4xl md:text-6xl font-bold tracking-tight mb-6">
-              Get in Touch
-            </h1>
-            <p className="text-xl md:text-2xl text-muted-foreground max-w-2xl mx-auto">
+        <div className="relative container mx-auto px-4 py-20 md:py-32">
+          <div className="mx-auto max-w-4xl text-center">
+            <h1 className="mb-6 text-4xl font-bold tracking-tight md:text-6xl">Get in Touch</h1>
+            <p className="text-muted-foreground mx-auto max-w-2xl text-xl md:text-2xl">
               Have a question or feedback? We&apos;d love to hear from you.
             </p>
           </div>
@@ -113,19 +109,19 @@ export default function ContactPage() {
       {/* Contact Content */}
       <section className="py-16 md:py-24">
         <div className="container mx-auto px-4">
-          <div className="max-w-6xl mx-auto">
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
+          <div className="mx-auto max-w-6xl">
+            <div className="grid grid-cols-1 gap-12 lg:grid-cols-2">
               {/* Contact Form */}
               <div>
-                <h2 className="text-2xl font-bold mb-6">Send Us a Message</h2>
-                <Card className="border-2 border-foreground">
+                <h2 className="mb-6 text-2xl font-bold">Send Us a Message</h2>
+                <Card className="border-foreground border-2">
                   <CardContent className="p-6">
                     {isSubmitted ? (
-                      <div className="text-center py-12">
-                        <div className="h-16 w-16 bg-primary text-primary-foreground flex items-center justify-center mx-auto mb-4">
+                      <div className="py-12 text-center">
+                        <div className="bg-primary text-primary-foreground mx-auto mb-4 flex h-16 w-16 items-center justify-center">
                           <CheckCircle2 className="h-8 w-8" />
                         </div>
-                        <h3 className="text-xl font-bold mb-2">Message Sent!</h3>
+                        <h3 className="mb-2 text-xl font-bold">Message Sent!</h3>
                         <p className="text-muted-foreground">
                           Thank you for reaching out. We&apos;ll respond within 24 hours.
                         </p>
@@ -143,7 +139,7 @@ export default function ContactPage() {
                             value={formData.name}
                             onChange={handleInputChange}
                             required
-                            className="border-2 border-foreground"
+                            className="border-foreground border-2"
                           />
                         </div>
 
@@ -159,7 +155,7 @@ export default function ContactPage() {
                             value={formData.email}
                             onChange={handleInputChange}
                             required
-                            className="border-2 border-foreground"
+                            className="border-foreground border-2"
                           />
                         </div>
 
@@ -172,7 +168,7 @@ export default function ContactPage() {
                             placeholder="(555) 123-4567"
                             value={formData.phone}
                             onChange={handleInputChange}
-                            className="border-2 border-foreground"
+                            className="border-foreground border-2"
                           />
                         </div>
 
@@ -185,10 +181,10 @@ export default function ContactPage() {
                             onValueChange={handleSubjectChange}
                             required
                           >
-                            <SelectTrigger className="border-2 border-foreground">
+                            <SelectTrigger className="border-foreground border-2">
                               <SelectValue placeholder="Select a subject" />
                             </SelectTrigger>
-                            <SelectContent className="border-2 border-foreground">
+                            <SelectContent className="border-foreground border-2">
                               {contactSubjects.map((subject) => (
                                 <SelectItem key={subject.value} value={subject.value}>
                                   {subject.label}
@@ -210,14 +206,14 @@ export default function ContactPage() {
                             onChange={handleInputChange}
                             required
                             rows={5}
-                            className="border-2 border-foreground resize-none"
+                            className="border-foreground resize-none border-2"
                           />
                         </div>
 
                         <Button
                           type="submit"
                           size="lg"
-                          className="w-full border-2 border-foreground"
+                          className="border-foreground w-full border-2"
                           disabled={isSubmitting}
                         >
                           {isSubmitting ? (
@@ -240,17 +236,17 @@ export default function ContactPage() {
 
               {/* Contact Info */}
               <div>
-                <h2 className="text-2xl font-bold mb-6">Contact Information</h2>
+                <h2 className="mb-6 text-2xl font-bold">Contact Information</h2>
                 <div className="space-y-6">
                   {/* Info Cards */}
-                  <Card className="border-2 border-foreground hover:shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] transition-all">
+                  <Card className="border-foreground border-2 transition-all hover:shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]">
                     <CardContent className="p-6">
                       <div className="flex items-start gap-4">
-                        <div className="h-12 w-12 bg-primary text-primary-foreground flex items-center justify-center shrink-0">
+                        <div className="bg-primary text-primary-foreground flex h-12 w-12 shrink-0 items-center justify-center">
                           <Mail className="h-6 w-6" />
                         </div>
                         <div>
-                          <h3 className="font-bold mb-1">Email</h3>
+                          <h3 className="mb-1 font-bold">Email</h3>
                           <a
                             href="mailto:support@apartmentdibs.com"
                             className="text-muted-foreground hover:text-primary transition-colors"
@@ -262,14 +258,14 @@ export default function ContactPage() {
                     </CardContent>
                   </Card>
 
-                  <Card className="border-2 border-foreground hover:shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] transition-all">
+                  <Card className="border-foreground border-2 transition-all hover:shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]">
                     <CardContent className="p-6">
                       <div className="flex items-start gap-4">
-                        <div className="h-12 w-12 bg-primary text-primary-foreground flex items-center justify-center shrink-0">
+                        <div className="bg-primary text-primary-foreground flex h-12 w-12 shrink-0 items-center justify-center">
                           <Phone className="h-6 w-6" />
                         </div>
                         <div>
-                          <h3 className="font-bold mb-1">Phone</h3>
+                          <h3 className="mb-1 font-bold">Phone</h3>
                           <a
                             href="tel:+15551234567"
                             className="text-muted-foreground hover:text-primary transition-colors"
@@ -281,16 +277,17 @@ export default function ContactPage() {
                     </CardContent>
                   </Card>
 
-                  <Card className="border-2 border-foreground hover:shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] transition-all">
+                  <Card className="border-foreground border-2 transition-all hover:shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]">
                     <CardContent className="p-6">
                       <div className="flex items-start gap-4">
-                        <div className="h-12 w-12 bg-primary text-primary-foreground flex items-center justify-center shrink-0">
+                        <div className="bg-primary text-primary-foreground flex h-12 w-12 shrink-0 items-center justify-center">
                           <MapPin className="h-6 w-6" />
                         </div>
                         <div>
-                          <h3 className="font-bold mb-1">Address</h3>
+                          <h3 className="mb-1 font-bold">Address</h3>
                           <p className="text-muted-foreground">
-                            123 Tech Way<br />
+                            123 Tech Way
+                            <br />
                             San Francisco, CA 94102
                           </p>
                         </div>
@@ -298,16 +295,17 @@ export default function ContactPage() {
                     </CardContent>
                   </Card>
 
-                  <Card className="border-2 border-foreground hover:shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] transition-all">
+                  <Card className="border-foreground border-2 transition-all hover:shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]">
                     <CardContent className="p-6">
                       <div className="flex items-start gap-4">
-                        <div className="h-12 w-12 bg-primary text-primary-foreground flex items-center justify-center shrink-0">
+                        <div className="bg-primary text-primary-foreground flex h-12 w-12 shrink-0 items-center justify-center">
                           <Clock className="h-6 w-6" />
                         </div>
                         <div>
-                          <h3 className="font-bold mb-1">Business Hours</h3>
+                          <h3 className="mb-1 font-bold">Business Hours</h3>
                           <p className="text-muted-foreground">
-                            Monday - Friday<br />
+                            Monday - Friday
+                            <br />
                             9:00 AM - 6:00 PM PST
                           </p>
                         </div>
@@ -316,16 +314,16 @@ export default function ContactPage() {
                   </Card>
 
                   {/* Map Placeholder */}
-                  <div className="border-2 border-foreground bg-muted h-48 flex items-center justify-center">
-                    <div className="text-center text-muted-foreground">
-                      <MapPin className="h-8 w-8 mx-auto mb-2" />
+                  <div className="border-foreground bg-muted flex h-48 items-center justify-center border-2">
+                    <div className="text-muted-foreground text-center">
+                      <MapPin className="mx-auto mb-2 h-8 w-8" />
                       <p>Map will be displayed here</p>
                     </div>
                   </div>
 
                   {/* Social Links */}
                   <div>
-                    <h3 className="font-bold mb-3">Follow Us</h3>
+                    <h3 className="mb-3 font-bold">Follow Us</h3>
                     <div className="flex gap-3">
                       {socialLinks.map((social) => {
                         const Icon = social.icon
@@ -335,7 +333,7 @@ export default function ContactPage() {
                             href={social.href}
                             target="_blank"
                             rel="noopener noreferrer"
-                            className="h-10 w-10 bg-muted border-2 border-foreground flex items-center justify-center hover:bg-primary hover:text-primary-foreground transition-colors"
+                            className="bg-muted border-foreground hover:bg-primary hover:text-primary-foreground flex h-10 w-10 items-center justify-center border-2 transition-colors"
                             aria-label={social.name}
                           >
                             <Icon className="h-5 w-5" />
@@ -346,9 +344,9 @@ export default function ContactPage() {
                   </div>
 
                   {/* FAQ Link */}
-                  <div className="p-4 bg-muted border-2 border-foreground">
+                  <div className="bg-muted border-foreground border-2 p-4">
                     <div className="flex items-center gap-3">
-                      <HelpCircle className="h-5 w-5 text-primary shrink-0" />
+                      <HelpCircle className="text-primary h-5 w-5 shrink-0" />
                       <p className="text-sm">
                         Looking for quick answers?{' '}
                         <Link href="/faq" className="text-primary font-medium hover:underline">

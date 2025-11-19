@@ -16,7 +16,7 @@ import {
   AlertTriangle,
   PartyPopper,
   Send,
-  Calendar
+  Calendar,
 } from 'lucide-react'
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
@@ -29,7 +29,7 @@ import {
   getStatusColor,
   getStatusLabel,
   formatDate,
-  formatRelativeTime
+  formatRelativeTime,
 } from '@/lib/mock-data/tenant'
 import { formatPrice } from '@/lib/mock-data/listings'
 
@@ -45,14 +45,14 @@ export default function ApplicationDetailPage() {
       <div className="space-y-6">
         <Link
           href="/tenant/applications"
-          className="inline-flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground"
+          className="text-muted-foreground hover:text-foreground inline-flex items-center gap-2 text-sm"
         >
           <ArrowLeft className="h-4 w-4" />
           Back to Applications
         </Link>
-        <Card className="border-2 border-foreground">
+        <Card className="border-foreground border-2">
           <CardContent className="py-12 text-center">
-            <h3 className="text-lg font-semibold mb-2">Application not found</h3>
+            <h3 className="mb-2 text-lg font-semibold">Application not found</h3>
             <p className="text-muted-foreground">
               The application you&apos;re looking for doesn&apos;t exist.
             </p>
@@ -75,31 +75,31 @@ export default function ApplicationDetailPage() {
       {/* Back Link */}
       <Link
         href="/tenant/applications"
-        className="inline-flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground"
+        className="text-muted-foreground hover:text-foreground inline-flex items-center gap-2 text-sm"
       >
         <ArrowLeft className="h-4 w-4" />
         Back to Applications
       </Link>
 
       {/* Header */}
-      <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+      <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
         <div className="flex items-center gap-3">
-          <MapPin className="h-5 w-5 text-muted-foreground" />
+          <MapPin className="text-muted-foreground h-5 w-5" />
           <h1 className="text-2xl font-bold">
             {application.address}
             {application.unit && `, ${application.unit}`}
           </h1>
         </div>
-        <Badge className={`${getStatusColor(application.status)} border text-sm px-3 py-1`}>
+        <Badge className={`${getStatusColor(application.status)} border px-3 py-1 text-sm`}>
           {getStatusLabel(application.status)}
         </Badge>
       </div>
 
       <div className="grid gap-6 lg:grid-cols-3">
         {/* Main Content */}
-        <div className="lg:col-span-2 space-y-6">
+        <div className="space-y-6 lg:col-span-2">
           {/* Property Info Card */}
-          <Card className="border-2 border-foreground overflow-hidden">
+          <Card className="border-foreground overflow-hidden border-2">
             <div className="relative aspect-video">
               <Image
                 src={application.propertyImage}
@@ -111,23 +111,21 @@ export default function ApplicationDetailPage() {
             </div>
             <CardContent className="p-6">
               <div className="flex flex-wrap items-center gap-6 text-sm">
-                <span className="text-2xl font-bold">
-                  {formatPrice(application.rent)}/mo
-                </span>
-                <span className="flex items-center gap-1 text-muted-foreground">
+                <span className="text-2xl font-bold">{formatPrice(application.rent)}/mo</span>
+                <span className="text-muted-foreground flex items-center gap-1">
                   <Bed className="h-4 w-4" /> {application.beds} bed
                 </span>
-                <span className="flex items-center gap-1 text-muted-foreground">
+                <span className="text-muted-foreground flex items-center gap-1">
                   <Bath className="h-4 w-4" /> {application.baths} bath
                 </span>
-                <span className="flex items-center gap-1 text-muted-foreground">
+                <span className="text-muted-foreground flex items-center gap-1">
                   <Square className="h-4 w-4" /> {application.sqft} sqft
                 </span>
               </div>
               <Separator className="my-4" />
               <div className="space-y-2">
                 <p className="font-medium">{application.landlordName}</p>
-                <p className="text-sm text-muted-foreground flex items-center gap-1">
+                <p className="text-muted-foreground flex items-center gap-1 text-sm">
                   <Clock className="h-3 w-3" />
                   {application.landlordResponseTime}
                 </p>
@@ -149,16 +147,14 @@ export default function ApplicationDetailPage() {
               </CardHeader>
               <CardContent className="space-y-4">
                 <div>
-                  <h4 className="font-medium mb-2">Next Steps:</h4>
-                  <ul className="list-disc list-inside text-sm space-y-1 text-muted-foreground">
+                  <h4 className="mb-2 font-medium">Next Steps:</h4>
+                  <ul className="text-muted-foreground list-inside list-disc space-y-1 text-sm">
                     <li>Review the lease agreement</li>
                     <li>Schedule a move-in inspection</li>
                     <li>Prepare security deposit and first month&apos;s rent</li>
                   </ul>
                 </div>
-                <Button className="border-2 border-foreground">
-                  Sign Lease Agreement
-                </Button>
+                <Button className="border-foreground border-2">Sign Lease Agreement</Button>
               </CardContent>
             </Card>
           )}
@@ -173,76 +169,72 @@ export default function ApplicationDetailPage() {
               </CardHeader>
               <CardContent className="space-y-4">
                 <div>
-                  <h4 className="font-medium mb-2 text-red-800">Reason:</h4>
+                  <h4 className="mb-2 font-medium text-red-800">Reason:</h4>
                   <p className="text-sm text-red-700">{application.denialReason}</p>
                 </div>
-                <p className="text-sm text-muted-foreground">
-                  If you believe this decision was made in error or would like more information,
-                  you may contact the landlord or request a copy of any consumer report used in this decision.
+                <p className="text-muted-foreground text-sm">
+                  If you believe this decision was made in error or would like more information, you
+                  may contact the landlord or request a copy of any consumer report used in this
+                  decision.
                 </p>
-                <Button variant="outline" asChild className="border-2 border-foreground">
+                <Button variant="outline" asChild className="border-foreground border-2">
                   <Link href="/search">Search Other Listings</Link>
                 </Button>
               </CardContent>
             </Card>
           )}
 
-          {(application.status === 'under_review' || application.status === 'submitted') && application.decisionDate && (
-            <Card className="border-2 border-yellow-500 bg-yellow-50">
-              <CardContent className="py-4">
-                <div className="flex items-center gap-3">
-                  <Calendar className="h-5 w-5 text-yellow-700" />
-                  <p className="text-yellow-800">
-                    <span className="font-medium">Expected decision by:</span>{' '}
-                    {formatDate(application.decisionDate)}
-                  </p>
-                </div>
-              </CardContent>
-            </Card>
-          )}
+          {(application.status === 'under_review' || application.status === 'submitted') &&
+            application.decisionDate && (
+              <Card className="border-2 border-yellow-500 bg-yellow-50">
+                <CardContent className="py-4">
+                  <div className="flex items-center gap-3">
+                    <Calendar className="h-5 w-5 text-yellow-700" />
+                    <p className="text-yellow-800">
+                      <span className="font-medium">Expected decision by:</span>{' '}
+                      {formatDate(application.decisionDate)}
+                    </p>
+                  </div>
+                </CardContent>
+              </Card>
+            )}
 
           {/* Communication Section */}
-          <Card className="border-2 border-foreground">
+          <Card className="border-foreground border-2">
             <CardHeader>
               <CardTitle>Messages</CardTitle>
-              <CardDescription>
-                Communication with the property agent
-              </CardDescription>
+              <CardDescription>Communication with the property agent</CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">
               {application.messages.length === 0 ? (
-                <p className="text-sm text-muted-foreground text-center py-4">
+                <p className="text-muted-foreground py-4 text-center text-sm">
                   No messages yet. Send a message to the agent below.
                 </p>
               ) : (
-                <div className="space-y-4 max-h-80 overflow-y-auto">
+                <div className="max-h-80 space-y-4 overflow-y-auto">
                   {application.messages.map((msg) => (
                     <div
                       key={msg.id}
-                      className={`flex gap-3 ${
-                        msg.sender === 'tenant' ? 'flex-row-reverse' : ''
-                      }`}
+                      className={`flex gap-3 ${msg.sender === 'tenant' ? 'flex-row-reverse' : ''}`}
                     >
-                      <Avatar className="h-8 w-8 border-2 border-foreground">
+                      <Avatar className="border-foreground h-8 w-8 border-2">
                         <AvatarFallback className="text-xs">
                           {msg.senderName.charAt(0).toUpperCase()}
                         </AvatarFallback>
                       </Avatar>
                       <div
-                        className={`flex-1 max-w-[80%] ${
+                        className={`max-w-[80%] flex-1 ${
                           msg.sender === 'tenant' ? 'text-right' : ''
                         }`}
                       >
                         <div
-                          className={`inline-block p-3 rounded-lg ${
-                            msg.sender === 'tenant'
-                              ? 'bg-foreground text-background'
-                              : 'bg-muted'
+                          className={`inline-block rounded-lg p-3 ${
+                            msg.sender === 'tenant' ? 'bg-foreground text-background' : 'bg-muted'
                           }`}
                         >
                           <p className="text-sm">{msg.message}</p>
                         </div>
-                        <p className="text-xs text-muted-foreground mt-1">
+                        <p className="text-muted-foreground mt-1 text-xs">
                           {msg.senderName} - {formatRelativeTime(msg.timestamp)}
                         </p>
                       </div>
@@ -259,15 +251,15 @@ export default function ApplicationDetailPage() {
                   placeholder="Type your message..."
                   value={message}
                   onChange={(e) => setMessage(e.target.value)}
-                  className="border-2 border-foreground resize-none"
+                  className="border-foreground resize-none border-2"
                   rows={3}
                 />
                 <Button
                   onClick={handleSendMessage}
                   disabled={!message.trim()}
-                  className="border-2 border-foreground"
+                  className="border-foreground border-2"
                 >
-                  <Send className="h-4 w-4 mr-2" />
+                  <Send className="mr-2 h-4 w-4" />
                   Send Message
                 </Button>
               </div>
@@ -277,12 +269,10 @@ export default function ApplicationDetailPage() {
 
         {/* Sidebar - Timeline */}
         <div className="space-y-6">
-          <Card className="border-2 border-foreground">
+          <Card className="border-foreground border-2">
             <CardHeader>
               <CardTitle>Application Timeline</CardTitle>
-              <CardDescription>
-                Track your application progress
-              </CardDescription>
+              <CardDescription>Track your application progress</CardDescription>
             </CardHeader>
             <CardContent>
               <div className="relative">
@@ -291,18 +281,16 @@ export default function ApplicationDetailPage() {
                     {/* Timeline Line */}
                     <div className="flex flex-col items-center">
                       {step.status === 'completed' ? (
-                        <CheckCircle2 className="h-6 w-6 text-green-600 flex-shrink-0" />
+                        <CheckCircle2 className="h-6 w-6 flex-shrink-0 text-green-600" />
                       ) : step.status === 'current' ? (
-                        <div className="h-6 w-6 rounded-full border-4 border-foreground bg-background flex-shrink-0" />
+                        <div className="border-foreground bg-background h-6 w-6 flex-shrink-0 rounded-full border-4" />
                       ) : (
-                        <Circle className="h-6 w-6 text-muted-foreground flex-shrink-0" />
+                        <Circle className="text-muted-foreground h-6 w-6 flex-shrink-0" />
                       )}
                       {index < application.timeline.length - 1 && (
                         <div
-                          className={`w-0.5 flex-1 mt-2 ${
-                            step.status === 'completed'
-                              ? 'bg-green-600'
-                              : 'bg-muted'
+                          className={`mt-2 w-0.5 flex-1 ${
+                            step.status === 'completed' ? 'bg-green-600' : 'bg-muted'
                           }`}
                         />
                       )}
@@ -312,17 +300,13 @@ export default function ApplicationDetailPage() {
                     <div className="flex-1 pb-2">
                       <p
                         className={`font-medium ${
-                          step.status === 'upcoming'
-                            ? 'text-muted-foreground'
-                            : ''
+                          step.status === 'upcoming' ? 'text-muted-foreground' : ''
                         }`}
                       >
                         {step.step}
                       </p>
                       {step.date && (
-                        <p className="text-sm text-muted-foreground">
-                          {formatDate(step.date)}
-                        </p>
+                        <p className="text-muted-foreground text-sm">{formatDate(step.date)}</p>
                       )}
                       {step.status === 'current' && (
                         <Badge variant="outline" className="mt-1 text-xs">
@@ -337,18 +321,19 @@ export default function ApplicationDetailPage() {
           </Card>
 
           {/* Quick Actions */}
-          <Card className="border-2 border-foreground">
+          <Card className="border-foreground border-2">
             <CardHeader>
               <CardTitle>Quick Actions</CardTitle>
             </CardHeader>
             <CardContent className="space-y-2">
-              <Button variant="outline" className="w-full border-2 border-foreground" asChild>
-                <Link href={`/search/${application.listingId}`}>
-                  View Listing
-                </Link>
+              <Button variant="outline" className="border-foreground w-full border-2" asChild>
+                <Link href={`/search/${application.listingId}`}>View Listing</Link>
               </Button>
               {application.status !== 'denied' && application.status !== 'withdrawn' && (
-                <Button variant="outline" className="w-full border-2 border-foreground text-red-600 hover:text-red-700">
+                <Button
+                  variant="outline"
+                  className="border-foreground w-full border-2 text-red-600 hover:text-red-700"
+                >
                   Withdraw Application
                 </Button>
               )}

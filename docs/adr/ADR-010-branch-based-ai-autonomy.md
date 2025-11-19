@@ -15,6 +15,7 @@ AI-assisted development workflows must balance productivity with production safe
 **The Problem**:
 
 **On Feature Branches**:
+
 - Rapid iteration needed for complex features
 - AI assistance accelerates development significantly
 - TypeScript/lint errors caught and fixed quickly
@@ -22,6 +23,7 @@ AI-assisted development workflows must balance productivity with production safe
 - Mistakes can be fixed with additional commits (fix-forward approach)
 
 **On Main Branch**:
+
 - Production deployments trigger automatically
 - Errors impact live users immediately
 - Reverting commits is disruptive
@@ -29,10 +31,12 @@ AI-assisted development workflows must balance productivity with production safe
 - Human review is critical before commits
 
 **Without clear guidelines, teams either**:
+
 1. **Over-restrict branches** → Slow development velocity, approval fatigue
 2. **Under-restrict main** → Production incidents, broken builds
 
 **Background**:
+
 - Complex feature development often requires 20+ commits with iterative fixes
 - AI agents can self-correct errors when given autonomy to commit-and-validate
 - Main branch deploys to production automatically (Vercel, Netlify, etc.)
@@ -40,6 +44,7 @@ AI-assisted development workflows must balance productivity with production safe
 - Full production builds can take 5+ minutes, blocking rapid iteration
 
 **Requirements**:
+
 - Enable high AI autonomy on safe branches (feature branches)
 - Require human validation on critical branches (main, production)
 - Clear workflow boundaries AI agents can detect and follow
@@ -85,6 +90,7 @@ vercel ls  # or check deployment dashboard
 **AI Autonomy Level**: **HIGH**
 
 Permissions granted:
+
 - ✅ Run multiple commands without approval (lint, typecheck, test)
 - ✅ Make architectural decisions independently
 - ✅ Create commits after validation passes
@@ -96,13 +102,14 @@ Permissions granted:
 
 ```typescript
 // Quick validation (~30 seconds)
-await runLint()         // Formatting, code quality
-await runTypeCheck()    // TypeScript compilation (no emit)
-await runUnitTests()    // Jest unit tests only
-await monitorPreview()  // Verify preview deployment succeeds
+await runLint() // Formatting, code quality
+await runTypeCheck() // TypeScript compilation (no emit)
+await runUnitTests() // Jest unit tests only
+await monitorPreview() // Verify preview deployment succeeds
 ```
 
 **Human-in-the-Loop (HITL)**:
+
 - ⏸️ Review PR before merging to main
 - ⏸️ Test preview deployment manually
 - ⏸️ Approve final merge decision
@@ -171,6 +178,7 @@ vercel ls --prod
 **AI Autonomy Level**: **LOW**
 
 Approval required:
+
 - 🛑 Approval before commits
 - 🛑 Approval before pushes
 - 🛑 Present changes for human review
@@ -183,16 +191,17 @@ Approval required:
 // Full validation (~5 minutes)
 await runLint()
 await runTypeCheck()
-await runProductionBuild()  // Full Next.js build
-await runAllTests()          // Unit + integration + E2E
-await requireApproval("Review changes before commit?")
+await runProductionBuild() // Full Next.js build
+await runAllTests() // Unit + integration + E2E
+await requireApproval('Review changes before commit?')
 await gitCommit()
-await requireApproval("Ready to push to main? This deploys to production.")
+await requireApproval('Ready to push to main? This deploys to production.')
 await gitPush()
 await monitorProductionDeploy()
 ```
 
 **Human-in-the-Loop (HITL)**:
+
 - ⏸️ Review every file change
 - ⏸️ Approve commit message
 - ⏸️ Approve push to main
@@ -263,36 +272,45 @@ await monitorProductionDeploy()
 ### Positive Consequences (Easier)
 
 ✅ **Fast Feature Development**: AI can iterate rapidly on branches without approval overhead
+
 - Example: 20+ commits in 1 day on complex refactoring
 
 ✅ **Production Safety**: Main branch protected by human review gates
+
 - Zero broken builds deployed to production
 
 ✅ **Clear Boundaries**: Team knows when to allow AI autonomy vs require human review
+
 - Branch name indicates workflow ("feature/" = high autonomy, "main" = human-validated)
 
 ✅ **Efficient Debugging**: Fix-forward on branches instead of amending commits
+
 - Git history shows progression of fixes, easier to debug
 
 ✅ **Preview Testing**: Test changes thoroughly before merging to main
+
 - Catch issues in preview environment, not production
 
 ✅ **Parallel Execution**: Feature branches enable parallel tool calls
+
 - Faster validation and iteration
 
 ### Negative Consequences (More Difficult)
 
 ⚠️ **Mental Context Switching**: Developers must remember which branch they're on
-- *Mitigation*: AI agent announces branch context at start of session
-- *Mitigation*: Shell prompt shows current branch with color coding
+
+- _Mitigation_: AI agent announces branch context at start of session
+- _Mitigation_: Shell prompt shows current branch with color coding
 
 ⚠️ **Slower Main Branch Work**: Production validation is deliberately slow and careful
-- *Mitigation*: Encourage all work on feature branches, merge via PR
-- *Mitigation*: Set expectations: "Full build takes 5 minutes on main"
+
+- _Mitigation_: Encourage all work on feature branches, merge via PR
+- _Mitigation_: Set expectations: "Full build takes 5 minutes on main"
 
 ⚠️ **AI Confusion**: AI must understand branch context to apply correct workflow
-- *Mitigation*: Implement branch detection logic in AI agent instructions
-- *Mitigation*: Document workflow rules clearly in CLAUDE.md
+
+- _Mitigation_: Implement branch detection logic in AI agent instructions
+- _Mitigation_: Document workflow rules clearly in CLAUDE.md
 
 ### Neutral Consequences
 
@@ -309,10 +327,12 @@ await monitorProductionDeploy()
 **Description**: Use identical workflow (approval gates, validation) for all branches
 
 **Pros**:
+
 - Simple to understand and implement
 - Consistent behavior regardless of branch
 
 **Cons**:
+
 - Too restrictive on feature branches → slow development velocity
 - Not safe enough on main → production incidents
 - Doesn't leverage AI's ability to self-correct on branches
@@ -327,11 +347,13 @@ await monitorProductionDeploy()
 **Description**: Allow high AI autonomy on all branches including main
 
 **Pros**:
+
 - Maximum productivity
 - No approval interruptions
 - Fast iteration everywhere
 
 **Cons**:
+
 - Too risky for production deployments
 - No human validation of critical changes
 - Single bad commit can break production
@@ -346,11 +368,13 @@ await monitorProductionDeploy()
 **Description**: Require human approval for all commits on all branches
 
 **Pros**:
+
 - Maximum safety everywhere
 - Human review catches all issues
 - Consistent workflow
 
 **Cons**:
+
 - Loses AI productivity benefits
 - Slow iteration on complex migrations
 - Approval fatigue (30+ approvals per feature)
@@ -365,10 +389,12 @@ await monitorProductionDeploy()
 **Description**: Maintain separate repos for dev and production code
 
 **Pros**:
+
 - Clear separation of concerns
 - Production repo always stable
 
 **Cons**:
+
 - Still need branch workflow distinction within each repo
 - Adds infrastructure complexity
 - Sync overhead between repos
@@ -381,14 +407,17 @@ await monitorProductionDeploy()
 ## Related
 
 **Related ADRs**:
+
 - [ADR-009: PR Review Automation](./ADR-009-pr-review-automation-with-github-cli.md) - Complements this workflow
 
 **Related Documentation**:
+
 - `docs/WORKFLOW_GUIDE.md` - Development workflow
 - `docs/SDLC.md` - Software development lifecycle
 - `.claude/agents/README.md` - Agent coordination and autonomy levels
 
 **External References**:
+
 - [Git Flow](https://nvie.com/posts/a-successful-git-branching-model/)
 - [Trunk-Based Development](https://trunkbaseddevelopment.com/)
 - [GitHub Flow](https://guides.github.com/introduction/flow/)
@@ -404,20 +433,20 @@ await monitorProductionDeploy()
 ```typescript
 async function determineWorkflow() {
   const branch = await git.getCurrentBranch()
-  const isMain = branch === "main" || branch === "master" || branch === "production"
+  const isMain = branch === 'main' || branch === 'master' || branch === 'production'
 
   if (isMain) {
     return {
-      workflow: "human-validated",
-      autonomy: "LOW",
-      validation: "full",
-      approvalRequired: ["commit", "push"],
+      workflow: 'human-validated',
+      autonomy: 'LOW',
+      validation: 'full',
+      approvalRequired: ['commit', 'push'],
     }
   } else {
     return {
-      workflow: "ai-assisted",
-      autonomy: "HIGH",
-      validation: "quick",
+      workflow: 'ai-assisted',
+      autonomy: 'HIGH',
+      validation: 'quick',
       approvalRequired: [],
     }
   }
@@ -566,13 +595,13 @@ branches:
       required_status_checks:
         strict: true
         contexts:
-          - "build"
-          - "test"
-          - "lint"
+          - 'build'
+          - 'test'
+          - 'lint'
       enforce_admins: true
       restrictions:
         users: []
-        teams: ["core-team"]
+        teams: ['core-team']
 ```
 
 ---
@@ -582,18 +611,21 @@ branches:
 How to measure effectiveness of this approach:
 
 **Feature Branch Development**:
+
 - ⏱️ Time to complete complex feature (target: 50% faster than manual)
 - 📊 Number of commits per feature (expect 15-30 for complex features)
 - ✅ Preview deployment success rate (target: 95%+)
 - 🤖 AI autonomy success rate (target: 90%+ commits without intervention)
 
 **Main Branch Safety**:
+
 - 🚫 Broken builds pushed to main (target: 0 per quarter)
 - 🚀 Production deployment success rate (target: 99%+)
 - 🔙 Rollbacks required (target: <2 per quarter)
 - 👤 Human review coverage (target: 100%)
 
 **Overall Workflow**:
+
 - ⏱️ Time from feature start to production (target: 3-5 days)
 - 📝 PR review turnaround time (target: <24 hours)
 - 😊 Developer satisfaction with workflow (survey quarterly)
@@ -616,6 +648,6 @@ Potential improvements for this pattern:
 
 ## Revision History
 
-| Date | Author | Change |
-|------|--------|--------|
+| Date       | Author              | Change        |
+| ---------- | ------------------- | ------------- |
 | 2025-11-17 | System Architecture | Initial draft |

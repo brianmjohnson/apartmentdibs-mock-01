@@ -56,12 +56,14 @@ Generic onboarding flows frustrate users by asking for irrelevant documents (e.g
 **Given** a tenant starts profile creation
 **When** they begin onboarding
 **Then** they answer 3-5 adaptive questions:
+
 - Employment type: W-2, Self-employed, Student, Retired
 - Pet ownership: Yes/No
 - Co-applicants: Solo or group
 - Recent relocation: Yes/No
 
 **Verification**:
+
 - [ ] Questions determine required documents
 - [ ] Irrelevant steps are skipped
 - [ ] Additional steps added when needed
@@ -78,6 +80,7 @@ Generic onboarding flows frustrate users by asking for irrelevant documents (e.g
 **Pet Owner**: Vaccination records, pet resume
 
 **Verification**:
+
 - [ ] Checklist matches user type
 - [ ] No irrelevant items shown
 - [ ] Time estimates accurate
@@ -87,11 +90,13 @@ Generic onboarding flows frustrate users by asking for irrelevant documents (e.g
 **Given** tenant is completing profile
 **When** they view checklist
 **Then** they see:
+
 - Progress bar: "6 of 10 steps complete"
 - Time estimates: "5 minutes remaining"
 - Completion percentage
 
 **Verification**:
+
 - [ ] Progress updates in real-time
 - [ ] Estimates based on average completion times
 - [ ] Encouraging messages at milestones
@@ -101,10 +106,12 @@ Generic onboarding flows frustrate users by asking for irrelevant documents (e.g
 **Given** tenant's situation changes
 **When** they update answers
 **Then** checklist dynamically adjusts:
+
 - Add: "You mentioned you have a pet. Please add vaccination records."
 - Skip: "You're not self-employed. Tax returns not required."
 
 **Verification**:
+
 - [ ] New items appear correctly
 - [ ] Skipped items removed
 - [ ] Progress recalculated
@@ -114,11 +121,13 @@ Generic onboarding flows frustrate users by asking for irrelevant documents (e.g
 **Given** tenant is stuck on a step
 **When** they click for help
 **Then** they see:
+
 - "What if I don't have pay stubs?"
 - "How to use Plaid for income verification"
 - Video tutorials for complex steps
 
 **Verification**:
+
 - [ ] Contextual help available per step
 - [ ] Videos embedded where helpful
 - [ ] Chat support link visible
@@ -132,6 +141,7 @@ Generic onboarding flows frustrate users by asking for irrelevant documents (e.g
 **Checklist Engine**: Rules engine determines required steps based on user type
 
 **Data Model**:
+
 ```sql
 CREATE TABLE onboarding_checklists (
   id UUID PRIMARY KEY,
@@ -146,6 +156,7 @@ CREATE TABLE onboarding_checklists (
 ### Frontend Specification
 
 **Components**:
+
 ```
 components/
   onboarding/
@@ -159,14 +170,15 @@ components/
 
 ## Analytics Tracking
 
-| Event Name | When Triggered | Properties |
-|------------|----------------|------------|
-| `assessment_completed` | User answers questions | `{userId, userType}` |
-| `checklist_generated` | Personalized list created | `{userId, stepCount}` |
-| `step_completed` | User finishes step | `{userId, stepType, duration}` |
-| `profile_completed` | All steps done | `{userId, totalTime}` |
+| Event Name             | When Triggered            | Properties                     |
+| ---------------------- | ------------------------- | ------------------------------ |
+| `assessment_completed` | User answers questions    | `{userId, userType}`           |
+| `checklist_generated`  | Personalized list created | `{userId, stepCount}`          |
+| `step_completed`       | User finishes step        | `{userId, stepType, duration}` |
+| `profile_completed`    | All steps done            | `{userId, totalTime}`          |
 
 **Success Metrics**:
+
 - 70%+ profile completion rate (up from 40%)
 - Median completion time <60 minutes
 - <5% support tickets related to onboarding
@@ -176,9 +188,11 @@ components/
 ## Dependencies
 
 ### Blocks
+
 - US-010: Reusable Profile
 
 ### Related Stories
+
 - US-008: Automated Document Collection Reminders
 
 ---

@@ -21,13 +21,7 @@ import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Checkbox } from '@/components/ui/checkbox'
 import { Separator } from '@/components/ui/separator'
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from '@/components/ui/card'
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 
 type Persona = 'tenant' | 'agent' | 'landlord' | null
 
@@ -116,9 +110,7 @@ export default function RegisterPage() {
     if (!password) {
       newErrors.password = 'Password is required'
     } else {
-      const failedRequirements = passwordRequirements.filter(
-        (req) => !req.test(password)
-      )
+      const failedRequirements = passwordRequirements.filter((req) => !req.test(password))
       if (failedRequirements.length > 0) {
         newErrors.password = 'Password does not meet all requirements'
       }
@@ -154,7 +146,7 @@ export default function RegisterPage() {
   // Step 1: Choose Persona
   if (step === 1) {
     return (
-      <Card className="border-2 border-foreground shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]">
+      <Card className="border-foreground border-2 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]">
         <CardHeader className="text-center">
           <CardTitle className="text-2xl font-bold">Create Account</CardTitle>
           <CardDescription>I want to...</CardDescription>
@@ -164,26 +156,23 @@ export default function RegisterPage() {
             <button
               key={p.id}
               onClick={() => handlePersonaSelect(p.id)}
-              className="w-full p-4 border-2 border-foreground text-left hover:shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] transition-all bg-card"
+              className="border-foreground bg-card w-full border-2 p-4 text-left transition-all hover:shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]"
             >
               <div className="flex items-start gap-4">
-                <div className="h-12 w-12 bg-primary text-primary-foreground flex items-center justify-center shrink-0">
+                <div className="bg-primary text-primary-foreground flex h-12 w-12 shrink-0 items-center justify-center">
                   <p.icon className="h-6 w-6" />
                 </div>
                 <div>
-                  <h3 className="font-bold text-lg">{p.title}</h3>
-                  <p className="text-sm text-muted-foreground">{p.description}</p>
+                  <h3 className="text-lg font-bold">{p.title}</h3>
+                  <p className="text-muted-foreground text-sm">{p.description}</p>
                 </div>
               </div>
             </button>
           ))}
 
-          <p className="mt-6 text-center text-sm text-muted-foreground">
+          <p className="text-muted-foreground mt-6 text-center text-sm">
             Already have an account?{' '}
-            <Link
-              href="/login"
-              className="font-medium text-foreground hover:underline"
-            >
+            <Link href="/login" className="text-foreground font-medium hover:underline">
               Sign In
             </Link>
           </p>
@@ -194,23 +183,18 @@ export default function RegisterPage() {
 
   // Step 2: Registration Form
   return (
-    <Card className="border-2 border-foreground shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]">
+    <Card className="border-foreground border-2 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]">
       <CardHeader>
         <button
           onClick={() => setStep(1)}
-          className="flex items-center text-sm text-muted-foreground hover:text-foreground mb-2"
+          className="text-muted-foreground hover:text-foreground mb-2 flex items-center text-sm"
         >
-          <ArrowLeft className="h-4 w-4 mr-1" />
+          <ArrowLeft className="mr-1 h-4 w-4" />
           Back
         </button>
         <CardTitle className="text-2xl font-bold">Create Account</CardTitle>
         <CardDescription>
-          as{' '}
-          {persona === 'tenant'
-            ? 'a Tenant'
-            : persona === 'agent'
-              ? 'an Agent'
-              : 'a Landlord'}
+          as {persona === 'tenant' ? 'a Tenant' : persona === 'agent' ? 'an Agent' : 'a Landlord'}
         </CardDescription>
       </CardHeader>
       <CardContent>
@@ -220,18 +204,16 @@ export default function RegisterPage() {
             <div className="space-y-2">
               <Label htmlFor="firstName">First Name</Label>
               <div className="relative">
-                <User className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                <User className="text-muted-foreground absolute top-1/2 left-3 h-4 w-4 -translate-y-1/2" />
                 <Input
                   id="firstName"
                   placeholder="John"
                   value={firstName}
                   onChange={(e) => setFirstName(e.target.value)}
-                  className={`pl-10 border-2 ${errors.firstName ? 'border-destructive' : 'border-foreground'}`}
+                  className={`border-2 pl-10 ${errors.firstName ? 'border-destructive' : 'border-foreground'}`}
                 />
               </div>
-              {errors.firstName && (
-                <p className="text-sm text-destructive">{errors.firstName}</p>
-              )}
+              {errors.firstName && <p className="text-destructive text-sm">{errors.firstName}</p>}
             </div>
             <div className="space-y-2">
               <Label htmlFor="lastName">Last Name</Label>
@@ -242,9 +224,7 @@ export default function RegisterPage() {
                 onChange={(e) => setLastName(e.target.value)}
                 className={`border-2 ${errors.lastName ? 'border-destructive' : 'border-foreground'}`}
               />
-              {errors.lastName && (
-                <p className="text-sm text-destructive">{errors.lastName}</p>
-              )}
+              {errors.lastName && <p className="text-destructive text-sm">{errors.lastName}</p>}
             </div>
           </div>
 
@@ -252,49 +232,43 @@ export default function RegisterPage() {
           <div className="space-y-2">
             <Label htmlFor="email">Email</Label>
             <div className="relative">
-              <Mail className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+              <Mail className="text-muted-foreground absolute top-1/2 left-3 h-4 w-4 -translate-y-1/2" />
               <Input
                 id="email"
                 type="email"
                 placeholder="you@example.com"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                className={`pl-10 border-2 ${errors.email ? 'border-destructive' : 'border-foreground'}`}
+                className={`border-2 pl-10 ${errors.email ? 'border-destructive' : 'border-foreground'}`}
               />
             </div>
-            {errors.email && (
-              <p className="text-sm text-destructive">{errors.email}</p>
-            )}
+            {errors.email && <p className="text-destructive text-sm">{errors.email}</p>}
           </div>
 
           {/* Password */}
           <div className="space-y-2">
             <Label htmlFor="password">Password</Label>
             <div className="relative">
-              <Lock className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+              <Lock className="text-muted-foreground absolute top-1/2 left-3 h-4 w-4 -translate-y-1/2" />
               <Input
                 id="password"
                 type={showPassword ? 'text' : 'password'}
                 placeholder="Create a strong password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                className={`pl-10 pr-10 border-2 ${errors.password ? 'border-destructive' : 'border-foreground'}`}
+                className={`border-2 pr-10 pl-10 ${errors.password ? 'border-destructive' : 'border-foreground'}`}
               />
               <button
                 type="button"
                 onClick={() => setShowPassword(!showPassword)}
-                className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground"
+                className="text-muted-foreground hover:text-foreground absolute top-1/2 right-3 -translate-y-1/2"
               >
-                {showPassword ? (
-                  <EyeOff className="h-4 w-4" />
-                ) : (
-                  <Eye className="h-4 w-4" />
-                )}
+                {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
               </button>
             </div>
             {password && (
               <div className="space-y-2">
-                <div className="h-1 bg-muted rounded-full overflow-hidden">
+                <div className="bg-muted h-1 overflow-hidden rounded-full">
                   <div
                     className={`h-full transition-all ${passwordStrength.color}`}
                     style={{ width: passwordStrength.width }}
@@ -305,15 +279,13 @@ export default function RegisterPage() {
                     <div
                       key={req.label}
                       className={`flex items-center text-xs ${
-                        req.test(password)
-                          ? 'text-green-600'
-                          : 'text-muted-foreground'
+                        req.test(password) ? 'text-green-600' : 'text-muted-foreground'
                       }`}
                     >
                       {req.test(password) ? (
-                        <Check className="h-3 w-3 mr-1" />
+                        <Check className="mr-1 h-3 w-3" />
                       ) : (
-                        <X className="h-3 w-3 mr-1" />
+                        <X className="mr-1 h-3 w-3" />
                       )}
                       {req.label}
                     </div>
@@ -321,38 +293,32 @@ export default function RegisterPage() {
                 </div>
               </div>
             )}
-            {errors.password && (
-              <p className="text-sm text-destructive">{errors.password}</p>
-            )}
+            {errors.password && <p className="text-destructive text-sm">{errors.password}</p>}
           </div>
 
           {/* Confirm Password */}
           <div className="space-y-2">
             <Label htmlFor="confirmPassword">Confirm Password</Label>
             <div className="relative">
-              <Lock className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+              <Lock className="text-muted-foreground absolute top-1/2 left-3 h-4 w-4 -translate-y-1/2" />
               <Input
                 id="confirmPassword"
                 type={showConfirmPassword ? 'text' : 'password'}
                 placeholder="Confirm your password"
                 value={confirmPassword}
                 onChange={(e) => setConfirmPassword(e.target.value)}
-                className={`pl-10 pr-10 border-2 ${errors.confirmPassword ? 'border-destructive' : 'border-foreground'}`}
+                className={`border-2 pr-10 pl-10 ${errors.confirmPassword ? 'border-destructive' : 'border-foreground'}`}
               />
               <button
                 type="button"
                 onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-                className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground"
+                className="text-muted-foreground hover:text-foreground absolute top-1/2 right-3 -translate-y-1/2"
               >
-                {showConfirmPassword ? (
-                  <EyeOff className="h-4 w-4" />
-                ) : (
-                  <Eye className="h-4 w-4" />
-                )}
+                {showConfirmPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
               </button>
             </div>
             {errors.confirmPassword && (
-              <p className="text-sm text-destructive">{errors.confirmPassword}</p>
+              <p className="text-destructive text-sm">{errors.confirmPassword}</p>
             )}
           </div>
 
@@ -365,7 +331,7 @@ export default function RegisterPage() {
                 onCheckedChange={(checked) => setAgreeToTerms(checked as boolean)}
                 className="mt-1"
               />
-              <Label htmlFor="terms" className="text-sm font-normal cursor-pointer leading-relaxed">
+              <Label htmlFor="terms" className="cursor-pointer text-sm leading-relaxed font-normal">
                 I agree to the{' '}
                 <Link href="/terms" className="font-medium hover:underline">
                   Terms of Service
@@ -376,17 +342,11 @@ export default function RegisterPage() {
                 </Link>
               </Label>
             </div>
-            {errors.terms && (
-              <p className="text-sm text-destructive">{errors.terms}</p>
-            )}
+            {errors.terms && <p className="text-destructive text-sm">{errors.terms}</p>}
           </div>
 
           {/* Submit Button */}
-          <Button
-            type="submit"
-            className="w-full border-2 border-foreground"
-            disabled={isLoading}
-          >
+          <Button type="submit" className="border-foreground w-full border-2" disabled={isLoading}>
             {isLoading ? (
               <>
                 <Loader2 className="mr-2 h-4 w-4 animate-spin" />
@@ -401,19 +361,15 @@ export default function RegisterPage() {
         {/* OAuth Separator */}
         <div className="relative my-6">
           <Separator />
-          <span className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 bg-card px-2 text-xs text-muted-foreground">
+          <span className="bg-card text-muted-foreground absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 px-2 text-xs">
             Or sign up with
           </span>
         </div>
 
         {/* OAuth Buttons */}
         <div className="grid grid-cols-2 gap-3">
-          <Button
-            type="button"
-            variant="outline"
-            className="border-2 border-foreground"
-          >
-            <svg className="h-4 w-4 mr-2" viewBox="0 0 24 24">
+          <Button type="button" variant="outline" className="border-foreground border-2">
+            <svg className="mr-2 h-4 w-4" viewBox="0 0 24 24">
               <path
                 fill="currentColor"
                 d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"
@@ -433,12 +389,8 @@ export default function RegisterPage() {
             </svg>
             Google
           </Button>
-          <Button
-            type="button"
-            variant="outline"
-            className="border-2 border-foreground"
-          >
-            <svg className="h-4 w-4 mr-2" viewBox="0 0 24 24" fill="currentColor">
+          <Button type="button" variant="outline" className="border-foreground border-2">
+            <svg className="mr-2 h-4 w-4" viewBox="0 0 24 24" fill="currentColor">
               <path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.81-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M13 3.5c.73-.83 1.94-1.46 2.94-1.5.13 1.17-.34 2.35-1.04 3.19-.69.85-1.83 1.51-2.95 1.42-.15-1.15.41-2.35 1.05-3.11z" />
             </svg>
             Apple
@@ -446,12 +398,9 @@ export default function RegisterPage() {
         </div>
 
         {/* Sign In Link */}
-        <p className="mt-6 text-center text-sm text-muted-foreground">
+        <p className="text-muted-foreground mt-6 text-center text-sm">
           Already have an account?{' '}
-          <Link
-            href="/login"
-            className="font-medium text-foreground hover:underline"
-          >
+          <Link href="/login" className="text-foreground font-medium hover:underline">
             Sign In
           </Link>
         </p>

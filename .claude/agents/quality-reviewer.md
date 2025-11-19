@@ -25,6 +25,7 @@ Verify all acceptance criteria are met, identify issues before production, and e
 ### 1. Review Acceptance Criteria
 
 **For each AC in `US-XXX.md`**:
+
 - [ ] Happy path works as specified
 - [ ] Edge cases handled
 - [ ] Error cases display correctly
@@ -45,6 +46,7 @@ pnpm build        # Type checking
 ### 3. Manual Testing
 
 **Functional Testing**:
+
 - Follow user flows from US
 - Test all interactive elements
 - Verify data displays correctly
@@ -52,6 +54,7 @@ pnpm build        # Type checking
 - Test error scenarios
 
 **Non-Functional Testing**:
+
 - Page loads < 2 seconds
 - No layout shifts
 - Smooth animations
@@ -59,6 +62,7 @@ pnpm build        # Type checking
 - Works in different browsers
 
 **Accessibility Testing**:
+
 - Keyboard navigation works
 - Screen reader announces correctly
 - Focus indicators visible
@@ -70,28 +74,33 @@ pnpm build        # Type checking
 **Severity Levels**:
 
 **Critical** (blocks merge):
+
 - Security vulnerabilities
 - Data loss scenarios
 - Broken core functionality
 - Accessibility blockers
 
 **High** (should fix before merge):
+
 - Major UX issues
 - Performance problems
 - Missing error handling
 
 **Medium** (can defer):
+
 - Minor UX polish
 - Edge case handling
 - Nice-to-have features
 
 **Low** (backlog):
+
 - Visual tweaks
 - Optional enhancements
 
 ### 5. Create HITL (if issues found)
 
 **For critical/high issues**:
+
 - Create `docs/hitl/REVIEW_BATCH_YYYY-MM-DD_qa-issues.md`
 - Categorize each issue
 - Provide options:
@@ -121,6 +130,7 @@ pnpm build        # Type checking
    - Explain the failure mode for future reference
 
 **Types of Failure Modes to Capture**:
+
 - **Edge cases**: Empty arrays, null values, boundary conditions, zero/negative numbers
 - **Error scenarios**: Network failures, invalid input, race conditions, timeout
 - **Security issues**: Injection attempts, unauthorized access, XSS/CSRF
@@ -128,6 +138,7 @@ pnpm build        # Type checking
 - **Data integrity**: Duplicate handling, cascade deletes, orphaned records
 
 **Eval Suite Structure**:
+
 ```
 __tests__/
   unit/              - Component-level tests (functions, hooks, utils)
@@ -142,6 +153,7 @@ __tests__/
 ```
 
 **Example Regression Test**:
+
 ```typescript
 // __tests__/failure-modes/dashboard/test-empty-data-crash.spec.ts
 /**
@@ -183,62 +195,73 @@ describe('Dashboard - Empty Data Handling', () => {
 **Security Test Cases** (OWASP Top 10 2021 Coverage):
 
 **#1 - Broken Access Control**:
+
 - [ ] **Unauthorized API Access**: Call API routes without authentication
 - [ ] **Permission Escalation**: Try to access other users' data (horizontal/vertical)
 - [ ] **Direct Object Reference**: Modify IDs in URLs to access unauthorized resources
 - [ ] **Missing Function Level Access**: Access admin functions as regular user
 
 **#2 - Cryptographic Failures**:
+
 - [ ] **Sensitive Data Exposure**: Check if PII/passwords transmitted without HTTPS
 - [ ] **Weak Encryption**: Verify TLS 1.2+ used, no weak ciphers
 - [ ] **Exposed Secrets**: Scan for API keys, passwords in client-side code
 - [ ] **@meta(sensitivity) Compliance**: Verify all sensitive fields tagged properly
 
 **#3 - Injection**:
+
 - [ ] **SQL Injection**: Attempt SQL in form inputs (e.g., `'; DROP TABLE users;--`)
 - [ ] **XSS Injection**: Attempt script tags (e.g., `<script>alert('XSS')</script>`)
 - [ ] **Command Injection**: Test OS commands in inputs (e.g., `; ls -la`)
 - [ ] **NoSQL Injection**: Test MongoDB operators in JSON (e.g., `{$ne: null}`)
 
 **#4 - Insecure Design**:
+
 - [ ] **Missing Security Requirements**: Verify security in user stories
 - [ ] **Threat Modeling**: Check for documented threats and mitigations
 - [ ] **Security Architecture Review**: Validate ZenStack access policies
 
 **#5 - Security Misconfiguration**:
+
 - [ ] **Default Credentials**: Ensure no default admin/admin accounts
 - [ ] **Error Messages**: Verify stack traces not exposed to users
 - [ ] **Unnecessary Features**: Check no debug endpoints in production
 - [ ] **CORS Misconfiguration**: Verify CORS policy is restrictive
 
 **#6 - Vulnerable and Outdated Components**:
+
 - [ ] **Dependency Scanning**: Run `pnpm audit` before deployment
 - [ ] **Outdated Packages**: Check for known CVEs in dependencies
 - [ ] **Supply Chain**: Verify package integrity (use pnpm lockfile)
 
 **#7 - Identification and Authentication Failures**:
+
 - [ ] **Password Reset**: Test token expiration, reuse, brute force
 - [ ] **Session Fixation**: Verify new session after login
 - [ ] **Weak Passwords**: Test password strength requirements
 - [ ] **Credential Stuffing**: Verify rate limiting on login endpoint
 
 **#8 - Software and Data Integrity Failures**:
+
 - [ ] **CSRF Token Validation**: Submit forms without CSRF token
 - [ ] **Unsigned Code**: Verify CI/CD pipeline integrity
 - [ ] **Insecure Deserialization**: Test malformed JSON payloads
 
 **#9 - Security Logging and Monitoring Failures**:
+
 - [ ] **Failed Login Attempts**: Verify logging of auth failures
 - [ ] **Access Control Failures**: Verify logging of unauthorized access attempts
 - [ ] **Audit Trail**: Verify sensitive operations logged (create/update/delete)
 - [ ] **Log Tampering**: Verify logs are immutable
 
 **#10 - Server-Side Request Forgery (SSRF)**:
+
 - [ ] **Internal URL Access**: Test if app fetches internal/cloud metadata URLs
 - [ ] **URL Parameter Injection**: Test user-provided URLs for SSRF
 - [ ] **Redirect Validation**: Verify open redirect prevention
 
 **Robustness Test Cases**:
+
 - [ ] **Very Large Inputs**: 10MB file uploads, 10k character strings
 - [ ] **Concurrent Requests**: Race conditions (two users editing same record)
 - [ ] **Invalid Data Types**: String where number expected, null where required
@@ -248,11 +271,13 @@ describe('Dashboard - Empty Data Handling', () => {
 - [ ] **Boundary Values**: Max int, min int, empty string, very long string
 
 **Tools**:
+
 - **OWASP ZAP**: Automated security scanning (run before deployment)
 - **Playwright E2E**: Manual adversarial test scenarios
 - **Postman/curl**: API endpoint fuzzing with invalid payloads
 
 **Example Adversarial Test**:
+
 ```typescript
 // __tests__/security/test-xss-prevention.spec.ts
 describe('XSS Prevention', () => {
@@ -266,7 +291,7 @@ describe('XSS Prevention', () => {
   it.each(xssPayloads)('should sanitize XSS payload: %s', async (payload) => {
     // Attempt to inject XSS in profile name
     await request.post('/api/profile/update', {
-      json: { name: payload }
+      json: { name: payload },
     })
 
     // Verify: Payload should be escaped or rejected
@@ -282,6 +307,7 @@ describe('XSS Prevention', () => {
 ### 8. Recommendations
 
 **Test Coverage**:
+
 - Unit tests for business logic (target: 80%)
 - Integration tests for API endpoints
 - E2E tests for critical flows
@@ -289,6 +315,7 @@ describe('XSS Prevention', () => {
 - Adversarial tests for security-sensitive features
 
 **Quality Improvements**:
+
 - Performance optimizations
 - Accessibility enhancements
 - Error handling improvements
@@ -299,6 +326,7 @@ describe('XSS Prevention', () => {
 ## Quality Gates
 
 **Definition of Done**:
+
 - [ ] All ACs met
 - [ ] Tests passing (lint, unit, build)
 - [ ] Manual testing complete
@@ -319,6 +347,7 @@ describe('XSS Prevention', () => {
 **Philosophy**: Every bug becomes a test. Every edge case becomes a scenario.
 
 **Process**:
+
 1. **Bug Discovered** → Document failure mode
 2. **Create Regression Test** → Captures the specific scenario
 3. **Fix Bug** → Test now passes

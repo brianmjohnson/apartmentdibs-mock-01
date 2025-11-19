@@ -19,6 +19,7 @@
 ### Problem Statement
 
 Fair housing laws vary significantly by jurisdiction:
+
 - **NYC Fair Chance Act**: Cannot consider misdemeanors >3 years old, must use "direct relationship test" for felonies
 - **San Francisco Fair Chance Ordinance**: Cannot ask about criminal history on initial application
 - **California AB 2493**: Must accept Portable Tenant Screening Reports (PTSRs), fee caps apply
@@ -52,6 +53,7 @@ Jessica's perspective: "I lie awake at night wondering if I accidentally said so
 **Estimated Effort**: 21 story points (80-100 hours)
 
 **Complexity Factors**:
+
 - Technical complexity: High (rule engine, geolocation, dynamic filtering)
 - UI complexity: Medium (compliance warnings, education modals)
 - Integration complexity: Medium (Google Maps geocoding)
@@ -66,6 +68,7 @@ Jessica's perspective: "I lie awake at night wondering if I accidentally said so
 **Given** a landlord/agent creates a listing
 **When** they enter the property address
 **Then** the platform geolocates via Google Maps API to determine:
+
 - City
 - County
 - State
@@ -73,6 +76,7 @@ Jessica's perspective: "I lie awake at night wondering if I accidentally said so
 **And** loads applicable regulations (e.g., "123 Main St, Brooklyn, NY" -> NYC, Kings County, New York State -> NYC Fair Chance Act, New York State Human Rights Law, Federal Fair Housing Act)
 
 **Verification**:
+
 - [ ] Address geocoding works for all US addresses
 - [ ] Correct jurisdiction hierarchy determined
 - [ ] All applicable laws identified and loaded
@@ -85,11 +89,13 @@ Jessica's perspective: "I lie awake at night wondering if I accidentally said so
 **Then** the rule engine applies enforcement logic:
 
 **Example Rules**:
+
 - **NYC Fair Chance Act**: Block criminal history filters for misdemeanors >3 years old
 - **California AB 2493**: Require PTSR acceptance, enforce fee cap ($62)
 - **Seattle**: Allow co-signer override for credit scores <600
 
 **Verification**:
+
 - [ ] Rules stored in `compliance_rules` table with JSONB enforcement logic
 - [ ] Rules include jurisdiction, type, description, logic, effective date, source URL
 - [ ] Rule versioning for historical reference
@@ -101,16 +107,19 @@ Jessica's perspective: "I lie awake at night wondering if I accidentally said so
 **Then** the platform blocks and adjusts automatically:
 
 **Criminal History Example (NYC)**:
+
 - Landlord attempts: "No criminal history"
 - Platform blocks: "NYC Fair Chance Act restricts criminal history screening. Only violent felonies within 10 years can be considered. Adjusted your filter accordingly."
 - Updated filter: "No violent felonies in past 10 years"
 
 **Credit Score Example (Seattle)**:
+
 - Landlord sets: "Minimum credit score 650"
 - Applicant has 580 but offers co-signer with 750
 - Platform: "Applicant meets Seattle Fair Chance criteria (co-signer provided). Accept application."
 
 **Verification**:
+
 - [ ] Discriminatory filters are blocked with explanation
 - [ ] Filters auto-adjusted to compliant alternatives
 - [ ] Co-signer override logic works correctly
@@ -121,10 +130,12 @@ Jessica's perspective: "I lie awake at night wondering if I accidentally said so
 **Given** fair housing laws change
 **When** legal team updates `compliance_rules` table
 **Then** affected landlords/agents receive notification:
+
 - Push notification: "California AB 2493 updated: PTSR validity now 60 days. Your listings auto-updated to comply."
 - No user action required (compliance is automatic)
 
 **Verification**:
+
 - [ ] Rule updates take effect immediately
 - [ ] Affected users notified via push/email
 - [ ] Listings auto-updated to comply
@@ -135,11 +146,13 @@ Jessica's perspective: "I lie awake at night wondering if I accidentally said so
 **Given** the platform blocks a discriminatory filter
 **When** landlord/agent asks "Why was my filter blocked?"
 **Then** a modal displays:
+
 - Law name and citation (e.g., "NYC Fair Chance Act (Admin Code 5-204)")
 - Plain-English explanation
 - Link to official government source
 
 **Verification**:
+
 - [ ] Every blocked filter has educational modal
 - [ ] Explanation is jargon-free
 - [ ] Source links to official government pages
@@ -154,6 +167,7 @@ Jessica's perspective: "I lie awake at night wondering if I accidentally said so
 **And** logs the override attempt: "Landlord attempted to bypass NYC Fair Chance Act on [date]." (Evidence of willful violation if later sued)
 
 **Verification**:
+
 - [ ] Override attempts are blocked completely
 - [ ] Warning message explains legal requirement
 - [ ] All override attempts logged in audit trail
@@ -168,6 +182,7 @@ Jessica's perspective: "I lie awake at night wondering if I accidentally said so
 **Example**: Property 0.1 mile into Westchester but near NYC border -> Apply NYC Fair Chance Act (most restrictive)
 
 **Verification**:
+
 - [ ] Border detection works correctly
 - [ ] Most restrictive rules applied
 - [ ] User notified which jurisdiction rules apply
@@ -175,12 +190,15 @@ Jessica's perspective: "I lie awake at night wondering if I accidentally said so
 ### AC-8: Non-Functional Requirements
 
 **Accuracy**:
+
 - [ ] Compliance rules are 99.9%+ accurate (legal review required before deployment)
 
 **Latency**:
+
 - [ ] Rule evaluation completes in <500ms (real-time filter blocking)
 
 **Auditability**:
+
 - [ ] Every compliance rule application logged (prove platform enforced law if landlord later sued)
 
 ---
@@ -221,15 +239,18 @@ ORDER BY effective_date DESC;
 ```
 
 **Business Logic**:
+
 - `lib/services/compliance-engine.ts` - Rule evaluation and enforcement
 - `lib/services/geocoding.ts` - Address to jurisdiction mapping
 - `lib/services/compliance-education.ts` - Educational content retrieval
 
 **External Dependencies**:
+
 - Google Maps Geocoding API
 - Legal team maintenance dashboard
 
 **Database Changes**:
+
 - [ ] `compliance_rules` table with JSONB enforcement logic
 - [ ] `compliance_logs` table for audit trail
 - [ ] `jurisdiction_mappings` table for geocode -> jurisdiction
@@ -237,6 +258,7 @@ ORDER BY effective_date DESC;
 ### Frontend Specification
 
 **Components**:
+
 ```
 components/
   compliance/
@@ -247,6 +269,7 @@ components/
 ```
 
 **Admin Dashboard**:
+
 - Legal team can add/update rules without engineering deploy
 - Rule preview and testing tools
 - Affected listings report
@@ -254,12 +277,14 @@ components/
 ### UI/UX Design
 
 **Key Interactions**:
+
 1. Agent sets filter -> Platform evaluates against jurisdiction rules
 2. If violation detected -> Show warning, auto-adjust, log
 3. Agent can view "Why blocked?" -> Educational modal
 4. Agent cannot bypass compliance rules
 
 **Visual Treatment**:
+
 - Warning banners in yellow/orange
 - Educational modals with law citations
 - Compliance badge showing jurisdiction coverage
@@ -270,15 +295,16 @@ components/
 
 **Events to Track**:
 
-| Event Name | When Triggered | Properties |
-|------------|----------------|------------|
-| `compliance_check_performed` | Filter evaluated against rules | `{agentId, listingId, jurisdiction, ruleCount}` |
-| `compliance_violation_blocked` | Discriminatory filter blocked | `{agentId, listingId, ruleType, originalValue, adjustedValue}` |
-| `compliance_override_attempted` | User tries to bypass rule | `{agentId, listingId, ruleType, blocked: true}` |
-| `compliance_education_viewed` | User opens educational modal | `{agentId, ruleType, jurisdiction}` |
-| `compliance_rule_updated` | Legal team updates rule | `{ruleId, jurisdiction, changeType}` |
+| Event Name                      | When Triggered                 | Properties                                                     |
+| ------------------------------- | ------------------------------ | -------------------------------------------------------------- |
+| `compliance_check_performed`    | Filter evaluated against rules | `{agentId, listingId, jurisdiction, ruleCount}`                |
+| `compliance_violation_blocked`  | Discriminatory filter blocked  | `{agentId, listingId, ruleType, originalValue, adjustedValue}` |
+| `compliance_override_attempted` | User tries to bypass rule      | `{agentId, listingId, ruleType, blocked: true}`                |
+| `compliance_education_viewed`   | User opens educational modal   | `{agentId, ruleType, jurisdiction}`                            |
+| `compliance_rule_updated`       | Legal team updates rule        | `{ruleId, jurisdiction, changeType}`                           |
 
 **Success Metrics**:
+
 - 100% of discriminatory filters blocked before reaching applicants
 - <1% compliance-related user complaints
 - 0 fair housing violations attributed to platform compliance gaps
@@ -288,17 +314,21 @@ components/
 ## Dependencies
 
 ### Blocks
+
 - All screening-related features require compliance engine
 
 ### Blocked By
+
 - None (foundational infrastructure)
 
 ### Related Stories
+
 - US-001: PII Anonymization
 - US-002: Automated Adverse Action Notices
 - US-004: Audit Trail for Fair Housing Defense
 
 ### External Dependencies
+
 - Google Maps Geocoding API
 - Legal team for rule maintenance
 - State/local government law sources
@@ -308,18 +338,21 @@ components/
 ## Testing Requirements
 
 ### Unit Tests
+
 - [ ] Geocoding address to jurisdiction
 - [ ] Rule engine evaluation logic
 - [ ] Filter adjustment algorithms
 - [ ] Border case jurisdiction selection
 
 ### Integration Tests
+
 - [ ] Complete filter -> check -> block flow
 - [ ] Real-time rule updates propagation
 - [ ] Audit log creation
 - [ ] Educational modal content retrieval
 
 ### E2E Tests (Playwright)
+
 ```typescript
 test('platform blocks discriminatory criminal history filter in NYC', async ({ page }) => {
   await page.goto('/landlord/listings/new')
@@ -346,15 +379,18 @@ test('platform blocks discriminatory criminal history filter in NYC', async ({ p
 ## Security Considerations
 
 **Access Control**:
+
 - Only legal team can modify compliance rules
 - Rule changes require approval workflow
 - All rule changes logged
 
 **Data Validation**:
+
 - Rule enforcement logic validated before deployment
 - Jurisdiction mappings verified against authoritative sources
 
 **Potential Risks**:
+
 - **Outdated rules** - Mitigate with legal team monitoring, quarterly reviews
 - **Incorrect jurisdiction detection** - Mitigate with address verification, user confirmation
 - **Rule logic errors** - Mitigate with testing environment, staged rollout
@@ -364,15 +400,18 @@ test('platform blocks discriminatory criminal history filter in NYC', async ({ p
 ## Performance Considerations
 
 **Expected Load**:
+
 - 1,000+ compliance checks per day
 - Rule evaluation on every filter change
 
 **Optimization Strategies**:
+
 - Cache jurisdiction mappings
 - Pre-compile rule evaluation logic
 - Index compliance_rules by jurisdiction
 
 **Performance Targets**:
+
 - Rule evaluation: <500ms
 - Jurisdiction detection: <1 second
 - Educational modal load: <500ms
@@ -382,31 +421,37 @@ test('platform blocks discriminatory criminal history filter in NYC', async ({ p
 ## Rollout Plan
 
 **Phase 1: Development** (Week 1-2)
+
 - [ ] Compliance rule database schema
 - [ ] Rule evaluation engine
 - [ ] Geocoding integration
 
 **Phase 2: Rule Population** (Week 2-3)
+
 - [ ] Legal team populates initial rules (Federal, NY, CA)
 - [ ] Rule testing and verification
 - [ ] Educational content creation
 
 **Phase 3: Integration** (Week 3)
+
 - [ ] Filter blocking UI
 - [ ] Educational modals
 - [ ] Audit logging
 
 **Phase 4: Testing** (Week 4)
+
 - [ ] Unit and integration tests
 - [ ] Legal review of all rules
 - [ ] User acceptance testing
 
 **Phase 5: Deployment**
+
 - [ ] Deploy to staging with test jurisdictions
 - [ ] Production deployment (NYC first)
 - [ ] Monitor for compliance gaps
 
 **Rollback Plan**:
+
 - Feature flag to revert to manual compliance
 - Rule versioning allows rollback to previous state
 
@@ -429,10 +474,10 @@ test('platform blocks discriminatory criminal history filter in NYC', async ({ p
 
 ### Update Log
 
-| Date | Author | Update |
-|------|--------|--------|
+| Date       | Author          | Update                                                   |
+| ---------- | --------------- | -------------------------------------------------------- |
 | 2025-11-19 | Product Manager | Initial story creation from consolidated User_Stories.md |
-| 2025-11-19 | - | Approved - ready for implementation |
+| 2025-11-19 | -               | Approved - ready for implementation                      |
 
 ### Discussion Notes
 

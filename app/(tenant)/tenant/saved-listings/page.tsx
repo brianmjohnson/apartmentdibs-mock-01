@@ -24,10 +24,10 @@ export default function SavedListingsPage() {
   const [savedIds, setSavedIds] = useState<string[]>(mockSavedListings)
   const [listingToRemove, setListingToRemove] = useState<string | null>(null)
 
-  const savedListings = mockListings.filter(listing => savedIds.includes(listing.id))
+  const savedListings = mockListings.filter((listing) => savedIds.includes(listing.id))
 
   const handleRemove = (listingId: string) => {
-    setSavedIds(prev => prev.filter(id => id !== listingId))
+    setSavedIds((prev) => prev.filter((id) => id !== listingId))
     setListingToRemove(null)
   }
 
@@ -39,24 +39,22 @@ export default function SavedListingsPage() {
           <h1 className="text-3xl font-bold tracking-tight">Saved Listings</h1>
           <span className="text-muted-foreground">({savedListings.length} saved)</span>
         </div>
-        <p className="text-muted-foreground">
-          Listings you&apos;ve saved for later
-        </p>
+        <p className="text-muted-foreground">Listings you&apos;ve saved for later</p>
       </div>
 
       {/* Listings Grid */}
       {savedListings.length === 0 ? (
-        <Card className="border-2 border-foreground">
+        <Card className="border-foreground border-2">
           <CardContent className="py-12">
             <div className="text-center">
-              <Heart className="h-12 w-12 mx-auto text-muted-foreground mb-4" />
-              <h3 className="text-lg font-semibold mb-2">No saved listings</h3>
+              <Heart className="text-muted-foreground mx-auto mb-4 h-12 w-12" />
+              <h3 className="mb-2 text-lg font-semibold">No saved listings</h3>
               <p className="text-muted-foreground mb-6">
                 Save listings you like to compare them later
               </p>
-              <Button asChild className="border-2 border-foreground">
+              <Button asChild className="border-foreground border-2">
                 <Link href="/search">
-                  <Search className="h-4 w-4 mr-2" />
+                  <Search className="mr-2 h-4 w-4" />
                   Start Searching
                 </Link>
               </Button>
@@ -70,7 +68,10 @@ export default function SavedListingsPage() {
             const bedsLabel = listing.beds === 0 ? 'Studio' : `${listing.beds} BD`
 
             return (
-              <Card key={listing.id} className="group overflow-hidden border-2 border-foreground transition-all hover:shadow-lg">
+              <Card
+                key={listing.id}
+                className="group border-foreground overflow-hidden border-2 transition-all hover:shadow-lg"
+              >
                 <div className="relative">
                   <Link href={`/search/${listing.id}`}>
                     <AspectRatio ratio={4 / 3}>
@@ -85,28 +86,39 @@ export default function SavedListingsPage() {
                   </Link>
 
                   {/* Remove Button */}
-                  <Dialog open={listingToRemove === listing.id} onOpenChange={(open) => !open && setListingToRemove(null)}>
+                  <Dialog
+                    open={listingToRemove === listing.id}
+                    onOpenChange={(open) => !open && setListingToRemove(null)}
+                  >
                     <DialogTrigger asChild>
                       <button
                         onClick={() => setListingToRemove(listing.id)}
-                        className="absolute top-3 right-3 p-2 bg-white/90 rounded-full shadow-md hover:bg-red-50 transition-colors"
+                        className="absolute top-3 right-3 rounded-full bg-white/90 p-2 shadow-md transition-colors hover:bg-red-50"
                         aria-label="Remove from saved"
                       >
                         <Trash2 className="h-4 w-4 text-red-600" />
                       </button>
                     </DialogTrigger>
-                    <DialogContent className="border-2 border-foreground">
+                    <DialogContent className="border-foreground border-2">
                       <DialogHeader>
                         <DialogTitle>Remove from Saved</DialogTitle>
                         <DialogDescription>
-                          Are you sure you want to remove {listing.address} from your saved listings?
+                          Are you sure you want to remove {listing.address} from your saved
+                          listings?
                         </DialogDescription>
                       </DialogHeader>
                       <DialogFooter>
-                        <Button variant="outline" onClick={() => setListingToRemove(null)} className="border-2 border-foreground">
+                        <Button
+                          variant="outline"
+                          onClick={() => setListingToRemove(null)}
+                          className="border-foreground border-2"
+                        >
                           Cancel
                         </Button>
-                        <Button onClick={() => handleRemove(listing.id)} className="border-2 border-foreground bg-red-600 hover:bg-red-700">
+                        <Button
+                          onClick={() => handleRemove(listing.id)}
+                          className="border-foreground border-2 bg-red-600 hover:bg-red-700"
+                        >
                           Remove
                         </Button>
                       </DialogFooter>
@@ -115,14 +127,14 @@ export default function SavedListingsPage() {
                 </div>
 
                 <CardContent className="p-4">
-                  <div className="flex items-baseline justify-between mb-2">
+                  <div className="mb-2 flex items-baseline justify-between">
                     <span className="text-2xl font-bold">
                       {formatPrice(listing.price)}
-                      <span className="text-sm font-normal text-muted-foreground">/mo</span>
+                      <span className="text-muted-foreground text-sm font-normal">/mo</span>
                     </span>
                   </div>
 
-                  <div className="flex items-center gap-3 text-sm text-muted-foreground mb-3">
+                  <div className="text-muted-foreground mb-3 flex items-center gap-3 text-sm">
                     <span className="flex items-center gap-1">
                       <Bed className="h-4 w-4" />
                       {bedsLabel}
@@ -139,8 +151,8 @@ export default function SavedListingsPage() {
                     </span>
                   </div>
 
-                  <div className="flex items-start gap-1 text-sm text-muted-foreground mb-3">
-                    <MapPin className="h-4 w-4 mt-0.5 flex-shrink-0" />
+                  <div className="text-muted-foreground mb-3 flex items-start gap-1 text-sm">
+                    <MapPin className="mt-0.5 h-4 w-4 flex-shrink-0" />
                     <span className="line-clamp-1">{fullAddress}</span>
                   </div>
 
@@ -163,8 +175,8 @@ export default function SavedListingsPage() {
                   </div>
                 </CardContent>
 
-                <CardFooter className="p-4 pt-0 gap-2">
-                  <Button asChild className="flex-1 border-2 border-foreground">
+                <CardFooter className="gap-2 p-4 pt-0">
+                  <Button asChild className="border-foreground flex-1 border-2">
                     <Link href={`/search/${listing.id}`}>Apply Now</Link>
                   </Button>
                 </CardFooter>

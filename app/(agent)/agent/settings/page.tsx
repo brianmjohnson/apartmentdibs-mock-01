@@ -11,7 +11,7 @@ import {
   Users,
   Bell,
   Save,
-  ChevronRight
+  ChevronRight,
 } from 'lucide-react'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
@@ -28,11 +28,11 @@ export default function AgentSettingsPage() {
     company: mockAgentProfile.company,
     licenseNumber: 'NYS-2024-78542',
     website: 'https://brooklynre.com',
-    bio: 'Experienced real estate agent specializing in Brooklyn rentals with 8+ years in the market.'
+    bio: 'Experienced real estate agent specializing in Brooklyn rentals with 8+ years in the market.',
   })
 
   const handleChange = (field: string, value: string) => {
-    setFormData(prev => ({ ...prev, [field]: value }))
+    setFormData((prev) => ({ ...prev, [field]: value }))
   }
 
   return (
@@ -40,69 +40,65 @@ export default function AgentSettingsPage() {
       {/* Page Header */}
       <div>
         <h1 className="text-3xl font-bold tracking-tight">Settings</h1>
-        <p className="text-muted-foreground">
-          Manage your account and preferences
-        </p>
+        <p className="text-muted-foreground">Manage your account and preferences</p>
       </div>
 
       {/* Quick Navigation */}
       <div className="grid gap-4 md:grid-cols-3">
         <Link href="/agent/settings/team">
-          <Card className="border-2 border-foreground hover:bg-muted/50 transition-colors cursor-pointer">
-            <CardContent className="p-4 flex items-center justify-between">
+          <Card className="border-foreground hover:bg-muted/50 cursor-pointer border-2 transition-colors">
+            <CardContent className="flex items-center justify-between p-4">
               <div className="flex items-center gap-3">
-                <Users className="h-5 w-5 text-muted-foreground" />
+                <Users className="text-muted-foreground h-5 w-5" />
                 <div>
                   <p className="font-medium">Team</p>
-                  <p className="text-sm text-muted-foreground">Manage team members</p>
+                  <p className="text-muted-foreground text-sm">Manage team members</p>
                 </div>
               </div>
-              <ChevronRight className="h-5 w-5 text-muted-foreground" />
+              <ChevronRight className="text-muted-foreground h-5 w-5" />
             </CardContent>
           </Card>
         </Link>
 
         <Link href="/agent/settings/billing">
-          <Card className="border-2 border-foreground hover:bg-muted/50 transition-colors cursor-pointer">
-            <CardContent className="p-4 flex items-center justify-between">
+          <Card className="border-foreground hover:bg-muted/50 cursor-pointer border-2 transition-colors">
+            <CardContent className="flex items-center justify-between p-4">
               <div className="flex items-center gap-3">
-                <CreditCard className="h-5 w-5 text-muted-foreground" />
+                <CreditCard className="text-muted-foreground h-5 w-5" />
                 <div>
                   <p className="font-medium">Billing</p>
-                  <p className="text-sm text-muted-foreground">Plans and payments</p>
+                  <p className="text-muted-foreground text-sm">Plans and payments</p>
                 </div>
               </div>
-              <ChevronRight className="h-5 w-5 text-muted-foreground" />
+              <ChevronRight className="text-muted-foreground h-5 w-5" />
             </CardContent>
           </Card>
         </Link>
 
         <Link href="/agent/settings/notifications">
-          <Card className="border-2 border-foreground hover:bg-muted/50 transition-colors cursor-pointer">
-            <CardContent className="p-4 flex items-center justify-between">
+          <Card className="border-foreground hover:bg-muted/50 cursor-pointer border-2 transition-colors">
+            <CardContent className="flex items-center justify-between p-4">
               <div className="flex items-center gap-3">
-                <Bell className="h-5 w-5 text-muted-foreground" />
+                <Bell className="text-muted-foreground h-5 w-5" />
                 <div>
                   <p className="font-medium">Notifications</p>
-                  <p className="text-sm text-muted-foreground">Alert preferences</p>
+                  <p className="text-muted-foreground text-sm">Alert preferences</p>
                 </div>
               </div>
-              <ChevronRight className="h-5 w-5 text-muted-foreground" />
+              <ChevronRight className="text-muted-foreground h-5 w-5" />
             </CardContent>
           </Card>
         </Link>
       </div>
 
       {/* Account Information */}
-      <Card className="border-2 border-foreground">
+      <Card className="border-foreground border-2">
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
             <User className="h-5 w-5" />
             Account Information
           </CardTitle>
-          <CardDescription>
-            Your personal and business details
-          </CardDescription>
+          <CardDescription>Your personal and business details</CardDescription>
         </CardHeader>
         <CardContent className="space-y-6">
           {/* Personal Info */}
@@ -119,26 +115,26 @@ export default function AgentSettingsPage() {
             <div className="space-y-2">
               <Label htmlFor="email">Email</Label>
               <div className="relative">
-                <Mail className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                <Mail className="text-muted-foreground absolute top-1/2 left-3 h-4 w-4 -translate-y-1/2" />
                 <Input
                   id="email"
                   type="email"
                   value={formData.email}
                   onChange={(e) => handleChange('email', e.target.value)}
-                  className="pl-10 border-2"
+                  className="border-2 pl-10"
                 />
               </div>
             </div>
             <div className="space-y-2">
               <Label htmlFor="phone">Phone</Label>
               <div className="relative">
-                <Phone className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                <Phone className="text-muted-foreground absolute top-1/2 left-3 h-4 w-4 -translate-y-1/2" />
                 <Input
                   id="phone"
                   type="tel"
                   value={formData.phone}
                   onChange={(e) => handleChange('phone', e.target.value)}
-                  className="pl-10 border-2"
+                  className="border-2 pl-10"
                 />
               </div>
             </div>
@@ -161,12 +157,12 @@ export default function AgentSettingsPage() {
             <div className="space-y-2">
               <Label htmlFor="company">Company Name</Label>
               <div className="relative">
-                <Building className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                <Building className="text-muted-foreground absolute top-1/2 left-3 h-4 w-4 -translate-y-1/2" />
                 <Input
                   id="company"
                   value={formData.company}
                   onChange={(e) => handleChange('company', e.target.value)}
-                  className="pl-10 border-2"
+                  className="border-2 pl-10"
                 />
               </div>
             </div>
@@ -187,11 +183,11 @@ export default function AgentSettingsPage() {
               id="bio"
               value={formData.bio}
               onChange={(e) => handleChange('bio', e.target.value)}
-              className="w-full min-h-[100px] px-3 py-2 border-2 rounded-md bg-background resize-none"
+              className="bg-background min-h-[100px] w-full resize-none rounded-md border-2 px-3 py-2"
             />
           </div>
 
-          <Button className="border-2 border-foreground">
+          <Button className="border-foreground border-2">
             <Save className="mr-2 h-4 w-4" />
             Save Changes
           </Button>
@@ -202,19 +198,20 @@ export default function AgentSettingsPage() {
       <Card className="border-2 border-red-300">
         <CardHeader>
           <CardTitle className="text-red-600">Danger Zone</CardTitle>
-          <CardDescription>
-            Irreversible actions for your account
-          </CardDescription>
+          <CardDescription>Irreversible actions for your account</CardDescription>
         </CardHeader>
         <CardContent className="space-y-4">
-          <div className="flex items-center justify-between p-3 bg-red-50 dark:bg-red-900/20 rounded-md">
+          <div className="flex items-center justify-between rounded-md bg-red-50 p-3 dark:bg-red-900/20">
             <div>
               <p className="font-medium text-red-800 dark:text-red-200">Delete Account</p>
               <p className="text-sm text-red-600 dark:text-red-300">
                 Permanently delete your account and all data
               </p>
             </div>
-            <Button variant="outline" className="border-2 border-red-300 text-red-700 hover:bg-red-50">
+            <Button
+              variant="outline"
+              className="border-2 border-red-300 text-red-700 hover:bg-red-50"
+            >
               Delete
             </Button>
           </div>

@@ -56,12 +56,14 @@ David's perspective: "I try to be fair, but I know I have biases. If I see a nam
 **Given** a landlord reviews applicant profiles
 **When** profiles are displayed
 **Then** all PII is hidden:
+
 - Name replaced with "Applicant #2847"
 - No photo shown
 - Address shown as city only
 - Employer name hidden (show industry only)
 
 **Verification**:
+
 - [ ] No PII visible in any view
 - [ ] Applicant ID consistent across views
 - [ ] Cannot reverse-engineer identity
@@ -71,6 +73,7 @@ David's perspective: "I try to be fair, but I know I have biases. If I see a nam
 **Given** PII is hidden
 **When** landlord evaluates applicants
 **Then** they see objective metrics only:
+
 - Income-to-rent ratio: 4.1x
 - Credit score band: 740-760
 - Employment stability: 5+ years
@@ -78,6 +81,7 @@ David's perspective: "I try to be fair, but I know I have biases. If I see a nam
 - Background check: Pass
 
 **Verification**:
+
 - [ ] All metrics clearly displayed
 - [ ] No demographic indicators
 - [ ] Sufficient data for decision
@@ -87,12 +91,14 @@ David's perspective: "I try to be fair, but I know I have biases. If I see a nam
 **Given** a landlord selects an applicant
 **When** selection is confirmed
 **Then** full profile is revealed:
+
 - Name: Maya Chen
 - Photo: Professional headshot
 - Contact: Email, phone
 - Current address: Full address
 
 **Verification**:
+
 - [ ] Reveal only after selection finalized
 - [ ] Cannot view and then "undo selection"
 - [ ] Reveal logged in audit trail
@@ -102,12 +108,14 @@ David's perspective: "I try to be fair, but I know I have biases. If I see a nam
 **Given** applicants can submit personal notes
 **When** notes are displayed to landlord
 **Then** PII is automatically scrubbed:
+
 - Names, addresses, ages removed
 - References to protected characteristics removed
 - "I'm a quiet professional" allowed
 - "I'm a 28-year-old Hispanic woman" scrubbed
 
 **Verification**:
+
 - [ ] NLP scrubbing works accurately
 - [ ] No false positives on legitimate content
 - [ ] Original preserved for applicant
@@ -117,11 +125,13 @@ David's perspective: "I try to be fair, but I know I have biases. If I see a nam
 **Given** landlord filters applicants
 **When** they attempt discriminatory filters
 **Then** platform blocks:
+
 - Cannot filter by name patterns
 - Cannot sort by anything identifying
 - Can only filter by objective criteria
 
 **Verification**:
+
 - [ ] All filter options are objective
 - [ ] No workarounds available
 
@@ -140,6 +150,7 @@ David's perspective: "I try to be fair, but I know I have biases. If I see a nam
 ### Frontend Specification
 
 **Components**:
+
 ```
 components/
   obfuscation/
@@ -152,13 +163,14 @@ components/
 
 ## Analytics Tracking
 
-| Event Name | When Triggered | Properties |
-|------------|----------------|------------|
-| `obfuscated_profile_viewed` | Landlord sees profile | `{landlordId, applicantId}` |
-| `pii_revealed` | Selection made | `{landlordId, applicantId}` |
+| Event Name                   | When Triggered         | Properties                      |
+| ---------------------------- | ---------------------- | ------------------------------- |
+| `obfuscated_profile_viewed`  | Landlord sees profile  | `{landlordId, applicantId}`     |
+| `pii_revealed`               | Selection made         | `{landlordId, applicantId}`     |
 | `scrubbed_content_displayed` | Personal note filtered | `{applicantId, scrubbedFields}` |
 
 **Success Metrics**:
+
 - 100% of pre-selection views are obfuscated
 - <1% of fair housing complaints
 - 95%+ landlord satisfaction with data sufficiency
@@ -168,9 +180,11 @@ components/
 ## Dependencies
 
 ### Blocks
+
 - All landlord review features
 
 ### Related Stories
+
 - US-001: PII Anonymization
 - US-004: Audit Trail
 

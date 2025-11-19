@@ -1,6 +1,6 @@
 # HITL Review Batch - [Category] - YYYY-MM-DD
 
-**Batch ID**: REVIEW_BATCH_YYYY-MM-DD_[category]
+**Batch ID**: REVIEW*BATCH_YYYY-MM-DD*[category]
 **Date Created**: YYYY-MM-DD
 **Category**: User Stories | ADRs | Tech Specs | QA Issues | Mixed
 **Total Items**: X
@@ -21,6 +21,7 @@
 ## Statistics
 
 ### By Type
+
 - User Stories: X
 - ADRs: Y
 - Tech Specs: Z
@@ -28,12 +29,14 @@
 - Other: V
 
 ### By Priority
+
 - P0 (Critical/MVP): X items
 - P1 (Important): Y items
 - P2 (Nice to Have): Z items
 - P3 (Future): W items
 
 ### By Status
+
 - Awaiting Review: X
 - Needs Revision: Y (from previous round)
 - Approved: Z (updated after review)
@@ -45,21 +48,25 @@
 Use these for bulk approval of low-risk items:
 
 ### Option A: Approve All
+
 - [ ] **Approve all items in this batch**
   - Use when: All items are straightforward and low-risk
   - Action: Mark all linked HITL files as `APPROVED`
 
 ### Option B: Approve by Priority
+
 - [ ] **Approve all P0 (MVP) items** (Items: #1-#5)
 - [ ] **Approve all P1 (Important) items** (Items: #6-#8)
 - [ ] **Approve all P2 (Nice to Have) items** (Items: #9-#10)
 
 ### Option C: Approve by Type
+
 - [ ] **Approve all user stories** (Items: #1-#5)
 - [ ] **Approve all ADRs** (Items: #6-#8)
 - [ ] **Approve all tech specs** (Items: #9-#12)
 
 ### Option D: Review Individually
+
 - Use when: High-risk decisions or unfamiliar territory
 - Process: Open each link, review thoroughly, mark status
 
@@ -72,6 +79,7 @@ Use these for bulk approval of low-risk items:
 These items are high-priority or high-risk and should be reviewed individually:
 
 #### Item #1: [Title]
+
 - **Type**: User Story | ADR | Tech Spec | QA Issue
 - **Priority**: P0
 - **Risk**: High | Medium | Low
@@ -89,6 +97,7 @@ These items are high-priority or high-risk and should be reviewed individually:
 [Reason this needs thorough review - high risk, breaking change, etc.]
 
 **Quick Check**:
+
 - [ ] Reviewed full context
 - [ ] Alternatives considered
 - [ ] Comfortable with recommendation
@@ -97,6 +106,7 @@ These items are high-priority or high-risk and should be reviewed individually:
 ---
 
 #### Item #2: [Another Critical Item]
+
 [Same format]
 
 ---
@@ -106,6 +116,7 @@ These items are high-priority or high-risk and should be reviewed individually:
 These items are lower risk and follow established patterns:
 
 #### Item #3: [Title]
+
 - **Type**: User Story
 - **Priority**: P1
 - **Risk**: Low
@@ -118,6 +129,7 @@ These items are lower risk and follow established patterns:
 ---
 
 #### Item #4: [Title]
+
 [Same format]
 
 ---
@@ -127,6 +139,7 @@ These items are lower risk and follow established patterns:
 These items were previously marked `NEEDS_REVISION` and have been updated:
 
 #### Item #X: [Title] (REVISED)
+
 - **Original Review**: YYYY-MM-DD
 - **Revision Date**: YYYY-MM-DD
 - **HITL File**: [hitl-YYYY-MM-DD-0XX.md](./hitl-YYYY-MM-DD-0XX.md)
@@ -135,12 +148,14 @@ These items were previously marked `NEEDS_REVISION` and have been updated:
 [Summary of revisions made based on feedback]
 
 **Previous Feedback**:
+
 > [Quote your previous feedback]
 
 **How Addressed**:
 [How the revision addresses your feedback]
 
 **Re-Review**:
+
 - [ ] Changes satisfy previous concerns
 - [ ] Decision: `APPROVED` | `STILL_NEEDS_REVISION` | `REJECTED`
 
@@ -150,28 +165,28 @@ These items were previously marked `NEEDS_REVISION` and have been updated:
 
 ### User Stories (X items)
 
-| # | ID | Title | Priority | Risk | File | Status |
-|---|---|---|---|---|---|---|
-| 1 | US-001 | [User Authentication] | P0 | Low | [hitl-...-001.md](./hitl-...-001.md) | PENDING |
-| 2 | US-002 | [User Profile] | P0 | Low | [hitl-...-002.md](./hitl-...-002.md) | PENDING |
+| #   | ID     | Title                 | Priority | Risk | File                                 | Status  |
+| --- | ------ | --------------------- | -------- | ---- | ------------------------------------ | ------- |
+| 1   | US-001 | [User Authentication] | P0       | Low  | [hitl-...-001.md](./hitl-...-001.md) | PENDING |
+| 2   | US-002 | [User Profile]        | P0       | Low  | [hitl-...-002.md](./hitl-...-002.md) | PENDING |
 
 ### ADRs (Y items)
 
-| # | ID | Title | Category | Risk | File | Status |
-|---|---|---|---|---|---|---|
-| 1 | ADR-003 | [State Management] | Technical | Medium | [hitl-...-003.md](./hitl-...-003.md) | PENDING |
+| #   | ID      | Title              | Category  | Risk   | File                                 | Status  |
+| --- | ------- | ------------------ | --------- | ------ | ------------------------------------ | ------- |
+| 1   | ADR-003 | [State Management] | Technical | Medium | [hitl-...-003.md](./hitl-...-003.md) | PENDING |
 
 ### Tech Specs (Z items)
 
-| # | Story | Component | Type | Risk | File | Status |
-|---|---|---|---|---|---|---|
-| 1 | US-001 | Auth Flow | FE+BE | Medium | [hitl-...-005.md](./hitl-...-005.md) | PENDING |
+| #   | Story  | Component | Type  | Risk   | File                                 | Status  |
+| --- | ------ | --------- | ----- | ------ | ------------------------------------ | ------- |
+| 1   | US-001 | Auth Flow | FE+BE | Medium | [hitl-...-005.md](./hitl-...-005.md) | PENDING |
 
 ### QA Issues (W items)
 
-| # | Story | Severity | Type | Recommended | File | Status |
-|---|---|---|---|---|---|---|
-| 1 | US-001 | Critical | Security | Fix Now | [hitl-...-010.md](./hitl-...-010.md) | PENDING |
+| #   | Story  | Severity | Type     | Recommended | File                                 | Status  |
+| --- | ------ | -------- | -------- | ----------- | ------------------------------------ | ------- |
+| 1   | US-001 | Critical | Security | Fix Now     | [hitl-...-010.md](./hitl-...-010.md) | PENDING |
 
 ---
 
@@ -180,23 +195,27 @@ These items were previously marked `NEEDS_REVISION` and have been updated:
 Before marking this batch as complete:
 
 ### Preparation
+
 - [ ] Read executive summary
 - [ ] Understand overall context
 - [ ] Note any high-risk items
 
 ### Review Process
+
 - [ ] Critical items reviewed individually
 - [ ] Standard items approved or reviewed as needed
 - [ ] Revised items re-evaluated
 - [ ] All decisions documented in individual HITL files
 
 ### Documentation
+
 - [ ] Each HITL file status updated
 - [ ] Feedback provided for NEEDS_REVISION items
 - [ ] Rationale given for REJECTED items
 - [ ] Next steps clear for all items
 
 ### Completion
+
 - [ ] All items have status (no PENDING left)
 - [ ] Ready to run `pnpm hitl:resume`
 - [ ] Batch status changed to COMPLETED
@@ -244,12 +263,15 @@ Before marking this batch as complete:
 [Add any patterns, concerns, or observations from this batch review]
 
 **Common Themes**:
+
 - [Any patterns across multiple items]
 
 **Concerns**:
+
 - [Any broader concerns that emerged]
 
 **Follow-up Actions**:
+
 - [Any actions needed beyond individual items]
 
 ---
@@ -261,6 +283,7 @@ Before marking this batch as complete:
 **Time Taken**: [How long to review]
 
 **Decisions**:
+
 - Approved: X items
 - Needs Revision: Y items
 - Rejected: Z items

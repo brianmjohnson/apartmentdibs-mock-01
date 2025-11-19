@@ -18,6 +18,7 @@ cp CLAUDE_HOME.md ~/.claude/CLAUDE.md
 **RULE**: When an agent exists for a specific purpose, you MUST use that agent. Do NOT bypass agents by thinking "this is simple enough to do directly."
 
 **Why this matters**: Agents exist because:
+
 1. They have specialized workflows
 2. They follow established patterns
 3. They maintain consistency across projects
@@ -70,6 +71,7 @@ ls .claude/agents/ | grep -i <task-keyword>
 ```
 
 **Example**:
+
 ```bash
 # User: "Update the next package to the latest version"
 
@@ -95,6 +97,7 @@ ls docs/adr/ | grep -i dependency
 **You MUST**: Use that agent, NO EXCEPTIONS
 
 Do NOT respond with:
+
 - "That agent is for more complex tasks, this is simple"
 - "I can handle this directly without the agent"
 - "The agent is overkill for this"
@@ -108,6 +111,7 @@ The user knows the architecture better than you. Follow their direction.
 ### 1. Research BEFORE Implementation
 
 Before writing ANY code:
+
 1. **Search codebase** for existing solutions
 2. **Check documentation** for established patterns
 3. **Review ADRs** for architectural decisions
@@ -120,6 +124,7 @@ Before writing ANY code:
 **CORRECT mindset**: "Let me check if there's an established pattern for this"
 
 Tasks that seem "simple" often have:
+
 - Hidden edge cases
 - Established workflows
 - Required approvals
@@ -141,6 +146,7 @@ When choosing how to accomplish a task, use this priority order:
 **ADRs are not suggestions** - they are REQUIRED architectural decisions.
 
 If an ADR exists for the task:
+
 - ✅ Read the entire ADR
 - ✅ Follow the workflow exactly
 - ✅ Use the specified tools/patterns
@@ -151,16 +157,16 @@ If an ADR exists for the task:
 
 ## 📋 Common Task → Agent Mapping
 
-| Task | Check For | Required Reading |
-|------|-----------|------------------|
-| **Dependency updates** | ADR-012 | Automated dependency workflow |
-| **PR comments** | github-pr-comment-processor | Agent workflow |
-| **Deployment monitoring** | deployment-monitoring-agent | Agent workflow |
-| **Template sync** | template-sync-workflow skill | Skill + scripts |
-| **Git commits** | ADR-010 | Branch-based autonomy |
-| **Architecture decisions** | architecture-agent subagent | Subagent workflow |
-| **Code reviews** | quality-reviewer subagent | Subagent workflow |
-| **User stories** | product-manager subagent | Subagent workflow |
+| Task                       | Check For                    | Required Reading              |
+| -------------------------- | ---------------------------- | ----------------------------- |
+| **Dependency updates**     | ADR-012                      | Automated dependency workflow |
+| **PR comments**            | github-pr-comment-processor  | Agent workflow                |
+| **Deployment monitoring**  | deployment-monitoring-agent  | Agent workflow                |
+| **Template sync**          | template-sync-workflow skill | Skill + scripts               |
+| **Git commits**            | ADR-010                      | Branch-based autonomy         |
+| **Architecture decisions** | architecture-agent subagent  | Subagent workflow             |
+| **Code reviews**           | quality-reviewer subagent    | Subagent workflow             |
+| **User stories**           | product-manager subagent     | Subagent workflow             |
 
 ---
 
@@ -173,6 +179,7 @@ The ONLY times you can skip agents:
 3. **Agent doesn't exist** - No agent/skill/ADR/subagent for the task
 
 Even in exceptions, you should:
+
 - ✅ Document why you bypassed the agent
 - ✅ Create a follow-up task to formalize the pattern
 - ✅ Ask if a new agent/ADR should be created
@@ -184,6 +191,7 @@ Even in exceptions, you should:
 ### Scenario: User recommends agent but Claude ignores it
 
 **What happened**:
+
 ```
 User: "Use the template-sync-workflow skill for this"
 Claude: "This is a simple rsync operation, I'll handle it directly"
@@ -191,12 +199,14 @@ Claude: "This is a simple rsync operation, I'll handle it directly"
 ```
 
 **Why this is WRONG**:
+
 1. User explicitly recommended the agent
 2. The skill has scripts, safety checks, and established patterns
 3. "Simple" doesn't mean "skip the established workflow"
 4. Undermines the architecture the team built
 
 **Correct behavior**:
+
 ```
 User: "Use the template-sync-workflow skill for this"
 Claude: "I'll use the template-sync-workflow skill as recommended."
@@ -206,6 +216,7 @@ Claude: "I'll use the template-sync-workflow skill as recommended."
 ### Scenario: Claude thinks task is too simple for agent
 
 **What happened**:
+
 ```
 User: "Update this dependency"
 Claude: "I'll run pnpm add package@latest"
@@ -213,12 +224,14 @@ Claude: "I'll run pnpm add package@latest"
 ```
 
 **Why this is WRONG**:
+
 1. ADR-012 exists for dependency updates
 2. Workflow includes: one-at-a-time, testing, rollback plan
 3. "Simple" updates can break production
 4. Skipping workflow bypasses safety checks
 
 **Correct behavior**:
+
 ```
 User: "Update this dependency"
 Claude: [Checks for ADRs about dependencies]
@@ -271,11 +284,13 @@ Ask yourself these questions BEFORE executing:
 ## 🔄 Feedback Loop
 
 If you find yourself repeatedly thinking:
+
 - "The agent is overkill for this"
 - "This is too simple for the workflow"
 - "I can do this faster without the agent"
 
 **STOP** - You're operating against the architecture. Either:
+
 1. Follow the established pattern (most likely)
 2. Discuss with the user whether the pattern should be simplified
 3. Never silently bypass without discussion
@@ -306,6 +321,7 @@ You're NOT following this when:
 ## 🚀 Quick Reference
 
 **Before ANY task**:
+
 1. Check for agents: `.claude/agents/`, `.claude/skills/`, `.claude/agents/`
 2. Check for ADRs: `docs/adr/`
 3. If any exist → Use them
@@ -317,6 +333,7 @@ You're NOT following this when:
 ---
 
 **Installation Reminder**:
+
 ```bash
 cp CLAUDE_HOME.md ~/.claude/CLAUDE.md
 ```

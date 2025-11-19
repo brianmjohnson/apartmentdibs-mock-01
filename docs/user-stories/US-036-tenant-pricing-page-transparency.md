@@ -59,6 +59,7 @@ Tenants are used to "free" application processes (even if they pay $50 per appli
 **Then** they see tier comparison:
 
 **Basic Profile ($39.99)**:
+
 - Credit report (TransUnion)
 - Basic background check
 - 60-day validity
@@ -66,6 +67,7 @@ Tenants are used to "free" application processes (even if they pay $50 per appli
 - Email support
 
 **Premium Profile ($54.99)**:
+
 - Everything in Basic
 - Full criminal background check
 - Eviction history search
@@ -74,12 +76,14 @@ Tenants are used to "free" application processes (even if they pay $50 per appli
 - Priority support
 
 **Group Application ($99.99)**:
+
 - Everything in Premium
 - 2-4 roommate profiles
 - Shared household screening
 - 90-day validity
 
 **Verification**:
+
 - [ ] Tiers clearly compared
 - [ ] Features listed
 - [ ] "Best Value" indicator
@@ -91,17 +95,20 @@ Tenants are used to "free" application processes (even if they pay $50 per appli
 **Then** tenant sees:
 
 **Traditional Cost Breakdown**:
+
 - "$50 per application x 5 applications = $250"
 - "$25 credit report x 5 = $125"
 - "Total: $375+"
 
 **ApartmentDibs Cost**:
+
 - "$54.99 once = unlimited applications"
 - "Savings: $320+"
 
 **Visual**: Side-by-side comparison chart
 
 **Verification**:
+
 - [ ] Math is clear
 - [ ] Visual comparison compelling
 - [ ] Savings highlighted
@@ -115,15 +122,18 @@ Tenants are used to "free" application processes (even if they pay $50 per appli
 **Heading**: "Why do tenants pay for screening?"
 
 **Explanation**:
+
 - Traditional: Landlord pays -> landlord chooses company -> landlord sets criteria
 - ApartmentDibs: Tenant pays -> tenant owns profile -> tenant controls data -> fairer evaluation
 
 **Benefits**:
+
 - Reuse profile for unlimited applications
 - Data stays with you (not scattered)
 - Same metrics for all applicants (fair comparison)
 
 **Verification**:
+
 - [ ] Logic explained clearly
 - [ ] Benefits compelling
 - [ ] Addresses objection
@@ -133,6 +143,7 @@ Tenants are used to "free" application processes (even if they pay $50 per appli
 **Given** detailed comparison needed
 **When** viewing table
 **Then** rows include:
+
 - Credit report
 - Background check
 - Income verification
@@ -143,6 +154,7 @@ Tenants are used to "free" application processes (even if they pay $50 per appli
 **Columns**: Basic, Premium, Group
 
 **Verification**:
+
 - [ ] All features listed
 - [ ] Checkmarks clear
 - [ ] Differences obvious
@@ -152,10 +164,12 @@ Tenants are used to "free" application processes (even if they pay $50 per appli
 **Given** risk reduction needed
 **When** displayed
 **Then** shows:
+
 - "If your profile is denied by all landlords within 30 days, we'll refund your fee"
 - Terms and conditions link
 
 **Verification**:
+
 - [ ] Guarantee prominent
 - [ ] Terms accessible
 - [ ] Builds confidence
@@ -165,12 +179,15 @@ Tenants are used to "free" application processes (even if they pay $50 per appli
 **Given** conversion goal
 **When** CTAs displayed
 **Then** each tier shows:
+
 - "Get Started" -> /register with tier pre-selected
 
 **Additional**:
+
 - "Compare all features" -> scrolls to detail table
 
 **Verification**:
+
 - [ ] CTAs work correctly
 - [ ] Tier passed to registration
 
@@ -179,10 +196,12 @@ Tenants are used to "free" application processes (even if they pay $50 per appli
 **Given** multiple user types
 **When** tenant on pricing
 **Then** they see:
+
 - "Are you an agent? See Agent Pricing"
 - "Are you a landlord? See Landlord Pricing"
 
 **Verification**:
+
 - [ ] Links work correctly
 
 ### AC-8: Schema.org Product Markup
@@ -207,6 +226,7 @@ Tenants are used to "free" application processes (even if they pay $50 per appli
 ```
 
 **Verification**:
+
 - [ ] Valid schema
 - [ ] Price shows in search
 
@@ -242,14 +262,15 @@ components/
 
 ## Analytics Tracking
 
-| Event Name | When Triggered | Properties |
-|------------|----------------|------------|
-| `pricing_viewed` | Page loads | `{source}` |
-| `tier_selected` | CTA clicked | `{tier, price}` |
-| `comparison_viewed` | Scrolled to table | `{}` |
-| `why_pay_expanded` | Transparency viewed | `{}` |
+| Event Name          | When Triggered      | Properties      |
+| ------------------- | ------------------- | --------------- |
+| `pricing_viewed`    | Page loads          | `{source}`      |
+| `tier_selected`     | CTA clicked         | `{tier, price}` |
+| `comparison_viewed` | Scrolled to table   | `{}`            |
+| `why_pay_expanded`  | Transparency viewed | `{}`            |
 
 **Success Metrics**:
+
 - 15% pricing-to-checkout conversion
 - 60% Premium tier selection
 - <30% bounce rate on pricing page
@@ -267,6 +288,7 @@ components/
 ## Dependencies
 
 ### Related Stories
+
 - US-020: Tenant Screening Fees
 - US-035: Tenant FAQ
 

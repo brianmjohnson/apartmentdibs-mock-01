@@ -28,13 +28,13 @@ Raw functionality meets technical precision. Every element serves a purpose - no
 
 ```css
 /* Monospace: Headings, buttons, links, badges, titles */
-font-family: var(--font-geist-mono);  /* Use: font-mono */
+font-family: var(--font-geist-mono); /* Use: font-mono */
 
 /* Sans-serif: Body text, descriptions, form inputs */
-font-family: var(--font-geist-sans);  /* Use: font-geist */
+font-family: var(--font-geist-sans); /* Use: font-geist */
 
 /* Base size */
-text-xs: 0.8125rem (13px)  /* Standard for buttons, badges */
+text-xs: 0.8125rem (13px); /* Standard for buttons, badges */
 ```
 
 ### Essential Spacing
@@ -53,16 +53,17 @@ gap-6    /* Standard: card sections, form groups */
 
 **Base classes**: `rounded-none font-mono text-xs`
 
-| Variant | Classes | Hover State |
-|---------|---------|-------------|
-| default | `bg-primary text-primary-foreground` | `hover:bg-primary/90` |
-| destructive | `bg-destructive text-white` | `hover:bg-destructive/90` |
-| outline | `border border-primary underline-offset-1` | `hover:underline` |
-| secondary | `bg-secondary text-secondary-foreground` | `hover:bg-primary/10` |
-| ghost | (transparent) | `hover:bg-primary/10` |
-| link | `underline-offset-1` | `hover:underline` |
+| Variant     | Classes                                    | Hover State               |
+| ----------- | ------------------------------------------ | ------------------------- |
+| default     | `bg-primary text-primary-foreground`       | `hover:bg-primary/90`     |
+| destructive | `bg-destructive text-white`                | `hover:bg-destructive/90` |
+| outline     | `border border-primary underline-offset-1` | `hover:underline`         |
+| secondary   | `bg-secondary text-secondary-foreground`   | `hover:bg-primary/10`     |
+| ghost       | (transparent)                              | `hover:bg-primary/10`     |
+| link        | `underline-offset-1`                       | `hover:underline`         |
 
 **Sizes**:
+
 - default: `h-[36px] px-2 py-2`
 - sm: `h-8 gap-1.5 px-2`
 - lg: `h-12 px-4`
@@ -82,6 +83,7 @@ gap-6    /* Standard: card sections, form groups */
 **Base**: `rounded-lg bg-secondary h-10 px-3 py-1 text-base md:text-sm`
 
 **Key behaviors**:
+
 - Hover: `hover:bg-neutral-200/75 dark:hover:bg-input/50`
 - Selection: `selection:bg-primary selection:text-primary-foreground`
 - No focus ring (global CSS reset)
@@ -92,6 +94,7 @@ gap-6    /* Standard: card sections, form groups */
 **Base**: `rounded-lg bg-secondary border-none min-h-[80px] px-3 py-2 text-sm`
 
 Explicitly removes all focus indicators:
+
 ```css
 outline-none focus:outline-none focus-visible:outline-none
 ring-0 focus:ring-0 focus-visible:ring-0
@@ -119,6 +122,7 @@ Note: Badges have no border-radius by default (inherits none)
 ### Layout Patterns
 
 **Gap-based layouts** (NOT margin-based):
+
 ```tsx
 // CORRECT: Use gap utilities
 <div className="flex flex-col gap-6">
@@ -155,8 +159,8 @@ Note: Badges have no border-radius by default (inherits none)
 ```css
 :root {
   /* Core */
-  --background: oklch(1 0 0);                    /* Pure white */
-  --foreground: oklch(0.141 0.005 285.823);      /* Near-black */
+  --background: oklch(1 0 0); /* Pure white */
+  --foreground: oklch(0.141 0.005 285.823); /* Near-black */
 
   /* Cards & Popovers */
   --card: oklch(1 0 0);
@@ -165,11 +169,11 @@ Note: Badges have no border-radius by default (inherits none)
   --popover-foreground: oklch(0.141 0.005 285.823);
 
   /* Primary (main actions) */
-  --primary: oklch(0.141 0.005 285.823);         /* Near-black */
-  --primary-foreground: oklch(1 0 0);            /* White */
+  --primary: oklch(0.141 0.005 285.823); /* Near-black */
+  --primary-foreground: oklch(1 0 0); /* White */
 
   /* Secondary (subtle backgrounds) */
-  --secondary: oklch(0.967 0.001 286.375);       /* Light gray */
+  --secondary: oklch(0.967 0.001 286.375); /* Light gray */
   --secondary-foreground: oklch(0.21 0.006 285.885);
 
   /* Muted (disabled states, hints) */
@@ -181,7 +185,7 @@ Note: Badges have no border-radius by default (inherits none)
   --accent-foreground: oklch(0.21 0.006 285.885);
 
   /* Destructive (errors, deletions) */
-  --destructive: oklch(0.577 0.245 27.325);      /* Red */
+  --destructive: oklch(0.577 0.245 27.325); /* Red */
 
   /* Borders & Inputs */
   --border: oklch(0.92 0.004 286.32);
@@ -189,8 +193,8 @@ Note: Badges have no border-radius by default (inherits none)
   --ring: oklch(0.645 0.246 16.439);
 
   /* Brand colors */
-  --brand: oklch(0.623 0.214 259.815);           /* Blue */
-  --highlight: oklch(0.852 0.199 91.936);        /* Yellow */
+  --brand: oklch(0.623 0.214 259.815); /* Blue */
+  --highlight: oklch(0.852 0.199 91.936); /* Yellow */
   --background-marketing: oklch(0.9738 0.0045 78.3);
 }
 ```
@@ -199,8 +203,8 @@ Note: Badges have no border-radius by default (inherits none)
 
 ```css
 .dark {
-  --background: oklch(0.141 0.005 285.823);      /* Near-black */
-  --foreground: oklch(1 0 0);                    /* White */
+  --background: oklch(0.141 0.005 285.823); /* Near-black */
+  --foreground: oklch(1 0 0); /* White */
   --card: oklch(0.21 0.006 285.885);
   --popover: oklch(0.21 0.006 285.885);
   --primary: oklch(0.37 0 0);
@@ -208,7 +212,7 @@ Note: Badges have no border-radius by default (inherits none)
   --muted: oklch(0.274 0.006 286.033);
   --muted-foreground: oklch(0.705 0.015 286.067);
   --destructive: oklch(0.704 0.191 22.216);
-  --border: oklch(1 0 0);                        /* White borders */
+  --border: oklch(1 0 0); /* White borders */
   --input: oklch(1 0 0 / 15%);
 }
 ```
@@ -254,23 +258,24 @@ text-base: 1rem (16px)      /* Mobile input text */
 
 The brutalist system uses contrasting border radii:
 
-| Element Type | Radius | Tailwind Class | Rationale |
-|--------------|--------|----------------|-----------|
-| Buttons | 0 | `rounded-none` | Sharp, decisive, action-oriented |
-| Badges | 0 | (default) | Matches button aesthetic |
-| Inputs | 0.75rem | `rounded-lg` | Softer for text entry comfort |
-| Textareas | 0.75rem | `rounded-lg` | Consistent with inputs |
-| Selects | 0.75rem | `rounded-lg` | Consistent with inputs |
-| Cards | 1.25rem | `rounded-xl` | Container softness |
-| Dialogs | 0 | (none) | Raw modal appearance |
-| Toasts | 0.75rem | (CSS var) | Consistent with inputs |
+| Element Type | Radius  | Tailwind Class | Rationale                        |
+| ------------ | ------- | -------------- | -------------------------------- |
+| Buttons      | 0       | `rounded-none` | Sharp, decisive, action-oriented |
+| Badges       | 0       | (default)      | Matches button aesthetic         |
+| Inputs       | 0.75rem | `rounded-lg`   | Softer for text entry comfort    |
+| Textareas    | 0.75rem | `rounded-lg`   | Consistent with inputs           |
+| Selects      | 0.75rem | `rounded-lg`   | Consistent with inputs           |
+| Cards        | 1.25rem | `rounded-xl`   | Container softness               |
+| Dialogs      | 0       | (none)         | Raw modal appearance             |
+| Toasts       | 0.75rem | (CSS var)      | Consistent with inputs           |
 
 **Radius CSS Variables**:
+
 ```css
 --radius: 0.75rem;
---radius-sm: calc(var(--radius) - 4px);  /* 8px */
---radius-md: calc(var(--radius) - 2px);  /* 10px */
---radius-lg: var(--radius);              /* 12px */
+--radius-sm: calc(var(--radius) - 4px); /* 8px */
+--radius-md: calc(var(--radius) - 2px); /* 10px */
+--radius-lg: var(--radius); /* 12px */
 --radius-xl: calc(var(--radius) + 10px); /* 22px */
 ```
 
@@ -312,7 +317,7 @@ Brutalist design minimizes shadows. Use sparingly:
 }
 
 /* No shadow */
-box-shadow: none !important;  /* Applied to toasts, focus states */
+box-shadow: none !important; /* Applied to toasts, focus states */
 ```
 
 ### Focus State Management
@@ -324,13 +329,13 @@ input:focus,
 textarea:focus,
 select:focus,
 button:focus,
-[role="button"]:focus,
-[role="tab"]:focus,
-[role="menuitem"]:focus,
-[role="option"]:focus,
-[role="switch"]:focus,
-[role="checkbox"]:focus,
-[role="radio"]:focus {
+[role='button']:focus,
+[role='tab']:focus,
+[role='menuitem']:focus,
+[role='option']:focus,
+[role='switch']:focus,
+[role='checkbox']:focus,
+[role='radio']:focus {
   outline: none !important;
   box-shadow: none !important;
   ring: none !important;
@@ -454,11 +459,9 @@ Key dark mode overrides:
     <Input
       type="email"
       placeholder="you@example.com"
-      aria-invalid={errors.email ? "true" : undefined}
+      aria-invalid={errors.email ? 'true' : undefined}
     />
-    {errors.email && (
-      <p className="text-destructive text-xs">{errors.email}</p>
-    )}
+    {errors.email && <p className="text-xs text-destructive">{errors.email}</p>}
   </div>
 
   <div className="flex flex-col gap-2">
@@ -476,9 +479,7 @@ Key dark mode overrides:
 <Card>
   <CardHeader>
     <CardTitle>Brutalist Card</CardTitle>
-    <CardDescription>
-      Functional design with purpose
-    </CardDescription>
+    <CardDescription>Functional design with purpose</CardDescription>
     <CardAction>
       <Button variant="ghost" size="icon">
         <MoreIcon />
@@ -486,9 +487,7 @@ Key dark mode overrides:
     </CardAction>
   </CardHeader>
   <CardContent className="px-6">
-    <p className="font-geist text-sm">
-      Content goes here with proper spacing.
-    </p>
+    <p className="font-geist text-sm">Content goes here with proper spacing.</p>
   </CardContent>
   <CardFooter className="border-t">
     <Button variant="outline">Cancel</Button>

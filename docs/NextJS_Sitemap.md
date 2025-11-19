@@ -3,6 +3,7 @@
 ## Overview
 
 This document outlines the complete folder structure for the ApartmentDibs Next.js 15 application using the App Router architecture. The structure emphasizes:
+
 - **Route Groups** for persona-specific experiences (tenant, agent, landlord, admin)
 - **API Routes** for tRPC endpoints, webhooks, and third-party integrations
 - **Shared Components** using shadcn/ui with TypeScript
@@ -511,8 +512,8 @@ apartmentdibs/
 // app/middleware.ts
 // Runs on every request (authentication, compliance checks)
 
-import { NextResponse } from 'next/server';
-import type { NextRequest } from 'next/server';
+import { NextResponse } from 'next/server'
+import type { NextRequest } from 'next/server'
 
 export function middleware(request: NextRequest) {
   // 1. Authentication check
@@ -527,7 +528,7 @@ export function middleware(request: NextRequest) {
   // - Log all PII access attempts (for audit trail)
   // - Block access to PII if landlord hasn't selected applicant
 
-  return NextResponse.next();
+  return NextResponse.next()
 }
 
 export const config = {
@@ -535,7 +536,7 @@ export const config = {
     '/(tenant|agent|landlord|admin)/:path*', // Protected routes
     '/api/:path*', // Protect API routes
   ],
-};
+}
 ```
 
 ---
@@ -543,6 +544,7 @@ export const config = {
 ## Route Group Conventions
 
 ### Layout Inheritance
+
 - **`(public)/layout.tsx`**: Public header/footer, no auth
 - **`(tenant)/layout.tsx`**: Tenant sidebar, auth required
 - **`(agent)/layout.tsx`**: Agent sidebar, auth required
@@ -550,6 +552,7 @@ export const config = {
 - **`(admin)/layout.tsx`**: Admin full-width layout, admin role required
 
 ### Parallel Routes (Future Enhancement)
+
 - **`@modal`**: Modal overlays (e.g., applicant detail modal)
   ```
   app/(agent)/listings/[listingId]/@modal/applicant/[applicantId]/page.tsx
@@ -560,6 +563,7 @@ export const config = {
   ```
 
 ### Intercepting Routes (Future Enhancement)
+
 - **Intercept applicant detail**: Open modal instead of full page
   ```
   app/(agent)/listings/[listingId]/(..)applicant/[applicantId]/page.tsx
@@ -596,6 +600,7 @@ apartmentdibs-mobile/
 ## Key Routing Patterns
 
 ### 1. Dynamic Routes
+
 ```
 app/search/[listingId]/page.tsx
 // Accessible via: /search/abc-123
@@ -603,6 +608,7 @@ app/search/[listingId]/page.tsx
 ```
 
 ### 2. Catch-All Routes
+
 ```
 app/blog/[...slug]/page.tsx
 // Matches: /blog/a, /blog/a/b, /blog/a/b/c
@@ -610,6 +616,7 @@ app/blog/[...slug]/page.tsx
 ```
 
 ### 3. Optional Catch-All Routes
+
 ```
 app/docs/[[...slug]]/page.tsx
 // Matches: /docs, /docs/a, /docs/a/b
@@ -617,12 +624,14 @@ app/docs/[[...slug]]/page.tsx
 ```
 
 ### 4. Route Groups (No URL Segment)
+
 ```
 app/(tenant)/dashboard/page.tsx
 // URL: /dashboard (NOT /tenant/dashboard)
 ```
 
 ### 5. Private Folders (Excluded from Routing)
+
 ```
 app/_components/Header.tsx
 // NOT accessible via URL (underscore prefix)
@@ -633,6 +642,7 @@ app/_components/Header.tsx
 ## API Route Patterns
 
 ### tRPC Endpoints (Type-Safe)
+
 ```typescript
 // app/api/trpc/[trpc]/route.ts
 // Handles all tRPC procedures:
@@ -643,11 +653,12 @@ app/_components/Header.tsx
 ```
 
 ### REST Endpoints (Webhooks Only)
+
 ```typescript
 // app/api/webhooks/stripe/route.ts
 export async function POST(request: Request) {
-  const payload = await request.text();
-  const sig = request.headers.get('stripe-signature');
+  const payload = await request.text()
+  const sig = request.headers.get('stripe-signature')
   // Verify webhook, process event
 }
 ```
@@ -657,19 +668,22 @@ export async function POST(request: Request) {
 ## Server Component vs. Client Component Strategy
 
 ### Server Components (Default)
+
 - All `page.tsx` files are Server Components by default
 - Used for: Data fetching, SEO optimization, reduced client bundle size
 - Example: `app/(public)/search/page.tsx` fetches listings server-side
 
 ### Client Components (Use Sparingly)
+
 - Add `'use client'` directive at top of file
 - Used for: Interactivity (forms, modals, dropdowns), browser APIs
 - Example: `src/components/forms/profile-form.tsx` (form with validation)
 
 ### Hybrid Approach
+
 - Server Component wraps Client Component
 - Server Component fetches data, Client Component handles interactions
 
 ---
 
-*This site map should be updated as new features are added or routing patterns change.*
+_This site map should be updated as new features are added or routing patterns change._

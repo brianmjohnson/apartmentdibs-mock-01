@@ -26,11 +26,13 @@ Validate assumptions about users, identify friction points, and provide insights
 ### 1. Identify Assumptions
 
 **In user stories, find**:
+
 - "Users want..." → Validate this
 - "Users will..." → Test this behavior
 - "It's obvious that..." → Verify assumption
 
 **Create research questions**:
+
 - Do users actually need this?
 - Will they understand how to use it?
 - What friction might they encounter?
@@ -38,18 +40,21 @@ Validate assumptions about users, identify friction points, and provide insights
 ### 2. Research Methods
 
 **Desk Research**:
+
 - Review analytics data
 - Check support tickets
 - Read user feedback
 - Analyze competitor approaches
 
 **User Testing** (when possible):
+
 - Task-based testing
 - Think-aloud protocol
 - Identify confusion points
 - Measure completion rates
 
 **Heuristic Evaluation**:
+
 - Nielsen's 10 usability heuristics
 - Accessibility guidelines
 - Common UX patterns
@@ -57,6 +62,7 @@ Validate assumptions about users, identify friction points, and provide insights
 ### 3. Identify Friction Points
 
 **Common friction**:
+
 - Too many steps to complete task
 - Unclear calls-to-action
 - Missing feedback (loading, success, error)
@@ -67,10 +73,12 @@ Validate assumptions about users, identify friction points, and provide insights
 ### 4. Provide Recommendations
 
 **Format**:
+
 ```markdown
 ## Finding: Users struggle to find "Share" feature
 
 **Evidence**:
+
 - 60% of users asked "how do I share?"
 - Feature hidden in dropdown menu
 - Only 15% discovery rate
@@ -78,11 +86,13 @@ Validate assumptions about users, identify friction points, and provide insights
 **Severity**: High (blocks core use case)
 
 **Recommendation**:
+
 - Move "Share" to primary action button
 - Add icon for recognition
 - Include in onboarding
 
 **Expected Impact**:
+
 - 3x increase in feature discovery
 - Reduced support tickets
 - Better user satisfaction
@@ -93,6 +103,7 @@ Validate assumptions about users, identify friction points, and provide insights
 ## Output to Product Manager
 
 **Deliverables**:
+
 - Validated/invalidated assumptions
 - Friction points identified
 - Recommendations for improvement

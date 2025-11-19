@@ -15,6 +15,7 @@ Neon is a serverless PostgreSQL platform. Since Neon is **fully PostgreSQL-compa
 The Neon CLI (`neonctl`) is automatically installed via `scripts/install-cli-tools.sh` during session startup.
 
 **Manual Installation** (if needed):
+
 ```bash
 # Via pnpm (recommended)
 pnpm add -g neonctl
@@ -28,17 +29,20 @@ npm install -g neonctl
 Neon CLI requires an API key for authentication:
 
 **Required Environment Variable**:
+
 ```env
 NEON_API_KEY="your-api-key-here"    # API key from Neon console
 ```
 
 **How to Get API Key**:
+
 1. Log in to https://console.neon.tech
 2. Go to Account Settings → API Keys
 3. Create a new API key
 4. Copy the key and set `NEON_API_KEY` environment variable
 
 **Check Authentication Status**:
+
 ```bash
 neonctl auth
 ```
@@ -54,11 +58,13 @@ neonctl auth
 Neon provides two types of connection strings:
 
 **1. Pooled Connection** (recommended for applications):
+
 ```
 postgresql://user:password@ep-cool-darkness-123456.us-east-2.aws.neon.tech/mydb?sslmode=require&pgbouncer=true
 ```
 
 **2. Direct Connection** (recommended for migrations, admin tasks):
+
 ```
 postgresql://user:password@ep-cool-darkness-123456.us-east-2.aws.neon.tech/mydb?sslmode=require
 ```
@@ -68,6 +74,7 @@ postgresql://user:password@ep-cool-darkness-123456.us-east-2.aws.neon.tech/mydb?
 `psql` is the standard PostgreSQL command-line client. Use it for interactive database queries, administration, and debugging.
 
 **Install psql**:
+
 ```bash
 # macOS
 brew install postgresql
@@ -90,6 +97,7 @@ psql "postgresql://user:password@ep-cool-darkness-123456.us-east-2.aws.neon.tech
 ```
 
 **Example Session**:
+
 ```bash
 # Set environment variable (from .env.local)
 export DATABASE_URL_UNPOOLED="postgresql://user:pass@ep-xxx.neon.tech/mydb?sslmode=require"
@@ -199,16 +207,19 @@ pg_restore -d $DATABASE_URL_UNPOOLED -t users backup.dump
 `pgcli` is a modern PostgreSQL CLI with auto-completion and syntax highlighting.
 
 **Install pgcli**:
+
 ```bash
 pip install pgcli
 ```
 
 **Connect to Neon**:
+
 ```bash
 pgcli $DATABASE_URL_UNPOOLED
 ```
 
 **Features**:
+
 - Auto-completion for SQL keywords, table names, column names
 - Syntax highlighting
 - Multi-line queries with `\e` to open editor
@@ -220,6 +231,7 @@ pgcli $DATABASE_URL_UNPOOLED
 Any PostgreSQL GUI tool works with Neon:
 
 **Popular Options**:
+
 - **pgAdmin**: https://www.pgadmin.org/
 - **DBeaver**: https://dbeaver.io/
 - **TablePlus**: https://tableplus.com/
@@ -227,6 +239,7 @@ Any PostgreSQL GUI tool works with Neon:
 - **DataGrip** (JetBrains): https://www.jetbrains.com/datagrip/
 
 **Connection Settings**:
+
 - Host: Extract from connection string (e.g., `ep-cool-darkness-123456.us-east-2.aws.neon.tech`)
 - Port: `5432`
 - Database: Extract from connection string (e.g., `mydb`)
@@ -355,6 +368,7 @@ pnpm dev
 ### Environment Variables
 
 Add to `.env.local` (not committed to git):
+
 ```env
 # Neon API Key (for neonctl CLI)
 NEON_API_KEY="your-neon-api-key"
@@ -365,6 +379,7 @@ DATABASE_URL_UNPOOLED="postgresql://user:pass@ep-xxx.neon.tech/mydb?sslmode=requ
 ```
 
 Add placeholders to `.env.example`:
+
 ```env
 # Neon CLI (for database management)
 NEON_API_KEY="<your neon api key from console>"
@@ -409,6 +424,7 @@ neonctl branches delete feature-auth
 ```
 
 **Use Cases**:
+
 - Isolated development environments
 - CI/CD test databases
 - Staging environments

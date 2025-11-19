@@ -1,15 +1,7 @@
 'use client'
 
 import { useState } from 'react'
-import {
-  CheckCircle,
-  Mail,
-  ArrowRight,
-  X,
-  Clock,
-  FileText,
-  Phone
-} from 'lucide-react'
+import { CheckCircle, Mail, ArrowRight, X, Clock, FileText, Phone } from 'lucide-react'
 import { Card, CardContent } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { formatDate } from '@/lib/mock-data/landlord'
@@ -31,7 +23,7 @@ export function PiiRevealNotice({
   onDismiss,
   onContactApplicant,
   onCreateLease,
-  className = ''
+  className = '',
 }: PiiRevealNoticeProps) {
   const [isDismissed, setIsDismissed] = useState(false)
 
@@ -52,40 +44,38 @@ export function PiiRevealNotice({
         <div className="flex items-start gap-4">
           {/* Success Icon */}
           <div className="shrink-0">
-            <div className="h-10 w-10 rounded-full bg-green-100 dark:bg-green-800 flex items-center justify-center">
+            <div className="flex h-10 w-10 items-center justify-center rounded-full bg-green-100 dark:bg-green-800">
               <CheckCircle className="h-6 w-6 text-green-600 dark:text-green-400" />
             </div>
           </div>
 
           {/* Content */}
-          <div className="flex-1 min-w-0">
+          <div className="min-w-0 flex-1">
             <h3 className="font-semibold text-green-800 dark:text-green-200">
               Applicant Selected - PII Unlocked
             </h3>
-            <p className="text-sm text-green-700 dark:text-green-300 mt-1">
-              You&apos;ve selected <strong>{applicantName}</strong> ({applicantId}).
-              Their full profile information is now visible.
+            <p className="mt-1 text-sm text-green-700 dark:text-green-300">
+              You&apos;ve selected <strong>{applicantName}</strong> ({applicantId}). Their full
+              profile information is now visible.
             </p>
 
             {/* Timestamp */}
-            <div className="flex items-center gap-1 mt-2 text-xs text-green-600 dark:text-green-400">
+            <div className="mt-2 flex items-center gap-1 text-xs text-green-600 dark:text-green-400">
               <Clock className="h-3 w-3" />
               <span>Revealed {formatDate(revealedAt)}</span>
             </div>
 
             {/* Email Notification Info */}
-            <div className="mt-3 p-2 bg-green-100 dark:bg-green-800/50 rounded text-xs text-green-700 dark:text-green-300 flex items-center gap-2">
+            <div className="mt-3 flex items-center gap-2 rounded bg-green-100 p-2 text-xs text-green-700 dark:bg-green-800/50 dark:text-green-300">
               <Mail className="h-4 w-4 shrink-0" />
-              <span>
-                Email notification sent to {applicantName} with next steps
-              </span>
+              <span>Email notification sent to {applicantName} with next steps</span>
             </div>
 
             {/* Action Buttons */}
-            <div className="flex flex-wrap gap-2 mt-4">
+            <div className="mt-4 flex flex-wrap gap-2">
               <Button
                 size="sm"
-                className="border-2 border-green-600 bg-green-600 hover:bg-green-700 text-white"
+                className="border-2 border-green-600 bg-green-600 text-white hover:bg-green-700"
                 onClick={onContactApplicant}
               >
                 <Phone className="mr-1 h-3 w-3" />
@@ -109,7 +99,7 @@ export function PiiRevealNotice({
             <Button
               variant="ghost"
               size="icon"
-              className="shrink-0 h-6 w-6 text-green-600 hover:text-green-800 hover:bg-green-100"
+              className="h-6 w-6 shrink-0 text-green-600 hover:bg-green-100 hover:text-green-800"
               onClick={handleDismiss}
               aria-label="Dismiss notification"
             >
@@ -126,7 +116,7 @@ export function PiiRevealNotice({
 export function PiiRevealBanner({
   applicantName,
   applicantId,
-  className = ''
+  className = '',
 }: {
   applicantName: string
   applicantId: string
@@ -134,7 +124,7 @@ export function PiiRevealBanner({
 }) {
   return (
     <div
-      className={`flex items-center gap-2 px-4 py-2 bg-green-100 dark:bg-green-900/50 text-green-800 dark:text-green-200 text-sm rounded-md border border-green-300 ${className}`}
+      className={`flex items-center gap-2 rounded-md border border-green-300 bg-green-100 px-4 py-2 text-sm text-green-800 dark:bg-green-900/50 dark:text-green-200 ${className}`}
       role="status"
     >
       <CheckCircle className="h-4 w-4 shrink-0" />

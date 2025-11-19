@@ -19,6 +19,7 @@
 ### Problem Statement
 
 Fair housing lawsuits often hinge on "he said / she said" disputes:
+
 - Denied applicant claims: "Landlord rejected me because of my race"
 - Landlord claims: "I rejected them because of low credit score"
 - Without documentation, courts assume bias (burden of proof on landlord)
@@ -51,6 +52,7 @@ David's perspective: "I'm a doctor. I'm trained to document everything. But rent
 **Estimated Effort**: 21 story points (80-100 hours)
 
 **Complexity Factors**:
+
 - Technical complexity: High (immutable logging, cryptographic hashing, retention policies)
 - UI complexity: Medium (audit report generation, timeline views)
 - Integration complexity: Medium (performance optimization, data archival)
@@ -65,6 +67,7 @@ David's perspective: "I'm a doctor. I'm trained to document everything. But rent
 **Given** a landlord/agent interacts with applicant profiles
 **When** any action is taken
 **Then** the platform logs:
+
 - **Viewed**: "Landlord viewed Applicant #2847 profile at 2:34 PM on 2024-11-18"
 - **Filtered**: "Landlord applied filter: Credit score > 700. Applicants excluded: #5910, #3294"
 - **Shortlisted**: "Landlord added Applicant #2847 to shortlist at 3:15 PM"
@@ -72,6 +75,7 @@ David's perspective: "I'm a doctor. I'm trained to document everything. But rent
 - **Selected**: "Landlord selected Applicant #2847 at 4:30 PM. Reason: Highest income-to-rent ratio (4.1x)"
 
 **Verification**:
+
 - [ ] All view events logged with timestamp
 - [ ] All filter applications logged with affected applicants
 - [ ] All shortlist/deny/select actions logged with reasons
@@ -82,11 +86,13 @@ David's perspective: "I'm a doctor. I'm trained to document everything. But rent
 **Given** a landlord compares multiple applicants side-by-side
 **When** the comparison view is accessed
 **Then** the platform logs:
+
 - "Landlord compared Applicants #2847, #8392, #5910 at 3:45 PM"
 - "Sorted by: Income-to-rent ratio (descending)"
 - All comparison criteria captured
 
 **Verification**:
+
 - [ ] Comparison events logged
 - [ ] Sort/filter criteria included
 - [ ] All compared applicants identified
@@ -96,11 +102,13 @@ David's perspective: "I'm a doctor. I'm trained to document everything. But rent
 **Given** a landlord has stated screening criteria
 **When** decisions are made
 **Then** the platform validates and flags inconsistencies:
+
 - **Stated**: "Minimum credit score 680, minimum income-to-rent 3.0x"
 - **Actual**: Selected applicant with 690 credit, denied applicant with 720 credit
 - **Audit flag**: "Inconsistency detected: You denied Applicant #8392 (720 credit) but selected Applicant #2847 (690 credit). Reason logged: Applicant #2847 offered longer lease term."
 
 **Verification**:
+
 - [ ] Criteria inconsistencies detected
 - [ ] Landlord required to provide legitimate reason for exceptions
 - [ ] All exceptions documented with justification
@@ -110,12 +118,14 @@ David's perspective: "I'm a doctor. I'm trained to document everything. But rent
 **Given** audit log entries are created
 **When** stored in database
 **Then** each entry includes:
+
 - ISO 8601 timestamp with timezone: "2024-11-18T14:34:22-05:00"
 - User ID (landlord_id or agent_id)
 - IP address (for geolocation verification)
 - Device info: "iPhone 15 Pro, iOS 18.0, Safari 17.2"
 
 **Verification**:
+
 - [ ] Timestamps are timezone-aware
 - [ ] IP addresses captured
 - [ ] Device information logged
@@ -126,6 +136,7 @@ David's perspective: "I'm a doctor. I'm trained to document everything. But rent
 **Given** a landlord needs legal defense documentation
 **When** they request an audit report
 **Then** the platform generates PDF containing:
+
 - Listing details: "123 Main St, Brooklyn"
 - Date range: "Oct 1 - Oct 30, 2024"
 - Total applicants: 8
@@ -136,6 +147,7 @@ David's perspective: "I'm a doctor. I'm trained to document everything. But rent
 - All denials cross-referenced with stated criteria
 
 **Verification**:
+
 - [ ] PDF generation works correctly
 - [ ] All decision data included
 - [ ] Criteria consistency validated
@@ -146,12 +158,14 @@ David's perspective: "I'm a doctor. I'm trained to document everything. But rent
 **Given** audit logs are created
 **When** accessed
 **Then** the following rules apply:
+
 - **Retention**: 3 years (FCRA requirement)
 - **Landlord access**: Full access to their own logs
 - **Regulator access**: Upon subpoena
 - **Denied applicant access**: Upon request, redacted to show only their own data
 
 **Verification**:
+
 - [ ] Logs retained for 3 years minimum
 - [ ] Auto-archival of logs >1 year old
 - [ ] Access control enforced
@@ -162,11 +176,13 @@ David's perspective: "I'm a doctor. I'm trained to document everything. But rent
 **Given** audit logs are stored
 **When** any modification is attempted
 **Then** the platform enforces immutability:
+
 - Logs cannot be edited or deleted
 - Cryptographic hash (SHA-256) computed for each entry
 - Hash stored separately for integrity verification
 
 **Verification**:
+
 - [ ] No UPDATE or DELETE operations on audit_logs table
 - [ ] SHA-256 hash computed for each entry
 - [ ] Hash verification detects tampering
@@ -175,14 +191,17 @@ David's perspective: "I'm a doctor. I'm trained to document everything. But rent
 ### AC-8: Non-Functional Requirements
 
 **Immutability**:
+
 - [ ] Audit logs are append-only (blockchain-style)
 - [ ] Hash integrity verification available
 
 **Performance**:
+
 - [ ] Log writes complete in <50ms (don't slow user experience)
 - [ ] Log reads complete in <100ms
 
 **Storage**:
+
 - [ ] Logs >1 year compressed for storage efficiency
 - [ ] Partitioning by timestamp for query performance
 
@@ -222,20 +241,22 @@ FOR VALUES FROM ('2024-11-01') TO ('2024-12-01');
 **Hash Computation**:
 
 ```typescript
-import { createHash } from 'crypto';
+import { createHash } from 'crypto'
 
 function computeAuditHash(log: AuditLog): string {
-  const content = `${log.id}|${log.event_type}|${log.timestamp}|${JSON.stringify(log.event_data)}`;
-  return createHash('sha256').update(content).digest('hex');
+  const content = `${log.id}|${log.event_type}|${log.timestamp}|${JSON.stringify(log.event_data)}`
+  return createHash('sha256').update(content).digest('hex')
 }
 ```
 
 **Business Logic**:
+
 - `lib/services/audit-logger.ts` - Log creation and hashing
 - `lib/services/audit-reporter.ts` - PDF report generation
 - `lib/services/audit-verifier.ts` - Hash integrity verification
 
 **Database Changes**:
+
 - [ ] `audit_logs` table with partitioning
 - [ ] `audit_hashes` separate table for integrity
 - [ ] Indexes for fast querying
@@ -244,6 +265,7 @@ function computeAuditHash(log: AuditLog): string {
 ### Frontend Specification
 
 **Components**:
+
 ```
 components/
   audit/
@@ -254,6 +276,7 @@ components/
 ```
 
 **Routing**:
+
 - `/landlord/listings/[listingId]/audit` - View audit trail for listing
 - `/landlord/audit-reports` - Generate and download reports
 
@@ -263,14 +286,15 @@ components/
 
 **Events to Track**:
 
-| Event Name | When Triggered | Properties |
-|------------|----------------|------------|
-| `audit_log_created` | Any auditable action | `{userId, listingId, eventType}` |
-| `audit_report_generated` | Landlord generates PDF | `{userId, listingId, dateRange}` |
+| Event Name                        | When Triggered                | Properties                                 |
+| --------------------------------- | ----------------------------- | ------------------------------------------ |
+| `audit_log_created`               | Any auditable action          | `{userId, listingId, eventType}`           |
+| `audit_report_generated`          | Landlord generates PDF        | `{userId, listingId, dateRange}`           |
 | `criteria_inconsistency_detected` | Decision contradicts criteria | `{userId, applicantId, inconsistencyType}` |
-| `audit_data_exported` | GDPR/CCPA export requested | `{applicantId, exportType}` |
+| `audit_data_exported`             | GDPR/CCPA export requested    | `{applicantId, exportType}`                |
 
 **Success Metrics**:
+
 - 100% of landlord actions logged in audit trail
 - <1% of reports have unexplained inconsistencies
 - 0 successful tampering attempts
@@ -280,18 +304,22 @@ components/
 ## Dependencies
 
 ### Blocks
+
 - US-002: Automated Adverse Action Notices (letters reference audit)
 - All features requiring compliance documentation
 
 ### Blocked By
+
 - US-001: PII Anonymization (need applicant data to log)
 
 ### Related Stories
+
 - US-002: Automated Adverse Action Notices
 - US-003: Location-Aware Fair Housing Compliance
 - US-025: GDPR/CCPA Data Export & Deletion
 
 ### External Dependencies
+
 - PDF generation library (e.g., Puppeteer, pdfkit)
 - Archival storage for old logs
 
@@ -300,18 +328,21 @@ components/
 ## Testing Requirements
 
 ### Unit Tests
+
 - [ ] Hash computation correctness
 - [ ] Event logging completeness
 - [ ] Criteria inconsistency detection
 - [ ] Report generation content
 
 ### Integration Tests
+
 - [ ] Complete action -> log -> hash flow
 - [ ] PDF generation accuracy
 - [ ] Access control enforcement
 - [ ] Retention policy implementation
 
 ### E2E Tests (Playwright)
+
 ```typescript
 test('landlord can generate audit report', async ({ page }) => {
   await page.goto('/landlord/listings/listing-123/audit')
@@ -339,17 +370,20 @@ test('landlord can generate audit report', async ({ page }) => {
 ## Security Considerations
 
 **Access Control**:
+
 - Landlords can only access their own audit logs
 - Applicants can request their own data (redacted)
 - Admin access for compliance audits
 - No modification by anyone
 
 **Data Integrity**:
+
 - SHA-256 hashing for tamper detection
 - Separate hash storage
 - Immutable database permissions
 
 **Potential Risks**:
+
 - **Storage costs at scale** - Mitigate with compression, archival
 - **Hash collision** - Mitigate with SHA-256 (extremely unlikely)
 - **Legal discovery requests** - Mitigate with export functionality
@@ -359,16 +393,19 @@ test('landlord can generate audit report', async ({ page }) => {
 ## Performance Considerations
 
 **Expected Load**:
+
 - 5,000+ log writes per day
 - 100+ report generations per week
 
 **Optimization Strategies**:
+
 - Async log writes (don't block user actions)
 - Table partitioning by month
 - Index optimization for common queries
 - Compress archived partitions
 
 **Performance Targets**:
+
 - Log write: <50ms
 - Log read (single listing): <100ms
 - Report generation: <10 seconds
@@ -378,26 +415,31 @@ test('landlord can generate audit report', async ({ page }) => {
 ## Rollout Plan
 
 **Phase 1: Development** (Week 1-2)
+
 - [ ] Audit log table and schema
 - [ ] Log creation service
 - [ ] Hash computation
 
 **Phase 2: Integration** (Week 2-3)
+
 - [ ] Integrate logging into all actions
 - [ ] Inconsistency detection
 - [ ] PDF report generation
 
 **Phase 3: Testing** (Week 3)
+
 - [ ] Unit and integration tests
 - [ ] Performance testing
 - [ ] Security review
 
 **Phase 4: Deployment**
+
 - [ ] Deploy to staging
 - [ ] Production deployment
 - [ ] Monitor log volume and performance
 
 **Rollback Plan**:
+
 - Feature flag to disable real-time logging
 - Background job to backfill logs if needed
 
@@ -420,10 +462,10 @@ test('landlord can generate audit report', async ({ page }) => {
 
 ### Update Log
 
-| Date | Author | Update |
-|------|--------|--------|
+| Date       | Author          | Update                                                   |
+| ---------- | --------------- | -------------------------------------------------------- |
 | 2025-11-19 | Product Manager | Initial story creation from consolidated User_Stories.md |
-| 2025-11-19 | - | Approved - ready for implementation |
+| 2025-11-19 | -               | Approved - ready for implementation                      |
 
 ### Discussion Notes
 

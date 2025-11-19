@@ -19,7 +19,7 @@ import {
   getPropertyUnits,
   formatCurrency,
   formatDate,
-  getUnitStatusColor
+  getUnitStatusColor,
 } from '@/lib/mock-data/landlord'
 
 interface PropertyDetailPageProps {
@@ -38,15 +38,13 @@ export default function PropertyDetailPage({ params }: PropertyDetailPageProps) 
       <div className="space-y-6">
         <div className="flex items-center gap-4">
           <Link href="/landlord/properties">
-            <Button variant="ghost" size="icon" className="border-2 border-foreground">
+            <Button variant="ghost" size="icon" className="border-foreground border-2">
               <ArrowLeft className="h-4 w-4" />
             </Button>
           </Link>
           <div>
             <h1 className="text-3xl font-bold tracking-tight">Property Not Found</h1>
-            <p className="text-muted-foreground">
-              The requested property could not be found
-            </p>
+            <p className="text-muted-foreground">The requested property could not be found</p>
           </div>
         </div>
       </div>
@@ -61,7 +59,7 @@ export default function PropertyDetailPage({ params }: PropertyDetailPageProps) 
       <div className="flex items-start justify-between gap-4">
         <div className="flex items-center gap-4">
           <Link href="/landlord/properties">
-            <Button variant="ghost" size="icon" className="border-2 border-foreground">
+            <Button variant="ghost" size="icon" className="border-foreground border-2">
               <ArrowLeft className="h-4 w-4" />
             </Button>
           </Link>
@@ -81,44 +79,41 @@ export default function PropertyDetailPage({ params }: PropertyDetailPageProps) 
       {/* Property Overview */}
       <div className="grid gap-6 md:grid-cols-3">
         {/* Image Gallery Placeholder */}
-        <Card className="border-2 border-foreground md:col-span-2">
+        <Card className="border-foreground border-2 md:col-span-2">
           <CardContent className="p-0">
-            <div className="h-64 bg-muted flex items-center justify-center">
-              <Building className="h-20 w-20 text-muted-foreground" />
+            <div className="bg-muted flex h-64 items-center justify-center">
+              <Building className="text-muted-foreground h-20 w-20" />
             </div>
           </CardContent>
         </Card>
 
         {/* Property Stats */}
-        <Card className="border-2 border-foreground">
+        <Card className="border-foreground border-2">
           <CardHeader>
             <CardTitle>Property Overview</CardTitle>
           </CardHeader>
           <CardContent className="space-y-4">
-            <div className="flex justify-between items-center">
+            <div className="flex items-center justify-between">
               <span className="text-muted-foreground">Total Units</span>
               <span className="font-bold">{property.units}</span>
             </div>
-            <div className="flex justify-between items-center">
+            <div className="flex items-center justify-between">
               <span className="text-muted-foreground">Occupancy Rate</span>
               <span className="font-bold">{occupancyRate}%</span>
             </div>
             <div className="space-y-1">
-              <div className="h-2 bg-muted border border-foreground">
-                <div
-                  className="h-full bg-green-500"
-                  style={{ width: `${occupancyRate}%` }}
-                />
+              <div className="bg-muted border-foreground h-2 border">
+                <div className="h-full bg-green-500" style={{ width: `${occupancyRate}%` }} />
               </div>
-              <p className="text-xs text-muted-foreground">
+              <p className="text-muted-foreground text-xs">
                 <span className="text-green-600">{property.occupied} occupied</span>
                 {' / '}
                 <span className="text-red-600">{property.vacant} vacant</span>
               </p>
             </div>
-            <div className="pt-4 border-t-2 border-border">
+            <div className="border-border border-t-2 pt-4">
               <p className="text-muted-foreground text-sm">Monthly Revenue</p>
-              <p className="font-bold text-2xl">{formatCurrency(property.monthlyRevenue)}</p>
+              <p className="text-2xl font-bold">{formatCurrency(property.monthlyRevenue)}</p>
             </div>
             <div>
               <p className="text-muted-foreground text-sm">Year Built</p>
@@ -135,33 +130,31 @@ export default function PropertyDetailPage({ params }: PropertyDetailPageProps) 
       </div>
 
       {/* Units List */}
-      <Card className="border-2 border-foreground">
+      <Card className="border-foreground border-2">
         <CardHeader>
           <CardTitle>Units</CardTitle>
-          <CardDescription>
-            All rental units in this property
-          </CardDescription>
+          <CardDescription>All rental units in this property</CardDescription>
         </CardHeader>
         <CardContent>
-          <div className="border-2 border-foreground overflow-hidden">
+          <div className="border-foreground overflow-hidden border-2">
             <Table>
               <TableHeader>
-                <TableRow className="border-b-2 border-foreground bg-muted/50">
+                <TableRow className="border-foreground bg-muted/50 border-b-2">
                   <TableHead className="font-bold">Unit</TableHead>
                   <TableHead className="font-bold">Status</TableHead>
                   <TableHead className="font-bold">Tenant</TableHead>
                   <TableHead className="font-bold">Rent</TableHead>
                   <TableHead className="font-bold">Lease Expires</TableHead>
-                  <TableHead className="font-bold text-right">Actions</TableHead>
+                  <TableHead className="text-right font-bold">Actions</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
                 {units.map((unit) => (
-                  <TableRow key={unit.id} className="border-b border-border">
+                  <TableRow key={unit.id} className="border-border border-b">
                     <TableCell>
                       <div>
                         <p className="font-medium">Unit {unit.unitNumber}</p>
-                        <p className="text-xs text-muted-foreground">
+                        <p className="text-muted-foreground text-xs">
                           {unit.beds} bed, {unit.baths} bath, {unit.sqft} sqft
                         </p>
                       </div>
@@ -183,9 +176,7 @@ export default function PropertyDetailPage({ params }: PropertyDetailPageProps) 
                         <span className="text-muted-foreground">-</span>
                       )}
                     </TableCell>
-                    <TableCell className="font-medium">
-                      {formatCurrency(unit.rent)}
-                    </TableCell>
+                    <TableCell className="font-medium">{formatCurrency(unit.rent)}</TableCell>
                     <TableCell>
                       {unit.tenant ? (
                         formatDate(unit.tenant.leaseEnd)

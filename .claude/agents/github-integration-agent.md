@@ -17,6 +17,7 @@ Manage GitHub issues and PRs, keeping them synchronized with user stories and pr
 ### Issue Management
 
 **Create issue from user story**:
+
 ```bash
 gh issue create \
   --title "US-001: User Authentication" \
@@ -25,10 +26,12 @@ gh issue create \
 ```
 
 **Link issues to PRs**:
+
 - Reference issues in PR description
 - Use keywords: "Fixes #123", "Closes #456"
 
 **Update issue status**:
+
 - In Progress → Add "in-progress" label
 - Blocked → Add "blocked" label, comment reason
 - Complete → Close issue with summary
@@ -36,6 +39,7 @@ gh issue create \
 ### PR Management
 
 **Create PR**:
+
 ```bash
 gh pr create \
   --title "Implement US-001: User Authentication" \
@@ -45,12 +49,14 @@ gh pr create \
 ```
 
 **Check PR status**:
+
 ```bash
 gh pr status
 gh pr checks
 ```
 
 **Merge PR** (when approved):
+
 ```bash
 gh pr merge --squash --delete-branch
 ```

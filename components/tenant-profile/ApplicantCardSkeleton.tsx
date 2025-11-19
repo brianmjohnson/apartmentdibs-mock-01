@@ -4,23 +4,23 @@ import { Skeleton } from '@/components/ui/skeleton'
 
 export function ApplicantCardSkeleton() {
   return (
-    <div className="p-4 border-2 border-border">
+    <div className="border-border border-2 p-4">
       <div className="space-y-4">
         {/* Header with avatar */}
         <div className="flex items-start gap-4">
           <Skeleton className="h-14 w-14 rounded-full" />
           <div className="flex-1">
-            <Skeleton className="h-6 w-40 mb-2" />
+            <Skeleton className="mb-2 h-6 w-40" />
             <Skeleton className="h-4 w-32" />
           </div>
           <Skeleton className="h-6 w-20" />
         </div>
 
         {/* Details grid */}
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+        <div className="grid grid-cols-2 gap-4 md:grid-cols-4">
           {[...Array(4)].map((_, i) => (
             <div key={i}>
-              <Skeleton className="h-4 w-20 mb-1" />
+              <Skeleton className="mb-1 h-4 w-20" />
               <Skeleton className="h-5 w-16" />
             </div>
           ))}

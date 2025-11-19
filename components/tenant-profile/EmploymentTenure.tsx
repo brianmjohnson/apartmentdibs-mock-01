@@ -30,7 +30,7 @@ export function EmploymentTenure({
   showIcon = true,
   showStabilityBadge = true,
   size = 'md',
-  className = ''
+  className = '',
 }: EmploymentTenureProps) {
   const isStable = isStableEmployment(tenure)
   const stabilityLabel = getStabilityLabel(tenure)
@@ -38,31 +38,27 @@ export function EmploymentTenure({
   const sizeClasses = {
     sm: 'text-xs',
     md: 'text-sm',
-    lg: 'text-base'
+    lg: 'text-base',
   }
 
   const iconSizes = {
     sm: 'h-3 w-3',
     md: 'h-4 w-4',
-    lg: 'h-5 w-5'
+    lg: 'h-5 w-5',
   }
 
   return (
     <div className={`flex items-center gap-2 ${className}`}>
-      {showIcon && (
-        <Briefcase className={`${iconSizes[size]} text-muted-foreground`} />
-      )}
+      {showIcon && <Briefcase className={`${iconSizes[size]} text-muted-foreground`} />}
       <div className="flex flex-col gap-1">
         <div className="flex items-center gap-2">
-          <span className={`font-bold ${sizeClasses[size]}`}>
-            {tenure}
-          </span>
+          <span className={`font-bold ${sizeClasses[size]}`}>{tenure}</span>
           {showStabilityBadge && stabilityLabel && (
             <Badge
               variant="outline"
-              className="bg-green-100 text-green-800 border-green-300 text-xs"
+              className="border-green-300 bg-green-100 text-xs text-green-800"
             >
-              <TrendingUp className="h-3 w-3 mr-1" />
+              <TrendingUp className="mr-1 h-3 w-3" />
               {stabilityLabel}
             </Badge>
           )}
@@ -80,7 +76,7 @@ export function EmploymentTenure({
 // Compact version for use in tables or lists
 export function EmploymentTenureCompact({
   tenure,
-  className = ''
+  className = '',
 }: {
   tenure: string
   className?: string
@@ -88,9 +84,9 @@ export function EmploymentTenureCompact({
   return (
     <Badge
       variant="outline"
-      className={`border-2 ${isStableEmployment(tenure) ? 'bg-green-100 text-green-800 border-green-300' : 'bg-muted text-foreground border-border'} ${className}`}
+      className={`border-2 ${isStableEmployment(tenure) ? 'border-green-300 bg-green-100 text-green-800' : 'bg-muted text-foreground border-border'} ${className}`}
     >
-      <Briefcase className="h-3 w-3 mr-1" />
+      <Briefcase className="mr-1 h-3 w-3" />
       {tenure}
     </Badge>
   )

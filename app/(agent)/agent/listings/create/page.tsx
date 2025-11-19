@@ -15,7 +15,7 @@ import {
   Eye,
   X,
   AlertTriangle,
-  Image as ImageIcon
+  Image as ImageIcon,
 } from 'lucide-react'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
@@ -38,7 +38,7 @@ import {
   leaseTermOptions,
   petPolicyOptions,
   parkingOptions,
-  formatCurrency
+  formatCurrency,
 } from '@/lib/mock-data/agent'
 
 const steps = [
@@ -111,15 +111,15 @@ export default function CreateListing() {
   const [formData, setFormData] = useState<FormData>(initialFormData)
 
   const updateFormData = <K extends keyof FormData>(key: K, value: FormData[K]) => {
-    setFormData(prev => ({ ...prev, [key]: value }))
+    setFormData((prev) => ({ ...prev, [key]: value }))
   }
 
   const toggleAmenity = (amenity: string) => {
-    setFormData(prev => ({
+    setFormData((prev) => ({
       ...prev,
       amenities: prev.amenities.includes(amenity)
-        ? prev.amenities.filter(a => a !== amenity)
-        : [...prev.amenities, amenity]
+        ? prev.amenities.filter((a) => a !== amenity)
+        : [...prev.amenities, amenity],
     }))
   }
 
@@ -161,37 +161,37 @@ export default function CreateListing() {
             const isCurrent = currentStep === step.id
 
             return (
-              <div key={step.id} className="flex flex-col items-center relative z-10">
+              <div key={step.id} className="relative z-10 flex flex-col items-center">
                 <div
-                  className={`
-                    w-10 h-10 rounded-full border-2 flex items-center justify-center
-                    ${isCompleted
+                  className={`flex h-10 w-10 items-center justify-center rounded-full border-2 ${
+                    isCompleted
                       ? 'bg-primary border-primary text-primary-foreground'
                       : isCurrent
                         ? 'bg-background border-primary text-primary'
                         : 'bg-muted border-muted-foreground/30 text-muted-foreground'
-                    }
-                  `}
+                  } `}
                 >
                   {isCompleted ? <Check className="h-5 w-5" /> : <Icon className="h-5 w-5" />}
                 </div>
-                <span className={`text-xs mt-2 hidden sm:block ${isCurrent ? 'font-medium' : 'text-muted-foreground'}`}>
+                <span
+                  className={`mt-2 hidden text-xs sm:block ${isCurrent ? 'font-medium' : 'text-muted-foreground'}`}
+                >
                   {step.name}
                 </span>
               </div>
             )
           })}
         </div>
-        <div className="absolute top-5 left-0 right-0 h-0.5 bg-muted-foreground/30 -z-10">
+        <div className="bg-muted-foreground/30 absolute top-5 right-0 left-0 -z-10 h-0.5">
           <div
-            className="h-full bg-primary transition-all"
+            className="bg-primary h-full transition-all"
             style={{ width: `${((currentStep - 1) / (steps.length - 1)) * 100}%` }}
           />
         </div>
       </div>
 
       {/* Form Steps */}
-      <Card className="border-2 border-foreground">
+      <Card className="border-foreground border-2">
         <CardHeader>
           <CardTitle>{steps[currentStep - 1].name}</CardTitle>
           <CardDescription>
@@ -234,7 +234,7 @@ export default function CreateListing() {
                       <SelectValue placeholder="Select type" />
                     </SelectTrigger>
                     <SelectContent>
-                      {propertyTypeOptions.map(opt => (
+                      {propertyTypeOptions.map((opt) => (
                         <SelectItem key={opt.value} value={opt.value}>
                           {opt.label}
                         </SelectItem>
@@ -255,7 +255,7 @@ export default function CreateListing() {
                       <SelectValue />
                     </SelectTrigger>
                     <SelectContent>
-                      {[0, 1, 2, 3, 4, 5].map(num => (
+                      {[0, 1, 2, 3, 4, 5].map((num) => (
                         <SelectItem key={num} value={String(num)}>
                           {num === 0 ? 'Studio' : num}
                         </SelectItem>
@@ -273,7 +273,7 @@ export default function CreateListing() {
                       <SelectValue />
                     </SelectTrigger>
                     <SelectContent>
-                      {[1, 1.5, 2, 2.5, 3, 3.5, 4].map(num => (
+                      {[1, 1.5, 2, 2.5, 3, 3.5, 4].map((num) => (
                         <SelectItem key={num} value={String(num)}>
                           {num}
                         </SelectItem>
@@ -315,7 +315,7 @@ export default function CreateListing() {
                 <div>
                   <Label htmlFor="rent">Monthly Rent *</Label>
                   <div className="relative">
-                    <DollarSign className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
+                    <DollarSign className="text-muted-foreground absolute top-3 left-3 h-4 w-4" />
                     <Input
                       id="rent"
                       type="number"
@@ -329,7 +329,7 @@ export default function CreateListing() {
                 <div>
                   <Label htmlFor="deposit">Security Deposit *</Label>
                   <div className="relative">
-                    <DollarSign className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
+                    <DollarSign className="text-muted-foreground absolute top-3 left-3 h-4 w-4" />
                     <Input
                       id="deposit"
                       type="number"
@@ -353,7 +353,7 @@ export default function CreateListing() {
                       <SelectValue />
                     </SelectTrigger>
                     <SelectContent>
-                      {leaseTermOptions.map(opt => (
+                      {leaseTermOptions.map((opt) => (
                         <SelectItem key={opt.value} value={opt.value}>
                           {opt.label}
                         </SelectItem>
@@ -380,7 +380,7 @@ export default function CreateListing() {
                   placeholder="Describe the property, its features, and the neighborhood..."
                   value={formData.description}
                   onChange={(e) => updateFormData('description', e.target.value)}
-                  className="border-2 min-h-[150px]"
+                  className="min-h-[150px] border-2"
                 />
               </div>
             </div>
@@ -391,20 +391,18 @@ export default function CreateListing() {
             <div className="space-y-6">
               <div>
                 <Label>Amenities</Label>
-                <p className="text-sm text-muted-foreground mb-3">
+                <p className="text-muted-foreground mb-3 text-sm">
                   Select all amenities that apply
                 </p>
-                <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
-                  {amenityOptions.map(amenity => (
+                <div className="grid grid-cols-2 gap-3 sm:grid-cols-3">
+                  {amenityOptions.map((amenity) => (
                     <div
                       key={amenity}
-                      className={`
-                        flex items-center gap-2 p-3 border-2 cursor-pointer transition-colors
-                        ${formData.amenities.includes(amenity)
+                      className={`flex cursor-pointer items-center gap-2 border-2 p-3 transition-colors ${
+                        formData.amenities.includes(amenity)
                           ? 'bg-primary/10 border-primary'
                           : 'border-border hover:border-primary/50'
-                        }
-                      `}
+                      } `}
                       onClick={() => toggleAmenity(amenity)}
                     >
                       <Checkbox
@@ -428,7 +426,7 @@ export default function CreateListing() {
                       <SelectValue />
                     </SelectTrigger>
                     <SelectContent>
-                      {petPolicyOptions.map(opt => (
+                      {petPolicyOptions.map((opt) => (
                         <SelectItem key={opt.value} value={opt.value}>
                           {opt.label}
                         </SelectItem>
@@ -446,7 +444,7 @@ export default function CreateListing() {
                       <SelectValue />
                     </SelectTrigger>
                     <SelectContent>
-                      {parkingOptions.map(opt => (
+                      {parkingOptions.map((opt) => (
                         <SelectItem key={opt.value} value={opt.value}>
                           {opt.label}
                         </SelectItem>
@@ -462,15 +460,18 @@ export default function CreateListing() {
           {currentStep === 4 && (
             <div className="space-y-4">
               <div
-                className="border-2 border-dashed border-foreground p-8 text-center cursor-pointer hover:bg-muted/50 transition-colors"
+                className="border-foreground hover:bg-muted/50 cursor-pointer border-2 border-dashed p-8 text-center transition-colors"
                 onClick={() => {
                   // Mock photo upload
-                  updateFormData('photos', [...formData.photos, `photo-${formData.photos.length + 1}`])
+                  updateFormData('photos', [
+                    ...formData.photos,
+                    `photo-${formData.photos.length + 1}`,
+                  ])
                 }}
               >
-                <Upload className="h-12 w-12 mx-auto text-muted-foreground mb-4" />
+                <Upload className="text-muted-foreground mx-auto mb-4 h-12 w-12" />
                 <p className="font-medium">Click to upload photos</p>
-                <p className="text-sm text-muted-foreground">
+                <p className="text-muted-foreground text-sm">
                   or drag and drop PNG, JPG up to 10MB
                 </p>
               </div>
@@ -478,17 +479,23 @@ export default function CreateListing() {
               {formData.photos.length > 0 && (
                 <div className="grid grid-cols-3 gap-4">
                   {formData.photos.map((photo, index) => (
-                    <div key={photo} className="relative aspect-video bg-muted border-2 border-foreground">
+                    <div
+                      key={photo}
+                      className="bg-muted border-foreground relative aspect-video border-2"
+                    >
                       <div className="absolute inset-0 flex items-center justify-center">
-                        <ImageIcon className="h-8 w-8 text-muted-foreground" />
+                        <ImageIcon className="text-muted-foreground h-8 w-8" />
                       </div>
                       <span className="absolute bottom-2 left-2 text-xs font-medium">
                         Photo {index + 1}
                       </span>
                       <button
-                        className="absolute top-2 right-2 p-1 bg-background border border-foreground hover:bg-destructive hover:text-destructive-foreground"
+                        className="bg-background border-foreground hover:bg-destructive hover:text-destructive-foreground absolute top-2 right-2 border p-1"
                         onClick={() => {
-                          updateFormData('photos', formData.photos.filter((_, i) => i !== index))
+                          updateFormData(
+                            'photos',
+                            formData.photos.filter((_, i) => i !== index)
+                          )
                         }}
                       >
                         <X className="h-3 w-3" />
@@ -498,7 +505,7 @@ export default function CreateListing() {
                 </div>
               )}
 
-              <p className="text-sm text-muted-foreground">
+              <p className="text-muted-foreground text-sm">
                 Tip: Properties with 10+ photos get 3x more inquiries
               </p>
             </div>
@@ -507,23 +514,23 @@ export default function CreateListing() {
           {/* Step 5: Screening Criteria */}
           {currentStep === 5 && (
             <div className="space-y-6">
-              <div className="p-4 bg-yellow-50 border-2 border-yellow-300 dark:bg-yellow-900/20">
+              <div className="border-2 border-yellow-300 bg-yellow-50 p-4 dark:bg-yellow-900/20">
                 <div className="flex gap-2">
-                  <AlertTriangle className="h-5 w-5 text-yellow-600 shrink-0" />
+                  <AlertTriangle className="h-5 w-5 shrink-0 text-yellow-600" />
                   <div>
                     <p className="font-medium text-yellow-800 dark:text-yellow-200">
                       Fair Housing Compliance
                     </p>
                     <p className="text-sm text-yellow-700 dark:text-yellow-300">
-                      Ensure your screening criteria comply with local fair housing laws.
-                      Overly restrictive criteria may be discriminatory.
+                      Ensure your screening criteria comply with local fair housing laws. Overly
+                      restrictive criteria may be discriminatory.
                     </p>
                   </div>
                 </div>
               </div>
 
               <div>
-                <div className="flex justify-between mb-2">
+                <div className="mb-2 flex justify-between">
                   <Label>Minimum Credit Score</Label>
                   <span className="font-bold">{formData.minCreditScore}</span>
                 </div>
@@ -535,14 +542,14 @@ export default function CreateListing() {
                   step={10}
                   className="w-full"
                 />
-                <div className="flex justify-between text-xs text-muted-foreground mt-1">
+                <div className="text-muted-foreground mt-1 flex justify-between text-xs">
                   <span>500</span>
                   <span>800</span>
                 </div>
               </div>
 
               <div>
-                <div className="flex justify-between mb-2">
+                <div className="mb-2 flex justify-between">
                   <Label>Income-to-Rent Ratio</Label>
                   <span className="font-bold">{formData.incomeRatio}x</span>
                 </div>
@@ -554,14 +561,14 @@ export default function CreateListing() {
                   step={1}
                   className="w-full"
                 />
-                <div className="flex justify-between text-xs text-muted-foreground mt-1">
+                <div className="text-muted-foreground mt-1 flex justify-between text-xs">
                   <span>25x</span>
                   <span>50x</span>
                 </div>
               </div>
 
               <div>
-                <div className="flex justify-between mb-2">
+                <div className="mb-2 flex justify-between">
                   <Label>Eviction History (Max Years)</Label>
                   <span className="font-bold">{formData.maxEvictionYears} years</span>
                 </div>
@@ -573,13 +580,13 @@ export default function CreateListing() {
                   step={1}
                   className="w-full"
                 />
-                <div className="flex justify-between text-xs text-muted-foreground mt-1">
+                <div className="text-muted-foreground mt-1 flex justify-between text-xs">
                   <span>3 years</span>
                   <span>10 years</span>
                 </div>
               </div>
 
-              <div className="flex items-center gap-3 p-4 border-2 border-foreground">
+              <div className="border-foreground flex items-center gap-3 border-2 p-4">
                 <Checkbox
                   id="backgroundCheck"
                   checked={formData.backgroundCheck}
@@ -598,7 +605,7 @@ export default function CreateListing() {
               <div className="grid gap-6 md:grid-cols-2">
                 {/* Property Details Summary */}
                 <div className="space-y-3">
-                  <h3 className="font-bold text-lg">Property Details</h3>
+                  <h3 className="text-lg font-bold">Property Details</h3>
                   <div className="space-y-2 text-sm">
                     <div className="flex justify-between">
                       <span className="text-muted-foreground">Address</span>
@@ -616,7 +623,9 @@ export default function CreateListing() {
                     </div>
                     <div className="flex justify-between">
                       <span className="text-muted-foreground">Bed/Bath</span>
-                      <span className="font-medium">{formData.beds} bed / {formData.baths} bath</span>
+                      <span className="font-medium">
+                        {formData.beds} bed / {formData.baths} bath
+                      </span>
                     </div>
                     <div className="flex justify-between">
                       <span className="text-muted-foreground">Size</span>
@@ -627,15 +636,19 @@ export default function CreateListing() {
 
                 {/* Listing Details Summary */}
                 <div className="space-y-3">
-                  <h3 className="font-bold text-lg">Listing Details</h3>
+                  <h3 className="text-lg font-bold">Listing Details</h3>
                   <div className="space-y-2 text-sm">
                     <div className="flex justify-between">
                       <span className="text-muted-foreground">Rent</span>
-                      <span className="font-medium">{formData.rent ? formatCurrency(formData.rent) : '-'}/mo</span>
+                      <span className="font-medium">
+                        {formData.rent ? formatCurrency(formData.rent) : '-'}/mo
+                      </span>
                     </div>
                     <div className="flex justify-between">
                       <span className="text-muted-foreground">Deposit</span>
-                      <span className="font-medium">{formData.deposit ? formatCurrency(formData.deposit) : '-'}</span>
+                      <span className="font-medium">
+                        {formData.deposit ? formatCurrency(formData.deposit) : '-'}
+                      </span>
                     </div>
                     <div className="flex justify-between">
                       <span className="text-muted-foreground">Lease Term</span>
@@ -652,9 +665,9 @@ export default function CreateListing() {
               {/* Amenities */}
               {formData.amenities.length > 0 && (
                 <div>
-                  <h3 className="font-bold text-lg mb-3">Amenities</h3>
+                  <h3 className="mb-3 text-lg font-bold">Amenities</h3>
                   <div className="flex flex-wrap gap-2">
-                    {formData.amenities.map(amenity => (
+                    {formData.amenities.map((amenity) => (
                       <Badge key={amenity} variant="outline" className="border-2">
                         {amenity}
                       </Badge>
@@ -665,15 +678,15 @@ export default function CreateListing() {
 
               {/* Photos */}
               <div>
-                <h3 className="font-bold text-lg mb-3">Photos</h3>
-                <p className="text-sm text-muted-foreground">
+                <h3 className="mb-3 text-lg font-bold">Photos</h3>
+                <p className="text-muted-foreground text-sm">
                   {formData.photos.length} photo(s) uploaded
                 </p>
               </div>
 
               {/* Screening Criteria */}
               <div>
-                <h3 className="font-bold text-lg mb-3">Screening Criteria</h3>
+                <h3 className="mb-3 text-lg font-bold">Screening Criteria</h3>
                 <div className="space-y-2 text-sm">
                   <div className="flex justify-between">
                     <span className="text-muted-foreground">Min Credit Score</span>
@@ -689,7 +702,9 @@ export default function CreateListing() {
                   </div>
                   <div className="flex justify-between">
                     <span className="text-muted-foreground">Background Check</span>
-                    <span className="font-medium">{formData.backgroundCheck ? 'Required' : 'Not required'}</span>
+                    <span className="font-medium">
+                      {formData.backgroundCheck ? 'Required' : 'Not required'}
+                    </span>
                   </div>
                 </div>
               </div>
@@ -718,12 +733,12 @@ export default function CreateListing() {
           )}
 
           {currentStep < 6 ? (
-            <Button onClick={nextStep} className="border-2 border-foreground">
+            <Button onClick={nextStep} className="border-foreground border-2">
               Next
               <ChevronRight className="ml-2 h-4 w-4" />
             </Button>
           ) : (
-            <Button onClick={handlePublish} className="border-2 border-foreground">
+            <Button onClick={handlePublish} className="border-foreground border-2">
               <Check className="mr-2 h-4 w-4" />
               Publish Listing
             </Button>

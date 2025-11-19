@@ -15,6 +15,7 @@ Modern web applications need deep linking that works seamlessly with OAuth authe
 **The Problem**:
 
 **OAuth Redirect Preservation**:
+
 - Users access protected resources while unauthenticated → redirected to `/signin`
 - After OAuth authentication completes → users must return to original destination
 - Context must be preserved: path, search params, AND hash fragments
@@ -22,15 +23,18 @@ Modern web applications need deep linking that works seamlessly with OAuth authe
 
 **State Management Complexity**:
 URLs must support two distinct types of state:
+
 - **Shared client-server state**: Filters, pagination, sorting (affects SSR, sent to server)
 - **Client-only state**: UI triggers like modals, scrolling, view switching (no server round-trip)
 
 **Type Safety**:
+
 - Manual URL construction is error-prone (`/users/${id}` vs `/user/${id}`)
 - Routes, search parameters, and hash actions need compile-time validation
 - Refactoring routes is risky without type safety
 
 **Security**:
+
 - Callback URL validation must prevent open redirect vulnerabilities
 - Arbitrary redirects after OAuth can compromise user accounts
 - Legitimate deep links must still work
@@ -46,12 +50,14 @@ URLs must support two distinct types of state:
 ```
 
 **Background**:
+
 - Next.js App Router uses file-based routing
 - OAuth providers (Google, GitHub) redirect to callback URLs
 - Hash fragments (#) are client-only, not sent to server
 - Search params (?) are sent to server, affect SSR
 
 **Requirements**:
+
 - Preserve deep links through OAuth flows
 - Type-safe route construction (compile-time validation)
 - Separate server state (search params) from client state (hash)
@@ -79,6 +85,7 @@ This establishes typed destination builders for all routes with explicit separat
 **Key Properties**:
 
 **Search params** (`?key=value`):
+
 - ✅ Sent to server in every request
 - ✅ Affect server-side rendering (SSR)
 - ✅ Trigger page rerenders when changed
@@ -87,6 +94,7 @@ This establishes typed destination builders for all routes with explicit separat
 - **Use for**: Filters, pagination, sorting, UTM params
 
 **Hash fragments** (`#action`):
+
 - ✅ Client-only (not sent to server)
 - ✅ No page reload when changed
 - ✅ No server round-trip
@@ -106,31 +114,29 @@ This establishes typed destination builders for all routes with explicit separat
 // Route-specific destination builders with typed params and actions
 const destinations = {
   profile: (params?: ProfileSearchParams, hashAction?: ProfileHashAction) =>
-    buildDestinationUrl("/profile", params, hashAction),
+    buildDestinationUrl('/profile', params, hashAction),
 
-  user: (
-    username: string,
-    params?: UserSearchParams,
-    hashAction?: UserHashAction,
-  ) => buildDestinationUrl(`/user/${username}`, params, hashAction),
+  user: (username: string, params?: UserSearchParams, hashAction?: UserHashAction) =>
+    buildDestinationUrl(`/user/${username}`, params, hashAction),
 
   posts: (params?: PostsSearchParams, hashAction?: PostsHashAction) =>
-    buildDestinationUrl("/posts", params, hashAction),
+    buildDestinationUrl('/posts', params, hashAction),
 
-  home: () => "/",
-  dashboard: () => "/dashboard",
+  home: () => '/',
+  dashboard: () => '/dashboard',
 } as const
 
 // Usage
 const destination = destinations.user(
-  "alice",
-  { tab: "posts", sort: "date:desc" }, // Type-checked search params
-  "scroll-to:comment:abc123", // Type-checked hash action
+  'alice',
+  { tab: 'posts', sort: 'date:desc' }, // Type-checked search params
+  'scroll-to:comment:abc123' // Type-checked hash action
 )
 // Result: /user/alice?tab=posts&sort=date:desc#scroll-to:comment:abc123
 ```
 
 **Type Safety Benefits**:
+
 - ✅ Autocomplete for all route functions
 - ✅ Compile-time errors for invalid routes
 - ✅ Typed search parameters (no typos)
@@ -145,23 +151,15 @@ Use TypeScript template literal types to enforce action patterns:
 ```typescript
 // lib/deep-linking.ts
 
-type ProfileHashAction =
-  | "edit"
-  | "settings"
-  | "change-password"
-  | `scroll-to:${string}:${string}` // Generic scroll pattern
+type ProfileHashAction = 'edit' | 'settings' | 'change-password' | `scroll-to:${string}:${string}` // Generic scroll pattern
 
 type UserHashAction =
-  | "follow"
-  | "message"
+  | 'follow'
+  | 'message'
   | `scroll-to:comment:${string}`
   | `scroll-to:post:${string}`
 
-type PostsHashAction =
-  | "create"
-  | "grid-view"
-  | "list-view"
-  | `scroll-to:post:${string}`
+type PostsHashAction = 'create' | 'grid-view' | 'list-view' | `scroll-to:post:${string}`
 ```
 
 **Colon Separators in scroll-to Pattern**:
@@ -169,6 +167,7 @@ type PostsHashAction =
 The generic `scroll-to:{entityType}:{entityId}` pattern uses colons instead of hyphens to avoid ambiguity with UUIDs (which contain hyphens).
 
 Examples:
+
 - `scroll-to:comment:abc123` - Scroll to comment with ID abc123
 - `scroll-to:post:xyz789` - Scroll to post with ID xyz789
 - `scroll-to:comment:123e4567-e89b-12d3-a456-426614174000` - UUID works correctly
@@ -189,8 +188,8 @@ type ProfileSearchParams = {
 }
 
 type UserSearchParams = {
-  tab?: "posts" | "comments" | "likes"
-  sort?: `${string}:${"asc" | "desc"}` // e.g., "date:asc"
+  tab?: 'posts' | 'comments' | 'likes'
+  sort?: `${string}:${'asc' | 'desc'}` // e.g., "date:asc"
   page?: string
 }
 
@@ -203,6 +202,7 @@ type PostsSearchParams = {
 ```
 
 **Benefits**:
+
 - ✅ Type-checked parameter names
 - ✅ Validated parameter values (e.g., tab can only be "posts", "comments", or "likes")
 - ✅ Self-documenting (type definition is documentation)
@@ -215,7 +215,7 @@ type PostsSearchParams = {
 
 ```typescript
 // 1. Build signin URL with destination
-const destination = destinations.profile({}, "edit")
+const destination = destinations.profile({}, 'edit')
 const signinUrl = buildSigninUrl(destination)
 // Result: /signin?destination=%2Fprofile%23edit
 
@@ -227,15 +227,11 @@ const signinUrl = buildSigninUrl(destination)
 useEffect(() => {
   const hashAction = parseHashAction(window.location.hash)
 
-  if (hashAction === "edit") {
+  if (hashAction === 'edit') {
     openEditModal()
 
     // Clear hash to prevent re-triggering on navigation
-    window.history.replaceState(
-      null,
-      "",
-      window.location.pathname + window.location.search,
-    )
+    window.history.replaceState(null, '', window.location.pathname + window.location.search)
   }
 }, [])
 ```
@@ -247,16 +243,16 @@ useEffect(() => {
 
 export function validateCallbackUrl(url: string): boolean {
   // Only allow relative URLs
-  if (!url.startsWith("/")) return false
+  if (!url.startsWith('/')) return false
 
   // Prevent protocol-relative URLs (//evil.com)
-  if (url.startsWith("//")) return false
+  if (url.startsWith('//')) return false
 
   // Prevent javascript: protocol
-  if (url.toLowerCase().startsWith("javascript:")) return false
+  if (url.toLowerCase().startsWith('javascript:')) return false
 
   // Prevent data: protocol
-  if (url.toLowerCase().startsWith("data:")) return false
+  if (url.toLowerCase().startsWith('data:')) return false
 
   return true
 }
@@ -271,7 +267,7 @@ The system supports **three destination encoding formats** with automatic detect
 **1. Raw Relative URL (Preferred for Internal Use)**
 
 ```typescript
-destination = "/profile?tab=posts#edit"
+destination = '/profile?tab=posts#edit'
 ```
 
 - **Format**: Plain relative URL with path, search params, and hash
@@ -282,7 +278,7 @@ destination = "/profile?tab=posts#edit"
 **2. URL-Encoded (Web-Safe)**
 
 ```typescript
-destination = "%2Fprofile%3Ftab%3Dposts%23edit"
+destination = '%2Fprofile%3Ftab%3Dposts%23edit'
 ```
 
 - **Format**: Standard URL encoding (percent-encoded)
@@ -293,7 +289,7 @@ destination = "%2Fprofile%3Ftab%3Dposts%23edit"
 **3. Base64 URL-Encoded (Compact, URL-Safe)**
 
 ```typescript
-destination = "L3Byb2ZpbGU_dGFiPXBvc3RzI2VkaXQ"
+destination = 'L3Byb2ZpbGU_dGFiPXBvc3RzI2VkaXQ'
 ```
 
 - **Format**: Base64 URL encoding (RFC 4648 §5) - URL-safe variant
@@ -317,39 +313,39 @@ function normalizeDestination(destination: string | null | undefined): string {
     return buildDestinationFromCurrentLocation() // Auto-capture current URL
   }
 
-  if (destination.startsWith("/")) {
+  if (destination.startsWith('/')) {
     return destination // Format 1: Raw
   }
 
-  if (destination.startsWith("%2F")) {
+  if (destination.startsWith('%2F')) {
     return decodeURIComponent(destination) // Format 2: URL-encoded
   }
 
   // Format 3: Base64 URL (fallback)
   try {
     const decoded = decodeDestination(destination) // Auto-handles base64url
-    if (decoded && decoded.startsWith("/")) {
+    if (decoded && decoded.startsWith('/')) {
       return decoded
     }
   } catch {
-    console.warn("Invalid destination format, using /")
+    console.warn('Invalid destination format, using /')
   }
 
-  return "/" // Safe fallback
+  return '/' // Safe fallback
 }
 
 // Base64 URL decoding (RFC 4648 §5)
 function decodeDestination(encoded: string): string {
   // Convert base64url to standard base64
-  let base64 = encoded.replace(/-/g, "+").replace(/_/g, "/")
+  let base64 = encoded.replace(/-/g, '+').replace(/_/g, '/')
 
   // Add padding if needed
   const padding = (4 - (base64.length % 4)) % 4
   if (padding > 0) {
-    base64 += "=".repeat(padding)
+    base64 += '='.repeat(padding)
   }
 
-  return Buffer.from(base64, "base64").toString("utf-8")
+  return Buffer.from(base64, 'base64').toString('utf-8')
 }
 ```
 
@@ -371,19 +367,16 @@ const dest = destinations.profile({}, "edit")
 
 ```javascript
 // Option A: URL-encoded (simple, widely compatible)
-const dest = encodeURIComponent("/profile#edit")
+const dest = encodeURIComponent('/profile#edit')
 window.location = `/signin?destination=${dest}`
 
 // Option B: Base64 URL (compact, URL-safe, no extra encoding needed)
 function base64UrlEncode(str) {
   const base64 = btoa(str) // Standard base64
-  return base64
-    .replace(/\+/g, "-")
-    .replace(/\//g, "_")
-    .replace(/=+$/, "") // Remove padding
+  return base64.replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '') // Remove padding
 }
 
-const dest = base64UrlEncode("/profile#edit")
+const dest = base64UrlEncode('/profile#edit')
 window.location = `/signin?destination=${dest}`
 // Result: /signin?destination=L3Byb2ZpbGUjZWRpdA
 // No % encoding needed!
@@ -408,11 +401,7 @@ router.push(`/signin?destination=L3Byb2ZpbGUjZWRpdA`) // Base64 URL
 // lib/deep-linking.ts
 
 // Build typed destination URL
-function buildDestinationUrl<P, A>(
-  path: string,
-  searchParams?: P,
-  hashAction?: A,
-): string
+function buildDestinationUrl<P, A>(path: string, searchParams?: P, hashAction?: A): string
 
 // Build signin URL with encoded destination
 function buildSigninUrl(destination: string): string
@@ -450,11 +439,11 @@ function extractScrollTargetId(action: string): {
 
 ```typescript
 const destinations = {
-  profile: (params?, action?) => buildDestinationUrl("/profile", params, action),
+  profile: (params?, action?) => buildDestinationUrl('/profile', params, action),
   user: (username, params?, action?) => buildDestinationUrl(`/user/${username}`, params, action),
-  posts: (params?, action?) => buildDestinationUrl("/posts", params, action),
-  home: () => "/",
-  dashboard: () => "/dashboard",
+  posts: (params?, action?) => buildDestinationUrl('/posts', params, action),
+  home: () => '/',
+  dashboard: () => '/dashboard',
 } as const
 ```
 
@@ -474,46 +463,58 @@ function buildDestinationFromCurrentLocation(): string
 ### Positive Consequences (Easier)
 
 ✅ **Type Safety**: Compile-time validation prevents typos in routes, params, and hash actions
+
 - Example: `destinations.usre("alice")` → TypeScript error (typo in "user")
 
 ✅ **Centralized Route Definitions**: Single source of truth for all URL construction
+
 - Change route pattern once, all usages update automatically
 
 ✅ **OAuth Compatibility**: Seamless deep linking through authentication flows
+
 - Users land exactly where they intended after OAuth
 
 ✅ **Developer Experience**: IDE autocomplete for all routes and actions
+
 - Faster development, fewer bugs
 
 ✅ **Refactoring Safety**: Changing route patterns is localized to `lib/deep-linking.ts`
+
 - Find all route usages via TypeScript compiler
 
 ✅ **Security**: Controlled URL construction reduces open redirect vulnerabilities
+
 - Validation layer catches malicious redirects
 
 ✅ **Separation of Concerns**: Clear distinction between server state and client state
+
 - Server doesn't process client-only actions
 
 ✅ **SEO-Friendly**: Search params remain in URL for server-side rendering and crawlers
+
 - Hash actions don't affect SEO
 
 ### Negative Consequences (More Difficult)
 
 ⚠️ **Additional Abstraction**: Developers must learn destination builder API
-- *Mitigation*: Comprehensive documentation and examples in this ADR
-- *Mitigation*: Type safety makes API discoverable via autocomplete
+
+- _Mitigation_: Comprehensive documentation and examples in this ADR
+- _Mitigation_: Type safety makes API discoverable via autocomplete
 
 ⚠️ **Migration Required**: Existing manual URL construction code needs updating
-- *Mitigation*: Migration can be incremental (start with auth flows)
-- *Mitigation*: Consider ESLint rule to detect manual URL construction
+
+- _Mitigation_: Migration can be incremental (start with auth flows)
+- _Mitigation_: Consider ESLint rule to detect manual URL construction
 
 ⚠️ **Hash State Limitations**: Hash actions cannot directly affect SSR or SEO
-- *Mitigation*: Use search params for SEO-critical state
-- *Mitigation*: Document pattern clearly in team guidelines
+
+- _Mitigation_: Use search params for SEO-critical state
+- _Mitigation_: Document pattern clearly in team guidelines
 
 ⚠️ **Type Maintenance**: New routes require updating destination builders
-- *Mitigation*: Template for adding new routes (copy existing pattern)
-- *Future*: Consider generating builders from Next.js route files
+
+- _Mitigation_: Template for adding new routes (copy existing pattern)
+- _Future_: Consider generating builders from Next.js route files
 
 ### Neutral Consequences
 
@@ -535,10 +536,12 @@ const url = `/user/${username}?tab=${tab}#${action}`
 ```
 
 **Pros**:
+
 - Simple, no abstraction
 - Everyone knows how URLs work
 
 **Cons**:
+
 - Typos in routes not caught until runtime
 - No autocomplete or type checking
 - Difficult to refactor when routes change
@@ -559,10 +562,12 @@ const url = `/profile?action=edit`
 ```
 
 **Pros**:
+
 - Simple, one state mechanism
 - SEO-friendly
 
 **Cons**:
+
 - Action triggers require server round-trip (performance penalty)
 - Actions affect browser history and back button behavior
 - Server must handle client-only actions (complexity)
@@ -579,14 +584,16 @@ const url = `/profile?action=edit`
 
 ```typescript
 // ❌ Store actions in client state
-setAuthRedirectAction({ type: "edit", resource: "profile" })
+setAuthRedirectAction({ type: 'edit', resource: 'profile' })
 ```
 
 **Pros**:
+
 - Type-safe state management
 - No URL encoding concerns
 
 **Cons**:
+
 - State not preserved across browser sessions
 - Breaks shareable deep links (can't share "edit profile" link)
 - Requires additional state management complexity
@@ -607,10 +614,12 @@ headers: { "X-Post-Auth-Action": "edit" }
 ```
 
 **Pros**:
+
 - Keeps URLs clean
 - Type-safe (if wrapped)
 
 **Cons**:
+
 - Custom headers not preserved through OAuth provider redirects
 - Not compatible with standard OAuth flow
 - Browser security restrictions on custom headers
@@ -631,10 +640,12 @@ headers: { "X-Post-Auth-Action": "edit" }
 ```
 
 **Pros**:
+
 - Simple implementation
 - URL-based (shareable)
 
 **Cons**:
+
 - Client actions appear in server logs and analytics (noise)
 - Actions affect URL history and back button
 - Special parameter naming convention fragile
@@ -648,13 +659,16 @@ headers: { "X-Post-Auth-Action": "edit" }
 ## Related
 
 **Related ADRs**:
+
 - None yet (this is a new pattern for projects_template)
 
 **Related Documentation**:
+
 - `docs/domains/authentication/session-design.md` - Session management patterns
 - `lib/deep-linking.ts` - Implementation (to be created)
 
 **External References**:
+
 - [URL Specification (WHATWG)](https://url.spec.whatwg.org/)
 - [RFC 4648 - Base64 Encoding](https://datatracker.ietf.org/doc/html/rfc4648)
 - [OAuth 2.0 Specification](https://oauth.net/2/)
@@ -667,6 +681,7 @@ headers: { "X-Post-Auth-Action": "edit" }
 ### Implementation Checklist
 
 **Phase 1: Core Utilities** (lib/deep-linking.ts):
+
 - [ ] Create `buildDestinationUrl()` function
 - [ ] Create `buildSigninUrl()` function
 - [ ] Create `normalizeDestination()` with auto-detection
@@ -677,24 +692,28 @@ headers: { "X-Post-Auth-Action": "edit" }
 - [ ] Add comprehensive JSDoc documentation
 
 **Phase 2: Type Definitions**:
+
 - [ ] Define hash action types for each route
 - [ ] Define search param types for each route
 - [ ] Create destination builder functions
 - [ ] Export typed constants
 
 **Phase 3: Authentication Integration**:
+
 - [ ] Update `/signin` page to handle destination param
 - [ ] Update OAuth callback to preserve destination
 - [ ] Add security validation in callback handler
 - [ ] Test OAuth flow with various destinations
 
 **Phase 4: Component Integration**:
+
 - [ ] Create `useHashAction()` hook for standardized hash handling
 - [ ] Update authentication components to use destination builders
 - [ ] Add hash action handling to route pages
 - [ ] Document pattern for adding new routes
 
 **Phase 5: Migration**:
+
 - [ ] Migrate high-traffic routes first
 - [ ] Update authentication flows
 - [ ] Migrate remaining manual URL construction
@@ -705,6 +724,7 @@ headers: { "X-Post-Auth-Action": "edit" }
 ### Testing Checklist
 
 **Unit Tests** (`__tests__/lib/deep-linking.test.ts`):
+
 - [ ] Test `buildDestinationUrl()` with all param combinations
 - [ ] Test `normalizeDestination()` with all three encoding formats
 - [ ] Test `parseDestinationUrl()` URL parsing
@@ -713,6 +733,7 @@ headers: { "X-Post-Auth-Action": "edit" }
 - [ ] Test `validateCallbackUrl()` security validation
 
 **Integration Tests**:
+
 - [ ] Test OAuth flow with raw destination
 - [ ] Test OAuth flow with URL-encoded destination
 - [ ] Test OAuth flow with base64url destination
@@ -720,6 +741,7 @@ headers: { "X-Post-Auth-Action": "edit" }
 - [ ] Test hash action execution after OAuth
 
 **E2E Tests** (Playwright):
+
 - [ ] Test complete flow: protected page → OAuth → return with hash action
 - [ ] Test modal opening from hash action
 - [ ] Test scroll-to functionality
@@ -727,6 +749,7 @@ headers: { "X-Post-Auth-Action": "edit" }
 - [ ] Test browser back button behavior
 
 **Security Tests**:
+
 - [ ] Test open redirect prevention (absolute URLs rejected)
 - [ ] Test protocol-relative URLs rejected (`//evil.com`)
 - [ ] Test javascript: protocol rejected
@@ -741,23 +764,23 @@ headers: { "X-Post-Auth-Action": "edit" }
 
 ```typescript
 // 1. Define hash action type
-type MyPageHashAction = "action1" | "action2" | `scroll-to:${string}:${string}`
+type MyPageHashAction = 'action1' | 'action2' | `scroll-to:${string}:${string}`
 
 // 2. Define search param type
 type MyPageSearchParams = {
   filter?: string
-  sort?: "asc" | "desc"
+  sort?: 'asc' | 'desc'
 }
 
 // 3. Add destination builder
 const destinations = {
   // ... existing routes
   myPage: (params?: MyPageSearchParams, hashAction?: MyPageHashAction) =>
-    buildDestinationUrl("/my-page", params, hashAction),
+    buildDestinationUrl('/my-page', params, hashAction),
 }
 
 // 4. Use in components
-const dest = destinations.myPage({ filter: "active" }, "action1")
+const dest = destinations.myPage({ filter: 'active' }, 'action1')
 ```
 
 **Handling Hash Actions in Pages**:
@@ -826,6 +849,6 @@ function ShareProfileButton({ username }: { username: string }) {
 
 ## Revision History
 
-| Date | Author | Change |
-|------|--------|--------|
+| Date       | Author              | Change        |
+| ---------- | ------------------- | ------------- |
 | 2025-11-17 | System Architecture | Initial draft |

@@ -59,16 +59,19 @@ Landlords are risk-averse and need detailed information before trusting a platfo
 **Then** they see:
 
 **Hero Section**:
+
 - Headline: "Protect Your Investment, Fill Faster"
 - Subheadline: "Automated compliance. Data-driven screening. Zero lawsuit risk."
 - CTA: "Start Free Trial" -> /register?role=landlord
 
 **Pain Points (3-Column)**:
+
 - "Compliance Risk" - "50% of landlords violate FCRA. Our audit trail protects you."
 - "Bad Tenants" - "Our risk scores predict default with 98% accuracy."
 - "Vacancy Costs" - "Fill 56% faster with verified applicant pool."
 
 **Solution Overview**:
+
 - Audit trails for every decision
 - Automated adverse action letters
 - Risk scores based on 50,000+ data points
@@ -76,6 +79,7 @@ Landlords are risk-averse and need detailed information before trusting a platfo
 **Testimonial**: David Patel quote with photo
 
 **Verification**:
+
 - [ ] Hero section compelling
 - [ ] CTAs functional
 - [ ] Pain points addressed
@@ -87,17 +91,20 @@ Landlords are risk-averse and need detailed information before trusting a platfo
 **Then** they see:
 
 **Tier Comparison Table**:
+
 - Free Tier: 1 listing, basic screening, email support ($0/month)
 - Compliance Tier: Unlimited listings, audit trail, adverse action, risk scores, priority support ($249/year)
 - Concierge Tier: Everything + phone support, white-glove onboarding ($499/year + $99/listing)
 
 **ROI Calculator**:
+
 - Inputs: Units owned, average rent
 - Output: Annual savings estimate
 
 **Money-Back Guarantee**: "30-day refund if not satisfied"
 
 **Verification**:
+
 - [ ] Tier table clear
 - [ ] Calculator functional
 - [ ] Guarantee displayed
@@ -107,17 +114,20 @@ Landlords are risk-averse and need detailed information before trusting a platfo
 **Given** landlord has questions
 **When** viewing FAQ
 **Then** they see:
+
 - Schema.org FAQPage structured data
 - Minimum 10 questions covering compliance, features, support
 - Clear answers in plain language
 
 **Questions Include**:
+
 - "How does the audit trail protect me from lawsuits?"
 - "What if I don't know Fair Housing laws?"
 - "How do risk scores work?"
 - "Can I use my own lease template?"
 
 **Verification**:
+
 - [ ] FAQPage schema implemented
 - [ ] Questions comprehensive
 - [ ] Answers helpful
@@ -127,12 +137,14 @@ Landlords are risk-averse and need detailed information before trusting a platfo
 **Given** landlord wants compliance details
 **When** viewing page
 **Then** they see:
+
 - Location-aware compliance rules explanation
 - Audit trail walkthrough with screenshots
 - Adverse action letter samples
 - PDF compliance report generation
 
 **Verification**:
+
 - [ ] Technical details explained
 - [ ] Screenshots/samples included
 - [ ] Builds confidence
@@ -142,15 +154,18 @@ Landlords are risk-averse and need detailed information before trusting a platfo
 **Given** landlord wants proof
 **When** viewing case studies
 **Then** they see:
+
 - Index page with 3-5 preview cards
 - Individual case study pages with Problem, Solution, Results, Testimonial
 - Schema.org Article markup
 
 **Case Studies**:
+
 - "How David reduced vacancy by 56%"
 - "Sandra's first year with concierge service"
 
 **Verification**:
+
 - [ ] Case studies compelling
 - [ ] Metrics included
 - [ ] SEO markup correct
@@ -160,15 +175,18 @@ Landlords are risk-averse and need detailed information before trusting a platfo
 **Given** landlord wants personalized demo
 **When** filling out form
 **Then** they provide:
+
 - Name, email, phone
 - Number of units
 - Current challenges (checkboxes)
 
 **And** see:
+
 - Calendly embed for scheduling
 - Phone callback option for Sandra-type
 
 **Verification**:
+
 - [ ] Form works correctly
 - [ ] Calendar integration functional
 - [ ] Lead captured in CRM
@@ -192,6 +210,7 @@ app/(public)/for-landlords/demo/page.tsx
 ### Frontend Specification
 
 **Components**:
+
 ```
 components/
   marketing/
@@ -206,13 +225,14 @@ components/
 
 ## Analytics Tracking
 
-| Event Name | When Triggered | Properties |
-|------------|----------------|------------|
-| `landlord_page_viewed` | Page loads | `{page, source}` |
-| `roi_calculated` | Calculator used | `{units, savings}` |
-| `demo_requested` | Form submitted | `{landlordId}` |
+| Event Name             | When Triggered  | Properties         |
+| ---------------------- | --------------- | ------------------ |
+| `landlord_page_viewed` | Page loads      | `{page, source}`   |
+| `roi_calculated`       | Calculator used | `{units, savings}` |
+| `demo_requested`       | Form submitted  | `{landlordId}`     |
 
 **Success Metrics**:
+
 - 5% visitor-to-demo conversion
 - 20% demo-to-signup conversion
 - $50 CAC for landlord segment
@@ -222,6 +242,7 @@ components/
 ## Dependencies
 
 ### Related Stories
+
 - US-021: Landlord Compliance Tier
 - US-026: Split Homepage
 

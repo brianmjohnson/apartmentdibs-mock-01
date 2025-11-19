@@ -13,6 +13,7 @@
 User Story US-003 (Location-Aware Fair Housing Compliance) requires an automated system to enforce jurisdiction-specific fair housing regulations when landlords set screening criteria. Rules vary significantly by location (NYC Fair Chance Act, California AB 2493, Seattle co-signer rules, etc.) and must be dynamically applied based on property address. The system must block discriminatory filters, auto-adjust criteria, and provide educational explanations.
 
 **Background**:
+
 - Fair housing laws vary by federal/state/city jurisdiction
 - NYC Fair Chance Act restricts criminal history screening
 - California AB 2493 requires PTSR acceptance and fee caps
@@ -21,6 +22,7 @@ User Story US-003 (Location-Aware Fair Housing Compliance) requires an automated
 - Risk: Platform and landlords face fair housing lawsuits
 
 **Requirements**:
+
 - **Functional**: Detect property jurisdiction from address (geocoding)
 - **Functional**: Store and evaluate compliance rules per jurisdiction
 - **Functional**: Block discriminatory screening criteria with explanation
@@ -34,6 +36,7 @@ User Story US-003 (Location-Aware Fair Housing Compliance) requires an automated
 - **Constraints**: Must be maintainable by legal team (not engineers)
 
 **Scope**:
+
 - **Included**: Rule engine, geocoding, filter blocking, education modals
 - **Included**: Admin dashboard for legal team rule management
 - **Not included**: International jurisdictions (US only for MVP)
@@ -48,6 +51,7 @@ User Story US-003 (Location-Aware Fair Housing Compliance) requires an automated
 Rules are stored with JSONB enforcement logic allowing complex conditions without code changes. Jurisdiction hierarchy (Federal > State > City/County) determines which rules apply, with most restrictive winning in conflicts. The legal team can add/modify rules via admin UI with staging environment testing.
 
 **Implementation Approach**:
+
 - Create `compliance_rules` table with JSONB enforcement logic
 - Create `jurisdiction_mappings` table for geocode -> jurisdiction lookup
 - Implement rule evaluation engine with hierarchy resolution
@@ -57,6 +61,7 @@ Rules are stored with JSONB enforcement logic allowing complex conditions withou
 - Log all compliance actions to ADR-017 audit trail
 
 **Why This Approach**:
+
 1. **Flexibility**: JSONB rules handle complex conditions without code changes
 2. **Hierarchy**: Properly handles overlapping jurisdictions
 3. **Legal Team Ownership**: Non-engineers can manage rules
@@ -64,55 +69,56 @@ Rules are stored with JSONB enforcement logic allowing complex conditions withou
 5. **Auditability**: Full logging of all compliance decisions
 
 **Example/Proof of Concept**:
+
 ```typescript
 // lib/services/compliance-engine.ts
-import { prisma } from '@/lib/db';
-import { Redis } from '@upstash/redis';
+import { prisma } from '@/lib/db'
+import { Redis } from '@upstash/redis'
 
 interface ComplianceRule {
-  id: string;
-  jurisdiction: string;
-  jurisdictionLevel: 'federal' | 'state' | 'county' | 'city';
-  ruleType: string;
-  ruleDescription: string;
+  id: string
+  jurisdiction: string
+  jurisdictionLevel: 'federal' | 'state' | 'county' | 'city'
+  ruleType: string
+  ruleDescription: string
   enforcementLogic: {
-    type: 'block_filter' | 'adjust_filter' | 'require_field' | 'cap_value';
-    field: string;
-    condition: Record<string, unknown>;
-    adjustedValue?: unknown;
-    message: string;
-  };
+    type: 'block_filter' | 'adjust_filter' | 'require_field' | 'cap_value'
+    field: string
+    condition: Record<string, unknown>
+    adjustedValue?: unknown
+    message: string
+  }
   educationContent: {
-    lawName: string;
-    citation: string;
-    explanation: string;
-    sourceUrl: string;
-  };
-  effectiveDate: Date;
-  endDate?: Date;
+    lawName: string
+    citation: string
+    explanation: string
+    sourceUrl: string
+  }
+  effectiveDate: Date
+  endDate?: Date
 }
 
 interface ComplianceCheckResult {
-  passed: boolean;
+  passed: boolean
   violations: Array<{
-    ruleId: string;
-    ruleType: string;
-    originalValue: unknown;
-    adjustedValue?: unknown;
-    message: string;
-    education: ComplianceRule['educationContent'];
-  }>;
-  adjustedCriteria?: Record<string, unknown>;
+    ruleId: string
+    ruleType: string
+    originalValue: unknown
+    adjustedValue?: unknown
+    message: string
+    education: ComplianceRule['educationContent']
+  }>
+  adjustedCriteria?: Record<string, unknown>
 }
 
 export class ComplianceEngine {
-  private redis: Redis;
+  private redis: Redis
 
   constructor() {
     this.redis = new Redis({
       url: process.env.UPSTASH_REDIS_URL!,
       token: process.env.UPSTASH_REDIS_TOKEN!,
-    });
+    })
   }
 
   /**
@@ -120,43 +126,43 @@ export class ComplianceEngine {
    */
   async getJurisdictions(address: string): Promise<string[]> {
     // Check cache first
-    const cacheKey = `jurisdiction:${address}`;
-    const cached = await this.redis.get<string[]>(cacheKey);
-    if (cached) return cached;
+    const cacheKey = `jurisdiction:${address}`
+    const cached = await this.redis.get<string[]>(cacheKey)
+    if (cached) return cached
 
     // Geocode address
     const geocodeResponse = await fetch(
       `https://maps.googleapis.com/maps/api/geocode/json?address=${encodeURIComponent(address)}&key=${process.env.GOOGLE_MAPS_API_KEY}`
-    );
-    const geocodeData = await geocodeResponse.json();
+    )
+    const geocodeData = await geocodeResponse.json()
 
     if (!geocodeData.results?.[0]) {
-      throw new Error('Unable to geocode address');
+      throw new Error('Unable to geocode address')
     }
 
     // Extract jurisdiction components
-    const components = geocodeData.results[0].address_components;
-    const jurisdictions: string[] = ['Federal']; // Always include federal
+    const components = geocodeData.results[0].address_components
+    const jurisdictions: string[] = ['Federal'] // Always include federal
 
     for (const component of components) {
       if (component.types.includes('administrative_area_level_1')) {
         // State
-        jurisdictions.push(component.long_name);
+        jurisdictions.push(component.long_name)
       }
       if (component.types.includes('administrative_area_level_2')) {
         // County
-        jurisdictions.push(component.long_name);
+        jurisdictions.push(component.long_name)
       }
       if (component.types.includes('locality')) {
         // City
-        jurisdictions.push(component.long_name);
+        jurisdictions.push(component.long_name)
       }
     }
 
     // Cache for 24 hours
-    await this.redis.set(cacheKey, jurisdictions, { ex: 86400 });
+    await this.redis.set(cacheKey, jurisdictions, { ex: 86400 })
 
-    return jurisdictions;
+    return jurisdictions
   }
 
   /**
@@ -167,31 +173,28 @@ export class ComplianceEngine {
     criteria: Record<string, unknown>,
     applicantData?: Record<string, unknown>
   ): Promise<ComplianceCheckResult> {
-    const jurisdictions = await this.getJurisdictions(address);
+    const jurisdictions = await this.getJurisdictions(address)
 
     // Get applicable rules
     const rules = await prisma.complianceRule.findMany({
       where: {
         jurisdiction: { in: jurisdictions },
         effectiveDate: { lte: new Date() },
-        OR: [
-          { endDate: null },
-          { endDate: { gt: new Date() } },
-        ],
+        OR: [{ endDate: null }, { endDate: { gt: new Date() } }],
       },
       orderBy: [
         // Order by specificity (city > county > state > federal)
         { jurisdictionLevel: 'desc' },
         { effectiveDate: 'desc' },
       ],
-    });
+    })
 
-    const violations: ComplianceCheckResult['violations'] = [];
-    const adjustedCriteria = { ...criteria };
+    const violations: ComplianceCheckResult['violations'] = []
+    const adjustedCriteria = { ...criteria }
 
     // Evaluate each rule
     for (const rule of rules) {
-      const evaluation = this.evaluateRule(rule, criteria, applicantData);
+      const evaluation = this.evaluateRule(rule, criteria, applicantData)
 
       if (!evaluation.passed) {
         violations.push({
@@ -201,23 +204,23 @@ export class ComplianceEngine {
           adjustedValue: evaluation.adjustedValue,
           message: evaluation.message,
           education: rule.educationContent,
-        });
+        })
 
         // Apply adjustment if provided
         if (evaluation.adjustedValue !== undefined) {
-          adjustedCriteria[rule.enforcementLogic.field] = evaluation.adjustedValue;
+          adjustedCriteria[rule.enforcementLogic.field] = evaluation.adjustedValue
         }
       }
     }
 
     // Log compliance check to audit trail
-    await this.logComplianceCheck(address, jurisdictions, criteria, violations);
+    await this.logComplianceCheck(address, jurisdictions, criteria, violations)
 
     return {
       passed: violations.length === 0,
       violations,
       adjustedCriteria: violations.length > 0 ? adjustedCriteria : undefined,
-    };
+    }
   }
 
   /**
@@ -228,13 +231,13 @@ export class ComplianceEngine {
     criteria: Record<string, unknown>,
     applicantData?: Record<string, unknown>
   ): {
-    passed: boolean;
-    originalValue?: unknown;
-    adjustedValue?: unknown;
-    message: string;
+    passed: boolean
+    originalValue?: unknown
+    adjustedValue?: unknown
+    message: string
   } {
-    const { enforcementLogic } = rule;
-    const criteriaValue = criteria[enforcementLogic.field];
+    const { enforcementLogic } = rule
+    const criteriaValue = criteria[enforcementLogic.field]
 
     switch (enforcementLogic.type) {
       case 'block_filter': {
@@ -246,9 +249,9 @@ export class ComplianceEngine {
             originalValue: criteriaValue,
             adjustedValue: enforcementLogic.adjustedValue,
             message: enforcementLogic.message,
-          };
+          }
         }
-        break;
+        break
       }
 
       case 'adjust_filter': {
@@ -260,9 +263,9 @@ export class ComplianceEngine {
             originalValue: criteriaValue,
             adjustedValue: enforcementLogic.adjustedValue,
             message: enforcementLogic.message,
-          };
+          }
         }
-        break;
+        break
       }
 
       case 'require_field': {
@@ -274,51 +277,48 @@ export class ComplianceEngine {
             originalValue: criteriaValue,
             adjustedValue: true,
             message: enforcementLogic.message,
-          };
+          }
         }
-        break;
+        break
       }
 
       case 'cap_value': {
         // Cap maximum value
         // Example: California application fee cap $62
-        const maxValue = enforcementLogic.condition.max as number;
+        const maxValue = enforcementLogic.condition.max as number
         if (typeof criteriaValue === 'number' && criteriaValue > maxValue) {
           return {
             passed: false,
             originalValue: criteriaValue,
             adjustedValue: maxValue,
             message: enforcementLogic.message,
-          };
+          }
         }
-        break;
+        break
       }
     }
 
-    return { passed: true, message: '' };
+    return { passed: true, message: '' }
   }
 
   /**
    * Check if value matches condition
    */
-  private matchesCondition(
-    value: unknown,
-    condition: Record<string, unknown>
-  ): boolean {
+  private matchesCondition(value: unknown, condition: Record<string, unknown>): boolean {
     // Simple condition matching - can be extended
     if (condition.equals !== undefined) {
-      return value === condition.equals;
+      return value === condition.equals
     }
     if (condition.in !== undefined && Array.isArray(condition.in)) {
-      return condition.in.includes(value);
+      return condition.in.includes(value)
     }
     if (condition.exists !== undefined) {
-      return condition.exists ? value !== undefined : value === undefined;
+      return condition.exists ? value !== undefined : value === undefined
     }
     if (condition.greaterThan !== undefined) {
-      return typeof value === 'number' && value > (condition.greaterThan as number);
+      return typeof value === 'number' && value > (condition.greaterThan as number)
     }
-    return false;
+    return false
   }
 
   /**
@@ -338,17 +338,13 @@ export class ComplianceEngine {
         violationsFound: violations,
         timestamp: new Date(),
       },
-    });
+    })
   }
 
   /**
    * Check if override attempt should be blocked
    */
-  async blockOverrideAttempt(
-    userId: string,
-    ruleId: string,
-    address: string
-  ): Promise<void> {
+  async blockOverrideAttempt(userId: string, ruleId: string, address: string): Promise<void> {
     // Log the override attempt (evidence of willful violation)
     await prisma.complianceOverrideAttempt.create({
       data: {
@@ -358,7 +354,7 @@ export class ComplianceEngine {
         timestamp: new Date(),
         blocked: true,
       },
-    });
+    })
 
     // Could trigger alert to compliance team for repeat offenders
   }
@@ -426,6 +422,7 @@ INSERT INTO compliance_rules (
 **What becomes easier or more difficult as a result of this decision?**
 
 ### Positive Consequences
+
 - **Legal Protection**: Platform prevents landlords from violating fair housing laws
 - **Automatic Compliance**: No manual research required by landlords
 - **Legal Team Ownership**: Rules managed without engineering involvement
@@ -434,6 +431,7 @@ INSERT INTO compliance_rules (
 - **Scalability**: New jurisdictions added via data, not code
 
 ### Negative Consequences
+
 - **Rule Maintenance**: Legal team must monitor regulatory changes
 - **Edge Cases**: Complex rules may require custom enforcement logic
 - **False Positives**: Overly aggressive rules may frustrate landlords
@@ -441,10 +439,12 @@ INSERT INTO compliance_rules (
 - **Rule Testing**: New rules need testing before production
 
 ### Neutral Consequences
+
 - **Legal Review**: All rules require legal team sign-off
 - **Performance Trade-off**: Rule evaluation adds latency to filter changes
 
 ### Mitigation Strategies
+
 - **Rule Maintenance**: Subscribe to legal updates, quarterly rule audits
 - **Edge Cases**: Support custom JavaScript conditions for complex rules
 - **False Positives**: User feedback mechanism, rule refinement process
@@ -461,12 +461,14 @@ INSERT INTO compliance_rules (
 Implement compliance rules directly in application code.
 
 **Pros**:
+
 - Full control over logic
 - Type-safe rule implementation
 - No external data dependencies
 - Fast evaluation
 
 **Cons**:
+
 - Requires code deployment for rule changes
 - Legal team cannot manage rules
 - Difficult to audit rule changes
@@ -483,12 +485,14 @@ Compliance rules change frequently and legal team must be able to update without
 Use enterprise business rules management system (BRMS).
 
 **Pros**:
+
 - Purpose-built for complex rules
 - Sophisticated rule management UI
 - Industry-proven solutions
 - Decision tables and workflows
 
 **Cons**:
+
 - Expensive licensing ($10k+/year)
 - Complex integration
 - Learning curve for legal team
@@ -505,12 +509,14 @@ Enterprise BRMS is expensive and complex for our relatively simple rule needs. J
 Define rules as GraphQL schemas with custom resolvers.
 
 **Pros**:
+
 - Type-safe rule definitions
 - GraphQL tooling ecosystem
 - Self-documenting
 - Flexible querying
 
 **Cons**:
+
 - Not intuitive for legal team
 - Requires GraphQL expertise
 - Complex for simple rules
@@ -527,12 +533,14 @@ GraphQL adds complexity without clear benefit. JSONB is simpler and more flexibl
 Use external compliance service that provides jurisdiction rules.
 
 **Pros**:
+
 - Rules maintained by experts
 - Always up to date
 - No internal maintenance
 - Legal liability transferred
 
 **Cons**:
+
 - No suitable vendor exists for rental compliance
 - High cost if it existed
 - External dependency for critical function
@@ -546,15 +554,18 @@ No suitable third-party exists for rental-specific fair housing rules. Custom so
 ## Related
 
 **Related ADRs**:
+
 - [ADR-017: Immutable Audit Trail] - Compliance checks logged for legal defense
 - [ADR-003: Redis Caching Strategy] - Cache jurisdiction mappings
 
 **Related Documentation**:
+
 - [User Story US-003] - Location-Aware Fair Housing Compliance
 - [docs/compliance/rule-management.md] - Admin guide (to be created)
 - [docs/compliance/jurisdiction-list.md] - Supported jurisdictions (to be created)
 
 **External References**:
+
 - [Google Maps Geocoding API](https://developers.google.com/maps/documentation/geocoding)
 - [NYC Fair Chance Act](https://www1.nyc.gov/site/cchr/law/fair-chance-act.page)
 - [California AB 2493](https://leginfo.legislature.ca.gov/faces/billTextClient.xhtml?bill_id=201720180AB2493)
@@ -565,12 +576,14 @@ No suitable third-party exists for rental-specific fair housing rules. Custom so
 ## Notes
 
 **Decision Making Process**:
+
 - Analyzed jurisdiction complexity across US
 - Evaluated rule engine options
 - Consulted fair housing regulatory sources
 - Decision date: 2025-11-19
 
 **Initial Jurisdiction Coverage**:
+
 - Federal (Fair Housing Act)
 - New York State
 - New York City (Fair Chance Act)
@@ -579,16 +592,19 @@ No suitable third-party exists for rental-specific fair housing rules. Custom so
 - Additional jurisdictions added as needed
 
 **Cost Estimate**:
+
 - Google Maps Geocoding: ~$5/month (1,000 requests at $5/1k)
 - PostgreSQL storage: Minimal (rules are small)
 - Total: <$10/month
 
 **Review Schedule**:
+
 - Legal team reviews rules quarterly
 - Monitor blocked filters monthly
 - User feedback review weekly
 
 **Migration Plan**:
+
 - **Phase 1**: Create database schema and rule engine (Week 1)
 - **Phase 2**: Implement geocoding integration (Week 1)
 - **Phase 3**: Build admin dashboard for legal team (Week 2)
@@ -600,6 +616,6 @@ No suitable third-party exists for rental-specific fair housing rules. Custom so
 
 ## Revision History
 
-| Date | Author | Change |
-|------|--------|--------|
+| Date       | Author             | Change                      |
+| ---------- | ------------------ | --------------------------- |
 | 2025-11-19 | Architecture Agent | Initial creation for US-003 |

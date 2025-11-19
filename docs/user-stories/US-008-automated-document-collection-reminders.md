@@ -56,12 +56,14 @@ Jessica's perspective: "I send the same 'please submit your pay stubs' email 20 
 **Given** an applicant has started their profile
 **When** documents are incomplete after 24 hours
 **Then** the platform identifies missing items:
+
 - Pay stubs
 - Credit authorization
 - Employment verification
 - References
 
 **Verification**:
+
 - [ ] System detects all missing document types
 - [ ] Tracks time since application started
 
@@ -70,12 +72,14 @@ Jessica's perspective: "I send the same 'please submit your pay stubs' email 20 
 **Given** documents are missing
 **When** reminder triggers fire
 **Then** applicant receives:
+
 - Day 1: Email "Reminder: Complete your profile to apply for [Address]"
 - Day 3: SMS "Only 2 steps left! (credit authorization + pay stubs)"
 - Day 5: Email "Urgent: Application expires in 48 hours"
 - Day 7: Final notice before expiration
 
 **Verification**:
+
 - [ ] Reminders sent at correct intervals
 - [ ] Multi-channel delivery (email + SMS)
 - [ ] Personalized with specific missing items
@@ -88,6 +92,7 @@ Jessica's perspective: "I send the same 'please submit your pay stubs' email 20 
 **Then** agent receives alert: "Applicant #2847 needs intervention - 5 days incomplete"
 
 **Verification**:
+
 - [ ] Agent dashboard shows stuck applicants
 - [ ] Alert includes one-click contact option
 
@@ -96,11 +101,13 @@ Jessica's perspective: "I send the same 'please submit your pay stubs' email 20 
 **Given** reminders are sent
 **When** applicant views their profile
 **Then** they see:
+
 - Progress bar showing completion percentage
 - Specific items needed with upload buttons
 - Deadline countdown
 
 **Verification**:
+
 - [ ] Progress indicator visible
 - [ ] Missing items clearly listed
 - [ ] Direct upload links work
@@ -110,12 +117,14 @@ Jessica's perspective: "I send the same 'please submit your pay stubs' email 20 
 **Given** an agent manages reminder preferences
 **When** they access settings
 **Then** they can configure:
+
 - Reminder frequency (default: Day 1, 3, 5, 7)
 - Channels (email, SMS, both)
 - Custom message templates
 - Application expiration period
 
 **Verification**:
+
 - [ ] Settings are customizable per agent
 - [ ] Custom templates work correctly
 
@@ -126,14 +135,17 @@ Jessica's perspective: "I send the same 'please submit your pay stubs' email 20 
 ### Backend Specification
 
 **Scheduled Jobs**:
+
 - Daily job checks all incomplete applications
 - Triggers appropriate reminder based on days elapsed
 
 **Message Templates**:
+
 - Stored in database with variable interpolation
 - Supports email and SMS formats
 
 **Data Model**:
+
 ```sql
 CREATE TABLE reminder_logs (
   id UUID PRIMARY KEY,
@@ -148,6 +160,7 @@ CREATE TABLE reminder_logs (
 ### Frontend Specification
 
 **Components**:
+
 ```
 components/
   reminders/
@@ -160,13 +173,14 @@ components/
 
 ## Analytics Tracking
 
-| Event Name | When Triggered | Properties |
-|------------|----------------|------------|
-| `reminder_sent` | Automated reminder delivered | `{applicantId, reminderType, channel}` |
-| `document_uploaded` | Applicant submits missing doc | `{applicantId, docType, daysElapsed}` |
-| `application_expired` | Profile times out | `{applicantId, daysElapsed}` |
+| Event Name            | When Triggered                | Properties                             |
+| --------------------- | ----------------------------- | -------------------------------------- |
+| `reminder_sent`       | Automated reminder delivered  | `{applicantId, reminderType, channel}` |
+| `document_uploaded`   | Applicant submits missing doc | `{applicantId, docType, daysElapsed}`  |
+| `application_expired` | Profile times out             | `{applicantId, daysElapsed}`           |
 
 **Success Metrics**:
+
 - 80%+ profile completion rate (up from 40%)
 - 70% reduction in agent manual follow-up
 - Average completion time <3 days
@@ -176,12 +190,15 @@ components/
 ## Dependencies
 
 ### Blocked By
+
 - US-005: Unified Applicant Dashboard
 
 ### Related Stories
+
 - US-012: Adaptive Onboarding Checklist
 
 ### External Dependencies
+
 - SendGrid for email
 - Twilio for SMS
 

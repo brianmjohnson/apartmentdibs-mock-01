@@ -1,41 +1,39 @@
-"use client";
+'use client'
 
-import Image from "next/image";
-import Link from "next/link";
-import { Card, CardContent, CardFooter } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
-import { AspectRatio } from "@/components/ui/aspect-ratio";
-import { Skeleton } from "@/components/ui/skeleton";
-import { Listing, formatPrice } from "@/lib/mock-data/listings";
-import { Bed, Bath, Square, MapPin, Heart } from "lucide-react";
-import { useState } from "react";
+import Image from 'next/image'
+import Link from 'next/link'
+import { Card, CardContent, CardFooter } from '@/components/ui/card'
+import { Button } from '@/components/ui/button'
+import { Badge } from '@/components/ui/badge'
+import { AspectRatio } from '@/components/ui/aspect-ratio'
+import { Skeleton } from '@/components/ui/skeleton'
+import { Listing, formatPrice } from '@/lib/mock-data/listings'
+import { Bed, Bath, Square, MapPin, Heart } from 'lucide-react'
+import { useState } from 'react'
 
 interface ListingCardProps {
-  listing: Listing;
+  listing: Listing
 }
 
 export function ListingCard({ listing }: ListingCardProps) {
-  const [isSaved, setIsSaved] = useState(false);
-  const [imageLoaded, setImageLoaded] = useState(false);
+  const [isSaved, setIsSaved] = useState(false)
+  const [imageLoaded, setImageLoaded] = useState(false)
 
-  const fullAddress = `${listing.address}, ${listing.city}, ${listing.state}`;
-  const bedsLabel = listing.beds === 0 ? "Studio" : `${listing.beds} BD`;
+  const fullAddress = `${listing.address}, ${listing.city}, ${listing.state}`
+  const bedsLabel = listing.beds === 0 ? 'Studio' : `${listing.beds} BD`
 
   return (
     <Card className="group overflow-hidden transition-all hover:shadow-lg">
       <div className="relative">
         <Link href={`/search/${listing.id}`}>
           <AspectRatio ratio={4 / 3}>
-            {!imageLoaded && (
-              <Skeleton className="absolute inset-0 w-full h-full" />
-            )}
+            {!imageLoaded && <Skeleton className="absolute inset-0 h-full w-full" />}
             <Image
               src={listing.images[0]}
               alt={`${listing.address} - ${listing.city}`}
               fill
               className={`object-cover transition-transform group-hover:scale-105 ${
-                imageLoaded ? "opacity-100" : "opacity-0"
+                imageLoaded ? 'opacity-100' : 'opacity-0'
               }`}
               onLoad={() => setImageLoaded(true)}
               sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
@@ -44,26 +42,22 @@ export function ListingCard({ listing }: ListingCardProps) {
         </Link>
         <button
           onClick={() => setIsSaved(!isSaved)}
-          className="absolute top-3 right-3 p-2 bg-white/90 rounded-full shadow-md hover:bg-white transition-colors"
-          aria-label={isSaved ? "Remove from saved" : "Save listing"}
+          className="absolute top-3 right-3 rounded-full bg-white/90 p-2 shadow-md transition-colors hover:bg-white"
+          aria-label={isSaved ? 'Remove from saved' : 'Save listing'}
         >
-          <Heart
-            className={`h-4 w-4 ${
-              isSaved ? "fill-red-500 text-red-500" : "text-gray-600"
-            }`}
-          />
+          <Heart className={`h-4 w-4 ${isSaved ? 'fill-red-500 text-red-500' : 'text-gray-600'}`} />
         </button>
       </div>
 
       <CardContent className="p-4">
-        <div className="flex items-baseline justify-between mb-2">
+        <div className="mb-2 flex items-baseline justify-between">
           <span className="text-2xl font-bold">
             {formatPrice(listing.price)}
-            <span className="text-sm font-normal text-muted-foreground">/mo</span>
+            <span className="text-muted-foreground text-sm font-normal">/mo</span>
           </span>
         </div>
 
-        <div className="flex items-center gap-3 text-sm text-muted-foreground mb-3">
+        <div className="text-muted-foreground mb-3 flex items-center gap-3 text-sm">
           <span className="flex items-center gap-1">
             <Bed className="h-4 w-4" />
             {bedsLabel}
@@ -80,8 +74,8 @@ export function ListingCard({ listing }: ListingCardProps) {
           </span>
         </div>
 
-        <div className="flex items-start gap-1 text-sm text-muted-foreground mb-3">
-          <MapPin className="h-4 w-4 mt-0.5 flex-shrink-0" />
+        <div className="text-muted-foreground mb-3 flex items-start gap-1 text-sm">
+          <MapPin className="mt-0.5 h-4 w-4 flex-shrink-0" />
           <span className="line-clamp-1">{fullAddress}</span>
         </div>
 
@@ -110,19 +104,19 @@ export function ListingCard({ listing }: ListingCardProps) {
         </Button>
       </CardFooter>
     </Card>
-  );
+  )
 }
 
 export function ListingCardSkeleton() {
   return (
     <Card className="overflow-hidden">
       <AspectRatio ratio={4 / 3}>
-        <Skeleton className="w-full h-full" />
+        <Skeleton className="h-full w-full" />
       </AspectRatio>
       <CardContent className="p-4">
-        <Skeleton className="h-8 w-32 mb-2" />
-        <Skeleton className="h-4 w-48 mb-3" />
-        <Skeleton className="h-4 w-40 mb-3" />
+        <Skeleton className="mb-2 h-8 w-32" />
+        <Skeleton className="mb-3 h-4 w-48" />
+        <Skeleton className="mb-3 h-4 w-40" />
         <div className="flex gap-1.5">
           <Skeleton className="h-5 w-20" />
           <Skeleton className="h-5 w-16" />
@@ -132,5 +126,5 @@ export function ListingCardSkeleton() {
         <Skeleton className="h-10 w-full" />
       </CardFooter>
     </Card>
-  );
+  )
 }

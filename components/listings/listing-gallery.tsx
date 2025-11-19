@@ -120,7 +120,7 @@ export function ListingGallery({ images, address }: ListingGalleryProps) {
           <CarouselPrevious className="left-2" />
           <CarouselNext className="right-2" />
         </Carousel>
-        <div className="mt-2 text-center text-sm text-muted-foreground">{images.length} photos</div>
+        <div className="text-muted-foreground mt-2 text-center text-sm">{images.length} photos</div>
       </div>
 
       {/* Lightbox */}
@@ -128,7 +128,7 @@ export function ListingGallery({ images, address }: ListingGalleryProps) {
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/95">
           <button
             onClick={() => setShowLightbox(false)}
-            className="absolute right-4 top-4 rounded-full p-2 text-white transition-colors hover:bg-white/10"
+            className="absolute top-4 right-4 rounded-full p-2 text-white transition-colors hover:bg-white/10"
             aria-label="Close gallery"
           >
             <X className="h-6 w-6" />

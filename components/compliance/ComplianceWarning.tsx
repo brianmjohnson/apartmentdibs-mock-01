@@ -42,43 +42,46 @@ export function ComplianceWarning({
   }
 
   return (
-    <Alert variant="default" className={`border-2 border-yellow-500 bg-yellow-50 dark:bg-yellow-950/20 ${className || ''}`}>
+    <Alert
+      variant="default"
+      className={`border-2 border-yellow-500 bg-yellow-50 dark:bg-yellow-950/20 ${className || ''}`}
+    >
       <AlertTriangle className="h-5 w-5 text-yellow-600" />
-      <AlertTitle className="text-yellow-800 dark:text-yellow-200 font-bold">
+      <AlertTitle className="font-bold text-yellow-800 dark:text-yellow-200">
         Filter Adjusted for Compliance
       </AlertTitle>
       <AlertDescription className="mt-2 space-y-3">
         <p className="text-yellow-900 dark:text-yellow-100">
           <strong>{lawName}</strong>
-          {lawCitation && (
-            <span className="text-sm ml-1">({lawCitation})</span>
-          )}
-          {' '}restricts this screening criteria in {jurisdiction}.
+          {lawCitation && <span className="ml-1 text-sm">({lawCitation})</span>} restricts this
+          screening criteria in {jurisdiction}.
         </p>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-3 mt-3">
-          <div className="p-2 bg-red-100 dark:bg-red-950/30 rounded border border-red-200 dark:border-red-900">
-            <p className="text-xs font-medium text-red-800 dark:text-red-200 uppercase">Your Filter</p>
-            <p className="text-sm text-red-900 dark:text-red-100 line-through">{originalValue}</p>
+        <div className="mt-3 grid grid-cols-1 gap-3 md:grid-cols-2">
+          <div className="rounded border border-red-200 bg-red-100 p-2 dark:border-red-900 dark:bg-red-950/30">
+            <p className="text-xs font-medium text-red-800 uppercase dark:text-red-200">
+              Your Filter
+            </p>
+            <p className="text-sm text-red-900 line-through dark:text-red-100">{originalValue}</p>
           </div>
-          <div className="p-2 bg-green-100 dark:bg-green-950/30 rounded border border-green-200 dark:border-green-900">
-            <p className="text-xs font-medium text-green-800 dark:text-green-200 uppercase">Adjusted To</p>
+          <div className="rounded border border-green-200 bg-green-100 p-2 dark:border-green-900 dark:bg-green-950/30">
+            <p className="text-xs font-medium text-green-800 uppercase dark:text-green-200">
+              Adjusted To
+            </p>
             <p className="text-sm text-green-900 dark:text-green-100">{adjustedValue}</p>
           </div>
         </div>
 
-        <p className="text-sm text-yellow-800 dark:text-yellow-200">
-          {explanation}
-        </p>
+        <p className="text-sm text-yellow-800 dark:text-yellow-200">{explanation}</p>
 
-        <div className="flex flex-wrap gap-2 mt-3">
+        <div className="mt-3 flex flex-wrap gap-2">
           <Button
             variant="outline"
             size="sm"
             className="border-yellow-600 text-yellow-800 hover:bg-yellow-100 dark:border-yellow-400 dark:text-yellow-200 dark:hover:bg-yellow-950/50"
             onClick={handleLearnMore}
           >
-            <Info className="h-4 w-4 mr-1" />
+            <Info className="mr-1 h-4 w-4" />
             Why was my filter blocked?
           </Button>
           {sourceUrl && (
@@ -89,7 +92,7 @@ export function ComplianceWarning({
               asChild
             >
               <a href={sourceUrl} target="_blank" rel="noopener noreferrer">
-                <ExternalLink className="h-4 w-4 mr-1" />
+                <ExternalLink className="mr-1 h-4 w-4" />
                 View Official Law
               </a>
             </Button>

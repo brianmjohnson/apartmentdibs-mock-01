@@ -48,6 +48,7 @@ Jessica's perspective: "I spend more time chasing pay stubs than I do actually l
 **Estimated Effort**: 21 story points (80-100 hours)
 
 **Complexity Factors**:
+
 - Technical complexity: Medium (data aggregation, real-time updates)
 - UI complexity: High (dashboard design, filtering, sorting)
 - Integration complexity: Medium (WebSocket for real-time)
@@ -62,6 +63,7 @@ Jessica's perspective: "I spend more time chasing pay stubs than I do actually l
 **Given** an agent logs into the platform
 **When** they access the dashboard
 **Then** they see all applicants across all listings with columns:
+
 - Applicant ID (e.g., "Applicant #2847")
 - Listing address
 - Status: "New", "Documents Complete", "Under Review", "Shortlisted", "Offer Extended", "Lease Signed", "Denied"
@@ -70,10 +72,12 @@ Jessica's perspective: "I spend more time chasing pay stubs than I do actually l
 - Next action (e.g., "Awaiting landlord decision")
 
 **And** the list is:
+
 - Sortable by: application date, status, listing address, income ratio, credit score
 - Filterable by: status, listing, date range, verification status
 
 **Verification**:
+
 - [ ] All applicants displayed in single view
 - [ ] Sorting works for all columns
 - [ ] Filtering works for all criteria
@@ -84,6 +88,7 @@ Jessica's perspective: "I spend more time chasing pay stubs than I do actually l
 **Given** applicants have different statuses
 **When** displayed in the dashboard
 **Then** visual badges indicate status:
+
 - Green: "Documents Complete" (ready for landlord review)
 - Yellow: "Incomplete" (missing documents)
 - Red: "Expired" (application older than 14 days, no response)
@@ -91,6 +96,7 @@ Jessica's perspective: "I spend more time chasing pay stubs than I do actually l
 - Gray: "Denied" or "Withdrawn"
 
 **Verification**:
+
 - [ ] Color-coded badges display correctly
 - [ ] Badge colors are accessible (colorblind-friendly)
 - [ ] Status updates reflected in real-time
@@ -100,12 +106,14 @@ Jessica's perspective: "I spend more time chasing pay stubs than I do actually l
 **Given** applicant status changes or new events occur
 **When** the dashboard is open
 **Then** agent receives:
+
 - Push notifications (browser, mobile): "New verified applicant for 123 Main St: Applicant #2847 (4.1x income ratio)"
 - In-dashboard toast notifications
 - Email digest (configurable: hourly, daily, weekly)
 - SMS alerts for urgent actions
 
 **Verification**:
+
 - [ ] WebSocket delivers real-time updates
 - [ ] Push notifications work in browser
 - [ ] Email digest configurable
@@ -116,12 +124,14 @@ Jessica's perspective: "I spend more time chasing pay stubs than I do actually l
 **Given** an agent clicks on an applicant
 **When** the detail view opens
 **Then** they see:
+
 - Obfuscated profile summary (income ratio, credit band, employment, rental history)
 - Application timeline: "Applied Oct 15 -> Documents complete Oct 17 -> Landlord viewed Oct 18"
 - Internal notes (agent can add private notes)
 - Communication history (all platform messages)
 
 **Verification**:
+
 - [ ] Modal/side panel displays all details
 - [ ] Timeline shows all events
 - [ ] Notes are saveable and private
@@ -132,11 +142,13 @@ Jessica's perspective: "I spend more time chasing pay stubs than I do actually l
 **Given** an agent selects multiple applicants
 **When** they perform bulk actions
 **Then** available actions include:
+
 - "Forward to Landlord" (send all shortlisted at once)
 - "Request Missing Documents" (auto-send reminders)
 - "Deny with Reason" (generate adverse action letters for all)
 
 **Verification**:
+
 - [ ] Multi-select works correctly
 - [ ] Bulk forward sends all selected
 - [ ] Bulk reminder triggers for incomplete applicants
@@ -145,14 +157,17 @@ Jessica's perspective: "I spend more time chasing pay stubs than I do actually l
 ### AC-6: Non-Functional Requirements
 
 **Performance**:
+
 - [ ] Dashboard loads in <2 seconds (even with 500+ applicants)
 - [ ] Real-time updates via WebSocket (no page refresh)
 
 **Responsiveness**:
+
 - [ ] Mobile-friendly (agent checks between showings)
 - [ ] Touch-friendly controls
 
 **Reliability**:
+
 - [ ] Graceful degradation if WebSocket disconnects
 
 ---
@@ -182,6 +197,7 @@ CREATE INDEX idx_applications_agent_status ON applications(agent_id, status, las
 ### Frontend Specification
 
 **Components**:
+
 ```
 components/
   dashboard/
@@ -193,6 +209,7 @@ components/
 ```
 
 **Routing**:
+
 - `/agent/applicants` - Main dashboard
 - `/agent/applicants/[id]` - Detail view
 
@@ -200,14 +217,15 @@ components/
 
 ## Analytics Tracking
 
-| Event Name | When Triggered | Properties |
-|------------|----------------|------------|
-| `dashboard_viewed` | Agent opens dashboard | `{agentId, applicantCount}` |
-| `applicant_filtered` | Filter applied | `{agentId, filterType, filterValue}` |
-| `bulk_action_performed` | Bulk action executed | `{agentId, actionType, count}` |
-| `notification_received` | Real-time notification | `{agentId, notificationType}` |
+| Event Name              | When Triggered         | Properties                           |
+| ----------------------- | ---------------------- | ------------------------------------ |
+| `dashboard_viewed`      | Agent opens dashboard  | `{agentId, applicantCount}`          |
+| `applicant_filtered`    | Filter applied         | `{agentId, filterType, filterValue}` |
+| `bulk_action_performed` | Bulk action executed   | `{agentId, actionType, count}`       |
+| `notification_received` | Real-time notification | `{agentId, notificationType}`        |
 
 **Success Metrics**:
+
 - 75% reduction in time spent on applicant management
 - 90%+ of agents use dashboard daily
 - <2 second dashboard load time
@@ -217,9 +235,11 @@ components/
 ## Dependencies
 
 ### Blocked By
+
 - US-001: PII Anonymization (obfuscated data display)
 
 ### Related Stories
+
 - US-006: CRM Auto-Matching
 - US-008: Automated Document Collection Reminders
 
@@ -228,6 +248,7 @@ components/
 ## Testing Requirements
 
 ### E2E Tests
+
 ```typescript
 test('agent can view and filter applicants', async ({ page }) => {
   await page.goto('/agent/applicants')
@@ -245,10 +266,10 @@ test('agent can view and filter applicants', async ({ page }) => {
 
 ## Notes & Updates
 
-| Date | Author | Update |
-|------|--------|--------|
+| Date       | Author          | Update                 |
+| ---------- | --------------- | ---------------------- |
 | 2025-11-19 | Product Manager | Initial story creation |
-| 2025-11-19 | - | Approved |
+| 2025-11-19 | -               | Approved               |
 
 ---
 

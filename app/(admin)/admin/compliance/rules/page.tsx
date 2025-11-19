@@ -2,13 +2,7 @@
 
 import { useState } from 'react'
 import Link from 'next/link'
-import {
-  ArrowLeft,
-  Plus,
-  Edit,
-  ExternalLink,
-  FileText,
-} from 'lucide-react'
+import { ArrowLeft, Plus, Edit, ExternalLink, FileText } from 'lucide-react'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
@@ -39,10 +33,7 @@ import {
   DialogTitle,
   DialogTrigger,
 } from '@/components/ui/dialog'
-import {
-  mockComplianceRules,
-  formatDate,
-} from '@/lib/mock-data/admin'
+import { mockComplianceRules, formatDate } from '@/lib/mock-data/admin'
 
 export default function ComplianceRulesPage() {
   const [addDialogOpen, setAddDialogOpen] = useState(false)
@@ -71,33 +62,29 @@ export default function ComplianceRulesPage() {
       </Link>
 
       {/* Page Header */}
-      <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+      <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
         <div>
           <h1 className="text-3xl font-bold tracking-tight">Compliance Rules</h1>
-          <p className="text-muted-foreground">
-            Manage compliance rules and regulations
-          </p>
+          <p className="text-muted-foreground">Manage compliance rules and regulations</p>
         </div>
         <Dialog open={addDialogOpen} onOpenChange={setAddDialogOpen}>
           <DialogTrigger asChild>
-            <Button className="border-2 border-foreground">
+            <Button className="border-foreground border-2">
               <Plus className="mr-2 h-4 w-4" />
               Add Rule
             </Button>
           </DialogTrigger>
-          <DialogContent className="border-2 border-foreground max-w-2xl">
+          <DialogContent className="border-foreground max-w-2xl border-2">
             <DialogHeader>
               <DialogTitle>Add Compliance Rule</DialogTitle>
-              <DialogDescription>
-                Define a new compliance rule for the platform
-              </DialogDescription>
+              <DialogDescription>Define a new compliance rule for the platform</DialogDescription>
             </DialogHeader>
             <div className="space-y-4 py-4">
               <div className="grid grid-cols-2 gap-4">
                 <div>
                   <Label htmlFor="jurisdiction">Jurisdiction</Label>
                   <Select>
-                    <SelectTrigger className="border-2 mt-1">
+                    <SelectTrigger className="mt-1 border-2">
                       <SelectValue placeholder="Select jurisdiction" />
                     </SelectTrigger>
                     <SelectContent>
@@ -112,7 +99,7 @@ export default function ComplianceRulesPage() {
                 <div>
                   <Label htmlFor="rule_type">Rule Type</Label>
                   <Select>
-                    <SelectTrigger className="border-2 mt-1">
+                    <SelectTrigger className="mt-1 border-2">
                       <SelectValue placeholder="Select type" />
                     </SelectTrigger>
                     <SelectContent>
@@ -136,19 +123,11 @@ export default function ComplianceRulesPage() {
               <div className="grid grid-cols-2 gap-4">
                 <div>
                   <Label htmlFor="effective_date">Effective Date</Label>
-                  <Input
-                    id="effective_date"
-                    type="date"
-                    className="mt-1 border-2"
-                  />
+                  <Input id="effective_date" type="date" className="mt-1 border-2" />
                 </div>
                 <div>
                   <Label htmlFor="source_url">Source URL (optional)</Label>
-                  <Input
-                    id="source_url"
-                    placeholder="https://..."
-                    className="mt-1 border-2"
-                  />
+                  <Input id="source_url" placeholder="https://..." className="mt-1 border-2" />
                 </div>
               </div>
               <div>
@@ -174,7 +153,7 @@ export default function ComplianceRulesPage() {
                   // Handle add
                   setAddDialogOpen(false)
                 }}
-                className="border-2 border-foreground"
+                className="border-foreground border-2"
               >
                 Add Rule
               </Button>
@@ -184,15 +163,13 @@ export default function ComplianceRulesPage() {
       </div>
 
       {/* Rules Table */}
-      <Card className="border-2 border-foreground">
+      <Card className="border-foreground border-2">
         <CardHeader>
           <CardTitle>All Rules ({mockComplianceRules.length})</CardTitle>
-          <CardDescription>
-            Compliance rules applied to the platform
-          </CardDescription>
+          <CardDescription>Compliance rules applied to the platform</CardDescription>
         </CardHeader>
         <CardContent>
-          <div className="rounded-md border-2 border-border">
+          <div className="border-border rounded-md border-2">
             <Table>
               <TableHeader>
                 <TableRow>
@@ -207,30 +184,21 @@ export default function ComplianceRulesPage() {
               <TableBody>
                 {mockComplianceRules.map((rule) => (
                   <TableRow key={rule.id}>
-                    <TableCell className="font-medium">
-                      {rule.jurisdiction}
-                    </TableCell>
+                    <TableCell className="font-medium">{rule.jurisdiction}</TableCell>
                     <TableCell>{rule.ruleType}</TableCell>
                     <TableCell className="max-w-md">
                       <p className="truncate">{rule.description}</p>
                     </TableCell>
                     <TableCell>{formatDate(rule.effectiveDate)}</TableCell>
                     <TableCell>
-                      <Badge
-                        variant="outline"
-                        className={`border ${getStatusColor(rule.status)}`}
-                      >
+                      <Badge variant="outline" className={`border ${getStatusColor(rule.status)}`}>
                         {rule.status}
                       </Badge>
                     </TableCell>
                     <TableCell className="text-right">
                       <div className="flex items-center justify-end gap-2">
                         {rule.sourceUrl && (
-                          <a
-                            href={rule.sourceUrl}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                          >
+                          <a href={rule.sourceUrl} target="_blank" rel="noopener noreferrer">
                             <Button variant="ghost" size="icon">
                               <ExternalLink className="h-4 w-4" />
                               <span className="sr-only">View source</span>

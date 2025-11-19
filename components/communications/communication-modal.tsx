@@ -32,9 +32,12 @@ interface CommunicationData {
 const mockCommunications: Record<string, CommunicationData> = {
   applicationSubmitted: {
     sms: {
-      tenant: "Your application for 123 Main St has been submitted! We'll update you within 48 hours. Track status: apartmentdibs.com/app",
-      agent: "New application received for 123 Main St from John Doe. Background check in progress. Review: apartmentdibs.com/agent",
-      landlord: "New application alert: John Doe applied for 123 Main St. Pre-screening complete. View details: apartmentdibs.com/owner",
+      tenant:
+        "Your application for 123 Main St has been submitted! We'll update you within 48 hours. Track status: apartmentdibs.com/app",
+      agent:
+        'New application received for 123 Main St from John Doe. Background check in progress. Review: apartmentdibs.com/agent',
+      landlord:
+        'New application alert: John Doe applied for 123 Main St. Pre-screening complete. View details: apartmentdibs.com/owner',
     },
     email: {
       tenant: `Subject: Application Submitted - 123 Main St
@@ -90,16 +93,22 @@ View the complete application and make your decision in your owner portal.
 ApartmentDibs Team`,
     },
     inApp: {
-      tenant: "Your application for 123 Main St is being processed. Background check in progress. Expected completion: 48 hours.",
-      agent: "New application: John Doe for 123 Main St. Pre-screening passed. Background check pending. Click to review.",
-      landlord: "Application received for 123 Main St from pre-qualified tenant. Income: 3.2x rent. Click to review and decide.",
+      tenant:
+        'Your application for 123 Main St is being processed. Background check in progress. Expected completion: 48 hours.',
+      agent:
+        'New application: John Doe for 123 Main St. Pre-screening passed. Background check pending. Click to review.',
+      landlord:
+        'Application received for 123 Main St from pre-qualified tenant. Income: 3.2x rent. Click to review and decide.',
     },
   },
   applicationApproved: {
     sms: {
-      tenant: "Congratulations! Your application for 123 Main St is APPROVED! Next: Sign lease within 48 hours. Check email for details.",
-      agent: "Application APPROVED: John Doe for 123 Main St. Lease signing scheduled. Commission pending: $2,200.",
-      landlord: "Application APPROVED for 123 Main St. Tenant: John Doe. Lease generated. Move-in: Dec 1. View: apartmentdibs.com/owner",
+      tenant:
+        'Congratulations! Your application for 123 Main St is APPROVED! Next: Sign lease within 48 hours. Check email for details.',
+      agent:
+        'Application APPROVED: John Doe for 123 Main St. Lease signing scheduled. Commission pending: $2,200.',
+      landlord:
+        'Application APPROVED for 123 Main St. Tenant: John Doe. Lease generated. Move-in: Dec 1. View: apartmentdibs.com/owner',
     },
     email: {
       tenant: `Subject: Congratulations! Application Approved - 123 Main St
@@ -156,9 +165,12 @@ The lease has been sent to the tenant for signature. You'll be notified when all
 Thank you for using ApartmentDibs!`,
     },
     inApp: {
-      tenant: "Application APPROVED! Sign your lease now to secure 123 Main St. Deadline: 48 hours. Click to proceed.",
-      agent: "Approved! John Doe for 123 Main St. Lease pending signature. Your commission: $2,200.",
-      landlord: "Tenant approved for 123 Main St. Move-in: Dec 1. Expected annual rent: $26,400. Lease pending signature.",
+      tenant:
+        'Application APPROVED! Sign your lease now to secure 123 Main St. Deadline: 48 hours. Click to proceed.',
+      agent:
+        'Approved! John Doe for 123 Main St. Lease pending signature. Your commission: $2,200.',
+      landlord:
+        'Tenant approved for 123 Main St. Move-in: Dec 1. Expected annual rent: $26,400. Lease pending signature.',
     },
   },
 }
@@ -192,23 +204,21 @@ export function CommunicationModal({
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       {trigger && <DialogTrigger asChild>{trigger}</DialogTrigger>}
-      <DialogContent className="max-w-5xl max-h-[90vh] border-4 border-foreground">
+      <DialogContent className="border-foreground max-h-[90vh] max-w-5xl border-4">
         <DialogHeader>
-          <DialogTitle className="text-2xl font-bold">
-            Communication Preview
-          </DialogTitle>
+          <DialogTitle className="text-2xl font-bold">Communication Preview</DialogTitle>
           <DialogDescription>
             View how communications are sent to each persona via different channels.
           </DialogDescription>
         </DialogHeader>
 
         <Tabs defaultValue="sms" className="w-full">
-          <TabsList className="grid w-full grid-cols-3 border-2 border-foreground">
+          <TabsList className="border-foreground grid w-full grid-cols-3 border-2">
             {communicationTypes.map((type) => (
               <TabsTrigger
                 key={type.id}
                 value={type.id}
-                className="flex items-center gap-2 data-[state=active]:bg-primary data-[state=active]:text-primary-foreground"
+                className="data-[state=active]:bg-primary data-[state=active]:text-primary-foreground flex items-center gap-2"
               >
                 <type.icon className="h-4 w-4" />
                 {type.label}
@@ -218,15 +228,12 @@ export function CommunicationModal({
 
           {communicationTypes.map((type) => (
             <TabsContent key={type.id} value={type.id} className="mt-4">
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+              <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
                 {personas.map((persona) => (
-                  <Card key={persona.id} className="border-2 border-foreground">
+                  <Card key={persona.id} className="border-foreground border-2">
                     <CardHeader className="pb-3">
                       <CardTitle className="flex items-center gap-2 text-lg">
-                        <Badge
-                          variant="outline"
-                          className={`${persona.color} border`}
-                        >
+                        <Badge variant="outline" className={`${persona.color} border`}>
                           {persona.label}
                         </Badge>
                       </CardTitle>
@@ -245,8 +252,8 @@ export function CommunicationModal({
           ))}
         </Tabs>
 
-        <div className="flex justify-end mt-4">
-          <Button onClick={() => setOpen(false)} className="border-2 border-foreground">
+        <div className="mt-4 flex justify-end">
+          <Button onClick={() => setOpen(false)} className="border-foreground border-2">
             Close
           </Button>
         </div>
@@ -267,9 +274,7 @@ export function showCommunicationToast(
       onClick: () => {
         // This would typically update state in a parent component
         // For now, we'll use a custom event
-        window.dispatchEvent(
-          new CustomEvent('openCommunicationModal', { detail: { scenario } })
-        )
+        window.dispatchEvent(new CustomEvent('openCommunicationModal', { detail: { scenario } }))
       },
     },
   })

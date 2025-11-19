@@ -56,6 +56,7 @@
 **Given** applicant uploads pay stubs
 **When** processed by fraud detection
 **Then** system checks:
+
 - Document metadata (creation date, software used)
 - Font consistency
 - Math accuracy (net = gross - deductions)
@@ -64,6 +65,7 @@
 **And** flags: "High confidence" vs "Manual review needed"
 
 **Verification**:
+
 - [ ] PDF metadata analyzed
 - [ ] OCR extracts values for validation
 - [ ] Employer cross-referenced
@@ -73,12 +75,14 @@
 **Given** applicant provides references
 **When** references are contacted
 **Then** platform:
+
 - Sends structured questionnaire
 - Verifies employer via phone/email
 - Cross-references with LinkedIn/business registries
 - Flags inconsistencies
 
 **Verification**:
+
 - [ ] Automated questionnaire sent
 - [ ] Business verification works
 - [ ] Suspicious patterns flagged
@@ -88,12 +92,14 @@
 **Given** applicant uses Plaid for income
 **When** bank account connected
 **Then** platform:
+
 - Verifies deposits match stated income
 - Checks transaction patterns
 - Confirms employer direct deposits
 - Flags cash-only income
 
 **Verification**:
+
 - [ ] Plaid integration works
 - [ ] Income calculated from deposits
 - [ ] Discrepancies flagged
@@ -103,11 +109,13 @@
 **Given** verification checks complete
 **When** risk is assessed
 **Then** applicant receives:
+
 - Verification confidence score
 - List of verified vs unverified items
 - Flags for manual review
 
 **Verification**:
+
 - [ ] Score calculated
 - [ ] Clear breakdown provided
 - [ ] Manual review queue works
@@ -117,12 +125,14 @@
 **Given** documents flagged for review
 **When** support team investigates
 **Then** they can:
+
 - View flagged items
 - Request additional documents
 - Approve or reject
 - Note findings
 
 **Verification**:
+
 - [ ] Admin queue functions
 - [ ] Actions logged
 - [ ] Applicant notified
@@ -142,6 +152,7 @@
 ### Frontend Specification
 
 **Components**:
+
 ```
 components/
   fraud/
@@ -154,13 +165,14 @@ components/
 
 ## Analytics Tracking
 
-| Event Name | When Triggered | Properties |
-|------------|----------------|------------|
-| `document_analyzed` | Upload processed | `{applicantId, docType, confidence}` |
-| `fraud_flagged` | Issue detected | `{applicantId, issueType}` |
-| `manual_review_completed` | Admin reviewed | `{applicantId, decision}` |
+| Event Name                | When Triggered   | Properties                           |
+| ------------------------- | ---------------- | ------------------------------------ |
+| `document_analyzed`       | Upload processed | `{applicantId, docType, confidence}` |
+| `fraud_flagged`           | Issue detected   | `{applicantId, issueType}`           |
+| `manual_review_completed` | Admin reviewed   | `{applicantId, decision}`            |
 
 **Success Metrics**:
+
 - 95%+ fraud detection accuracy
 - <5% false positive rate
 - 50% reduction in fraudulent applications
@@ -170,10 +182,12 @@ components/
 ## Dependencies
 
 ### External Dependencies
+
 - Plaid API
 - Business verification service (D&B, Experian)
 
 ### Related Stories
+
 - US-023: Identity Verification
 
 ---

@@ -24,6 +24,7 @@ Applications with complex data relationships need flexible seeding for:
 - **Demos**: Consistent data for presentations
 
 **Common seeding anti-patterns**:
+
 ```typescript
 // ❌ Monolithic seed script
 async function seed() {
@@ -36,6 +37,7 @@ async function seed() {
 ```
 
 **Problems**:
+
 - Cannot seed individual models in isolation
 - Difficult to create specific test scenarios
 - Hard to maintain as models evolve
@@ -76,8 +78,8 @@ Each factory is a **pure function** that creates one model instance:
 
 ```typescript
 // prisma/seed/factories/user.factory.ts
-import { faker } from "@faker-js/faker"
-import { prisma } from "@/lib/prisma"
+import { faker } from '@faker-js/faker'
+import { prisma } from '@/lib/prisma'
 
 export interface UserFactoryInput {
   email?: string
@@ -95,18 +97,19 @@ export async function createUser(input: UserFactoryInput = {}) {
       firstName: input.firstName ?? faker.person.firstName(),
       lastName: input.lastName ?? faker.person.lastName(),
       emailVerified: input.emailVerified ?? true,
-      role: input.role ?? "user",
+      role: input.role ?? 'user',
       image: input.image ?? faker.image.avatar(),
     },
   })
 }
 
 // Convenience variants
-export const createAdmin = () => createUser({ role: "admin" })
-export const createModerator = () => createUser({ role: "moderator" })
+export const createAdmin = () => createUser({ role: 'admin' })
+export const createModerator = () => createUser({ role: 'moderator' })
 ```
 
 **Key Features**:
+
 - **Defaults with Faker**: Realistic random data
 - **Override capability**: Specify exact values when needed
 - **Type-safe**: TypeScript input interface
@@ -158,7 +161,7 @@ export async function createListing(input: ListingFactoryInput = {}) {
       businessId,
       title: input.title ?? faker.commerce.productName(),
       description: input.description ?? faker.lorem.paragraphs(3),
-      status: input.status ?? "DRAFT",
+      status: input.status ?? 'DRAFT',
 
       // Embedded JSON object
       address: input.address ?? {
@@ -166,14 +169,14 @@ export async function createListing(input: ListingFactoryInput = {}) {
         city: faker.location.city(),
         state: faker.location.state({ abbreviated: true }),
         zipCode: faker.location.zipCode(),
-        country: "US",
+        country: 'US',
       },
 
       // Nested array of objects
       images: input.images ?? [
         {
-          url: faker.image.urlLoremFlickr({ category: "house" }),
-          alt: "Property photo",
+          url: faker.image.urlLoremFlickr({ category: 'house' }),
+          alt: 'Property photo',
           order: 0,
         },
       ],
@@ -183,6 +186,7 @@ export async function createListing(input: ListingFactoryInput = {}) {
 ```
 
 **Use Faker for**:
+
 - Addresses
 - Product names
 - Lorem ipsum text
@@ -199,19 +203,19 @@ export async function createListing(input: ListingFactoryInput = {}) {
 // prisma/seed/scenarios/single-user-with-posts.ts
 export async function seedSingleUserWithPosts() {
   const user = await createUser({
-    email: "alice@example.com",
-    firstName: "Alice",
+    email: 'alice@example.com',
+    firstName: 'Alice',
   })
 
   await createPost({
     authorId: user.id,
-    title: "My First Post",
+    title: 'My First Post',
     published: true,
   })
 
   await createPost({
     authorId: user.id,
-    title: "Draft Post",
+    title: 'Draft Post',
     published: false,
   })
 
@@ -227,36 +231,36 @@ export async function seedSingleUserWithPosts() {
 // prisma/seed/scenarios/multi-organization.ts
 export async function seedMultiOrganization() {
   // Create organization owner
-  const owner = await createUser({ role: "owner" })
+  const owner = await createUser({ role: 'owner' })
 
   // Organization 1
-  const org1 = await createOrganization({ name: "Tech Corp" })
+  const org1 = await createOrganization({ name: 'Tech Corp' })
   await createMember({
     userId: owner.id,
     organizationId: org1.id,
-    role: "owner",
+    role: 'owner',
   })
 
   // Add team members to org1
-  const dev1 = await createUser({ role: "developer" })
+  const dev1 = await createUser({ role: 'developer' })
   await createMember({
     userId: dev1.id,
     organizationId: org1.id,
-    role: "member",
+    role: 'member',
   })
 
   // Create projects for org1
   const project1 = await createProject({
     organizationId: org1.id,
-    name: "Website Redesign",
+    name: 'Website Redesign',
   })
 
   // Organization 2
-  const org2 = await createOrganization({ name: "Marketing Agency" })
+  const org2 = await createOrganization({ name: 'Marketing Agency' })
   await createMember({
     userId: owner.id,
     organizationId: org2.id,
-    role: "owner",
+    role: 'owner',
   })
 
   return { owner, org1, org2, dev1, project1 }
@@ -273,33 +277,25 @@ export async function seedMultiOrganization() {
 
 ```typescript
 // prisma/seed/orchestrator.ts
-import { Command } from "commander"
-import {
-  seedDevelopment,
-  seedTest,
-  seedDemo,
-} from "./scenarios"
-import {
-  createUser,
-  createPost,
-  createOrganization,
-} from "./factories"
+import { Command } from 'commander'
+import { seedDevelopment, seedTest, seedDemo } from './scenarios'
+import { createUser, createPost, createOrganization } from './factories'
 
 const program = new Command()
 
 program
-  .option("--all", "Seed everything (development scenario)")
-  .option("--users <count>", "Number of users to create")
-  .option("--posts <count>", "Number of posts to create")
-  .option("--organizations <count>", "Number of organizations to create")
-  .option("--scenario <name>", "Named scenario to seed")
+  .option('--all', 'Seed everything (development scenario)')
+  .option('--users <count>', 'Number of users to create')
+  .option('--posts <count>', 'Number of posts to create')
+  .option('--organizations <count>', 'Number of organizations to create')
+  .option('--scenario <name>', 'Named scenario to seed')
 
 program.parse()
 const options = program.opts()
 
 async function main() {
   if (options.all) {
-    console.log("🌱 Seeding development data...")
+    console.log('🌱 Seeding development data...')
     await seedDevelopment()
   } else if (options.scenario) {
     console.log(`🌱 Seeding scenario: ${options.scenario}`)
@@ -315,16 +311,16 @@ async function main() {
       await createPost()
     }
   } else {
-    console.log("🌱 Seeding default scenario (test)...")
+    console.log('🌱 Seeding default scenario (test)...')
     await seedTest()
   }
 
-  console.log("✅ Seeding complete!")
+  console.log('✅ Seeding complete!')
 }
 
 main()
   .catch((e) => {
-    console.error("❌ Seeding failed:", e)
+    console.error('❌ Seeding failed:', e)
     process.exit(1)
   })
   .finally(async () => {
@@ -380,7 +376,7 @@ pnpm db:reset && pnpm db:seed --all
 
 ```typescript
 // __tests__/factories/setup.ts
-import { faker } from "@faker-js/faker"
+import { faker } from '@faker-js/faker'
 
 // Set seed for consistent results
 faker.seed(12345)
@@ -391,6 +387,7 @@ const user = await createUser()
 ```
 
 **Why Deterministic**:
+
 - Tests are reproducible
 - Easier to debug failures
 - Snapshots don't change on every run
@@ -401,8 +398,8 @@ const user = await createUser()
 
 ```typescript
 // __tests__/helpers/test-factories.ts
-import { faker } from "@faker-js/faker"
-import { createUser, createPost } from "@/prisma/seed/factories"
+import { faker } from '@faker-js/faker'
+import { createUser, createPost } from '@/prisma/seed/factories'
 
 // Set deterministic seed for tests
 faker.seed(12345)
@@ -426,10 +423,10 @@ export async function createTestPost(overrides = {}) {
 
 ```typescript
 // __tests__/api/posts.test.ts
-import { createTestUser, createTestPost } from "../helpers/test-factories"
+import { createTestUser, createTestPost } from '../helpers/test-factories'
 
-describe("POST /api/posts", () => {
-  it("creates a post", async () => {
+describe('POST /api/posts', () => {
+  it('creates a post', async () => {
     const user = await createTestUser()
     const post = await createTestPost({ authorId: user.id })
 
@@ -446,7 +443,7 @@ describe("POST /api/posts", () => {
 
 ```typescript
 // prisma/seed/utils/cleanup.ts
-import { prisma } from "@/lib/prisma"
+import { prisma } from '@/lib/prisma'
 
 export async function cleanDatabase() {
   // Delete in correct order to respect foreign keys
@@ -457,13 +454,13 @@ export async function cleanDatabase() {
   await prisma.session.deleteMany()
   await prisma.user.deleteMany()
 
-  console.log("🧹 Database cleaned")
+  console.log('🧹 Database cleaned')
 }
 
 // Delete all except platform organization
 export async function cleanDatabaseExceptPlatform() {
   const platformOrg = await prisma.organization.findFirst({
-    where: { slug: "platform" },
+    where: { slug: 'platform' },
   })
 
   await prisma.comment.deleteMany()
@@ -477,7 +474,7 @@ export async function cleanDatabaseExceptPlatform() {
   await prisma.session.deleteMany()
   await prisma.user.deleteMany()
 
-  console.log("🧹 Database cleaned (kept platform org)")
+  console.log('🧹 Database cleaned (kept platform org)')
 }
 ```
 
@@ -497,11 +494,11 @@ For multi-tenant apps, ensure platform organization exists:
 
 ```typescript
 // prisma/seed/utils/platform-org.ts
-import { prisma } from "@/lib/prisma"
+import { prisma } from '@/lib/prisma'
 
 export async function ensurePlatformOrganization() {
   const existingOrg = await prisma.organization.findFirst({
-    where: { slug: "platform" },
+    where: { slug: 'platform' },
   })
 
   if (existingOrg) {
@@ -510,8 +507,8 @@ export async function ensurePlatformOrganization() {
 
   return prisma.organization.create({
     data: {
-      name: "Platform",
-      slug: "platform",
+      name: 'Platform',
+      slug: 'platform',
       metadata: { isPlatform: true },
     },
   })
@@ -521,15 +518,15 @@ export async function createPlatformAdmin() {
   const platformOrg = await ensurePlatformOrganization()
 
   const admin = await createUser({
-    email: "admin@example.com",
-    role: "admin",
+    email: 'admin@example.com',
+    role: 'admin',
   })
 
   await prisma.member.create({
     data: {
       userId: admin.id,
       organizationId: platformOrg.id,
-      role: "owner",
+      role: 'owner',
     },
   })
 
@@ -547,41 +544,41 @@ Rich data for local development:
 
 ```typescript
 // prisma/seed/scenarios/development.ts
-import { cleanDatabase } from "../utils/cleanup"
-import { ensurePlatformOrganization, createPlatformAdmin } from "../utils/platform-org"
-import * as factories from "../factories"
+import { cleanDatabase } from '../utils/cleanup'
+import { ensurePlatformOrganization, createPlatformAdmin } from '../utils/platform-org'
+import * as factories from '../factories'
 
 export async function seedDevelopment() {
   await cleanDatabase()
 
-  console.log("🌱 Creating platform organization...")
+  console.log('🌱 Creating platform organization...')
   await ensurePlatformOrganization()
   await createPlatformAdmin()
 
-  console.log("🌱 Creating users...")
+  console.log('🌱 Creating users...')
   const users = await Promise.all([
-    factories.createUser({ email: "alice@example.com", firstName: "Alice" }),
-    factories.createUser({ email: "bob@example.com", firstName: "Bob" }),
-    factories.createUser({ email: "carol@example.com", firstName: "Carol" }),
+    factories.createUser({ email: 'alice@example.com', firstName: 'Alice' }),
+    factories.createUser({ email: 'bob@example.com', firstName: 'Bob' }),
+    factories.createUser({ email: 'carol@example.com', firstName: 'Carol' }),
   ])
 
-  console.log("🌱 Creating organizations...")
-  const org1 = await factories.createOrganization({ name: "Tech Startup" })
-  const org2 = await factories.createOrganization({ name: "Marketing Agency" })
+  console.log('🌱 Creating organizations...')
+  const org1 = await factories.createOrganization({ name: 'Tech Startup' })
+  const org2 = await factories.createOrganization({ name: 'Marketing Agency' })
 
-  console.log("🌱 Creating memberships...")
+  console.log('🌱 Creating memberships...')
   await factories.createMember({
     userId: users[0].id,
     organizationId: org1.id,
-    role: "owner",
+    role: 'owner',
   })
   await factories.createMember({
     userId: users[1].id,
     organizationId: org1.id,
-    role: "member",
+    role: 'member',
   })
 
-  console.log("🌱 Creating posts...")
+  console.log('🌱 Creating posts...')
   for (let i = 0; i < 20; i++) {
     await factories.createPost({
       authorId: users[i % users.length].id,
@@ -589,7 +586,7 @@ export async function seedDevelopment() {
     })
   }
 
-  console.log("✅ Development seed complete!")
+  console.log('✅ Development seed complete!')
 }
 ```
 
@@ -601,15 +598,15 @@ Minimal data for CI/CD tests:
 
 ```typescript
 // prisma/seed/scenarios/test.ts
-import { cleanDatabase } from "../utils/cleanup"
-import * as factories from "../factories"
+import { cleanDatabase } from '../utils/cleanup'
+import * as factories from '../factories'
 
 export async function seedTest() {
   await cleanDatabase()
 
   // Minimal data for tests
   const user = await factories.createUser({
-    email: "test@example.com",
+    email: 'test@example.com',
   })
 
   const post = await factories.createPost({
@@ -617,7 +614,7 @@ export async function seedTest() {
     published: true,
   })
 
-  console.log("✅ Test seed complete!")
+  console.log('✅ Test seed complete!')
   return { user, post }
 }
 ```
@@ -630,29 +627,29 @@ Polished data for presentations:
 
 ```typescript
 // prisma/seed/scenarios/demo.ts
-import { cleanDatabase } from "../utils/cleanup"
-import * as factories from "../factories"
+import { cleanDatabase } from '../utils/cleanup'
+import * as factories from '../factories'
 
 export async function seedDemo() {
   await cleanDatabase()
 
   // Create demo user with specific data
   const demoUser = await factories.createUser({
-    email: "demo@example.com",
-    firstName: "Demo",
-    lastName: "User",
-    image: "https://i.pravatar.cc/150?img=12",
+    email: 'demo@example.com',
+    firstName: 'Demo',
+    lastName: 'User',
+    image: 'https://i.pravatar.cc/150?img=12',
   })
 
   // Create polished demo posts
   await factories.createPost({
     authorId: demoUser.id,
-    title: "Welcome to Our Platform",
+    title: 'Welcome to Our Platform',
     content: "This is a demo post showcasing our platform's capabilities.",
     published: true,
   })
 
-  console.log("✅ Demo seed complete!")
+  console.log('✅ Demo seed complete!')
 }
 ```
 
@@ -664,34 +661,34 @@ export async function seedDemo() {
 
 ```typescript
 // __tests__/api/posts.test.ts
-import { createTestUser, createTestPost } from "../helpers/test-factories"
-import { cleanDatabase } from "@/prisma/seed/utils/cleanup"
+import { createTestUser, createTestPost } from '../helpers/test-factories'
+import { cleanDatabase } from '@/prisma/seed/utils/cleanup'
 
 beforeEach(async () => {
   await cleanDatabase()
 })
 
-describe("GET /api/posts", () => {
-  it("returns published posts", async () => {
+describe('GET /api/posts', () => {
+  it('returns published posts', async () => {
     const user = await createTestUser()
 
     await createTestPost({
       authorId: user.id,
       published: true,
-      title: "Published Post",
+      title: 'Published Post',
     })
 
     await createTestPost({
       authorId: user.id,
       published: false,
-      title: "Draft Post",
+      title: 'Draft Post',
     })
 
-    const response = await fetch("/api/posts")
+    const response = await fetch('/api/posts')
     const posts = await response.json()
 
     expect(posts).toHaveLength(1)
-    expect(posts[0].title).toBe("Published Post")
+    expect(posts[0].title).toBe('Published Post')
   })
 })
 ```
@@ -702,25 +699,25 @@ describe("GET /api/posts", () => {
 
 ```typescript
 // e2e/posts.spec.ts
-import { test, expect } from "@playwright/test"
-import { seedTest } from "@/prisma/seed/scenarios/test"
+import { test, expect } from '@playwright/test'
+import { seedTest } from '@/prisma/seed/scenarios/test'
 
 test.beforeEach(async () => {
   // Seed database before each test
   await seedTest()
 })
 
-test("user can create a post", async ({ page }) => {
-  await page.goto("/login")
-  await page.fill('input[name="email"]', "test@example.com")
+test('user can create a post', async ({ page }) => {
+  await page.goto('/login')
+  await page.fill('input[name="email"]', 'test@example.com')
   await page.click('button[type="submit"]')
 
-  await page.goto("/posts/new")
-  await page.fill('input[name="title"]', "My E2E Post")
-  await page.fill('textarea[name="content"]', "This is a test post.")
+  await page.goto('/posts/new')
+  await page.fill('input[name="title"]', 'My E2E Post')
+  await page.fill('textarea[name="content"]', 'This is a test post.')
   await page.click('button[type="submit"]')
 
-  await expect(page.locator("text=My E2E Post")).toBeVisible()
+  await expect(page.locator('text=My E2E Post')).toBeVisible()
 })
 ```
 
@@ -732,10 +729,10 @@ Use factories to generate component data:
 
 ```typescript
 // components/PostCard.stories.tsx
-import { Meta, StoryObj } from "@storybook/react"
-import { PostCard } from "./PostCard"
-import { createUser, createPost } from "@/prisma/seed/factories"
-import { faker } from "@faker-js/faker"
+import { Meta, StoryObj } from '@storybook/react'
+import { PostCard } from './PostCard'
+import { createUser, createPost } from '@/prisma/seed/factories'
+import { faker } from '@faker-js/faker'
 
 faker.seed(12345) // Deterministic
 
@@ -812,6 +809,7 @@ export const Draft: Story = {
 ### Monolithic Seed Scripts
 
 **Rejected**:
+
 - Cannot seed individual models
 - Difficult to create specific test scenarios
 - Hard to maintain as models evolve
@@ -819,6 +817,7 @@ export const Draft: Story = {
 ### SQL Fixtures
 
 **Rejected**:
+
 - Brittle (breaks when schema changes)
 - Difficult to maintain relationships
 - No type safety
@@ -826,6 +825,7 @@ export const Draft: Story = {
 ### Snapshot/Restore Strategy
 
 **Rejected**:
+
 - Large database dumps
 - Slow restore times
 - Difficult to version control

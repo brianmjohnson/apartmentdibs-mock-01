@@ -38,6 +38,7 @@ session.user = {
 ```
 
 **Problems**:
+
 - **Stale data**: Cached team/project data becomes outdated
 - **Complex caching logic**: Manual cache invalidation required
 - **Large cookie size**: More data = larger cookies
@@ -77,6 +78,7 @@ session.user = {
 ```
 
 **Benefits**:
+
 - **Always fresh**: Domain data queried from database
 - **Simple**: No cache invalidation logic needed
 - **Small cookies**: Minimal data transferred
@@ -93,7 +95,7 @@ session.user = {
 Use session for authentication state **only**:
 
 ```typescript
-import { useSession } from "@/lib/auth/auth-client"
+import { useSession } from '@/lib/auth/auth-client'
 
 function MyComponent() {
   const { data: session } = useSession()
@@ -104,7 +106,7 @@ function MyComponent() {
   const isEmailVerified = session?.user.emailVerified
 
   // ✅ Good: Check role from session
-  const isAdmin = session?.user.role?.includes("admin")
+  const isAdmin = session?.user.role?.includes('admin')
 }
 ```
 
@@ -154,11 +156,13 @@ session: {
 ```
 
 **Performance Characteristics**:
+
 - **Cookie cached**: <1ms (cookie read, no database query)
 - **Uncached session**: ~50ms (database query)
 - **Domain data query**: ~10-20ms (indexed queries)
 
 **Caching Behavior**:
+
 1. **First request**: Database query (50ms)
 2. **Next 5 minutes**: Cookie read (<1ms)
 3. **After 5 minutes**: Database query again
@@ -214,6 +218,7 @@ For multi-tenant apps, store current organization ID in session:
 ```
 
 **Why in session?**
+
 - User's current "context" for all actions
 - Persists across page navigations
 - Server and client both need this value
@@ -264,14 +269,14 @@ function ProjectList() {
 ### Role from Session
 
 ```typescript
-import { useSession } from "@/lib/auth/auth-client"
+import { useSession } from '@/lib/auth/auth-client'
 
 function usePermissions() {
   const { data: session } = useSession()
 
   // ✅ Good: Basic role check from session
-  const isAdmin = session?.user.role?.includes("admin")
-  const isModerator = session?.user.role?.includes("moderator")
+  const isAdmin = session?.user.role?.includes('admin')
+  const isModerator = session?.user.role?.includes('moderator')
 
   return { isAdmin, isModerator }
 }
@@ -282,8 +287,8 @@ function usePermissions() {
 For complex permissions, query additional data:
 
 ```typescript
-import { useSession } from "@/lib/auth/auth-client"
-import { useOrgMembership } from "@/lib/hooks/useOrgMembership"
+import { useSession } from '@/lib/auth/auth-client'
+import { useOrgMembership } from '@/lib/hooks/useOrgMembership'
 
 function useOrgPermissions(organizationId?: string) {
   const { data: session } = useSession()
@@ -292,14 +297,14 @@ function useOrgPermissions(organizationId?: string) {
   // Query user's membership in organization
   const { data: membership } = useOrgMembership({
     userId: session?.user.id,
-    organizationId: orgId
+    organizationId: orgId,
   })
 
   const hasPermission = (permission: string) => {
     // Complex permission logic based on org role
-    if (membership?.role === "owner") return true
-    if (membership?.role === "admin" && permission !== "billing") return true
-    if (membership?.role === "member" && permission.startsWith("read:")) return true
+    if (membership?.role === 'owner') return true
+    if (membership?.role === 'admin' && permission !== 'billing') return true
+    if (membership?.role === 'member' && permission.startsWith('read:')) return true
     return false
   }
 
@@ -322,12 +327,12 @@ List all non-auth fields currently in your session:
 ```typescript
 // Before
 session.user = {
-  id,           // ✅ Keep (auth)
-  email,        // ✅ Keep (auth)
-  role,         // ✅ Keep (auth)
-  currentTeam,  // ❌ Remove (business logic)
-  teamCount,    // ❌ Remove (business logic)
-  preferences,  // ❌ Remove (business logic)
+  id, // ✅ Keep (auth)
+  email, // ✅ Keep (auth)
+  role, // ✅ Keep (auth)
+  currentTeam, // ❌ Remove (business logic)
+  teamCount, // ❌ Remove (business logic)
+  preferences, // ❌ Remove (business logic)
 }
 ```
 
@@ -343,7 +348,7 @@ export function useActiveOrganization() {
   const { data: session } = useSession()
 
   return useQuery({
-    queryKey: ["organization", session?.activeOrganizationId],
+    queryKey: ['organization', session?.activeOrganizationId],
     queryFn: () => fetchOrganization(session?.activeOrganizationId),
     enabled: !!session?.activeOrganizationId,
   })
@@ -398,6 +403,7 @@ CREATE INDEX idx_org_slug ON "Organization"(slug);
 ```
 
 **Query Performance**:
+
 - Indexed queries: ~10-20ms
 - Unindexed queries: ~100-500ms (avoid!)
 
@@ -435,9 +441,9 @@ export const auth = betterAuth({
   session: {
     cookieCache: {
       enabled: true,
-      maxAge: 5 * 60 // 5 minutes
-    }
-  }
+      maxAge: 5 * 60, // 5 minutes
+    },
+  },
 })
 ```
 
@@ -447,7 +453,7 @@ export const auth = betterAuth({
 // lib/auth.ts
 export const authOptions: NextAuthOptions = {
   session: {
-    strategy: "database", // Use database sessions, not JWT
+    strategy: 'database', // Use database sessions, not JWT
   },
   callbacks: {
     session({ session, user }) {
@@ -459,8 +465,8 @@ export const authOptions: NextAuthOptions = {
       // session.user.teams = await getTeams(user.id) // NO!
 
       return session
-    }
-  }
+    },
+  },
 }
 ```
 
@@ -468,10 +474,10 @@ export const authOptions: NextAuthOptions = {
 
 ```typescript
 // Clerk stores minimal session by default
-import { useUser, useOrganization } from "@clerk/nextjs"
+import { useUser, useOrganization } from '@clerk/nextjs'
 
 function Component() {
-  const { user } = useUser()           // Auth data
+  const { user } = useUser() // Auth data
   const { organization } = useOrganization() // Domain data (queried)
 }
 ```
@@ -483,6 +489,7 @@ function Component() {
 ### Keep JWT Caching Pattern
 
 **Rejected**:
+
 - Requires complex cache invalidation with cookie sessions
 - Stale data issues
 - Modern auth libraries handle caching automatically
@@ -490,6 +497,7 @@ function Component() {
 ### Custom Session Fields via Plugins
 
 **Rejected**:
+
 - Most plugins recompute custom fields on every request
 - No performance benefit over separate queries
 - Adds complexity to session management
@@ -497,6 +505,7 @@ function Component() {
 ### Cache Domain Data in React Context
 
 **Rejected**:
+
 - Client-side state complexity
 - Hydration mismatches (SSR vs client)
 - Stale data synchronization issues

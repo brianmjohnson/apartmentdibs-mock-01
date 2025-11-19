@@ -17,7 +17,7 @@ export function CreditBand({
   showIcon = true,
   showLabel = true,
   size = 'md',
-  className = ''
+  className = '',
 }: CreditBandProps) {
   const colorClass = getCreditBandColor(creditBand)
   const label = getCreditBandLabel(creditBand)
@@ -25,20 +25,18 @@ export function CreditBand({
   const sizeClasses = {
     sm: 'text-xs',
     md: 'text-sm',
-    lg: 'text-base'
+    lg: 'text-base',
   }
 
   const iconSizes = {
     sm: 'h-3 w-3',
     md: 'h-4 w-4',
-    lg: 'h-5 w-5'
+    lg: 'h-5 w-5',
   }
 
   return (
     <div className={`flex items-center gap-2 ${className}`}>
-      {showIcon && (
-        <CreditCard className={`${iconSizes[size]} text-muted-foreground`} />
-      )}
+      {showIcon && <CreditCard className={`${iconSizes[size]} text-muted-foreground`} />}
       <div className="flex items-center gap-2">
         <span
           className={`font-bold ${sizeClasses[size]}`}
@@ -47,10 +45,7 @@ export function CreditBand({
           {creditBand}
         </span>
         {showLabel && (
-          <Badge
-            variant="outline"
-            className={`${colorClass} border ${sizeClasses[size]}`}
-          >
+          <Badge variant="outline" className={`${colorClass} border ${sizeClasses[size]}`}>
             {label}
           </Badge>
         )}
@@ -62,7 +57,7 @@ export function CreditBand({
 // Compact version for use in tables or lists
 export function CreditBandCompact({
   creditBand,
-  className = ''
+  className = '',
 }: {
   creditBand: string
   className?: string

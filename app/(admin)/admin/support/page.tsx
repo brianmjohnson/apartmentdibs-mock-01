@@ -2,15 +2,7 @@
 
 import { useState } from 'react'
 import Link from 'next/link'
-import {
-  Search,
-  Headphones,
-  Eye,
-  UserPlus,
-  CheckCircle,
-  Clock,
-  MoreHorizontal,
-} from 'lucide-react'
+import { Search, Headphones, Eye, UserPlus, CheckCircle, Clock, MoreHorizontal } from 'lucide-react'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
@@ -57,19 +49,17 @@ export default function SupportPage() {
   return (
     <div className="space-y-6">
       {/* Page Header */}
-      <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+      <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
         <div>
           <h1 className="text-3xl font-bold tracking-tight">Support Queue</h1>
-          <p className="text-muted-foreground">
-            Manage customer support tickets
-          </p>
+          <p className="text-muted-foreground">Manage customer support tickets</p>
         </div>
         <div className="flex items-center gap-2">
-          <Badge variant="outline" className="border-blue-300 text-blue-700 gap-1">
+          <Badge variant="outline" className="gap-1 border-blue-300 text-blue-700">
             <Clock className="h-3 w-3" />
             {openCount} Open
           </Badge>
-          <Badge variant="outline" className="border-yellow-300 text-yellow-700 gap-1">
+          <Badge variant="outline" className="gap-1 border-yellow-300 text-yellow-700">
             <Headphones className="h-3 w-3" />
             {inProgressCount} In Progress
           </Badge>
@@ -77,17 +67,17 @@ export default function SupportPage() {
       </div>
 
       {/* Search and Filter */}
-      <Card className="border-2 border-foreground">
+      <Card className="border-foreground border-2">
         <CardContent className="pt-6">
-          <div className="flex flex-col md:flex-row gap-4">
+          <div className="flex flex-col gap-4 md:flex-row">
             <div className="flex-1">
               <div className="relative">
-                <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                <Search className="text-muted-foreground absolute top-1/2 left-3 h-4 w-4 -translate-y-1/2" />
                 <Input
                   placeholder="Search by ticket ID, subject, or user..."
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
-                  className="pl-9 border-2"
+                  className="border-2 pl-9"
                 />
               </div>
             </div>
@@ -97,7 +87,7 @@ export default function SupportPage() {
 
       {/* Tabs and Tickets */}
       <Tabs value={activeTab} onValueChange={setActiveTab}>
-        <TabsList className="border-2 border-foreground">
+        <TabsList className="border-foreground border-2">
           <TabsTrigger value="all">All ({mockSupportTickets.length})</TabsTrigger>
           <TabsTrigger value="open">Open ({openCount})</TabsTrigger>
           <TabsTrigger value="in_progress">In Progress ({inProgressCount})</TabsTrigger>
@@ -108,18 +98,16 @@ export default function SupportPage() {
         <TabsContent value={activeTab} className="mt-4">
           <div className="space-y-4">
             {filteredTickets.map((ticket) => (
-              <Card key={ticket.id} className="border-2 border-foreground">
+              <Card key={ticket.id} className="border-foreground border-2">
                 <CardContent className="p-4">
-                  <div className="flex flex-col md:flex-row md:items-start justify-between gap-4">
+                  <div className="flex flex-col justify-between gap-4 md:flex-row md:items-start">
                     <div className="flex-1 space-y-2">
                       <div className="flex items-start justify-between">
                         <div>
                           <Link href={`/admin/support/${ticket.id}`}>
-                            <h3 className="font-semibold hover:underline">
-                              {ticket.subject}
-                            </h3>
+                            <h3 className="font-semibold hover:underline">{ticket.subject}</h3>
                           </Link>
-                          <p className="text-sm text-muted-foreground">
+                          <p className="text-muted-foreground text-sm">
                             {ticket.id} - {ticket.userName} ({ticket.userEmail})
                           </p>
                         </div>
@@ -169,19 +157,17 @@ export default function SupportPage() {
                         </Badge>
                       </div>
 
-                      <p className="text-sm text-muted-foreground line-clamp-2">
+                      <p className="text-muted-foreground line-clamp-2 text-sm">
                         {ticket.description}
                       </p>
 
-                      <div className="flex flex-wrap items-center gap-4 text-xs text-muted-foreground">
+                      <div className="text-muted-foreground flex flex-wrap items-center gap-4 text-xs">
                         <span>Created: {formatDateTime(ticket.createdAt)}</span>
-                        {ticket.assignedTo && (
-                          <span>Assigned to: {ticket.assignedTo}</span>
-                        )}
+                        {ticket.assignedTo && <span>Assigned to: {ticket.assignedTo}</span>}
                       </div>
                     </div>
 
-                    <div className="hidden md:flex items-center gap-2">
+                    <div className="hidden items-center gap-2 md:flex">
                       <Link href={`/admin/support/${ticket.id}`}>
                         <Button variant="outline" size="sm" className="border-2">
                           <Eye className="mr-2 h-4 w-4" />
@@ -189,7 +175,7 @@ export default function SupportPage() {
                         </Button>
                       </Link>
                       <Select>
-                        <SelectTrigger className="w-[140px] border-2 h-9">
+                        <SelectTrigger className="h-9 w-[140px] border-2">
                           <SelectValue placeholder="Assign to..." />
                         </SelectTrigger>
                         <SelectContent>
@@ -213,11 +199,9 @@ export default function SupportPage() {
             ))}
 
             {filteredTickets.length === 0 && (
-              <Card className="border-2 border-foreground">
+              <Card className="border-foreground border-2">
                 <CardContent className="py-8 text-center">
-                  <p className="text-muted-foreground">
-                    No tickets found matching your criteria
-                  </p>
+                  <p className="text-muted-foreground">No tickets found matching your criteria</p>
                 </CardContent>
               </Card>
             )}

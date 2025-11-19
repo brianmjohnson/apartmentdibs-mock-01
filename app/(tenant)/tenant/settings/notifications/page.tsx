@@ -46,12 +46,8 @@ export default function NotificationsSettingsPage() {
     },
   })
 
-  const updateSetting = (
-    channel: keyof NotificationSettings,
-    category: string,
-    value: boolean
-  ) => {
-    setSettings(prev => ({
+  const updateSetting = (channel: keyof NotificationSettings, category: string, value: boolean) => {
+    setSettings((prev) => ({
       ...prev,
       [channel]: {
         ...prev[channel],
@@ -79,7 +75,7 @@ export default function NotificationsSettingsPage() {
     <div className="flex items-center justify-between py-3">
       <div className="space-y-0.5">
         <Label className="font-medium">{title}</Label>
-        <p className="text-sm text-muted-foreground">{description}</p>
+        <p className="text-muted-foreground text-sm">{description}</p>
       </div>
       <Switch
         checked={settings[channel][category]}
@@ -93,7 +89,7 @@ export default function NotificationsSettingsPage() {
       {/* Back Link */}
       <Link
         href="/tenant/settings"
-        className="inline-flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground"
+        className="text-muted-foreground hover:text-foreground inline-flex items-center gap-2 text-sm"
       >
         <ArrowLeft className="h-4 w-4" />
         Back to Settings
@@ -108,15 +104,13 @@ export default function NotificationsSettingsPage() {
       </div>
 
       {/* Email Notifications */}
-      <Card className="border-2 border-foreground">
+      <Card className="border-foreground border-2">
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
             <Mail className="h-5 w-5" />
             Email Notifications
           </CardTitle>
-          <CardDescription>
-            Receive updates via email
-          </CardDescription>
+          <CardDescription>Receive updates via email</CardDescription>
         </CardHeader>
         <CardContent className="space-y-1">
           <NotificationCategory
@@ -143,15 +137,13 @@ export default function NotificationsSettingsPage() {
       </Card>
 
       {/* SMS Notifications */}
-      <Card className="border-2 border-foreground">
+      <Card className="border-foreground border-2">
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
             <MessageSquare className="h-5 w-5" />
             SMS Notifications
           </CardTitle>
-          <CardDescription>
-            Receive text messages for urgent updates
-          </CardDescription>
+          <CardDescription>Receive text messages for urgent updates</CardDescription>
         </CardHeader>
         <CardContent className="space-y-1">
           <NotificationCategory
@@ -178,15 +170,13 @@ export default function NotificationsSettingsPage() {
       </Card>
 
       {/* Push Notifications */}
-      <Card className="border-2 border-foreground">
+      <Card className="border-foreground border-2">
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
             <Bell className="h-5 w-5" />
             Push Notifications
           </CardTitle>
-          <CardDescription>
-            Receive notifications on your device
-          </CardDescription>
+          <CardDescription>Receive notifications on your device</CardDescription>
         </CardHeader>
         <CardContent className="space-y-1">
           <NotificationCategory
@@ -214,7 +204,7 @@ export default function NotificationsSettingsPage() {
 
       {/* Save Button */}
       <div className="flex justify-end">
-        <Button onClick={handleSave} className="border-2 border-foreground">
+        <Button onClick={handleSave} className="border-foreground border-2">
           Save Preferences
         </Button>
       </div>

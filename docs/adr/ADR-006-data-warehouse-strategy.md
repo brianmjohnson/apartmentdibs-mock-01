@@ -13,6 +13,7 @@
 As we build analytics capabilities and business intelligence, we need to decide whether to implement a dedicated data warehouse immediately or defer until we have proven need. This decision impacts architecture complexity, costs, and our ability to run advanced analytics and investor reports.
 
 **Background**:
+
 - Neon PostgreSQL is our primary database with built-in analytics capabilities
 - PostHog provides 90-day event retention on free tier
 - Current data volume: <1000 events/day (MVP stage)
@@ -20,6 +21,7 @@ As we build analytics capabilities and business intelligence, we need to decide 
 - Team has limited data engineering experience
 
 **Requirements**:
+
 - **Functional**: Store analytics events for >90 days
 - **Functional**: Run SQL queries for business intelligence
 - **Functional**: Generate reports for stakeholders/investors
@@ -29,6 +31,7 @@ As we build analytics capabilities and business intelligence, we need to decide 
 - **Constraints**: Must support future growth to millions of events
 
 **Scope**:
+
 - **Included**: Short-term analytics and reporting strategy
 - **Included**: Decision criteria for when to add data warehouse
 - **Not included**: Real-time OLAP analytics (not needed for MVP)
@@ -43,6 +46,7 @@ As we build analytics capabilities and business intelligence, we need to decide 
 Neon PostgreSQL provides SQL analytics capabilities directly on production data. PostHog retains 90 days of events (sufficient for MVP validation). We'll revisit this decision when event volume or BI complexity demands a dedicated warehouse.
 
 **Implementation Approach**:
+
 - Use Neon's BI-friendly features (read replicas, analytics queries)
 - Export critical reports to CSV for archival if needed
 - Leverage PostHog's built-in dashboards for product analytics
@@ -51,6 +55,7 @@ Neon PostgreSQL provides SQL analytics capabilities directly on production data.
 - Re-evaluate warehouse options when threshold is reached
 
 **Why This Approach**:
+
 1. **Simplicity**: No additional infrastructure to manage
 2. **Cost-Effective**: Zero additional cost for analytics
 3. **Sufficient**: Neon + PostHog cover MVP analytics needs
@@ -58,6 +63,7 @@ Neon PostgreSQL provides SQL analytics capabilities directly on production data.
 5. **Upgrade Path**: Clear criteria for when to add warehouse
 
 **Example/Proof of Concept**:
+
 ```typescript
 // Analytics query on Neon (direct Prisma)
 export const getMonthlyActiveUsers = async (startDate: Date) => {
@@ -69,8 +75,8 @@ export const getMonthlyActiveUsers = async (startDate: Date) => {
     WHERE created_at >= ${startDate}
     GROUP BY month
     ORDER BY month DESC
-  `;
-};
+  `
+}
 
 // PostHog for event-based analytics
 // Use PostHog dashboard for:
@@ -86,6 +92,7 @@ export const getMonthlyActiveUsers = async (startDate: Date) => {
 **What becomes easier or more difficult as a result of this decision?**
 
 ### Positive Consequences
+
 - **Simple Architecture**: No ETL pipelines or data syncing to manage
 - **Zero Cost**: No warehouse hosting fees ($0 vs $50-500/month)
 - **Fast Iteration**: No data engineering overhead
@@ -93,16 +100,19 @@ export const getMonthlyActiveUsers = async (startDate: Date) => {
 - **Defer Decision**: Learn what analytics we actually need before committing
 
 ### Negative Consequences
+
 - **Limited History**: PostHog only retains 90 days (may lose early insights)
 - **Analytics Load**: Heavy queries could impact production database
 - **Manual Exports**: Need manual process for long-term archival
 - **Future Migration**: Will need to migrate when we add warehouse later
 
 ### Neutral Consequences
+
 - **Query Performance**: Acceptable for MVP, may degrade with scale
 - **BI Tool Limitations**: Can't use advanced BI tools (Tableau, Looker) easily
 
 ### Mitigation Strategies
+
 - **Limited History**: Export critical reports monthly to Vercel Blob for archival
 - **Analytics Load**: Use Neon read replicas for heavy queries (isolate from production)
 - **Manual Exports**: Create cron job to export key metrics to CSV monthly
@@ -118,6 +128,7 @@ export const getMonthlyActiveUsers = async (startDate: Date) => {
 Set up Snowflake data warehouse with daily ETL from Neon and PostHog.
 
 **Pros**:
+
 - Industry-standard data warehouse
 - Excellent query performance at scale
 - Rich BI tool integrations (Tableau, Looker, Mode)
@@ -125,6 +136,7 @@ Set up Snowflake data warehouse with daily ETL from Neon and PostHog.
 - Handles petabyte-scale data
 
 **Cons**:
+
 - Overkill for <100k events/month
 - Cost: $50-200/month minimum (plus engineering time)
 - Need to build ETL pipelines (1-2 weeks setup)
@@ -142,6 +154,7 @@ Massive over-engineering for MVP stage. We don't have enough data or BI requirem
 Use Google BigQuery as serverless data warehouse with pay-per-query pricing.
 
 **Pros**:
+
 - Serverless (no infrastructure management)
 - Pay-per-query model (cost-effective for low volume)
 - Excellent for large-scale analytics
@@ -149,6 +162,7 @@ Use Google BigQuery as serverless data warehouse with pay-per-query pricing.
 - Free tier (1 TB queries/month)
 
 **Cons**:
+
 - Still requires ETL setup and maintenance
 - Adds Google Cloud dependency (we're on AWS/Vercel)
 - Learning curve for BigQuery SQL dialect
@@ -166,12 +180,14 @@ While more cost-effective than Snowflake, BigQuery still adds complexity we don'
 Build custom ETL to export data to AWS S3, query with Athena.
 
 **Pros**:
+
 - Very cost-effective ($5-15/month)
 - Full control over data format
 - Athena is serverless and scalable
 - S3 storage extremely cheap
 
 **Cons**:
+
 - Need to build custom ETL pipelines
 - Athena query performance slower than dedicated warehouse
 - More engineering effort than managed solutions
@@ -188,12 +204,14 @@ Engineering time to build ETL not justified for current analytics needs. Better 
 Pay for PostHog's data export feature to retain events indefinitely.
 
 **Pros**:
+
 - Simple one-click setup
 - Exports to S3/BigQuery automatically
 - Managed by PostHog (no ETL to build)
 - Extends PostHog event retention
 
 **Cons**:
+
 - PostHog export limited to event data (no transactional data)
 - Still need separate solution for database analytics
 - Cost increases with event volume
@@ -207,14 +225,17 @@ Only solves half the problem (event data, not database analytics). Doesn't provi
 ## Related
 
 **Related ADRs**:
+
 - [ADR-001: Technology Stack Selection] - Neon PostgreSQL chosen for database
 - [ADR-005: PostHog for Analytics] - PostHog provides 90-day event retention
 
 **Related Documentation**:
+
 - [docs/analytics/bi-queries.md] - Reusable BI query library (to be created)
 - [docs/analytics/export-strategy.md] - Data archival process (to be created)
 
 **External References**:
+
 - [Neon Analytics Features](https://neon.tech/docs/analytics)
 - [PostHog Data Export](https://posthog.com/docs/data/batch-exports)
 - [When to Add a Data Warehouse](https://www.startdataengineering.com/post/when-to-build-data-warehouse/)
@@ -224,6 +245,7 @@ Only solves half the problem (event data, not database analytics). Doesn't provi
 ## Notes
 
 **Decision Making Process**:
+
 - Evaluated current analytics requirements vs future needs
 - Compared warehouse costs against expected event volume
 - Consulted data engineering best practices for startups
@@ -231,12 +253,14 @@ Only solves half the problem (event data, not database analytics). Doesn't provi
 - Decision date: 2025-11-16
 
 **Review Schedule**:
+
 - **Automatic Review Trigger**: Alert when we hit 100k events/month
 - **Quarterly Check-in**: Review analytics complexity and BI requirements
 - **Investor Reporting**: Re-evaluate if we need multi-year historical reports
 - Monitor: Monthly event volume, query performance, analytics request complexity
 
 **Criteria to Revisit**:
+
 1. **Event Volume**: >100k events/month sustained
 2. **BI Complexity**: Need for complex joins across 10+ tables
 3. **Historical Analysis**: Investor requests for >1 year trends
@@ -244,6 +268,7 @@ Only solves half the problem (event data, not database analytics). Doesn't provi
 5. **Team Capacity**: Hire data engineer/analyst who can manage warehouse
 
 **Migration Plan** (when threshold is met):
+
 - **Phase 1 (Week 1)**: Evaluate Snowflake vs BigQuery vs Redshift
 - **Phase 2 (Week 2)**: Set up warehouse and test ETL pipeline
 - **Phase 3 (Week 3)**: Migrate historical data from exports
@@ -255,6 +280,6 @@ Only solves half the problem (event data, not database analytics). Doesn't provi
 
 ## Revision History
 
-| Date | Author | Change |
-|------|--------|--------|
+| Date       | Author   | Change                     |
+| ---------- | -------- | -------------------------- |
 | 2025-11-16 | AI Agent | Initial draft and approval |

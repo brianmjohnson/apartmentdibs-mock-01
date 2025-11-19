@@ -56,6 +56,7 @@ After selecting a tenant, landlords manually fill out lease templates, make erro
 **Given** a tenant is selected
 **When** landlord requests lease
 **Then** platform generates lease pre-filled with:
+
 - Tenant name, contact info
 - Property address, unit details
 - Rent amount, security deposit
@@ -63,6 +64,7 @@ After selecting a tenant, landlords manually fill out lease templates, make erro
 - Pet policy (if applicable)
 
 **Verification**:
+
 - [ ] All fields populated correctly
 - [ ] No manual data entry required
 - [ ] Generates within 30 seconds
@@ -72,11 +74,13 @@ After selecting a tenant, landlords manually fill out lease templates, make erro
 **Given** different states have different lease requirements
 **When** lease is generated
 **Then** template matches property location:
+
 - NY residential lease addendums
 - CA-specific disclosures
 - Local rent control provisions
 
 **Verification**:
+
 - [ ] Templates for major states
 - [ ] Required addendums included
 - [ ] Disclosures up-to-date
@@ -86,11 +90,13 @@ After selecting a tenant, landlords manually fill out lease templates, make erro
 **Given** landlords have specific requirements
 **When** generating lease
 **Then** they can add custom clauses:
+
 - "Tenant responsible for snow removal"
 - "Smoking prohibited"
 - "Quiet hours 10 PM - 8 AM"
 
 **Verification**:
+
 - [ ] Custom clause editor available
 - [ ] Saved for future leases
 - [ ] Flagged if potentially non-compliant
@@ -100,12 +106,14 @@ After selecting a tenant, landlords manually fill out lease templates, make erro
 **Given** lease is generated
 **When** sent for signature
 **Then** it integrates with DocuSign or HelloSign:
+
 - Sent to both parties
 - Signature fields auto-placed
 - Mobile-friendly signing
 - Legally binding (ESIGN Act)
 
 **Verification**:
+
 - [ ] Integration works correctly
 - [ ] Both parties can sign on any device
 - [ ] Signed PDF stored securely
@@ -115,11 +123,13 @@ After selecting a tenant, landlords manually fill out lease templates, make erro
 **Given** lease is signed
 **When** stored in platform
 **Then** both parties can:
+
 - Download PDF anytime
 - View lease terms in-app
 - Access for renewal reference
 
 **Verification**:
+
 - [ ] Lease accessible for lease duration
 - [ ] Download available
 - [ ] Version history if amended
@@ -139,6 +149,7 @@ After selecting a tenant, landlords manually fill out lease templates, make erro
 ### Frontend Specification
 
 **Components**:
+
 ```
 components/
   lease/
@@ -151,13 +162,14 @@ components/
 
 ## Analytics Tracking
 
-| Event Name | When Triggered | Properties |
-|------------|----------------|------------|
+| Event Name        | When Triggered         | Properties                          |
+| ----------------- | ---------------------- | ----------------------------------- |
 | `lease_generated` | Landlord creates lease | `{landlordId, tenantId, listingId}` |
-| `lease_sent` | Sent for signature | `{leaseId, channel}` |
-| `lease_signed` | Both parties signed | `{leaseId, timeToSign}` |
+| `lease_sent`      | Sent for signature     | `{leaseId, channel}`                |
+| `lease_signed`    | Both parties signed    | `{leaseId, timeToSign}`             |
 
 **Success Metrics**:
+
 - <48 hours from selection to signed lease (vs 5-10 days)
 - 95%+ digital signature adoption
 - 100% state-compliant leases
@@ -167,9 +179,11 @@ components/
 ## Dependencies
 
 ### Blocked By
+
 - US-016: Obfuscated Dashboard (reveal triggers lease)
 
 ### External Dependencies
+
 - DocuSign or HelloSign API
 
 ---

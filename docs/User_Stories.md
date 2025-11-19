@@ -716,23 +716,23 @@ This document contains detailed user stories for the ApartmentDibs platform, org
      - Embed Schema.org structured data on listing page:
        ```html
        <script type="application/ld+json">
-       {
-         "@context": "https://schema.org",
-         "@type": "RealEstateListing",
-         "name": "1BR in Williamsburg",
-         "url": "https://apartmentdibs.com/listings/123",
-         "address": {
-           "@type": "PostalAddress",
-           "streetAddress": "123 Main St",
-           "addressLocality": "Brooklyn",
-           "addressRegion": "NY",
-           "postalCode": "11211"
-         },
-         "price": 3000,
-         "priceCurrency": "USD",
-         "numberOfRooms": 1,
-         "floorSize": { "@type": "QuantitativeValue", "value": 750, "unitCode": "SQF" }
-       }
+         {
+           "@context": "https://schema.org",
+           "@type": "RealEstateListing",
+           "name": "1BR in Williamsburg",
+           "url": "https://apartmentdibs.com/listings/123",
+           "address": {
+             "@type": "PostalAddress",
+             "streetAddress": "123 Main St",
+             "addressLocality": "Brooklyn",
+             "addressRegion": "NY",
+             "postalCode": "11211"
+           },
+           "price": 3000,
+           "priceCurrency": "USD",
+           "numberOfRooms": 1,
+           "floorSize": { "@type": "QuantitativeValue", "value": 750, "unitCode": "SQF" }
+         }
        </script>
        ```
      - Google indexes listing -> shows in "apartments near me" search results
@@ -925,7 +925,8 @@ This document contains detailed user stories for the ApartmentDibs platform, org
   ```typescript
   export const metadata: Metadata = {
     title: 'ApartmentDibs | NYC Apartment Rentals',
-    description: 'Find verified apartment listings in NYC. Apply once, reuse everywhere. Fair housing compliant.',
+    description:
+      'Find verified apartment listings in NYC. Apply once, reuse everywhere. Fair housing compliant.',
     openGraph: {
       title: 'ApartmentDibs | NYC Apartment Rentals',
       description: 'Find verified apartment listings in NYC. Apply once, reuse everywhere.',
@@ -933,7 +934,7 @@ This document contains detailed user stories for the ApartmentDibs platform, org
       siteName: 'ApartmentDibs',
       type: 'website',
     },
-  };
+  }
   ```
 - **Structured Data:** WebSite schema with SearchAction for Google Sitelinks Search Box
 
@@ -1341,6 +1342,7 @@ This document contains detailed user stories for the ApartmentDibs platform, org
    - **Similar Properties:** Carousel of 4-6 similar listings
 
 3. **Schema.org Structured Data (JSON-LD):**
+
    ```json
    {
      "@context": "https://schema.org",
@@ -1362,7 +1364,7 @@ This document contains detailed user stories for the ApartmentDibs platform, org
      "geo": {
        "@type": "GeoCoordinates",
        "latitude": 40.7128,
-       "longitude": -73.9560
+       "longitude": -73.956
      },
      "numberOfRooms": 2,
      "numberOfBathroomsTotal": 1,
@@ -1483,6 +1485,7 @@ This document contains detailed user stories for the ApartmentDibs platform, org
      - "Interested in this building? Contact property manager."
 
 3. **Schema.org Structured Data:**
+
    ```json
    {
      "@context": "https://schema.org",
@@ -1500,7 +1503,7 @@ This document contains detailed user stories for the ApartmentDibs platform, org
      "geo": {
        "@type": "GeoCoordinates",
        "latitude": 40.7128,
-       "longitude": -73.9560
+       "longitude": -73.956
      },
      "amenityFeature": [
        { "@type": "LocationFeatureSpecification", "name": "Doorman", "value": true },
@@ -1602,6 +1605,7 @@ This document contains detailed user stories for the ApartmentDibs platform, org
    - Filter by status, sort by date
 
 4. **Schema.org Structured Data:**
+
    ```json
    {
      "@context": "https://schema.org",
@@ -1708,6 +1712,7 @@ This document contains detailed user stories for the ApartmentDibs platform, org
      - "Also consider: Greenpoint, Bushwick, Fort Greene"
 
 3. **Schema.org Structured Data:**
+
    ```json
    {
      "@context": "https://schema.org",
@@ -1774,7 +1779,7 @@ This document contains detailed user stories for the ApartmentDibs platform, org
 - **Problem:** Without sitemap, Google may not discover or prioritize all pages
 - **Scale:** With thousands of properties, buildings, businesses, and neighborhoods, manual sitemap is impossible
 - **Best Practices:** Sitemap should include priority and changefreq for each URL type
-- **Robots.txt:** Prevent crawling of private pages (/portal/*, /api/*) while allowing public pages
+- **Robots.txt:** Prevent crawling of private pages (/portal/_, /api/_) while allowing public pages
 
 #### Acceptance Criteria
 
@@ -1787,7 +1792,7 @@ This document contains detailed user stories for the ApartmentDibs platform, org
      - All business pages (`/business/[slug]`)
      - All neighborhood guides (`/neighborhoods/[slug]`)
      - All blog posts (`/blog/[slug]`)
-     - Marketing pages (/for-landlords/*, /for-agents/*)
+     - Marketing pages (/for-landlords/_, /for-agents/_)
      - Static pages (/, /about, /pricing, /faq, /contact)
    - **Per-URL metadata:**
      - `<loc>`: Full canonical URL
@@ -1797,6 +1802,7 @@ This document contains detailed user stories for the ApartmentDibs platform, org
    - **Sitemap Index:** If >50,000 URLs, split into multiple sitemaps
 
 2. **Dynamic Robots.txt (/robots.txt):**
+
    ```
    User-agent: *
    Allow: /
@@ -1841,15 +1847,16 @@ This document contains detailed user stories for the ApartmentDibs platform, org
   - `app/(public)/robots.ts` - Next.js robots function
 - **Data Sources:** Query listings, buildings, businesses, neighborhoods tables
 - **Example sitemap.ts:**
+
   ```typescript
-  import { MetadataRoute } from 'next';
-  import { prisma } from '@/lib/prisma';
+  import { MetadataRoute } from 'next'
+  import { prisma } from '@/lib/prisma'
 
   export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     const properties = await prisma.listing.findMany({
       where: { status: 'active' },
       select: { slug: true, updatedAt: true },
-    });
+    })
 
     return [
       {
@@ -1865,7 +1872,7 @@ This document contains detailed user stories for the ApartmentDibs platform, org
         priority: 0.8,
       })),
       // ... buildings, businesses, neighborhoods, blog posts
-    ];
+    ]
   }
   ```
 
@@ -1935,6 +1942,7 @@ This document contains detailed user stories for the ApartmentDibs platform, org
 
 3. **Schema.org FAQPage Structured Data:**
    - Enables rich snippets in Google search results
+
    ```json
    {
      "@context": "https://schema.org",

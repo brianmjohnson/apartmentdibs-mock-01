@@ -17,22 +17,26 @@ This skill provides guidance on choosing and implementing authentication strateg
 ### 1. Choose Auth Implementation
 
 **Better Auth (Recommended for full control)**:
+
 - ✅ Use when: Need full control over auth flow, custom logic, or specific OAuth providers
 - ✅ Flexible: Database-backed sessions with cookie caching
 - ✅ Plugins: Built-in admin, organization, two-factor
 - ✅ Type-safe: Full TypeScript support with type inference
 
 **NextAuth.js (Rapid setup)**:
+
 - ✅ Use when: Need quick OAuth setup with minimal configuration
 - ✅ Established: Large community, many providers
 - ⚠️ Less flexible: Limited customization options
 
 **Clerk (Managed service)**:
+
 - ✅ Use when: Want fully managed auth with UI components
 - ✅ Features: Built-in user management, organizations, webhooks
 - ⚠️ Cost: Paid service, vendor lock-in
 
 **Considerations**:
+
 - Project complexity (simple app vs enterprise)
 - Budget (free vs paid)
 - Control needed (full control vs managed)
@@ -48,7 +52,7 @@ This skill provides guidance on choosing and implementing authentication strateg
 // Better Auth with database sessions
 export const auth = betterAuth({
   database: {
-    provider: "postgresql",
+    provider: 'postgresql',
     url: process.env.DATABASE_URL,
   },
   session: {
@@ -61,12 +65,14 @@ export const auth = betterAuth({
 ```
 
 **Benefits**:
+
 - ✅ Can revoke sessions server-side
 - ✅ Supports multiple devices
 - ✅ Better security (no JWT vulnerabilities)
 - ✅ Cookie caching reduces DB queries
 
 **JWT Sessions** (Alternative):
+
 - ⚠️ Cannot revoke without additional infrastructure
 - ✅ Stateless (no DB queries)
 - ⚠️ Token size limitations
@@ -76,6 +82,7 @@ export const auth = betterAuth({
 ### 3. OAuth Providers
 
 **Recommended Providers**:
+
 - **Google**: Most common, reliable, broad user base
 - **GitHub**: Developer-focused apps
 - **Microsoft**: Enterprise B2B apps
@@ -103,6 +110,7 @@ export const auth = betterAuth({
 ### 4. Security Best Practices
 
 **Cookie Configuration**:
+
 ```typescript
 // See docs/domains/authentication/cookie-configuration.md
 advanced: {
@@ -114,12 +122,14 @@ advanced: {
 ```
 
 **Session Security**:
+
 - ✅ httpOnly cookies (prevent XSS)
 - ✅ secure flag in production (HTTPS only)
 - ✅ sameSite: 'lax' (CSRF protection + OAuth compatibility)
 - ✅ Short-lived sessions with refresh tokens
 
 **Additional Fields** (input: false for server-only):
+
 ```typescript
 user: {
   additionalFields: {
@@ -136,7 +146,7 @@ user: {
 **Organization Plugin** (Better Auth):
 
 ```typescript
-import { organization } from "better-auth/plugins"
+import { organization } from 'better-auth/plugins'
 
 export const auth = betterAuth({
   plugins: [
@@ -149,6 +159,7 @@ export const auth = betterAuth({
 ```
 
 **Session with Active Organization**:
+
 ```typescript
 {
   session: {
@@ -180,6 +191,7 @@ export const auth = betterAuth({
 ## Common Patterns
 
 **Sign In Flow**:
+
 ```typescript
 // components/SignInButton.tsx
 import { signIn } from "@/lib/auth/auth-client"
@@ -194,6 +206,7 @@ export function SignInButton() {
 ```
 
 **Protected Routes**:
+
 ```typescript
 // app/dashboard/layout.tsx
 import { RequireAuth } from "@/components/auth/guards/RequireAuth"
@@ -204,16 +217,17 @@ export default function DashboardLayout({ children }) {
 ```
 
 **Server-Side Auth Check**:
+
 ```typescript
 // app/api/protected/route.ts
-import { auth } from "@/lib/auth/auth-server"
-import { headers } from "next/headers"
+import { auth } from '@/lib/auth/auth-server'
+import { headers } from 'next/headers'
 
 export async function GET() {
   const session = await auth.api.getSession({ headers: headers() })
 
   if (!session) {
-    return new Response("Unauthorized", { status: 401 })
+    return new Response('Unauthorized', { status: 401 })
   }
 
   // ... protected logic

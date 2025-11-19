@@ -56,6 +56,7 @@ Jessica's perspective: "I have qualified renters walking away every week. They'r
 **Given** an applicant is denied
 **When** the denial is processed
 **Then** the applicant is auto-added to CRM with:
+
 - Budget range
 - Preferred neighborhoods
 - Move-in timeline
@@ -65,6 +66,7 @@ Jessica's perspective: "I have qualified renters walking away every week. They'r
 - Denial date
 
 **Verification**:
+
 - [ ] CRM entry created automatically
 - [ ] All preference data captured
 - [ ] Verification status preserved
@@ -74,6 +76,7 @@ Jessica's perspective: "I have qualified renters walking away every week. They'r
 **Given** an agent creates a new listing
 **When** the listing is published
 **Then** the platform scans CRM for matches based on:
+
 - Budget overlap (rent falls within lead's range)
 - Neighborhood match
 - Move-in timeline still active
@@ -83,6 +86,7 @@ Jessica's perspective: "I have qualified renters walking away every week. They'r
 **And** returns matches with relevance score (e.g., "95% match")
 
 **Verification**:
+
 - [ ] Matching completes in <1 second
 - [ ] Match score accurately reflects criteria
 - [ ] Only valid (non-expired) leads returned
@@ -92,11 +96,13 @@ Jessica's perspective: "I have qualified renters walking away every week. They'r
 **Given** matches are found for a new listing
 **When** agent clicks "Invite All Matched Leads"
 **Then** platform sends personalized messages:
+
 - SMS: "Hi Maya, new 1BR in Williamsburg matches your preferences. Apply with your existing profile?"
 - Email with property photos and one-click apply link
 - Push notification
 
 **Verification**:
+
 - [ ] Messages personalized with tenant name
 - [ ] Property details included
 - [ ] One-click apply works correctly
@@ -106,12 +112,14 @@ Jessica's perspective: "I have qualified renters walking away every week. They'r
 **Given** CRM outreach is performed
 **When** leads respond
 **Then** dashboard shows:
+
 - Leads contacted this month
 - Applications received
 - Lease conversion rate
 - Average days-to-fill comparison (CRM vs new leads)
 
 **Verification**:
+
 - [ ] Conversion funnel tracked
 - [ ] ROI calculator shows time/money saved
 
@@ -120,11 +128,13 @@ Jessica's perspective: "I have qualified renters walking away every week. They'r
 **Given** CRM leads have expiration dates
 **When** leads approach expiration (14 days before)
 **Then** agent is prompted to:
+
 - Re-engage with "Still looking?" message
 - Extend expiration by 30 days
 - Archive the lead
 
 **Verification**:
+
 - [ ] Expiration warnings sent
 - [ ] Extension option works
 - [ ] Archive removes from active matching
@@ -175,6 +185,7 @@ ORDER BY created_at DESC;
 ### Frontend Specification
 
 **Components**:
+
 ```
 components/
   crm/
@@ -188,14 +199,15 @@ components/
 
 ## Analytics Tracking
 
-| Event Name | When Triggered | Properties |
-|------------|----------------|------------|
-| `crm_lead_created` | Denial triggers CRM entry | `{agentId, applicantId}` |
-| `crm_matches_found` | New listing matches leads | `{agentId, listingId, matchCount}` |
-| `crm_outreach_sent` | Agent contacts leads | `{agentId, leadCount, channel}` |
-| `crm_lead_applied` | Lead applies to new listing | `{agentId, applicantId, listingId}` |
+| Event Name          | When Triggered              | Properties                          |
+| ------------------- | --------------------------- | ----------------------------------- |
+| `crm_lead_created`  | Denial triggers CRM entry   | `{agentId, applicantId}`            |
+| `crm_matches_found` | New listing matches leads   | `{agentId, listingId, matchCount}`  |
+| `crm_outreach_sent` | Agent contacts leads        | `{agentId, leadCount, channel}`     |
+| `crm_lead_applied`  | Lead applies to new listing | `{agentId, applicantId, listingId}` |
 
 **Success Metrics**:
+
 - 40%+ CRM conversion rate (matches who apply)
 - 50% reduction in days-to-fill for CRM-sourced applicants
 - 35%+ of vacancies filled via CRM leads
@@ -205,10 +217,12 @@ components/
 ## Dependencies
 
 ### Blocked By
+
 - US-002: Automated Adverse Action Notices (triggers CRM entry)
 - US-001: PII Anonymization (applicant preferences)
 
 ### Related Stories
+
 - US-005: Unified Applicant Dashboard
 
 ---

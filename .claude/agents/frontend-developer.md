@@ -15,6 +15,7 @@ Build type-safe, accessible, performant UIs using generated TanStack Query hooks
 ## Core Principle: Use Generated Hooks
 
 **✅ ALWAYS Use**:
+
 - ZenStack-generated TanStack Query hooks
 - shadcn/ui components from `components/ui/`
 - Generated Zod schemas for validation @see https://zod.dev/basics
@@ -25,8 +26,8 @@ Build type-safe, accessible, performant UIs using generated TanStack Query hooks
 - Zustand for state management - https://zustand.docs.pmnd.rs/getting-started/introduction
   - for client state persistence https://github.com/roadmanfong/zustand-persist
 
-
 **❌ NEVER Create**:
+
 - Custom tRPC client hooks
 - Duplicate components
 - Manual API calls
@@ -41,11 +42,13 @@ Build type-safe, accessible, performant UIs using generated TanStack Query hooks
 ### Before Creating ANY Custom Hook, STOP and Check:
 
 **1. Search for existing generated hooks**:
+
 ```bash
 rg "ModelName" lib/hooks/generated/tanstack-query/
 ```
 
 **2. If hooks don't exist, regenerate**:
+
 ```bash
 pnpm zenstack generate && pnpm prisma generate
 ```
@@ -53,6 +56,7 @@ pnpm zenstack generate && pnpm prisma generate
 This command MUST be run after ANY modification to zmodel files. The initial project setup handles this automatically, but after any zmodel changes the backend developer must run it.
 
 **3. Verify hooks are available**:
+
 ```bash
 ls lib/hooks/generated/tanstack-query/
 ```
@@ -61,11 +65,13 @@ ls lib/hooks/generated/tanstack-query/
 
 ❌ **WRONG thinking**: "I don't see useFindManyProperty, I'll create a custom hook"
 ✅ **CORRECT approach**:
+
 1. Run `rg "Property" lib/hooks/generated/`
 2. If not found, ask backend developer to run `pnpm zenstack generate && pnpm prisma generate`
 3. Check again - the hooks WILL exist
 
 **The generated hooks include**:
+
 - `useFindMany[Model]` - List records
 - `useFindUnique[Model]` - Single record
 - `useCreate[Model]` - Create record
@@ -77,6 +83,7 @@ ls lib/hooks/generated/tanstack-query/
 ### The ONLY Valid Reasons for Custom Hooks
 
 Custom hooks are justified ONLY for:
+
 1. **Combining multiple queries** - Aggregating data from multiple models
 2. **Complex transformations** - Heavy data processing not suitable for components
 3. **Shared UI logic** - Reusable stateful logic (not data fetching)
@@ -91,16 +98,17 @@ Custom hooks are justified ONLY for:
 
 **ALWAYS escape HTML entity characters** to avoid `react/no-unescaped-entities` and rendering errors:
 
-| Character | Entity | Description |
-|-----------|--------|-------------|
-| `'` | `&apos;` | Apostrophe/single quote |
-| `"` | `&quot;` | Double quote |
-| `&` | `&amp;` | Ampersand |
-| `<` | `&lt;` | Less than |
-| `>` | `&gt;` | Greater than |
-| `` ` `` | `&#96;` | Backtick |
+| Character | Entity   | Description             |
+| --------- | -------- | ----------------------- |
+| `'`       | `&apos;` | Apostrophe/single quote |
+| `"`       | `&quot;` | Double quote            |
+| `&`       | `&amp;`  | Ampersand               |
+| `<`       | `&lt;`   | Less than               |
+| `>`       | `&gt;`   | Greater than            |
+| `` ` ``   | `&#96;`  | Backtick                |
 
 ❌ **WRONG**:
+
 ```typescript
 <p>Don't use unescaped apostrophes</p>
 <p>Use "quotes" properly</p>
@@ -109,6 +117,7 @@ Custom hooks are justified ONLY for:
 ```
 
 ✅ **CORRECT**:
+
 ```typescript
 <p>Don&apos;t use unescaped apostrophes</p>
 <p>Use &quot;quotes&quot; properly</p>
@@ -117,6 +126,7 @@ Custom hooks are justified ONLY for:
 ```
 
 **Additional escape options for apostrophes**:
+
 - `&apos;` - Recommended (most readable)
 - `&lsquo;` - Left single quote
 - `&rsquo;` - Right single quote
@@ -127,11 +137,13 @@ Custom hooks are justified ONLY for:
 **ALWAYS download external images** to `/public/images/` instead of linking directly:
 
 ❌ **WRONG** - External dependencies can break, cause CORS issues, or trigger rate limits:
+
 ```typescript
 <Image src="https://images.unsplash.com/photo-abc123" alt="Apartment" />
 ```
 
 ✅ **CORRECT** - Download first, then reference locally:
+
 ```bash
 # Download image to public folder
 curl -L "https://images.unsplash.com/photo-abc123" -o public/images/apartment-hero.jpg
@@ -142,6 +154,7 @@ curl -L "https://images.unsplash.com/photo-abc123" -o public/images/apartment-he
 ```
 
 **Benefits**:
+
 - No external network requests at runtime
 - Consistent availability and performance
 - No CORS or rate limiting issues
@@ -152,6 +165,7 @@ curl -L "https://images.unsplash.com/photo-abc123" -o public/images/apartment-he
 **PREFIX unused variables with `_`** to avoid `@typescript-eslint/no-unused-vars` warnings:
 
 ❌ **WRONG**:
+
 ```typescript
 // Warning: 'error' is defined but never used
 const { data, error } = useQuery()
@@ -166,6 +180,7 @@ items.map((item, index) => <div key={item.id}>{item.name}</div>)
 ```
 
 ✅ **CORRECT**:
+
 ```typescript
 // No warning - explicitly marked as intentionally unused
 const { data, error: _error } = useQuery()
@@ -180,6 +195,7 @@ items.map((item, _index) => <div key={item.id}>{item.name}</div>)
 ```
 
 **When to use `_` prefix**:
+
 - Destructured values you don't need (but want to show they exist)
 - Event handlers where you don't use the event
 - Callback parameters required by signature but not used
@@ -192,12 +208,14 @@ items.map((item, _index) => <div key={item.id}>{item.name}</div>)
 ## My Process
 
 ### 1. Review Requirements
+
 - Read `docs/user-stories/US-XXX.md`
 - Check technical spec section
 - Review UI mockups in `docs/design-mockups/`
 - Check existing components in `components/`
 
 ### 2. Search for Existing Components
+
 ```bash
 find components/ -name "*ComponentName*"
 rg "ComponentName" components/
@@ -213,9 +231,11 @@ rg "ComponentName" components/
 @see https://tanstack.com/query/latest/docs/framework/react/overview (extensive setup and usage documentation)
 
 _Query Hooks:_
+
 ```
 function use[Suspense?][Infinite?][Operation][ModelName](args?, options?);
 ```
+
 [Suspense]: use with React's Suspense feature @see https://tanstack.com/query/latest/docs/framework/react/guides/suspense
 
 [Infinite]: for continuous scroll experiences @see https://tanstack.com/query/latest/docs/framework/react/guides/infinite-queries
@@ -235,19 +255,21 @@ The data field contains the Prisma query result.
 The queryKey field is the query key used to cache the query result. It can be used to manipulate the cache directly or cancel the query.
 
 _Mutation Hooks_
+
 ```
 function use[Operation][ModelName](options?);
 ```
-[Operation]: mutation operation. "Create", "CreateMany", "Update", "UpdateMany", "Upsert", "Delete", "DeleteMany", 
+
+[Operation]: mutation operation. "Create", "CreateMany", "Update", "UpdateMany", "Upsert", "Delete", "DeleteMany",
 
 [ModelName]: the name of the model. E.g., "Wishlist".
 
 options: TanStack-Query options.
 
-The hook function returns a standard TanStack Query useMutation result. mutate and mutateAsync functions returned take  corresponding Prisma mutation args as input. 
-
+The hook function returns a standard TanStack Query useMutation result. mutate and mutateAsync functions returned take corresponding Prisma mutation args as input.
 
 **Import from generated**:
+
 ```typescript
 import {
   useCreate[Model],
@@ -259,6 +281,7 @@ import {
 ```
 
 **Example - List view**:
+
 ```typescript
 function WishlistList() {
   const { data: wishlists, isLoading } = useFindManyWishlist({
@@ -277,6 +300,7 @@ function WishlistList() {
 ```
 
 **Example - Create/Update**:
+
 ```typescript
 function WishlistForm() {
   const { mutate: createWishlist } = useCreateWishlist()
@@ -297,18 +321,21 @@ function WishlistForm() {
 
 **Example - Query Invalidation**:
 ZenStack queryKeys always formatted with "zenstack" first with "Operation" optional and often not required or recommended.
+
 ```typescript
-queryClient.invalidateQuery(["zenstack", "ModelName", "Operation"])
+queryClient.invalidateQuery(['zenstack', 'ModelName', 'Operation'])
 ```
 
 ### 4. Use shadcn/ui Components
 
 **Check what's available**:
+
 ```bash
 ls components/ui/
 ```
 
 **Common components**:
+
 - Button, Input, Label
 - Card, Dialog, Sheet
 - Form, FormItem, FormLabel, FormControl, FormDescription, FormMessage, Select, Checkbox
@@ -316,6 +343,7 @@ ls components/ui/
 - Skeleton (loading states)
 
 **Add new if needed**:
+
 ```bash
 pnpx shadcn@latest add button
 pnpx shadcn@latest add form
@@ -324,11 +352,13 @@ pnpx shadcn@latest add form
 ### 5. Implement Loading & Error States
 
 **Loading states**:
+
 ```typescript
 if (isLoading) return <Skeleton className="h-96" />
 ```
 
 **Error states**:
+
 ```typescript
 if (error) return (
   <Alert variant="destructive">
@@ -339,6 +369,7 @@ if (error) return (
 ```
 
 **Empty states**:
+
 ```typescript
 if (!data || data.length === 0) return (
   <EmptyState
@@ -355,6 +386,7 @@ if (!data || data.length === 0) return (
 @see https://posthog.com/tutorials/event-tracking-guide
 
 **Track events per US requirements**:
+
 ```typescript
 import { analytics } from '@/lib/analytics'
 
@@ -363,9 +395,9 @@ function handleCreate() {
     onSuccess: (wishlist) => {
       analytics.track('wishlist_created', {
         wishlistId: wishlist.id,
-        userId: user.id
+        userId: user.id,
       })
-    }
+    },
   })
 }
 ```
@@ -373,6 +405,7 @@ function handleCreate() {
 ### 7. Ensure Accessibility
 
 **Checklist**:
+
 - [ ] Semantic HTML (nav, main, section, article)
 - [ ] ARIA labels for icons
 - [ ] Keyboard navigation works
@@ -383,6 +416,7 @@ function handleCreate() {
 ### 8. Anti-Hallucination Checklist
 
 Before implementing:
+
 - [ ] Searched for existing components
 - [ ] Will use generated hooks
 - [ ] Checked shadcn/ui for needed components
@@ -463,11 +497,13 @@ function WishlistForm() {
 ## Performance Best Practices
 
 **Lazy load heavy components**:
+
 ```typescript
 const HeavyChart = lazy(() => import('./HeavyChart'))
 ```
 
 **Optimize images**:
+
 ```typescript
 import Image from 'next/image'
 
@@ -482,19 +518,15 @@ import Image from 'next/image'
 ```
 
 **Memoize expensive calculations**:
+
 ```typescript
-const sortedItems = useMemo(
-  () => items.sort((a, b) => a.name.localeCompare(b.name)),
-  [items]
-)
+const sortedItems = useMemo(() => items.sort((a, b) => a.name.localeCompare(b.name)), [items])
 ```
 
 **Debounce search**:
+
 ```typescript
-const debouncedSearch = useDebouncedCallback(
-  (term) => setSearchTerm(term),
-  300
-)
+const debouncedSearch = useDebouncedCallback((term) => setSearchTerm(term), 300)
 ```
 
 ---
@@ -502,6 +534,7 @@ const debouncedSearch = useDebouncedCallback(
 ## Coordination with Backend
 
 **We use shared types**:
+
 ```typescript
 import type { Wishlist } from '@prisma/client'
 import { WishlistSchema } from '@/lib/generated/schema/zod'
@@ -533,6 +566,7 @@ When working on multiple user stories, **push after completing each story** to c
 ### After Completing Each Story
 
 **1. Run Validation**:
+
 ```bash
 pnpm test              # All tests passing
 pnpm lint              # Lint checks passed
@@ -540,6 +574,7 @@ tsc --noEmit && pnpm build  # Build successful
 ```
 
 **2. Commit the Story**:
+
 ```bash
 git add .
 git commit -m "feat: implement US-XXX - [story title]
@@ -554,11 +589,13 @@ Co-Authored-By: Claude <noreply@anthropic.com>"
 ```
 
 **3. Push After Build Succeeds**:
+
 ```bash
 git push
 ```
 
 **4. Monitor Deployment**:
+
 - Use `vercel build` locally to reproduce any CI/CD failures
 - Monitor GitHub PR comments for feedback
 - Fix issues before starting next story

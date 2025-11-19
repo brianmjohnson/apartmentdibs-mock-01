@@ -15,6 +15,7 @@ Generate comprehensive session summaries documenting work completed, capturing c
 ## When Activated
 
 **Trigger phrases**:
+
 - "batch complete"
 - "summarize this work"
 - "create session summary"
@@ -27,39 +28,47 @@ Generate comprehensive session summaries documenting work completed, capturing c
 ### 1. Collect Data
 
 **Git commits since last session**:
+
 ```bash
 git log --since="LAST_SESSION_DATE" --pretty=format:"%h %s"
 ```
 
 **Files changed**:
+
 ```bash
 git diff --stat LAST_SESSION..HEAD
 ```
 
 **User stories**:
+
 - Created: New files in `docs/user-stories/`
 - Completed: Check status changes
 
 **ADRs**:
+
 - Created: New files in `docs/adr/`
 - Updated: Changed ADR files
 
 **Tests**:
+
 - Count test files added
 - Check coverage changes
 
 ### 2. Categorize Work
 
 **Major features**:
+
 - Group commits by feature/story
 - Identify key accomplishments
 
 **Technical improvements**:
+
 - Refactoring
 - Performance optimizations
 - Bug fixes
 
 **Documentation**:
+
 - New docs created
 - Updated guides
 
@@ -68,6 +77,7 @@ git diff --stat LAST_SESSION..HEAD
 **Use template**: `docs/sessions/template.md`
 
 **Include**:
+
 - Executive summary
 - Statistics (commits, files, tests)
 - User stories completed

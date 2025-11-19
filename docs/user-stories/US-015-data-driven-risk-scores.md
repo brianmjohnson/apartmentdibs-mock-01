@@ -56,6 +56,7 @@ David's perspective: "A 700 credit score tells me something, but I've had 700-sc
 **Given** an applicant has completed their profile
 **When** risk score is calculated
 **Then** the score considers:
+
 - Credit score and history
 - Income stability (time at job)
 - Income-to-rent ratio
@@ -67,6 +68,7 @@ David's perspective: "A 700 credit score tells me something, but I've had 700-sc
 **And** outputs: "2% predicted default rate" or "Low risk"
 
 **Verification**:
+
 - [ ] Algorithm uses 50,000+ data points
 - [ ] Score updates with profile changes
 - [ ] Confidence interval provided
@@ -76,11 +78,13 @@ David's perspective: "A 700 credit score tells me something, but I've had 700-sc
 **Given** a landlord reviews applicants
 **When** they view the dashboard
 **Then** each applicant shows:
+
 - Risk score: "Very Low (1.5%)", "Low (3%)", "Moderate (6%)", "High (10%+)"
 - Key risk factors: "Positive: 5+ years employment. Negative: Eviction in 2019"
 - Comparison to average
 
 **Verification**:
+
 - [ ] Score clearly displayed
 - [ ] Factors explained in plain language
 - [ ] Visual indicators (color-coded)
@@ -90,11 +94,13 @@ David's perspective: "A 700 credit score tells me something, but I've had 700-sc
 **Given** multiple applicants for a listing
 **When** landlord compares them
 **Then** they see side-by-side risk comparison:
+
 - Applicant A: 2% default risk
 - Applicant B: 4% default risk
 - Platform recommendation based on risk
 
 **Verification**:
+
 - [ ] Comparison table works
 - [ ] Differences highlighted
 - [ ] No absolute recommendation (landlord decides)
@@ -104,11 +110,13 @@ David's perspective: "A 700 credit score tells me something, but I've had 700-sc
 **Given** landlord wants to understand score
 **When** they click for details
 **Then** they see:
+
 - Breakdown of factors
 - Weight of each factor
 - How applicant compares to population
 
 **Verification**:
+
 - [ ] Full transparency on calculation
 - [ ] Avoids "black box" perception
 - [ ] Educational content available
@@ -118,11 +126,13 @@ David's perspective: "A 700 credit score tells me something, but I've had 700-sc
 **Given** risk scores are used
 **When** lease outcomes are known (6+ months)
 **Then** platform tracks:
+
 - Predicted vs actual default rates
 - Model accuracy metrics
 - Continuous improvement data
 
 **Verification**:
+
 - [ ] Outcome data collected with consent
 - [ ] Model accuracy reported
 - [ ] Algorithm improved over time
@@ -138,6 +148,7 @@ David's perspective: "A 700 credit score tells me something, but I've had 700-sc
 **Training Data**: Historical tenant outcomes (anonymized)
 
 **Feature Engineering**:
+
 - Credit score bands
 - Employment tenure
 - Income volatility
@@ -146,6 +157,7 @@ David's perspective: "A 700 credit score tells me something, but I've had 700-sc
 ### Frontend Specification
 
 **Components**:
+
 ```
 components/
   risk/
@@ -158,13 +170,14 @@ components/
 
 ## Analytics Tracking
 
-| Event Name | When Triggered | Properties |
-|------------|----------------|------------|
-| `risk_score_viewed` | Landlord sees score | `{landlordId, applicantId, score}` |
-| `risk_details_expanded` | Factor breakdown viewed | `{landlordId, applicantId}` |
-| `risk_influenced_decision` | Selection made | `{landlordId, selectedRisk, rejectedRisks}` |
+| Event Name                 | When Triggered          | Properties                                  |
+| -------------------------- | ----------------------- | ------------------------------------------- |
+| `risk_score_viewed`        | Landlord sees score     | `{landlordId, applicantId, score}`          |
+| `risk_details_expanded`    | Factor breakdown viewed | `{landlordId, applicantId}`                 |
+| `risk_influenced_decision` | Selection made          | `{landlordId, selectedRisk, rejectedRisks}` |
 
 **Success Metrics**:
+
 - 20% reduction in defaults for platform users
 - 90%+ landlords find scores helpful
 - Model accuracy >85%
@@ -174,6 +187,7 @@ components/
 ## Dependencies
 
 ### Blocked By
+
 - US-001: PII Anonymization (need profile data)
 - US-004: Audit Trail (log score usage)
 

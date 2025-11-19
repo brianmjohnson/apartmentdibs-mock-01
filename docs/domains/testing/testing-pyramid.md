@@ -27,6 +27,7 @@ A comprehensive two-tier testing strategy combining Jest for fast unit tests and
 ```
 
 **Why This Structure**:
+
 - **Unit tests**: Fast feedback (<10s), enable TDD workflow
 - **Integration tests**: Validate component composition
 - **E2E tests**: Confidence in critical user journeys
@@ -38,31 +39,37 @@ A comprehensive two-tier testing strategy combining Jest for fast unit tests and
 ### What to Test with Jest
 
 **Business Logic**:
+
 - State machines (order processing, workflow steps)
 - Calculation functions (pricing, discounts, scoring)
 - Validation logic (form validators, business rules)
 
 **Helper Functions**:
+
 - Formatters (dates, currency, phone numbers)
 - Permission checks (isPlatformAdmin, hasPermission)
 - Data transformations (API response mappers)
 
 **React Hooks**:
+
 - Custom hooks (useOrganization, usePermissions)
 - Data fetching hooks (TanStack Query wrappers)
 - State management hooks (Zustand selectors)
 
 **React Components**:
+
 - Guard components (RequireAuth, RequireRole)
 - Form components (inputs, validators)
 - UI components (buttons, cards, modals)
 
 **Data Access Objects**:
+
 - Database queries
 - API client methods
 - Cache interactions
 
 **Validation Schemas**:
+
 - Zod schemas
 - Type guards
 - Input sanitization
@@ -125,37 +132,35 @@ describe("RequireAuth", () => {
 
 ```typescript
 // __tests__/lib/helpers/pricing.test.ts
-import { calculateDiscount, applyPromoCode } from "@/lib/helpers/pricing"
+import { calculateDiscount, applyPromoCode } from '@/lib/helpers/pricing'
 
-describe("Pricing Helpers", () => {
-  describe("calculateDiscount", () => {
-    it("applies percentage discount correctly", () => {
-      const result = calculateDiscount(100, { type: "percentage", value: 20 })
+describe('Pricing Helpers', () => {
+  describe('calculateDiscount', () => {
+    it('applies percentage discount correctly', () => {
+      const result = calculateDiscount(100, { type: 'percentage', value: 20 })
       expect(result).toBe(80)
     })
 
-    it("applies fixed amount discount correctly", () => {
-      const result = calculateDiscount(100, { type: "fixed", value: 15 })
+    it('applies fixed amount discount correctly', () => {
+      const result = calculateDiscount(100, { type: 'fixed', value: 15 })
       expect(result).toBe(85)
     })
 
-    it("does not discount below zero", () => {
-      const result = calculateDiscount(100, { type: "fixed", value: 150 })
+    it('does not discount below zero', () => {
+      const result = calculateDiscount(100, { type: 'fixed', value: 150 })
       expect(result).toBe(0)
     })
   })
 
-  describe("applyPromoCode", () => {
-    it("applies valid promo code", async () => {
-      const result = await applyPromoCode("SAVE20", 100)
+  describe('applyPromoCode', () => {
+    it('applies valid promo code', async () => {
+      const result = await applyPromoCode('SAVE20', 100)
       expect(result.finalPrice).toBe(80)
       expect(result.discountApplied).toBe(20)
     })
 
-    it("rejects expired promo code", async () => {
-      await expect(
-        applyPromoCode("EXPIRED", 100)
-      ).rejects.toThrow("Promo code expired")
+    it('rejects expired promo code', async () => {
+      await expect(applyPromoCode('EXPIRED', 100)).rejects.toThrow('Promo code expired')
     })
   })
 })
@@ -167,33 +172,33 @@ describe("Pricing Helpers", () => {
 
 ```typescript
 // __tests__/hooks/usePermissions.test.ts
-import { renderHook } from "@testing-library/react"
-import { usePermissions } from "@/lib/hooks/usePermissions"
-import { mockUseSession } from "@/tests/helpers/auth"
+import { renderHook } from '@testing-library/react'
+import { usePermissions } from '@/lib/hooks/usePermissions'
+import { mockUseSession } from '@/tests/helpers/auth'
 
-describe("usePermissions", () => {
-  it("identifies admin user correctly", () => {
+describe('usePermissions', () => {
+  it('identifies admin user correctly', () => {
     mockUseSession({
-      data: { user: { role: "admin" } },
+      data: { user: { role: 'admin' } },
       isPending: false,
     })
 
     const { result } = renderHook(() => usePermissions())
 
     expect(result.current.isAdmin).toBe(true)
-    expect(result.current.hasPermission("users.delete")).toBe(true)
+    expect(result.current.hasPermission('users.delete')).toBe(true)
   })
 
-  it("denies permissions for regular user", () => {
+  it('denies permissions for regular user', () => {
     mockUseSession({
-      data: { user: { role: "user" } },
+      data: { user: { role: 'user' } },
       isPending: false,
     })
 
     const { result } = renderHook(() => usePermissions())
 
     expect(result.current.isAdmin).toBe(false)
-    expect(result.current.hasPermission("users.delete")).toBe(false)
+    expect(result.current.hasPermission('users.delete')).toBe(false)
   })
 })
 ```
@@ -204,34 +209,34 @@ describe("usePermissions", () => {
 
 ```typescript
 // __tests__/lib/dao/organization.test.ts
-import { getOrganizationWithMembers } from "@/lib/dao/organization"
-import { createOrganization, createMember, createUser } from "@/tests/helpers/factories"
-import { cleanDatabase } from "@/prisma/seed/utils/cleanup"
+import { getOrganizationWithMembers } from '@/lib/dao/organization'
+import { createOrganization, createMember, createUser } from '@/tests/helpers/factories'
+import { cleanDatabase } from '@/prisma/seed/utils/cleanup'
 
 beforeEach(async () => {
   await cleanDatabase()
 })
 
-describe("getOrganizationWithMembers", () => {
-  it("returns organization with all members", async () => {
+describe('getOrganizationWithMembers', () => {
+  it('returns organization with all members', async () => {
     const org = await createOrganization()
     const user1 = await createUser()
     const user2 = await createUser()
 
-    await createMember({ userId: user1.id, organizationId: org.id, role: "owner" })
-    await createMember({ userId: user2.id, organizationId: org.id, role: "member" })
+    await createMember({ userId: user1.id, organizationId: org.id, role: 'owner' })
+    await createMember({ userId: user2.id, organizationId: org.id, role: 'member' })
 
     const result = await getOrganizationWithMembers(org.id)
 
     expect(result.id).toBe(org.id)
     expect(result.members).toHaveLength(2)
-    expect(result.members[0].role).toBe("owner")
+    expect(result.members[0].role).toBe('owner')
   })
 
-  it("throws error if organization not found", async () => {
-    await expect(
-      getOrganizationWithMembers("non-existent-id")
-    ).rejects.toThrow("Organization not found")
+  it('throws error if organization not found', async () => {
+    await expect(getOrganizationWithMembers('non-existent-id')).rejects.toThrow(
+      'Organization not found'
+    )
   })
 })
 ```
@@ -243,24 +248,28 @@ describe("getOrganizationWithMembers", () => {
 ### What to Test with Playwright
 
 **Authentication Flows**:
+
 - OAuth sign-in (Google, GitHub, etc.)
 - Sign-out and session cleanup
 - Session persistence across page reloads
 - Callback URL handling after OAuth
 
 **Authorization**:
+
 - Admin impersonation (start/stop)
 - Organization switching
 - Role-based access control
 - Data isolation between organizations
 
 **Critical CRUD Operations**:
+
 - Create/edit/delete core resources
 - Form validation and submission
 - File uploads
 - Multi-step workflows
 
 **User Journeys**:
+
 - Onboarding flow
 - Checkout/payment flow
 - Dashboard interactions
@@ -274,10 +283,10 @@ describe("getOrganizationWithMembers", () => {
 
 ```typescript
 // tests/e2e/auth.spec.ts
-import { test, expect } from "@playwright/test"
+import { test, expect } from '@playwright/test'
 
-test("user can sign in with OAuth", async ({ page }) => {
-  await page.goto("/")
+test('user can sign in with OAuth', async ({ page }) => {
+  await page.goto('/')
 
   // Click sign-in button
   await page.click('[data-testid="sign-in-button"]')
@@ -290,7 +299,7 @@ test("user can sign in with OAuth", async ({ page }) => {
   await expect(page.locator('[data-testid="user-menu"]')).toBeVisible()
 })
 
-test("user can sign out", async ({ page }) => {
+test('user can sign out', async ({ page }) => {
   await loginAsUser(page) // Helper function
 
   await page.click('[data-testid="user-menu"]')
@@ -307,32 +316,28 @@ test("user can sign out", async ({ page }) => {
 
 ```typescript
 // tests/e2e/impersonation.spec.ts
-import { test, expect } from "@playwright/test"
-import { loginAsAdmin, loginAsUser } from "../helpers/auth"
+import { test, expect } from '@playwright/test'
+import { loginAsAdmin, loginAsUser } from '../helpers/auth'
 
-test("admin can impersonate user and return", async ({ page }) => {
+test('admin can impersonate user and return', async ({ page }) => {
   await loginAsAdmin(page)
-  await page.goto("/admin/users")
+  await page.goto('/admin/users')
 
   // Start impersonation
   await page.click('[data-testid="impersonate-user-123"]')
 
   // Verify impersonation banner
-  await expect(
-    page.locator('[data-testid="impersonation-banner"]')
-  ).toBeVisible()
+  await expect(page.locator('[data-testid="impersonation-banner"]')).toBeVisible()
 
   // Navigate as impersonated user
-  await page.goto("/settings")
+  await page.goto('/settings')
   await expect(page).toHaveURL(/\/settings/)
 
   // Stop impersonation
   await page.click('[data-testid="stop-impersonation"]')
 
   // Verify returned to admin
-  await expect(
-    page.locator('[data-testid="impersonation-banner"]')
-  ).not.toBeVisible()
+  await expect(page.locator('[data-testid="impersonation-banner"]')).not.toBeVisible()
   await expect(page).toHaveURL(/\/admin/)
 })
 ```
@@ -343,31 +348,29 @@ test("admin can impersonate user and return", async ({ page }) => {
 
 ```typescript
 // tests/e2e/organization-switching.spec.ts
-import { test, expect } from "@playwright/test"
-import { seedMultiOrganization } from "@/prisma/seed/scenarios"
+import { test, expect } from '@playwright/test'
+import { seedMultiOrganization } from '@/prisma/seed/scenarios'
 
 test.beforeEach(async () => {
   await cleanDatabase()
   await seedMultiOrganization() // User with 2 organizations
 })
 
-test("user can switch between organizations", async ({ page }) => {
+test('user can switch between organizations', async ({ page }) => {
   await loginAsUser(page)
 
   // Check current organization
-  await expect(page.locator('[data-testid="org-name"]')).toHaveText("Org 1")
+  await expect(page.locator('[data-testid="org-name"]')).toHaveText('Org 1')
 
   // Switch organization
   await page.click('[data-testid="org-switcher"]')
   await page.click('[data-testid="org-option-2"]')
 
   // Verify switch
-  await expect(page.locator('[data-testid="org-name"]')).toHaveText("Org 2")
+  await expect(page.locator('[data-testid="org-name"]')).toHaveText('Org 2')
 
   // Verify data isolation (only see Org 2 projects)
-  await expect(page.locator('[data-testid="project-list"]')).not.toContainText(
-    "Org 1 Project"
-  )
+  await expect(page.locator('[data-testid="project-list"]')).not.toContainText('Org 1 Project')
 })
 ```
 
@@ -377,34 +380,34 @@ test("user can switch between organizations", async ({ page }) => {
 
 ```typescript
 // tests/e2e/posts.spec.ts
-import { test, expect } from "@playwright/test"
+import { test, expect } from '@playwright/test'
 
-test("user can create, edit, and delete a post", async ({ page }) => {
+test('user can create, edit, and delete a post', async ({ page }) => {
   await loginAsUser(page)
 
   // Create post
-  await page.goto("/posts/new")
-  await page.fill('input[name="title"]', "My Test Post")
-  await page.fill('textarea[name="content"]', "This is test content.")
+  await page.goto('/posts/new')
+  await page.fill('input[name="title"]', 'My Test Post')
+  await page.fill('textarea[name="content"]', 'This is test content.')
   await page.click('button[type="submit"]')
 
   // Verify creation
-  await expect(page.locator("text=My Test Post")).toBeVisible()
+  await expect(page.locator('text=My Test Post')).toBeVisible()
 
   // Edit post
   await page.click('[data-testid="edit-post"]')
-  await page.fill('input[name="title"]', "My Updated Post")
+  await page.fill('input[name="title"]', 'My Updated Post')
   await page.click('button[type="submit"]')
 
   // Verify edit
-  await expect(page.locator("text=My Updated Post")).toBeVisible()
+  await expect(page.locator('text=My Updated Post')).toBeVisible()
 
   // Delete post
   await page.click('[data-testid="delete-post"]')
   await page.click('[data-testid="confirm-delete"]')
 
   // Verify deletion
-  await expect(page.locator("text=My Updated Post")).not.toBeVisible()
+  await expect(page.locator('text=My Updated Post')).not.toBeVisible()
 })
 ```
 
@@ -418,7 +421,7 @@ test("user can create, edit, and delete a post", async ({ page }) => {
 
 ```typescript
 // __tests__/lib/dao/posts.test.ts
-import { createUser, createPost } from "@/tests/helpers/factories"
+import { createUser, createPost } from '@/tests/helpers/factories'
 
 it("returns user's published posts", async () => {
   const user = await createUser()
@@ -439,8 +442,8 @@ it("returns user's published posts", async () => {
 
 ```typescript
 // tests/e2e/setup.ts
-import { test as base } from "@playwright/test"
-import { seedTest } from "@/prisma/seed/scenarios/test"
+import { test as base } from '@playwright/test'
+import { seedTest } from '@/prisma/seed/scenarios/test'
 
 export const test = base.extend({
   // Reset database before each test
@@ -461,19 +464,19 @@ export const test = base.extend({
 ```javascript
 // jest.config.js
 module.exports = {
-  preset: "ts-jest",
-  testEnvironment: "jsdom",
-  setupFilesAfterEnv: ["<rootDir>/tests/setup.ts"],
+  preset: 'ts-jest',
+  testEnvironment: 'jsdom',
+  setupFilesAfterEnv: ['<rootDir>/tests/setup.ts'],
   moduleNameMapper: {
-    "^@/(.*)$": "<rootDir>/$1",
+    '^@/(.*)$': '<rootDir>/$1',
   },
   collectCoverageFrom: [
-    "lib/**/*.{ts,tsx}",
-    "components/**/*.{ts,tsx}",
-    "hooks/**/*.{ts,tsx}",
-    "!**/*.test.{ts,tsx}",
-    "!**/node_modules/**",
-    "!**/.next/**",
+    'lib/**/*.{ts,tsx}',
+    'components/**/*.{ts,tsx}',
+    'hooks/**/*.{ts,tsx}',
+    '!**/*.test.{ts,tsx}',
+    '!**/node_modules/**',
+    '!**/.next/**',
   ],
   coverageThresholds: {
     global: {
@@ -487,6 +490,7 @@ module.exports = {
 ```
 
 **Key Settings**:
+
 - `testEnvironment: "jsdom"` → Simulate browser environment
 - `coverageThresholds` → Enforce minimum coverage
 - `setupFilesAfterEnv` → Global test setup (mock defaults, etc.)
@@ -497,37 +501,38 @@ module.exports = {
 
 ```typescript
 // playwright.config.ts
-import { defineConfig, devices } from "@playwright/test"
+import { defineConfig, devices } from '@playwright/test'
 
 export default defineConfig({
-  testDir: "./tests/e2e",
+  testDir: './tests/e2e',
   fullyParallel: true,
   forbidOnly: !!process.env.CI,
   retries: process.env.CI ? 2 : 0,
   workers: process.env.CI ? 1 : undefined,
-  reporter: "html",
+  reporter: 'html',
 
   use: {
-    baseURL: process.env.BASE_URL || "http://localhost:3000",
-    trace: "on-first-retry",
-    screenshot: "only-on-failure",
+    baseURL: process.env.BASE_URL || 'http://localhost:3000',
+    trace: 'on-first-retry',
+    screenshot: 'only-on-failure',
   },
 
   projects: [
-    { name: "chromium", use: { ...devices["Desktop Chrome"] } },
-    { name: "firefox", use: { ...devices["Desktop Firefox"] } },
-    { name: "webkit", use: { ...devices["Desktop Safari"] } },
+    { name: 'chromium', use: { ...devices['Desktop Chrome'] } },
+    { name: 'firefox', use: { ...devices['Desktop Firefox'] } },
+    { name: 'webkit', use: { ...devices['Desktop Safari'] } },
   ],
 
   webServer: {
-    command: "pnpm dev",
-    url: "http://localhost:3000",
+    command: 'pnpm dev',
+    url: 'http://localhost:3000',
     reuseExistingServer: !process.env.CI,
   },
 })
 ```
 
 **Key Settings**:
+
 - `fullyParallel: true` → Run tests in parallel for speed
 - `retries: 2` → Retry flaky tests in CI
 - `trace: "on-first-retry"` → Generate trace for debugging
@@ -541,21 +546,21 @@ export default defineConfig({
 
 ```typescript
 // tests/helpers/auth.ts
-import { Page } from "@playwright/test"
+import { Page } from '@playwright/test'
 
-export async function loginAsUser(page: Page, email = "test@example.com") {
+export async function loginAsUser(page: Page, email = 'test@example.com') {
   // For E2E tests, use test OAuth endpoint
   await page.goto(`/api/auth/test-login?email=${email}`)
   await page.waitForURL(/\/dashboard/)
 }
 
 export async function loginAsAdmin(page: Page) {
-  await page.goto("/api/auth/test-login?role=admin")
+  await page.goto('/api/auth/test-login?role=admin')
   await page.waitForURL(/\/admin/)
 }
 
 export function mockUseSession(returnValue: any) {
-  jest.mock("@/lib/auth/auth-client", () => ({
+  jest.mock('@/lib/auth/auth-client', () => ({
     useSession: jest.fn(() => returnValue),
   }))
 }
@@ -567,8 +572,8 @@ export function mockUseSession(returnValue: any) {
 
 ```typescript
 // tests/helpers/factories.ts
-import { faker } from "@faker-js/faker"
-import { createUser as createUserFactory } from "@/prisma/seed/factories/user.factory"
+import { faker } from '@faker-js/faker'
+import { createUser as createUserFactory } from '@/prisma/seed/factories/user.factory'
 
 // Set deterministic seed for tests
 faker.seed(12345)
@@ -626,8 +631,8 @@ jobs:
       - uses: pnpm/action-setup@v2
       - uses: actions/setup-node@v3
         with:
-          node-version: "20"
-          cache: "pnpm"
+          node-version: '20'
+          cache: 'pnpm'
       - run: pnpm install
       - run: pnpm test:coverage
       - uses: codecov/codecov-action@v3
@@ -641,8 +646,8 @@ jobs:
       - uses: pnpm/action-setup@v2
       - uses: actions/setup-node@v3
         with:
-          node-version: "20"
-          cache: "pnpm"
+          node-version: '20'
+          cache: 'pnpm'
       - run: pnpm install
       - run: npx playwright install --with-deps
       - run: pnpm test:e2e
@@ -654,6 +659,7 @@ jobs:
 ```
 
 **Key Features**:
+
 - Parallel unit and E2E test jobs
 - Coverage upload to Codecov
 - Playwright report artifact on failure
@@ -693,18 +699,21 @@ jobs:
 ## Coverage Goals
 
 **Unit Tests**:
+
 - 70% overall code coverage (enforced)
 - 90%+ for business logic (state machines, calculations)
 - 80%+ for helper functions
 - 60%+ for components (focus on logic, not UI)
 
 **E2E Tests**:
+
 - 100% critical path coverage (auth, core features)
 - 100% authorization flow coverage
 - 90%+ happy path coverage for core features
 - 50%+ edge case coverage
 
 **Zero Tolerance**:
+
 - Authentication flows: Must have 100% E2E coverage
 - Authorization checks: Must have 100% E2E coverage
 - Data isolation: Must have 100% E2E coverage
@@ -775,6 +784,7 @@ npx playwright show-trace trace.zip
 ```
 
 **Playwright Trace Viewer**:
+
 - Timeline of all actions
 - Network requests
 - Screenshots at each step
@@ -809,6 +819,7 @@ npx playwright show-trace trace.zip
 ### Jest Only (No E2E)
 
 **Rejected**:
+
 - Cannot test OAuth flows
 - Cannot test browser-specific behavior
 - Cannot test full user journeys
@@ -817,6 +828,7 @@ npx playwright show-trace trace.zip
 ### Cypress Instead of Playwright
 
 **Rejected**:
+
 - Playwright has better TypeScript support
 - Runs on real browsers (not just Electron)
 - Faster execution
@@ -825,6 +837,7 @@ npx playwright show-trace trace.zip
 ### Full E2E Coverage (Everything with Playwright)
 
 **Rejected**:
+
 - Too slow for TDD workflow
 - Expensive CI minutes
 - Unnecessary for pure business logic

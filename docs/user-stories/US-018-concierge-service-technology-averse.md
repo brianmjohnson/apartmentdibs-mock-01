@@ -56,11 +56,13 @@ Sandra's perspective: "I don't want to learn another app. I just want to call so
 **Given** Sandra subscribes to concierge tier
 **When** she needs help
 **Then** she can call a dedicated phone number:
+
 - Priority routing to support
 - Familiar rep (assigned account manager)
 - Available during business hours
 
 **Verification**:
+
 - [ ] Phone number prominently displayed
 - [ ] Account manager assignment works
 - [ ] Call history tracked
@@ -70,11 +72,13 @@ Sandra's perspective: "I don't want to learn another app. I just want to call so
 **Given** Sandra needs to create a listing
 **When** she calls support
 **Then** the rep can:
+
 - Enter listing details on her behalf
 - Guide her through photo upload
 - Set screening criteria via phone
 
 **Verification**:
+
 - [ ] Admin can act on landlord's behalf
 - [ ] All actions logged
 - [ ] Landlord receives confirmation
@@ -84,12 +88,14 @@ Sandra's perspective: "I don't want to learn another app. I just want to call so
 **Given** applications are received
 **When** Sandra is ready to review
 **Then** support rep:
+
 - Schedules phone call
 - Walks through each applicant
 - Explains metrics and recommendations
 - Records her decision
 
 **Verification**:
+
 - [ ] Scheduled call workflow
 - [ ] Rep can view landlord's dashboard
 - [ ] Decision properly recorded
@@ -99,11 +105,13 @@ Sandra's perspective: "I don't want to learn another app. I just want to call so
 **Given** Sandra receives physical documents
 **When** she needs them uploaded
 **Then** she can:
+
 - Mail documents to scanning address
 - Platform digitizes and attaches
 - Or email photos to support
 
 **Verification**:
+
 - [ ] Mail-in address provided
 - [ ] Scanning service works
 - [ ] Documents attached to correct listing
@@ -113,12 +121,14 @@ Sandra's perspective: "I don't want to learn another app. I just want to call so
 **Given** Sandra is subscribed
 **When** important events occur
 **Then** account manager proactively calls:
+
 - New applicants received
 - Application deadlines approaching
 - Decision needed
 - Lease ready to send
 
 **Verification**:
+
 - [ ] Trigger-based outreach
 - [ ] Call logged in system
 - [ ] Preferences respected (call times)
@@ -138,6 +148,7 @@ Sandra's perspective: "I don't want to learn another app. I just want to call so
 ### Frontend Specification
 
 **Components**:
+
 ```
 components/
   concierge/
@@ -147,6 +158,7 @@ components/
 ```
 
 **Admin Dashboard**:
+
 - View landlord's screen
 - Perform actions with logging
 - Schedule calls
@@ -155,13 +167,14 @@ components/
 
 ## Analytics Tracking
 
-| Event Name | When Triggered | Properties |
-|------------|----------------|------------|
-| `concierge_call` | Support call made | `{landlordId, repId, duration, topic}` |
-| `proxy_action` | Rep acts on behalf | `{landlordId, repId, actionType}` |
-| `document_scanned` | Mail-in processed | `{landlordId, docType}` |
+| Event Name         | When Triggered     | Properties                             |
+| ------------------ | ------------------ | -------------------------------------- |
+| `concierge_call`   | Support call made  | `{landlordId, repId, duration, topic}` |
+| `proxy_action`     | Rep acts on behalf | `{landlordId, repId, actionType}`      |
+| `document_scanned` | Mail-in processed  | `{landlordId, docType}`                |
 
 **Success Metrics**:
+
 - 95%+ satisfaction for concierge tier
 - 80%+ retention rate
 - Average 3 calls per month per landlord
@@ -171,10 +184,12 @@ components/
 ## Dependencies
 
 ### Blocked By
+
 - US-016: Obfuscated Dashboard (rep walks through)
 - US-017: Digital Lease Generation
 
 ### External Dependencies
+
 - Phone system integration
 - Document scanning service
 

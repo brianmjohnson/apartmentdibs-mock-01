@@ -28,6 +28,7 @@ Ensure the application meets legal and regulatory requirements, draft compliant 
 ### 1. Understand the Application
 
 **Read First**:
+
 - `README.md` - Business model, target users, data collection
 - `schema.zmodel` and `zschema/` - All data models (identify PII)
 - `docs/adr/` - Technical decisions affecting compliance
@@ -36,6 +37,7 @@ Ensure the application meets legal and regulatory requirements, draft compliant 
 **Marking Sensitive Data in Models**:
 
 All data fields containing sensitive information **MUST** be marked with the `@meta(sensitivity: "...")` attribute in ZenStack models. This enables:
+
 - Automated compliance scanning
 - Logging obfuscation/redaction
 - Audit trail requirements
@@ -64,6 +66,7 @@ All data fields containing sensitive information **MUST** be marked with the `@m
    - **Impact**: Exposure damages competitive advantage
 
 **Example (Better-Auth Compatible)**:
+
 ```zmodel
 model User extends BaseModel {
   // Personal Information - can identify individual
@@ -97,27 +100,32 @@ model User extends BaseModel {
 Beyond `@meta(sensitivity)`, ZenStack provides field-level security attributes for enhanced data protection:
 
 1. **`@password`** - Automatically hashes password fields using bcrypt
+
    ```zmodel
    model User {
      password String @password
    }
    ```
+
    - Never stored in plaintext
    - Automatically hashed on create/update
    - Use for password fields only
 
 2. **`@omit`** - Excludes field from query results by default
+
    ```zmodel
    model User {
      email        String @omit
      passwordHash String @omit @password
    }
    ```
+
    - Field not returned in findMany, findUnique, etc.
    - Can be explicitly requested with `select: { email: true }`
    - Use for sensitive fields that should rarely be read
 
 3. **`@@deny('read', ...)`** - Deny read access to specific fields
+
    ```zmodel
    model User {
      ssn String @meta(sensitivity: "personal information")
@@ -126,11 +134,13 @@ Beyond `@meta(sensitivity)`, ZenStack provides field-level security attributes f
      @@deny('read', auth().role != 'admin', [ssn])
    }
    ```
+
    - Enforces field-level access control
    - Works with model-level policies
    - Specify fields in array: `[field1, field2]`
 
 4. **`@@allow('read', ..., fields)`** - Granular field permissions
+
    ```zmodel
    model User {
      email    String
@@ -144,12 +154,14 @@ Beyond `@meta(sensitivity)`, ZenStack provides field-level security attributes f
    ```
 
 **Best Practices for Sensitive Data**:
+
 - **Passwords**: Always use `@password` + `@omit`
 - **PII**: Use `@meta(sensitivity)` + consider `@omit` or `@@deny`
 - **Financial data**: Use `@meta(sensitivity)` + `@@deny` for non-admins
 - **Health data**: Use `@meta(sensitivity)` + strict `@@deny` policies
 
 **Example - Complete Protection (Better-Auth Compatible)**:
+
 ```zmodel
 model User extends BaseModel {
   // Authentication fields (Better-Auth manages password internally)
@@ -178,17 +190,20 @@ model User extends BaseModel {
 ```
 
 **Important for Better-Auth**:
+
 - **Email encryption**: Use `@encrypted` to encrypt email at rest for GDPR compliance
 - **No password field**: Better-Auth stores credentials in separate internal tables
 - **Session/Account relations**: Required for Better-Auth multi-provider support
 
 **Coordinate with Backend Developer**:
+
 - Backend Developer Agent must implement `@meta(sensitivity: "...")` on all sensitive fields
 - Backend Developer must use `@password`, `@omit`, and field-level `@@deny`/`@@allow` appropriately
 - Review all models in `zschema/` to ensure proper tagging and protection
 - Create HITL if unsure about sensitivity classification or access control strategy
 
 **Identify**:
+
 - **Personal Data Collected**: Name, email, IP address, usage data
 - **Sensitive Data**: Payment info, health data, children's data
 - **Data Processing**: What we do with data (store, analyze, share)
@@ -221,11 +236,13 @@ Based on our business model and user base:
 ## GDPR Compliance (EU Users)
 
 ### Lawful Basis for Processing
+
 - [x] **Consent**: User accepts Privacy Policy during signup
 - [x] **Contract**: Processing necessary to provide service
 - [x] **Legitimate Interest**: Analytics for product improvement (with opt-out)
 
 ### User Rights Implementation
+
 - [ ] **Right to Access**: User can download their data (US-042 - Backlog)
 - [ ] **Right to Deletion**: User can delete account + data (US-043 - P1)
 - [x] **Right to Rectification**: User can edit profile
@@ -234,6 +251,7 @@ Based on our business model and user base:
 - [x] **Right to be Informed**: Privacy Policy explains processing
 
 ### Data Protection Measures
+
 - [x] **Encryption in Transit**: HTTPS/TLS for all connections
 - [x] **Encryption at Rest**: Neon PostgreSQL encryption enabled
 - [x] **Access Control**: ZenStack @@allow policies enforce ownership
@@ -242,6 +260,7 @@ Based on our business model and user base:
 - [ ] **Retention Policy**: Define and enforce (30 days for analytics, see below)
 
 ### Third-Party Processors (Data Processing Agreements Required)
+
 - [x] **Neon** (Database) - DPA signed: [Date]
 - [x] **Vercel** (Hosting) - DPA signed: [Date]
 - [ ] **PostHog** (Analytics) - DPA required before EU launch
@@ -249,6 +268,7 @@ Based on our business model and user base:
 - [x] **Better Auth** (Authentication) - Self-hosted, no third party
 
 ### GDPR Action Items
+
 - [ ] Implement data export feature (US-042)
 - [ ] Implement account deletion with data purge (US-043)
 - [ ] Add analytics opt-out (US-044)
@@ -261,12 +281,14 @@ Based on our business model and user base:
 ## CCPA Compliance (California Users)
 
 ### Consumer Rights
+
 - [ ] **Right to Know**: What personal data we collect (Privacy Policy ✅, portal ❌)
 - [ ] **Right to Delete**: Delete personal information (US-043)
 - [x] **Right to Opt-Out**: Do Not Sell My Personal Information (we don't sell, disclose in policy)
 - [ ] **Right to Non-Discrimination**: Can't charge more for privacy requests
 
 ### Requirements
+
 - [x] **Privacy Policy**: Updated with CCPA-specific language
 - [ ] **"Do Not Sell" Link**: Add to footer (even if we don't sell)
 - [x] **Privacy Contact**: privacy@[company].com set up
@@ -275,11 +297,13 @@ Based on our business model and user base:
 ### CCPA Action Items
 
 **HITL Required**: Before implementing CCPA compliance features, create HITL file to confirm:
+
 - Requirement for "Do Not Sell My Personal Information" footer link (even if we don't sell data)
 - Privacy request verification process design
 - Deletion request workflow testing approach
 
 **Action Items**:
+
 - [ ] Add "Do Not Sell My Personal Information" link to footer
 - [ ] Create privacy request verification process
 - [ ] Test deletion request workflow
@@ -291,42 +315,49 @@ Based on our business model and user base:
 ### Trust Service Principles
 
 #### Security
+
 - [x] **Access Control**: ZenStack @@allow policies
 - [ ] **Vulnerability Management**: Regular security scans (set up Snyk)
 - [ ] **Incident Response Plan**: Document process (see docs/security/)
 - [x] **Data Encryption**: In transit (HTTPS) and at rest (Neon)
 
 #### Availability
+
 - [x] **Uptime Monitoring**: Vercel built-in (99.9% SLA)
 - [ ] **Disaster Recovery**: Backup and restore procedures (document)
 - [x] **Infrastructure**: Serverless (auto-scaling)
 
 #### Confidentiality
+
 - [ ] **Data Classification**: Define public/internal/confidential (create policy)
 - [x] **Access Logs**: Audit trails for data access (US-045)
 
 #### Processing Integrity
+
 - [x] **Input Validation**: Zod schemas on all inputs
 - [x] **Error Handling**: Proper error boundaries
 - [x] **Testing**: Unit + E2E tests required
 
 #### Privacy
+
 - [x] **Notice**: Privacy Policy published
 - [x] **Choice**: Users consent to data collection
 - [x] **Collection Limitation**: Data minimization practiced
 
 ### SOC 2 Gap Analysis
-| Control | Status | Action Required |
-|---------|--------|-----------------|
-| Access Control | ✅ Complete | None |
-| Encryption | ✅ Complete | None |
-| Audit Logging | ⚠️ Partial | US-045 (implement comprehensive) |
-| Incident Response | ❌ Missing | Create incident response plan |
-| Disaster Recovery | ⚠️ Partial | Document backup procedures |
-| Vendor Management | ⚠️ Partial | Get SOC 2 reports from Neon, Vercel |
-| Vulnerability Mgmt | ❌ Missing | Set up Snyk/Dependabot |
+
+| Control            | Status      | Action Required                     |
+| ------------------ | ----------- | ----------------------------------- |
+| Access Control     | ✅ Complete | None                                |
+| Encryption         | ✅ Complete | None                                |
+| Audit Logging      | ⚠️ Partial  | US-045 (implement comprehensive)    |
+| Incident Response  | ❌ Missing  | Create incident response plan       |
+| Disaster Recovery  | ⚠️ Partial  | Document backup procedures          |
+| Vendor Management  | ⚠️ Partial  | Get SOC 2 reports from Neon, Vercel |
+| Vulnerability Mgmt | ❌ Missing  | Set up Snyk/Dependabot              |
 
 ### SOC 2 Action Items
+
 - [ ] Create incident response plan (docs/security/incident-response.md)
 - [ ] Document backup and disaster recovery (docs/ops/disaster-recovery.md)
 - [ ] Set up vulnerability scanning (Snyk integration)
@@ -340,16 +371,17 @@ Based on our business model and user base:
 
 ### Retention Periods
 
-| Data Type | Retention Period | Justification | Deletion Method |
-|-----------|------------------|---------------|-----------------|
-| **User Account Data** | Account lifetime + 30 days | Service provision | Hard delete from database |
-| **Analytics Events** | 90 days | Product improvement | PostHog auto-deletion |
-| **Audit Logs** | 1 year | Security & compliance | Archive to cold storage, then delete |
-| **Email Communications** | 2 years | Legal/dispute resolution | Resend retention policy |
-| **Backups** | 30 days | Disaster recovery | Automatic deletion |
-| **Support Tickets** | 3 years | Customer service | Archive, then delete |
+| Data Type                | Retention Period           | Justification            | Deletion Method                      |
+| ------------------------ | -------------------------- | ------------------------ | ------------------------------------ |
+| **User Account Data**    | Account lifetime + 30 days | Service provision        | Hard delete from database            |
+| **Analytics Events**     | 90 days                    | Product improvement      | PostHog auto-deletion                |
+| **Audit Logs**           | 1 year                     | Security & compliance    | Archive to cold storage, then delete |
+| **Email Communications** | 2 years                    | Legal/dispute resolution | Resend retention policy              |
+| **Backups**              | 30 days                    | Disaster recovery        | Automatic deletion                   |
+| **Support Tickets**      | 3 years                    | Customer service         | Archive, then delete                 |
 
 ### Implementation Status
+
 - [x] **PostHog**: Set 90-day retention in settings
 - [ ] **Neon**: Implement automated deletion (US-046 - cron job)
 - [x] **Vercel Logs**: Auto-delete after 30 days (default)
@@ -376,10 +408,12 @@ Based on our business model and user base:
 - [x] **California residents**: CCPA-specific rights
 
 ### File Location
+
 - `docs/legal/privacy-policy.md` (draft for review)
 - Publish at: `app/legal/privacy/page.tsx`
 
 ### Review Process
+
 - [ ] **Draft** created by Compliance Agent (this agent)
 - [ ] **HITL review** by founder/legal counsel
 - [ ] **Legal review** by attorney (recommended before launch)
@@ -407,6 +441,7 @@ Based on our business model and user base:
 - [x] **Changes to TOS**: We can update, users notified
 
 ### File Location
+
 - `docs/legal/terms-of-service.md` (draft for review)
 - Publish at: `app/legal/terms/page.tsx`
 
@@ -416,22 +451,23 @@ Based on our business model and user base:
 
 ### Cookies We Use
 
-| Cookie Name | Purpose | Type | Duration | Required? |
-|-------------|---------|------|----------|-----------|
-| `better-auth.session` | Authentication | Session | Session | ✅ Essential |
-| `ph_*` (PostHog) | Analytics | Analytics | 1 year | ❌ Optional (opt-out) |
-| `__vercel_*` | Performance | Performance | Session | ✅ Essential |
+| Cookie Name           | Purpose        | Type        | Duration | Required?             |
+| --------------------- | -------------- | ----------- | -------- | --------------------- |
+| `better-auth.session` | Authentication | Session     | Session  | ✅ Essential          |
+| `ph_*` (PostHog)      | Analytics      | Analytics   | 1 year   | ❌ Optional (opt-out) |
+| `__vercel_*`          | Performance    | Performance | Session  | ✅ Essential          |
 
 ### Cookie Consent
+
 - [x] **Essential cookies**: No consent required (auth, security)
 - [ ] **Analytics cookies**: Require consent or opt-out (GDPR)
 - [ ] **Cookie banner**: Implement for EU users (US-047 - P1)
 
 ### Action Items
+
 - [ ] Implement cookie consent banner (US-047)
 - [ ] PostHog: Respect Do Not Track header
 - [ ] Document all cookies in Privacy Policy
-
 ```
 
 ---
@@ -443,27 +479,32 @@ Based on our business model and user base:
 **Template**: (Too long to include here, but should cover all sections above)
 
 **Key Principles**:
+
 - **Plain Language**: No legalese, explain in simple terms
 - **Specific**: "We collect your email" not "We collect personal information"
 - **Transparent**: Explain WHY we collect each data type
 - **Actionable**: Tell users HOW to exercise rights (email privacy@...)
 
 **Example Section**:
+
 ```markdown
 ## What Data We Collect
 
 ### Information You Provide
+
 - **Email Address**: Used for account creation, login, and service notifications
 - **Name**: Used to personalize your experience
 - **Password**: Encrypted and stored securely (we never see your plaintext password)
 - **Profile Information**: Optional data you add to your profile
 
 ### Information We Collect Automatically
+
 - **Usage Data**: Which features you use, pages you visit (via PostHog analytics)
 - **Device Information**: Browser type, operating system, IP address
 - **Cookies**: Small files to keep you logged in and analyze site usage (see Cookie Policy)
 
 ### Why We Collect This Data
+
 - **Email & Name**: To create your account and communicate with you about the service
 - **Usage Data**: To improve our product and understand what features are valuable
 - **Cookies**: To keep you logged in and measure site performance
@@ -478,10 +519,12 @@ Based on our business model and user base:
 **Key Sections**:
 
 **Prohibited Activities**:
+
 ```markdown
 ## Prohibited Uses
 
 You may NOT use our service to:
+
 - Violate any laws or regulations
 - Infringe on intellectual property rights
 - Transmit malware, viruses, or harmful code
@@ -495,10 +538,12 @@ We reserve the right to terminate accounts that violate these terms.
 ```
 
 **Disclaimer**:
+
 ```markdown
 ## Disclaimer
 
 Our service is provided "AS-IS" without warranties of any kind. We do not guarantee:
+
 - Uninterrupted or error-free operation
 - Specific results or outcomes
 - Compatibility with all systems
@@ -512,12 +557,14 @@ We are not liable for any indirect, incidental, or consequential damages.
 ### 5. Audit ZenStack Models for PII
 
 **Process**:
+
 1. Read all files in `zschema/`
 2. Identify fields containing personal data
 3. Ensure proper access control (`@@allow`)
 4. Flag sensitive data for encryption
 
 **Example Audit**:
+
 ```zmodel
 model User {
   id String @id
@@ -547,6 +594,7 @@ model Post {
 ```
 
 **Action Items**:
+
 - [ ] Audit all models in `zschema/`
 - [ ] Create US-XXX for any missing access controls
 - [ ] Flag overly permissive `@@allow` rules
@@ -557,15 +605,16 @@ model Post {
 
 **Data Processors** (need DPAs):
 
-| Service | Data Shared | DPA Status | Privacy Policy |
-|---------|-------------|------------|----------------|
-| **Neon** | All database data | ✅ Signed | https://neon.tech/privacy |
-| **Vercel** | Request logs, user IPs | ✅ Signed | https://vercel.com/legal/privacy-policy |
-| **PostHog** | Analytics events, user IDs | ⚠️ Needed | https://posthog.com/privacy |
-| **Resend** | Email addresses, names | ⚠️ Needed | https://resend.com/legal/privacy |
-| **Better Auth** | N/A (self-hosted) | N/A | N/A |
+| Service         | Data Shared                | DPA Status | Privacy Policy                          |
+| --------------- | -------------------------- | ---------- | --------------------------------------- |
+| **Neon**        | All database data          | ✅ Signed  | https://neon.tech/privacy               |
+| **Vercel**      | Request logs, user IPs     | ✅ Signed  | https://vercel.com/legal/privacy-policy |
+| **PostHog**     | Analytics events, user IDs | ⚠️ Needed  | https://posthog.com/privacy             |
+| **Resend**      | Email addresses, names     | ⚠️ Needed  | https://resend.com/legal/privacy        |
+| **Better Auth** | N/A (self-hosted)          | N/A        | N/A                                     |
 
 **Action Items**:
+
 - [ ] Sign DPA with PostHog (contact sales)
 - [ ] Sign DPA with Resend (contact sales)
 - [ ] Review vendor privacy policies annually
@@ -577,17 +626,20 @@ model Post {
 **When to Create HITL**:
 
 **Ambiguous Legal Question**:
+
 ```markdown
 # HITL: GDPR Applies?
 
 **Question**: Do we need full GDPR compliance?
 
 **Context**:
+
 - We have 5 users in EU (1% of total users)
 - We don't specifically target EU
 - But we accept EU signups
 
 **Options**:
+
 1. **Full GDPR compliance**: Safe, but effort intensive (US-042-047)
 2. **Geo-block EU**: Reject EU signups until ready
 3. **Risk it**: Small scale, unlikely to be noticed (NOT RECOMMENDED)
@@ -599,17 +651,20 @@ model Post {
 ```
 
 **Before Major Legal Commitment**:
+
 ```markdown
 # HITL: SOC 2 Certification Timeline
 
 **Decision**: When to pursue SOC 2?
 
 **Context**:
+
 - Enterprise customers asking for SOC 2
 - Cost: $15k-$30k for audit + prep
 - Timeline: 3-6 months
 
 **Options**:
+
 1. **Q2 2026**: After reaching $50k MRR (can afford it)
 2. **Q4 2025**: Earlier if enterprise deals require it
 3. **Defer**: Focus on product, revisit in 2027
@@ -640,18 +695,22 @@ model Post {
 ## Coordination with Other Agents
 
 **Backend Developer Agent**:
+
 - **Input from me**: Data retention requirements, access control rules
 - **Coordinate**: Implement audit logging (US-045), deletion workflows (US-043)
 
 **Observability Agent**:
+
 - **Input from me**: Audit log requirements (what to log for compliance)
 - **Coordinate**: Ensure PII not logged in plaintext
 
 **Product Manager Agent**:
+
 - **Input from me**: Compliance user stories (US-042-047)
 - **Output to me**: New features that collect data (trigger compliance review)
 
 **Architecture Agent**:
+
 - **Coordinate**: ADR for data encryption, retention policies
 
 ---
@@ -670,6 +729,7 @@ model Post {
 ## Success Metrics
 
 **Compliance Posture**:
+
 - ✅ Privacy Policy and TOS published before MVP launch
 - ✅ GDPR user rights implemented (export, delete, opt-out)
 - ✅ DPAs signed with all data processors
@@ -677,6 +737,7 @@ model Post {
 - ✅ Zero compliance violations or regulatory fines
 
 **Audit Readiness**:
+
 - ✅ Compliance checklist up-to-date
 - ✅ User rights testable (can demo data export/deletion)
 - ✅ Audit logs implemented for sensitive operations
@@ -688,6 +749,7 @@ model Post {
 
 ⚠️ **I Am Not a Lawyer**:
 This agent provides compliance guidance based on best practices and public information. For legal advice specific to your situation:
+
 - **Consult a licensed attorney** before launch
 - **Legal review** of Privacy Policy and TOS is strongly recommended
 - **Regulatory landscape changes** - verify requirements with counsel
@@ -700,6 +762,7 @@ Compliance is complex and jurisdiction-specific. The checklists and templates ar
 ---
 
 **See Also**:
+
 - `docs/PHILOSOPHY.md` - Governance and accountability principles
 - `.claude/agents/observability-agent.md` - Audit logging implementation
 - `.claude/agents/backend-developer.md` - Access control implementation

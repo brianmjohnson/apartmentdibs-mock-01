@@ -19,7 +19,7 @@ Preview deployments (Vercel, Netlify) generate unique URLs per branch, requiring
 ```typescript
 // ❌ Doesn't work for preview deployments
 const corsOptions = {
-  origin: "https://yourdomain.com", // Only allows production
+  origin: 'https://yourdomain.com', // Only allows production
 }
 
 // Preview URLs are dynamic:
@@ -29,6 +29,7 @@ const corsOptions = {
 ```
 
 **Requirements**:
+
 - Allow preview deployments (`*.vercel.app`)
 - Allow production domain (`yourdomain.com`)
 - Allow local development (`localhost`)
@@ -47,20 +48,20 @@ export function getAllowedOrigins(): string[] {
   const vercelEnv = process.env.VERCEL_ENV
 
   // Development: Allow localhost
-  if (env === "development") {
-    return ["http://localhost:3000", "http://localhost:3001"]
+  if (env === 'development') {
+    return ['http://localhost:3000', 'http://localhost:3001']
   }
 
   // Production: Allow production domain only
-  if (vercelEnv === "production") {
-    return ["https://yourdomain.com", "https://www.yourdomain.com"]
+  if (vercelEnv === 'production') {
+    return ['https://yourdomain.com', 'https://www.yourdomain.com']
   }
 
   // Preview: Allow preview deployments + production
-  if (vercelEnv === "preview") {
+  if (vercelEnv === 'preview') {
     return [
-      "https://yourdomain.com",
-      "https://www.yourdomain.com",
+      'https://yourdomain.com',
+      'https://www.yourdomain.com',
       // Pattern: *.vercel.app (handled in isAllowedOrigin)
     ]
   }
@@ -78,7 +79,7 @@ export function isAllowedOrigin(origin: string | undefined): boolean {
   if (allowedOrigins.includes(origin)) return true
 
   // Preview: Allow *.vercel.app pattern
-  if (env === "preview" && origin.endsWith(".vercel.app")) {
+  if (env === 'preview' && origin.endsWith('.vercel.app')) {
     return true
   }
 
@@ -90,8 +91,8 @@ export function isAllowedOrigin(origin: string | undefined): boolean {
 
 ```typescript
 // lib/api/cors.ts
-import { NextResponse } from "next/server"
-import { isAllowedOrigin } from "@/lib/cors"
+import { NextResponse } from 'next/server'
+import { isAllowedOrigin } from '@/lib/cors'
 
 export function corsHeaders(origin: string | undefined) {
   if (!isAllowedOrigin(origin)) {
@@ -99,18 +100,18 @@ export function corsHeaders(origin: string | undefined) {
   }
 
   return {
-    "Access-Control-Allow-Origin": origin,
-    "Access-Control-Allow-Methods": "GET, POST, PUT, DELETE, OPTIONS",
-    "Access-Control-Allow-Headers": "Content-Type, Authorization",
-    "Access-Control-Allow-Credentials": "true",
+    'Access-Control-Allow-Origin': origin,
+    'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, OPTIONS',
+    'Access-Control-Allow-Headers': 'Content-Type, Authorization',
+    'Access-Control-Allow-Credentials': 'true',
   }
 }
 
 // Usage in API route
 export async function GET(request: Request) {
-  const origin = request.headers.get("origin") ?? undefined
+  const origin = request.headers.get('origin') ?? undefined
 
-  const data = { message: "Hello" }
+  const data = { message: 'Hello' }
 
   return NextResponse.json(data, {
     headers: corsHeaders(origin),
@@ -119,7 +120,7 @@ export async function GET(request: Request) {
 
 // Handle preflight (OPTIONS)
 export async function OPTIONS(request: Request) {
-  const origin = request.headers.get("origin") ?? undefined
+  const origin = request.headers.get('origin') ?? undefined
 
   return new NextResponse(null, {
     status: 204,
@@ -132,22 +133,22 @@ export async function OPTIONS(request: Request) {
 
 ```typescript
 // middleware.ts
-import { NextResponse } from "next/server"
-import type { NextRequest } from "next/server"
-import { isAllowedOrigin } from "@/lib/cors"
+import { NextResponse } from 'next/server'
+import type { NextRequest } from 'next/server'
+import { isAllowedOrigin } from '@/lib/cors'
 
 export function middleware(request: NextRequest) {
-  const origin = request.headers.get("origin")
+  const origin = request.headers.get('origin')
 
   // Handle preflight requests
-  if (request.method === "OPTIONS") {
+  if (request.method === 'OPTIONS') {
     return new NextResponse(null, {
       status: 204,
       headers: {
-        "Access-Control-Allow-Origin": isAllowedOrigin(origin) ? origin! : "",
-        "Access-Control-Allow-Methods": "GET, POST, PUT, DELETE, OPTIONS",
-        "Access-Control-Allow-Headers": "Content-Type, Authorization",
-        "Access-Control-Allow-Credentials": "true",
+        'Access-Control-Allow-Origin': isAllowedOrigin(origin) ? origin! : '',
+        'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, OPTIONS',
+        'Access-Control-Allow-Headers': 'Content-Type, Authorization',
+        'Access-Control-Allow-Credentials': 'true',
       },
     })
   }
@@ -156,8 +157,8 @@ export function middleware(request: NextRequest) {
   const response = NextResponse.next()
 
   if (isAllowedOrigin(origin)) {
-    response.headers.set("Access-Control-Allow-Origin", origin!)
-    response.headers.set("Access-Control-Allow-Credentials", "true")
+    response.headers.set('Access-Control-Allow-Origin', origin!)
+    response.headers.set('Access-Control-Allow-Credentials', 'true')
   }
 
   return response
@@ -165,7 +166,7 @@ export function middleware(request: NextRequest) {
 
 // Apply middleware to API routes only
 export const config = {
-  matcher: "/api/:path*",
+  matcher: '/api/:path*',
 }
 ```
 
@@ -254,12 +255,14 @@ NEXT_PUBLIC_API_URL=https://yourdomain.com
 ## Security Considerations
 
 **Do**:
+
 - ✅ Validate origin against allowed patterns
 - ✅ Use `Access-Control-Allow-Credentials: true` only for trusted origins
 - ✅ Limit `Access-Control-Allow-Methods` to required methods
 - ✅ Specify exact `Access-Control-Allow-Headers` (don't use `*`)
 
 **Don't**:
+
 - ❌ Use `Access-Control-Allow-Origin: *` with credentials
 - ❌ Allow all origins in production
 - ❌ Trust `origin` header without validation
@@ -278,7 +281,7 @@ Error: CORS policy: No 'Access-Control-Allow-Origin' header
 **Solution**: Ensure `*.vercel.app` pattern matching is enabled for `VERCEL_ENV=preview`
 
 ```typescript
-if (env === "preview" && origin.endsWith(".vercel.app")) {
+if (env === 'preview' && origin.endsWith('.vercel.app')) {
   return true
 }
 ```
@@ -307,7 +310,7 @@ Error: Response to preflight request doesn't pass access control check
 
 ```typescript
 export async function OPTIONS(request: Request) {
-  const origin = request.headers.get("origin") ?? undefined
+  const origin = request.headers.get('origin') ?? undefined
 
   return new NextResponse(null, {
     status: 204,

@@ -56,11 +56,13 @@ Roommate situations require coordinating multiple applications. Each person subm
 **Given** a tenant wants to apply with roommates
 **When** they start a group application
 **Then** they can:
+
 - Invite 2-4 co-applicants via email/phone
 - Set themselves as primary applicant
 - Track invitation status
 
 **Verification**:
+
 - [ ] Invitations sent via email/SMS
 - [ ] Invitees can accept and link profiles
 - [ ] Status shows pending/accepted
@@ -70,12 +72,14 @@ Roommate situations require coordinating multiple applications. Each person subm
 **Given** all roommates have completed profiles
 **When** the group applies
 **Then** landlord sees combined metrics:
+
 - Total household income-to-rent ratio
 - Combined credit score summary
 - All background checks
 - Shared references
 
 **Verification**:
+
 - [ ] Household income calculated correctly
 - [ ] Individual and combined metrics shown
 - [ ] All applicants' data included
@@ -85,11 +89,13 @@ Roommate situations require coordinating multiple applications. Each person subm
 **Given** a group application
 **When** payment is processed
 **Then** pricing is:
+
 - $99.99 for 2-4 applicants
 - Split evenly or paid by primary
 - 90-day validity for all profiles
 
 **Verification**:
+
 - [ ] Group pricing applied
 - [ ] Payment split option works
 - [ ] All profiles get same validity
@@ -99,11 +105,13 @@ Roommate situations require coordinating multiple applications. Each person subm
 **Given** some roommates haven't completed profiles
 **When** primary tries to submit
 **Then** they see:
+
 - Status per roommate
 - Option to send reminders
 - Ability to apply with partial group
 
 **Verification**:
+
 - [ ] Per-member status visible
 - [ ] Reminder functionality works
 - [ ] Partial submission with warning
@@ -115,6 +123,7 @@ Roommate situations require coordinating multiple applications. Each person subm
 **Then** all applicants appear on lease as co-tenants
 
 **Verification**:
+
 - [ ] All names on lease
 - [ ] Each signs digitally
 
@@ -144,6 +153,7 @@ CREATE TABLE group_members (
 ### Frontend Specification
 
 **Components**:
+
 ```
 components/
   group/
@@ -156,13 +166,14 @@ components/
 
 ## Analytics Tracking
 
-| Event Name | When Triggered | Properties |
-|------------|----------------|------------|
-| `group_created` | Primary starts group | `{primaryId, memberCount}` |
-| `group_member_joined` | Roommate accepts | `{groupId, memberId}` |
-| `group_applied` | Group submits | `{groupId, listingId}` |
+| Event Name            | When Triggered       | Properties                 |
+| --------------------- | -------------------- | -------------------------- |
+| `group_created`       | Primary starts group | `{primaryId, memberCount}` |
+| `group_member_joined` | Roommate accepts     | `{groupId, memberId}`      |
+| `group_applied`       | Group submits        | `{groupId, listingId}`     |
 
 **Success Metrics**:
+
 - 40% of group applications complete within 48 hours
 - 30%+ of applications are group applications
 - 50% cost savings vs individual applications
@@ -172,9 +183,11 @@ components/
 ## Dependencies
 
 ### Blocked By
+
 - US-010: Reusable Profile
 
 ### Related Stories
+
 - US-017: Digital Lease Generation
 
 ---

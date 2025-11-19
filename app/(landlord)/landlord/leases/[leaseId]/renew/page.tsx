@@ -24,11 +24,7 @@ import {
   DialogTitle,
   DialogTrigger,
 } from '@/components/ui/dialog'
-import {
-  getLeaseById,
-  formatCurrency,
-  formatDate
-} from '@/lib/mock-data/landlord'
+import { getLeaseById, formatCurrency, formatDate } from '@/lib/mock-data/landlord'
 
 export default function LeaseRenewalPage({ params }: { params: Promise<{ leaseId: string }> }) {
   const { leaseId } = use(params)
@@ -47,7 +43,7 @@ export default function LeaseRenewalPage({ params }: { params: Promise<{ leaseId
             Back to Leases
           </Button>
         </Link>
-        <Card className="border-2 border-foreground">
+        <Card className="border-foreground border-2">
           <CardContent className="py-12 text-center">
             <p className="text-muted-foreground">Lease not found</p>
           </CardContent>
@@ -66,7 +62,10 @@ export default function LeaseRenewalPage({ params }: { params: Promise<{ leaseId
 
   const newEndDate = calculateEndDate()
   const rentChange = lease.monthlyRent - parseInt(newRent || '0')
-  const rentChangePercent = ((parseInt(newRent || '0') - lease.monthlyRent) / lease.monthlyRent * 100).toFixed(1)
+  const rentChangePercent = (
+    ((parseInt(newRent || '0') - lease.monthlyRent) / lease.monthlyRent) *
+    100
+  ).toFixed(1)
 
   return (
     <div className="space-y-6">
@@ -88,7 +87,7 @@ export default function LeaseRenewalPage({ params }: { params: Promise<{ leaseId
 
       <div className="grid gap-6 lg:grid-cols-2">
         {/* Current Lease Summary */}
-        <Card className="border-2 border-foreground">
+        <Card className="border-foreground border-2">
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
               <FileText className="h-5 w-5" />
@@ -99,12 +98,12 @@ export default function LeaseRenewalPage({ params }: { params: Promise<{ leaseId
           <CardContent className="space-y-4">
             <div className="grid grid-cols-2 gap-4">
               <div>
-                <p className="text-sm text-muted-foreground">Current Rent</p>
+                <p className="text-muted-foreground text-sm">Current Rent</p>
                 <p className="text-2xl font-bold">{formatCurrency(lease.monthlyRent)}</p>
-                <p className="text-xs text-muted-foreground">per month</p>
+                <p className="text-muted-foreground text-xs">per month</p>
               </div>
               <div>
-                <p className="text-sm text-muted-foreground">Current End Date</p>
+                <p className="text-muted-foreground text-sm">Current End Date</p>
                 <p className="text-2xl font-bold">{formatDate(lease.endDate)}</p>
               </div>
             </div>
@@ -123,7 +122,7 @@ export default function LeaseRenewalPage({ params }: { params: Promise<{ leaseId
         </Card>
 
         {/* Renewal Terms Form */}
-        <Card className="border-2 border-foreground">
+        <Card className="border-foreground border-2">
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
               <Calendar className="h-5 w-5" />
@@ -135,19 +134,22 @@ export default function LeaseRenewalPage({ params }: { params: Promise<{ leaseId
             <div className="space-y-2">
               <Label htmlFor="newRent">New Monthly Rent</Label>
               <div className="relative">
-                <DollarSign className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                <DollarSign className="text-muted-foreground absolute top-1/2 left-3 h-4 w-4 -translate-y-1/2" />
                 <Input
                   id="newRent"
                   type="number"
                   value={newRent}
                   onChange={(e) => setNewRent(e.target.value)}
-                  className="pl-9 border-2"
+                  className="border-2 pl-9"
                   placeholder="Enter new rent amount"
                 />
               </div>
               {newRent && parseInt(newRent) !== lease.monthlyRent && (
-                <p className={`text-xs ${parseInt(newRent) > lease.monthlyRent ? 'text-green-600' : 'text-red-600'}`}>
-                  {parseInt(newRent) > lease.monthlyRent ? '+' : ''}{rentChangePercent}% from current rent
+                <p
+                  className={`text-xs ${parseInt(newRent) > lease.monthlyRent ? 'text-green-600' : 'text-red-600'}`}
+                >
+                  {parseInt(newRent) > lease.monthlyRent ? '+' : ''}
+                  {rentChangePercent}% from current rent
                 </p>
               )}
             </div>
@@ -182,7 +184,7 @@ export default function LeaseRenewalPage({ params }: { params: Promise<{ leaseId
       </div>
 
       {/* Renewal Preview */}
-      <Card className="border-2 border-foreground bg-muted/50">
+      <Card className="border-foreground bg-muted/50 border-2">
         <CardHeader>
           <CardTitle>Renewal Summary</CardTitle>
           <CardDescription>Preview of the renewal terms to be sent to tenant</CardDescription>
@@ -190,26 +192,22 @@ export default function LeaseRenewalPage({ params }: { params: Promise<{ leaseId
         <CardContent>
           <div className="grid gap-4 md:grid-cols-4">
             <div>
-              <p className="text-sm text-muted-foreground">New Monthly Rent</p>
+              <p className="text-muted-foreground text-sm">New Monthly Rent</p>
               <p className="text-xl font-bold">
                 {newRent ? formatCurrency(parseInt(newRent)) : '-'}
               </p>
             </div>
             <div>
-              <p className="text-sm text-muted-foreground">Lease Length</p>
+              <p className="text-muted-foreground text-sm">Lease Length</p>
               <p className="text-xl font-bold">{leaseLength} months</p>
             </div>
             <div>
-              <p className="text-sm text-muted-foreground">Start Date</p>
-              <p className="text-xl font-bold">
-                {startDate ? formatDate(startDate) : '-'}
-              </p>
+              <p className="text-muted-foreground text-sm">Start Date</p>
+              <p className="text-xl font-bold">{startDate ? formatDate(startDate) : '-'}</p>
             </div>
             <div>
-              <p className="text-sm text-muted-foreground">End Date</p>
-              <p className="text-xl font-bold">
-                {newEndDate ? formatDate(newEndDate) : '-'}
-              </p>
+              <p className="text-muted-foreground text-sm">End Date</p>
+              <p className="text-xl font-bold">{newEndDate ? formatDate(newEndDate) : '-'}</p>
             </div>
           </div>
         </CardContent>
@@ -224,33 +222,36 @@ export default function LeaseRenewalPage({ params }: { params: Promise<{ leaseId
         </Link>
         <Dialog>
           <DialogTrigger asChild>
-            <Button className="border-2 border-foreground">
-              <Send className="h-4 w-4 mr-2" />
+            <Button className="border-foreground border-2">
+              <Send className="mr-2 h-4 w-4" />
               Send to Tenant
             </Button>
           </DialogTrigger>
-          <DialogContent className="border-2 border-foreground">
+          <DialogContent className="border-foreground border-2">
             <DialogHeader>
               <DialogTitle>Send Renewal Offer</DialogTitle>
               <DialogDescription>
                 This will send the renewal offer to {lease.tenantName} via email.
               </DialogDescription>
             </DialogHeader>
-            <div className="py-4 space-y-2">
+            <div className="space-y-2 py-4">
               <p className="text-sm">
                 <strong>New Rent:</strong> {newRent ? formatCurrency(parseInt(newRent)) : '-'}/mo
               </p>
               <p className="text-sm">
-                <strong>Lease Term:</strong> {startDate ? formatDate(startDate) : '-'} to {newEndDate ? formatDate(newEndDate) : '-'}
+                <strong>Lease Term:</strong> {startDate ? formatDate(startDate) : '-'} to{' '}
+                {newEndDate ? formatDate(newEndDate) : '-'}
               </p>
               <p className="text-sm">
                 <strong>Tenant Email:</strong> {lease.tenantEmail}
               </p>
             </div>
             <DialogFooter>
-              <Button variant="outline" className="border-2">Cancel</Button>
-              <Button className="border-2 border-foreground">
-                <Send className="h-4 w-4 mr-2" />
+              <Button variant="outline" className="border-2">
+                Cancel
+              </Button>
+              <Button className="border-foreground border-2">
+                <Send className="mr-2 h-4 w-4" />
                 Confirm & Send
               </Button>
             </DialogFooter>

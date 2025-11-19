@@ -57,6 +57,7 @@ Session Summary Agent
 ```
 
 **Coordination**:
+
 - Each agent reads previous agent's output
 - US-001.md contains context for all agents
 - ADRs provide architectural guardrails
@@ -82,6 +83,7 @@ Backend Agent      Frontend Agent
 ```
 
 **Coordination**:
+
 - Both read same tech spec
 - API contract defined in US-XXX.md
 - Both use ZenStack-generated types
@@ -106,6 +108,7 @@ Implementation Proceeds
 ```
 
 **Coordination**:
+
 - HITL file contains specific feedback
 - Agent reads feedback and incorporates
 - Multiple revision rounds possible
@@ -118,22 +121,26 @@ Implementation Proceeds
 **Role**: Make and document technical decisions
 
 **Inputs**:
+
 - Approved user stories
 - Existing ADRs
 - Tech stack constraints
 - Research findings
 
 **Outputs**:
+
 - New ADRs (DRAFT status)
 - Updated ADRs (NEEDS_REVIEW status)
 - Technical recommendations
 
 **When Activated**:
+
 - After user stories approved
 - Before implementation begins
 - When significant decision needed
 
 **Works With**:
+
 - Product Manager (understands requirements)
 - Backend/Frontend Developers (provides guidance)
 
@@ -146,23 +153,27 @@ Implementation Proceeds
 **Role**: Define and prioritize features
 
 **Inputs**:
+
 - Business plan (README.md)
 - Market research
 - User feedback
 - Success metrics
 
 **Outputs**:
+
 - `docs/user-stories.md` (master index)
 - `docs/user-stories/US-XXX.md` (detailed stories)
 - RICE scoring
 - Prioritization (P0-P3)
 
 **When Activated**:
+
 - At project start
 - For new features
 - Sprint planning
 
 **Works With**:
+
 - UX Researcher (validates assumptions)
 - UI Designer (creates mockups)
 - Architecture Agent (technical feasibility)
@@ -176,12 +187,14 @@ Implementation Proceeds
 **Role**: Implement UI and client logic
 
 **Inputs**:
+
 - Approved user stories
 - Technical specifications
 - ADRs for guidance
 - UI mockups/specs
 
 **Outputs**:
+
 - React components
 - Client-side logic
 - TanStack Query hook usage
@@ -189,15 +202,18 @@ Implementation Proceeds
 - Component tests
 
 **When Activated**:
+
 - After tech spec approved
 - Can work in parallel with backend
 
 **Works With**:
+
 - Backend Developer (API contracts)
 - UI Designer (implements designs)
 - Quality Reviewer (testing)
 
 **Anti-Hallucination Rules**:
+
 - ✅ Use ZenStack-generated hooks
 - ✅ Search for existing components first
 - ✅ Web search for library docs
@@ -213,12 +229,14 @@ Implementation Proceeds
 **Role**: Implement data models and business logic
 
 **Inputs**:
+
 - Approved user stories
 - Technical specifications
 - ADRs for guidance
 - Data requirements
 
 **Outputs**:
+
 - ZenStack models (`zschema/`)
 - Access control policies
 - Business logic services
@@ -226,15 +244,18 @@ Implementation Proceeds
 - Unit tests
 
 **When Activated**:
+
 - After tech spec approved
 - Can work in parallel with frontend
 
 **Works With**:
+
 - Frontend Developer (API contracts)
 - Architecture Agent (follows ADRs)
 - Quality Reviewer (testing)
 
 **Anti-Hallucination Rules**:
+
 - ✅ Use ZenStack-generated tRPC routes
 - ✅ Search for existing models first
 - ✅ Follow established schema patterns
@@ -250,12 +271,14 @@ Implementation Proceeds
 **Role**: Create component specifications and mockups
 
 **Inputs**:
+
 - User stories
 - Brand guidelines
 - Accessibility requirements
 - User personas
 
 **Outputs**:
+
 - Component specifications
 - Text-based mockups
 - Layout descriptions
@@ -263,10 +286,12 @@ Implementation Proceeds
 - Design tokens/variables
 
 **When Activated**:
+
 - During user story creation
 - Before frontend implementation
 
 **Works With**:
+
 - Product Manager (understands requirements)
 - UX Researcher (validates with users)
 - Frontend Developer (implements designs)
@@ -280,12 +305,14 @@ Implementation Proceeds
 **Role**: Validate assumptions and test usability
 
 **Inputs**:
+
 - User stories
 - Target personas
 - Product goals
 - User feedback
 
 **Outputs**:
+
 - User research findings
 - Usability recommendations
 - Friction point analysis
@@ -293,11 +320,13 @@ Implementation Proceeds
 - Analytics tracking requirements
 
 **When Activated**:
+
 - During user story refinement
 - After feature implementation
 - For major UX changes
 
 **Works With**:
+
 - Product Manager (refines stories)
 - UI Designer (improves designs)
 - Quality Reviewer (validates UX)
@@ -311,12 +340,14 @@ Implementation Proceeds
 **Role**: Validate implementation meets requirements
 
 **Inputs**:
+
 - User stories (acceptance criteria)
 - Implemented code
 - Test results
 - Performance metrics
 
 **Outputs**:
+
 - QA report
 - Issues found (critical/minor)
 - Test coverage analysis
@@ -324,15 +355,18 @@ Implementation Proceeds
 - HITL for decisions
 
 **When Activated**:
+
 - After implementation complete
 - Before marking story as done
 
 **Works With**:
+
 - Frontend/Backend Developers (reports issues)
 - Product Manager (story refinement)
 - Human (HITL for issue resolution)
 
 **Review Criteria**:
+
 - All acceptance criteria met?
 - Edge cases handled?
 - Error states implemented?
@@ -350,16 +384,19 @@ Implementation Proceeds
 ### 1. Shared Documents
 
 **User Story Files** (`docs/user-stories/US-XXX.md`):
+
 - Source of truth for requirements
 - All agents read this for context
 - Updated throughout lifecycle
 
 **ADRs** (`docs/adr/NNN-title.md`):
+
 - Architectural guardrails
 - All agents follow ADR decisions
 - Architecture agent maintains
 
 **CLAUDE.md**:
+
 - Project-wide instructions
 - All agents reference this
 - Points to detailed guides
@@ -367,21 +404,25 @@ Implementation Proceeds
 ### 2. HITL Checkpoints
 
 **Gate 1: User Stories**
+
 - Product Manager creates stories
 - Human reviews and approves
 - Architecture Agent waits for approval
 
 **Gate 2: ADRs**
+
 - Architecture Agent creates ADRs
 - Human reviews and approves
 - Developers wait for approval
 
 **Gate 3: Tech Specs**
+
 - Developers create specs
 - Human reviews contracts
 - Implementation waits for approval
 
 **Gate 4: QA Issues**
+
 - Quality Reviewer finds issues
 - Human decides resolution
 - Agents proceed based on decision
@@ -389,8 +430,10 @@ Implementation Proceeds
 ### 3. Agent Communication Protocol
 
 **Reading Previous Work**:
+
 ```markdown
 # Frontend Developer Agent reads:
+
 1. US-001.md - Requirements and acceptance criteria
 2. ADR-003.md - State management decision
 3. Technical spec in US-001.md - API contracts
@@ -398,8 +441,10 @@ Implementation Proceeds
 ```
 
 **Writing for Next Agent**:
+
 ```markdown
 # Backend Developer Agent writes:
+
 1. ZenStack models with clear comments
 2. Generated tRPC routes (auto-documented)
 3. Technical spec section in US-001.md
@@ -411,6 +456,7 @@ Implementation Proceeds
 **Before Implementing Anything**:
 
 1. **Search Codebase**:
+
    ```bash
    rg "similar-functionality" --type ts
    find components/ -name "*ComponentName*"
@@ -438,6 +484,7 @@ Implementation Proceeds
 #### Phase 1: Story Creation
 
 **Product Manager Agent**:
+
 1. Reads README.md business goals
 2. Creates US-015.md with:
    - User story format
@@ -448,6 +495,7 @@ Implementation Proceeds
 4. Creates HITL for batch review
 
 **HITL Checkpoint #1**:
+
 - Human reviews US-015
 - Marks APPROVED
 - Runs `pnpm hitl:resume`
@@ -455,6 +503,7 @@ Implementation Proceeds
 #### Phase 2: Architecture
 
 **Architecture Agent**:
+
 1. Reads US-015.md requirements
 2. Identifies need for ADR-003 (state management)
 3. Researches options (Context, Redux, Zustand)
@@ -462,6 +511,7 @@ Implementation Proceeds
 5. Creates HITL for review
 
 **HITL Checkpoint #2**:
+
 - Human reviews ADR-003
 - Marks APPROVED
 - Runs `pnpm hitl:resume`
@@ -469,6 +519,7 @@ Implementation Proceeds
 #### Phase 3: Technical Specification
 
 **Backend Developer Agent**:
+
 1. Reads US-015.md and ADR-003
 2. Designs UserPreference model
 3. Defines access control
@@ -476,6 +527,7 @@ Implementation Proceeds
 5. Waits for frontend spec
 
 **Frontend Developer Agent**:
+
 1. Reads US-015.md and ADR-003
 2. Designs PreferenceForm component
 3. Plans Zustand store structure
@@ -483,17 +535,20 @@ Implementation Proceeds
 5. Verifies API contract matches backend
 
 **UI Designer Agent**:
+
 1. Creates component spec
 2. Adds mockup to docs/design-mockups/
 3. Links in US-015.md
 
 **Coordination**:
+
 - Both read same requirements
 - API contract agreed in US-015.md
 - Both use ZenStack types
 - Designer provides UI guidance
 
 **HITL Checkpoint #3**:
+
 - Human reviews tech specs
 - Verifies frontend/backend alignment
 - Marks APPROVED
@@ -502,6 +557,7 @@ Implementation Proceeds
 #### Phase 4: Implementation (Parallel)
 
 **Backend Developer Agent**:
+
 1. Creates `zschema/user-preference.zmodel`
 2. Adds import to `auth.zmodel`
 3. Runs `pnpm gen:check`
@@ -510,6 +566,7 @@ Implementation Proceeds
 6. Marks backend complete
 
 **Frontend Developer Agent** (in parallel):
+
 1. Creates `components/preferences/PreferenceForm.tsx`
 2. Uses generated `useUserPreference` hook
 3. Implements Zustand store
@@ -518,6 +575,7 @@ Implementation Proceeds
 6. Marks frontend complete
 
 **Coordination**:
+
 - Both use generated types (type safety)
 - Frontend uses backend's tRPC routes
 - No custom integration needed
@@ -526,6 +584,7 @@ Implementation Proceeds
 #### Phase 5: Quality Review
 
 **Quality Reviewer Agent**:
+
 1. Reads US-015.md acceptance criteria
 2. Tests all criteria:
    - ✅ User can save preferences
@@ -537,18 +596,21 @@ Implementation Proceeds
 3. Creates HITL with issue
 
 **HITL Checkpoint #4**:
+
 - Human reviews issue
 - Decides: Fix immediately
 - Marks decision in HITL
 - Runs `pnpm hitl:resume`
 
 **Frontend Developer Agent** (fix):
+
 1. Reads HITL decision
 2. Adds real-time theme application
 3. Updates US-015.md
 4. Re-runs tests
 
 **Quality Reviewer Agent** (re-check):
+
 1. Verifies fix
 2. All criteria now pass
 3. Marks US-015 complete
@@ -556,6 +618,7 @@ Implementation Proceeds
 #### Phase 6: Session Summary
 
 **Session Summary Agent**:
+
 1. Triggered by "batch complete"
 2. Collects:
    - Git commits
@@ -600,6 +663,7 @@ Implementation Proceeds
 ### ✅ Clear Handoffs
 
 Each agent documents:
+
 - What they did
 - What's ready for next agent
 - Any blockers or questions
@@ -607,6 +671,7 @@ Each agent documents:
 ### ✅ Shared Context
 
 All agents read:
+
 - User stories (requirements)
 - ADRs (architectural decisions)
 - CLAUDE.md (process guidance)
@@ -614,6 +679,7 @@ All agents read:
 ### ✅ Research Before Implementing
 
 All agents:
+
 - Search codebase first
 - Check documentation
 - Web search for latest practices
@@ -622,6 +688,7 @@ All agents:
 ### ✅ Explicit Contracts
 
 API contracts defined in tech spec:
+
 - Input/output types
 - Error handling
 - Loading states
@@ -630,6 +697,7 @@ API contracts defined in tech spec:
 ### ✅ Quality Gates
 
 Quality reviewer ensures:
+
 - All acceptance criteria met
 - Tests passing
 - Performance acceptable
@@ -669,6 +737,7 @@ Agent coordination in this project:
 ---
 
 **See Also**:
+
 - `docs/WORKFLOW_GUIDE.md` - Complete workflow
 - `docs/HITL_GUIDE.md` - HITL batch process
 - `.claude/agents/*` - Individual agent configurations

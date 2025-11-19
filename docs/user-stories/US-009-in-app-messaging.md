@@ -56,12 +56,14 @@ Agents currently communicate with applicants across multiple channels (email, ph
 **Given** an agent wants to contact an applicant
 **When** they click "Message" from the applicant profile
 **Then** a message thread opens with:
+
 - Chat-style interface
 - Full conversation history
 - Typing indicators
 - Read receipts
 
 **Verification**:
+
 - [ ] Thread displays all historical messages
 - [ ] Real-time message delivery
 - [ ] Read receipts show when opened
@@ -71,11 +73,13 @@ Agents currently communicate with applicants across multiple channels (email, ph
 **Given** an agent sends a message
 **When** the applicant is not online
 **Then** they receive notification via:
+
 - Push notification (if app installed)
 - Email with message preview
 - SMS for urgent messages (configurable)
 
 **Verification**:
+
 - [ ] Notifications delivered to offline users
 - [ ] Email includes message content
 - [ ] Applicant can reply from any channel
@@ -85,11 +89,13 @@ Agents currently communicate with applicants across multiple channels (email, ph
 **Given** an agent frequently sends similar messages
 **When** they compose a message
 **Then** they can use:
+
 - Saved templates ("Still interested?", "Please submit documents")
 - Quick reply suggestions
 - Auto-complete for common phrases
 
 **Verification**:
+
 - [ ] Templates are saveable and editable
 - [ ] Quick replies display relevant options
 - [ ] Templates support variable interpolation
@@ -99,12 +105,14 @@ Agents currently communicate with applicants across multiple channels (email, ph
 **Given** agent or applicant needs to share documents
 **When** they attach a file
 **Then** the platform supports:
+
 - Image upload (photos, screenshots)
 - PDF upload (leases, documents)
 - Preview within chat
 - Download option
 
 **Verification**:
+
 - [ ] File upload works for common formats
 - [ ] Inline preview for images
 - [ ] PDF viewable without leaving app
@@ -114,11 +122,13 @@ Agents currently communicate with applicants across multiple channels (email, ph
 **Given** an agent needs to find a previous conversation
 **When** they use search
 **Then** they can search by:
+
 - Applicant name/ID
 - Keyword in message content
 - Date range
 
 **Verification**:
+
 - [ ] Search returns relevant results
 - [ ] Results link to specific message
 
@@ -127,11 +137,13 @@ Agents currently communicate with applicants across multiple channels (email, ph
 **Given** messages are sent
 **When** stored in the system
 **Then** they are:
+
 - Retained for 3 years (compliance)
 - Accessible in audit reports
 - Exportable for legal requests
 
 **Verification**:
+
 - [ ] Messages included in audit trail
 - [ ] Retention policy enforced
 - [ ] Export functionality works
@@ -143,6 +155,7 @@ Agents currently communicate with applicants across multiple channels (email, ph
 ### Backend Specification
 
 **Data Model**:
+
 ```sql
 CREATE TABLE messages (
   id UUID PRIMARY KEY,
@@ -165,6 +178,7 @@ CREATE INDEX idx_messages_thread ON messages(thread_id, created_at);
 ### Frontend Specification
 
 **Components**:
+
 ```
 components/
   messaging/
@@ -175,6 +189,7 @@ components/
 ```
 
 **Routing**:
+
 - `/agent/messages` - All conversations
 - `/agent/messages/[threadId]` - Single thread
 
@@ -182,13 +197,14 @@ components/
 
 ## Analytics Tracking
 
-| Event Name | When Triggered | Properties |
-|------------|----------------|------------|
-| `message_sent` | Agent/applicant sends message | `{senderId, threadId, hasAttachment}` |
-| `message_read` | Recipient opens message | `{messageId, readDelay}` |
-| `template_used` | Agent uses saved template | `{agentId, templateId}` |
+| Event Name      | When Triggered                | Properties                            |
+| --------------- | ----------------------------- | ------------------------------------- |
+| `message_sent`  | Agent/applicant sends message | `{senderId, threadId, hasAttachment}` |
+| `message_read`  | Recipient opens message       | `{messageId, readDelay}`              |
+| `template_used` | Agent uses saved template     | `{agentId, templateId}`               |
 
 **Success Metrics**:
+
 - 50% reduction in response time
 - 80%+ of communication via platform (vs external)
 - 90%+ message read rate within 24 hours
@@ -198,9 +214,11 @@ components/
 ## Dependencies
 
 ### Blocked By
+
 - US-005: Unified Applicant Dashboard
 
 ### Related Stories
+
 - US-004: Audit Trail (messages logged)
 - US-008: Automated Document Reminders
 

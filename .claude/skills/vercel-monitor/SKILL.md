@@ -42,6 +42,7 @@ vercel ls --status BUILDING,ERROR,READY --environment preview
 ```
 
 **Output example**:
+
 ```
   Age     Deployment                                                           Status      Environment     Duration     Username
   2h      https://apartmentdibs-mock-01-55pbsys1k-apartmentdibs.vercel.app     ● Ready     Preview         1m           brianmjohnson
@@ -49,6 +50,7 @@ vercel ls --status BUILDING,ERROR,READY --environment preview
 ```
 
 **Filter options**:
+
 - `--status BUILDING` - Only show in-progress builds
 - `--status ERROR` - Only show failed builds
 - `--status READY` - Only show successful builds
@@ -65,11 +67,13 @@ vercel inspect <url|deploymentId> --wait --timeout 600s
 ```
 
 **Example**:
+
 ```bash
 vercel inspect https://apartmentdibs-mock-01-55pbsys1k-apartmentdibs.vercel.app --wait --timeout 600s
 ```
 
 Use this to:
+
 - Wait for a deployment after `git push`
 - Block until build completes before running tests
 - Get immediate feedback on build status
@@ -83,11 +87,13 @@ vercel inspect <url|deploymentId> --logs
 ```
 
 **Example**:
+
 ```bash
 vercel inspect https://apartmentdibs-mock-01-cesjjw73c-apartmentdibs.vercel.app --logs
 ```
 
 Look for:
+
 - TypeScript errors
 - Build failures
 - Missing environment variables
@@ -102,6 +108,7 @@ vercel inspect <url>
 ```
 
 **Example output**:
+
 ```
 > Fetched deployment "apartmentdibs-mock-01-55pbsys1k-apartmentdibs.vercel.app" [295ms]
 
@@ -259,16 +266,16 @@ vercel build
 
 ## Quick Reference
 
-| Command | Description |
-|---------|-------------|
+| Command                           | Description              |
+| --------------------------------- | ------------------------ |
 | `vercel ls --environment preview` | List preview deployments |
-| `vercel ls --status ERROR` | List failed deployments |
-| `vercel inspect <url>` | Get deployment details |
-| `vercel inspect <url> --logs` | View build logs |
-| `vercel inspect <url> --wait` | Wait for completion |
-| `vercel env pull` | Download env variables |
-| `vercel env ls` | List env variables |
-| `vercel build` | Run build locally |
+| `vercel ls --status ERROR`        | List failed deployments  |
+| `vercel inspect <url>`            | Get deployment details   |
+| `vercel inspect <url> --logs`     | View build logs          |
+| `vercel inspect <url> --wait`     | Wait for completion      |
+| `vercel env pull`                 | Download env variables   |
+| `vercel env ls`                   | List env variables       |
+| `vercel build`                    | Run build locally        |
 
 ## Important Notes
 

@@ -12,7 +12,7 @@ import {
   FileSignature,
   Phone,
   Edit,
-  X
+  X,
 } from 'lucide-react'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
@@ -30,7 +30,7 @@ const mockCalendarEvents = [
     date: '2025-11-20',
     time: '10:00 AM',
     duration: 30,
-    notes: 'First-time viewing, interested in the layout'
+    notes: 'First-time viewing, interested in the layout',
   },
   {
     id: 'event-002',
@@ -41,7 +41,7 @@ const mockCalendarEvents = [
     date: '2025-11-20',
     time: '2:00 PM',
     duration: 45,
-    notes: 'Second viewing, bringing partner'
+    notes: 'Second viewing, bringing partner',
   },
   {
     id: 'event-003',
@@ -52,7 +52,7 @@ const mockCalendarEvents = [
     date: '2025-11-21',
     time: '11:00 AM',
     duration: 60,
-    notes: 'Bring two forms of ID'
+    notes: 'Bring two forms of ID',
   },
   {
     id: 'event-004',
@@ -63,7 +63,7 @@ const mockCalendarEvents = [
     date: '2025-11-22',
     time: '3:00 PM',
     duration: 15,
-    notes: 'Discuss move-in date flexibility'
+    notes: 'Discuss move-in date flexibility',
   },
   {
     id: 'event-005',
@@ -74,7 +74,7 @@ const mockCalendarEvents = [
     date: '2025-11-25',
     time: '9:00 AM',
     duration: 30,
-    notes: 'CRM lead - invited to apply'
+    notes: 'CRM lead - invited to apply',
   },
   {
     id: 'event-006',
@@ -85,8 +85,8 @@ const mockCalendarEvents = [
     date: '2025-11-19',
     time: '4:00 PM',
     duration: 60,
-    notes: 'Final walkthrough before signing'
-  }
+    notes: 'Final walkthrough before signing',
+  },
 ]
 
 const getEventTypeStyles = (type: string) => {
@@ -96,28 +96,28 @@ const getEventTypeStyles = (type: string) => {
         bg: 'bg-blue-100 dark:bg-blue-900/30',
         border: 'border-blue-300',
         text: 'text-blue-800 dark:text-blue-200',
-        badge: 'bg-blue-100 text-blue-800 border-blue-300'
+        badge: 'bg-blue-100 text-blue-800 border-blue-300',
       }
     case 'lease_signing':
       return {
         bg: 'bg-green-100 dark:bg-green-900/30',
         border: 'border-green-300',
         text: 'text-green-800 dark:text-green-200',
-        badge: 'bg-green-100 text-green-800 border-green-300'
+        badge: 'bg-green-100 text-green-800 border-green-300',
       }
     case 'follow_up':
       return {
         bg: 'bg-yellow-100 dark:bg-yellow-900/30',
         border: 'border-yellow-300',
         text: 'text-yellow-800 dark:text-yellow-200',
-        badge: 'bg-yellow-100 text-yellow-800 border-yellow-300'
+        badge: 'bg-yellow-100 text-yellow-800 border-yellow-300',
       }
     default:
       return {
         bg: 'bg-gray-100 dark:bg-gray-900/30',
         border: 'border-gray-300',
         text: 'text-gray-800 dark:text-gray-200',
-        badge: 'bg-gray-100 text-gray-800 border-gray-300'
+        badge: 'bg-gray-100 text-gray-800 border-gray-300',
       }
   }
 }
@@ -140,18 +140,10 @@ export default function CalendarPage() {
   const [selectedDate, setSelectedDate] = useState<string | null>('2025-11-20')
 
   // Get days in month
-  const daysInMonth = new Date(
-    currentMonth.getFullYear(),
-    currentMonth.getMonth() + 1,
-    0
-  ).getDate()
+  const daysInMonth = new Date(currentMonth.getFullYear(), currentMonth.getMonth() + 1, 0).getDate()
 
   // Get first day of month (0 = Sunday)
-  const firstDayOfMonth = new Date(
-    currentMonth.getFullYear(),
-    currentMonth.getMonth(),
-    1
-  ).getDay()
+  const firstDayOfMonth = new Date(currentMonth.getFullYear(), currentMonth.getMonth(), 1).getDay()
 
   // Generate calendar days
   const calendarDays = []
@@ -171,7 +163,7 @@ export default function CalendarPage() {
 
   // Get events for a specific date
   const getEventsForDate = (dateStr: string) => {
-    return mockCalendarEvents.filter(event => event.date === dateStr)
+    return mockCalendarEvents.filter((event) => event.date === dateStr)
   }
 
   // Get selected date events
@@ -187,8 +179,18 @@ export default function CalendarPage() {
   }
 
   const monthNames = [
-    'January', 'February', 'March', 'April', 'May', 'June',
-    'July', 'August', 'September', 'October', 'November', 'December'
+    'January',
+    'February',
+    'March',
+    'April',
+    'May',
+    'June',
+    'July',
+    'August',
+    'September',
+    'October',
+    'November',
+    'December',
   ]
 
   const dayNames = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat']
@@ -198,14 +200,12 @@ export default function CalendarPage() {
       {/* Page Header */}
       <div>
         <h1 className="text-3xl font-bold tracking-tight">Calendar</h1>
-        <p className="text-muted-foreground">
-          Manage your showings, signings, and follow-ups
-        </p>
+        <p className="text-muted-foreground">Manage your showings, signings, and follow-ups</p>
       </div>
 
       <div className="grid gap-6 lg:grid-cols-3">
         {/* Calendar Grid */}
-        <Card className="border-2 border-foreground lg:col-span-2">
+        <Card className="border-foreground border-2 lg:col-span-2">
           <CardHeader>
             <div className="flex items-center justify-between">
               <CardTitle>
@@ -223,9 +223,12 @@ export default function CalendarPage() {
           </CardHeader>
           <CardContent>
             {/* Day headers */}
-            <div className="grid grid-cols-7 gap-1 mb-2">
-              {dayNames.map(day => (
-                <div key={day} className="text-center text-sm font-medium text-muted-foreground p-2">
+            <div className="mb-2 grid grid-cols-7 gap-1">
+              {dayNames.map((day) => (
+                <div
+                  key={day}
+                  className="text-muted-foreground p-2 text-center text-sm font-medium"
+                >
                   {day}
                 </div>
               ))}
@@ -235,7 +238,7 @@ export default function CalendarPage() {
             <div className="grid grid-cols-7 gap-1">
               {calendarDays.map((day, index) => {
                 if (day === null) {
-                  return <div key={`empty-${index}`} className="p-2 h-24" />
+                  return <div key={`empty-${index}`} className="h-24 p-2" />
                 }
 
                 const dateStr = formatDateString(day)
@@ -247,31 +250,33 @@ export default function CalendarPage() {
                   <button
                     key={day}
                     onClick={() => setSelectedDate(dateStr)}
-                    className={`p-2 h-24 text-left border-2 rounded-md transition-colors ${
+                    className={`h-24 rounded-md border-2 p-2 text-left transition-colors ${
                       isSelected
                         ? 'border-primary bg-primary/10'
                         : isToday
-                        ? 'border-yellow-400 bg-yellow-50 dark:bg-yellow-900/20'
-                        : 'border-transparent hover:border-muted-foreground/30'
+                          ? 'border-yellow-400 bg-yellow-50 dark:bg-yellow-900/20'
+                          : 'hover:border-muted-foreground/30 border-transparent'
                     }`}
                   >
-                    <span className={`text-sm font-medium ${isToday ? 'text-yellow-700 dark:text-yellow-300' : ''}`}>
+                    <span
+                      className={`text-sm font-medium ${isToday ? 'text-yellow-700 dark:text-yellow-300' : ''}`}
+                    >
                       {day}
                     </span>
                     <div className="mt-1 space-y-0.5">
-                      {events.slice(0, 2).map(event => {
+                      {events.slice(0, 2).map((event) => {
                         const styles = getEventTypeStyles(event.type)
                         return (
                           <div
                             key={event.id}
-                            className={`text-xs px-1 py-0.5 rounded truncate ${styles.bg} ${styles.text}`}
+                            className={`truncate rounded px-1 py-0.5 text-xs ${styles.bg} ${styles.text}`}
                           >
                             {event.time.split(' ')[0]}
                           </div>
                         )
                       })}
                       {events.length > 2 && (
-                        <div className="text-xs text-muted-foreground">
+                        <div className="text-muted-foreground text-xs">
                           +{events.length - 2} more
                         </div>
                       )}
@@ -284,62 +289,58 @@ export default function CalendarPage() {
         </Card>
 
         {/* Selected Date Events */}
-        <Card className="border-2 border-foreground">
+        <Card className="border-foreground border-2">
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
               <CalendarIcon className="h-5 w-5" />
               {selectedDate ? formatDate(selectedDate) : 'Select a date'}
             </CardTitle>
-            <CardDescription>
-              {selectedDateEvents.length} event(s) scheduled
-            </CardDescription>
+            <CardDescription>{selectedDateEvents.length} event(s) scheduled</CardDescription>
           </CardHeader>
           <CardContent>
             {selectedDateEvents.length > 0 ? (
               <div className="space-y-3">
-                {selectedDateEvents.map(event => {
+                {selectedDateEvents.map((event) => {
                   const styles = getEventTypeStyles(event.type)
                   const Icon = getEventTypeIcon(event.type)
 
                   return (
                     <div
                       key={event.id}
-                      className={`p-3 border-2 rounded-md ${styles.border} ${styles.bg}`}
+                      className={`rounded-md border-2 p-3 ${styles.border} ${styles.bg}`}
                     >
-                      <div className="flex items-start justify-between mb-2">
+                      <div className="mb-2 flex items-start justify-between">
                         <Badge variant="outline" className={styles.badge}>
-                          <Icon className="h-3 w-3 mr-1" />
+                          <Icon className="mr-1 h-3 w-3" />
                           {event.type.replace('_', ' ')}
                         </Badge>
                       </div>
 
                       <div className="space-y-2">
                         <div className="flex items-center gap-2 text-sm">
-                          <Clock className="h-3 w-3 text-muted-foreground" />
+                          <Clock className="text-muted-foreground h-3 w-3" />
                           <span className="font-medium">{event.time}</span>
                           <span className="text-muted-foreground">({event.duration} min)</span>
                         </div>
 
                         <div className="flex items-center gap-2 text-sm">
-                          <MapPin className="h-3 w-3 text-muted-foreground" />
+                          <MapPin className="text-muted-foreground h-3 w-3" />
                           <span>{event.propertyAddress}</span>
                         </div>
 
                         <div className="flex items-center gap-2 text-sm">
-                          <User className="h-3 w-3 text-muted-foreground" />
+                          <User className="text-muted-foreground h-3 w-3" />
                           <span>{event.applicantId}</span>
                         </div>
 
                         {event.notes && (
-                          <p className="text-xs text-muted-foreground mt-2">
-                            {event.notes}
-                          </p>
+                          <p className="text-muted-foreground mt-2 text-xs">{event.notes}</p>
                         )}
                       </div>
 
-                      <div className="flex gap-2 mt-3">
+                      <div className="mt-3 flex gap-2">
                         <Button size="sm" variant="outline" className="flex-1 border-2">
-                          <Edit className="h-3 w-3 mr-1" />
+                          <Edit className="mr-1 h-3 w-3" />
                           Reschedule
                         </Button>
                         <Button
@@ -355,8 +356,8 @@ export default function CalendarPage() {
                 })}
               </div>
             ) : (
-              <div className="text-center py-8 text-muted-foreground">
-                <CalendarIcon className="h-8 w-8 mx-auto mb-2 opacity-50" />
+              <div className="text-muted-foreground py-8 text-center">
+                <CalendarIcon className="mx-auto mb-2 h-8 w-8 opacity-50" />
                 <p>No events scheduled</p>
                 <Button size="sm" variant="outline" className="mt-3 border-2">
                   Add Event
@@ -368,38 +369,37 @@ export default function CalendarPage() {
       </div>
 
       {/* Upcoming Events */}
-      <Card className="border-2 border-foreground">
+      <Card className="border-foreground border-2">
         <CardHeader>
           <CardTitle>Upcoming Events</CardTitle>
-          <CardDescription>
-            All scheduled events for the next 7 days
-          </CardDescription>
+          <CardDescription>All scheduled events for the next 7 days</CardDescription>
         </CardHeader>
         <CardContent>
           <div className="grid gap-3 md:grid-cols-2 lg:grid-cols-3">
             {mockCalendarEvents
-              .sort((a, b) => new Date(a.date + ' ' + a.time).getTime() - new Date(b.date + ' ' + b.time).getTime())
+              .sort(
+                (a, b) =>
+                  new Date(a.date + ' ' + a.time).getTime() -
+                  new Date(b.date + ' ' + b.time).getTime()
+              )
               .slice(0, 6)
-              .map(event => {
+              .map((event) => {
                 const styles = getEventTypeStyles(event.type)
                 const Icon = getEventTypeIcon(event.type)
 
                 return (
-                  <div
-                    key={event.id}
-                    className={`p-3 border-2 rounded-md ${styles.border}`}
-                  >
-                    <div className="flex items-center justify-between mb-2">
+                  <div key={event.id} className={`rounded-md border-2 p-3 ${styles.border}`}>
+                    <div className="mb-2 flex items-center justify-between">
                       <Badge variant="outline" className={styles.badge}>
-                        <Icon className="h-3 w-3 mr-1" />
+                        <Icon className="mr-1 h-3 w-3" />
                         {event.type.replace('_', ' ')}
                       </Badge>
-                      <span className="text-xs text-muted-foreground">
+                      <span className="text-muted-foreground text-xs">
                         {formatDate(event.date)}
                       </span>
                     </div>
-                    <p className="font-medium text-sm">{event.propertyAddress}</p>
-                    <div className="flex items-center gap-2 mt-1 text-xs text-muted-foreground">
+                    <p className="text-sm font-medium">{event.propertyAddress}</p>
+                    <div className="text-muted-foreground mt-1 flex items-center gap-2 text-xs">
                       <Clock className="h-3 w-3" />
                       {event.time}
                       <span className="mx-1">-</span>

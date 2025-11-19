@@ -22,7 +22,7 @@ import {
   mockTenantProfile,
   neighborhoodOptions,
   mustHaveOptions,
-  niceToHaveOptions
+  niceToHaveOptions,
 } from '@/lib/mock-data/tenant'
 
 export default function EditProfilePage() {
@@ -47,18 +47,18 @@ export default function EditProfilePage() {
     hasPets: mockTenantProfile.pets.hasPets,
     petType: mockTenantProfile.pets.type || '',
     petCount: mockTenantProfile.pets.count || 0,
-    occupants: mockTenantProfile.occupants
+    occupants: mockTenantProfile.occupants,
   })
 
   const handleInputChange = (field: string, value: any) => {
-    setFormData(prev => ({ ...prev, [field]: value }))
+    setFormData((prev) => ({ ...prev, [field]: value }))
   }
 
   const toggleArrayItem = (field: 'mustHaves' | 'niceToHaves' | 'neighborhoods', item: string) => {
-    setFormData(prev => {
+    setFormData((prev) => {
       const current = prev[field]
       const updated = current.includes(item)
-        ? current.filter(i => i !== item)
+        ? current.filter((i) => i !== item)
         : [...current, item]
       return { ...prev, [field]: updated }
     })
@@ -83,21 +83,21 @@ export default function EditProfilePage() {
           <h1 className="text-3xl font-bold tracking-tight">Edit Profile</h1>
         </div>
         <div className="flex gap-2">
-          <Button variant="outline" asChild className="border-2 border-foreground">
+          <Button variant="outline" asChild className="border-foreground border-2">
             <Link href="/tenant/profile">
-              <X className="h-4 w-4 mr-2" />
+              <X className="mr-2 h-4 w-4" />
               Cancel
             </Link>
           </Button>
-          <Button onClick={handleSave} className="border-2 border-foreground">
-            <Save className="h-4 w-4 mr-2" />
+          <Button onClick={handleSave} className="border-foreground border-2">
+            <Save className="mr-2 h-4 w-4" />
             Save Changes
           </Button>
         </div>
       </div>
 
       {/* Personal Information */}
-      <Card className="border-2 border-foreground">
+      <Card className="border-foreground border-2">
         <CardHeader>
           <CardTitle>Personal Information</CardTitle>
           <CardDescription>Your basic contact information</CardDescription>
@@ -110,7 +110,7 @@ export default function EditProfilePage() {
                 id="firstName"
                 value={formData.firstName}
                 onChange={(e) => handleInputChange('firstName', e.target.value)}
-                className="border-2 border-border focus:border-foreground"
+                className="border-border focus:border-foreground border-2"
               />
             </div>
             <div className="space-y-2">
@@ -119,7 +119,7 @@ export default function EditProfilePage() {
                 id="lastName"
                 value={formData.lastName}
                 onChange={(e) => handleInputChange('lastName', e.target.value)}
-                className="border-2 border-border focus:border-foreground"
+                className="border-border focus:border-foreground border-2"
               />
             </div>
           </div>
@@ -132,7 +132,7 @@ export default function EditProfilePage() {
                 type="email"
                 value={formData.email}
                 onChange={(e) => handleInputChange('email', e.target.value)}
-                className="border-2 border-border focus:border-foreground"
+                className="border-border focus:border-foreground border-2"
               />
             </div>
             <div className="space-y-2">
@@ -142,7 +142,7 @@ export default function EditProfilePage() {
                 type="tel"
                 value={formData.phone}
                 onChange={(e) => handleInputChange('phone', e.target.value)}
-                className="border-2 border-border focus:border-foreground"
+                className="border-border focus:border-foreground border-2"
               />
             </div>
           </div>
@@ -152,40 +152,48 @@ export default function EditProfilePage() {
           <div className="space-y-4">
             <Label>Current Address</Label>
             <div className="space-y-2">
-              <Label htmlFor="street" className="text-sm text-muted-foreground">Street</Label>
+              <Label htmlFor="street" className="text-muted-foreground text-sm">
+                Street
+              </Label>
               <Input
                 id="street"
                 value={formData.street}
                 onChange={(e) => handleInputChange('street', e.target.value)}
-                className="border-2 border-border focus:border-foreground"
+                className="border-border focus:border-foreground border-2"
               />
             </div>
             <div className="grid gap-4 md:grid-cols-3">
               <div className="space-y-2">
-                <Label htmlFor="city" className="text-sm text-muted-foreground">City</Label>
+                <Label htmlFor="city" className="text-muted-foreground text-sm">
+                  City
+                </Label>
                 <Input
                   id="city"
                   value={formData.city}
                   onChange={(e) => handleInputChange('city', e.target.value)}
-                  className="border-2 border-border focus:border-foreground"
+                  className="border-border focus:border-foreground border-2"
                 />
               </div>
               <div className="space-y-2">
-                <Label htmlFor="state" className="text-sm text-muted-foreground">State</Label>
+                <Label htmlFor="state" className="text-muted-foreground text-sm">
+                  State
+                </Label>
                 <Input
                   id="state"
                   value={formData.state}
                   onChange={(e) => handleInputChange('state', e.target.value)}
-                  className="border-2 border-border focus:border-foreground"
+                  className="border-border focus:border-foreground border-2"
                 />
               </div>
               <div className="space-y-2">
-                <Label htmlFor="zip" className="text-sm text-muted-foreground">ZIP Code</Label>
+                <Label htmlFor="zip" className="text-muted-foreground text-sm">
+                  ZIP Code
+                </Label>
                 <Input
                   id="zip"
                   value={formData.zip}
                   onChange={(e) => handleInputChange('zip', e.target.value)}
-                  className="border-2 border-border focus:border-foreground"
+                  className="border-border focus:border-foreground border-2"
                 />
               </div>
             </div>
@@ -194,7 +202,7 @@ export default function EditProfilePage() {
       </Card>
 
       {/* Rental Preferences */}
-      <Card className="border-2 border-foreground">
+      <Card className="border-foreground border-2">
         <CardHeader>
           <CardTitle>Rental Preferences</CardTitle>
           <CardDescription>Help us find the perfect apartment for you</CardDescription>
@@ -213,7 +221,7 @@ export default function EditProfilePage() {
                 className="w-full"
               />
             </div>
-            <div className="flex justify-between text-sm text-muted-foreground">
+            <div className="text-muted-foreground flex justify-between text-sm">
               <span>${formData.budgetRange[0].toLocaleString()}</span>
               <span>${formData.budgetRange[1].toLocaleString()}</span>
             </div>
@@ -234,7 +242,7 @@ export default function EditProfilePage() {
                   />
                   <Label
                     htmlFor={`neighborhood-${neighborhood}`}
-                    className="text-sm font-normal cursor-pointer"
+                    className="cursor-pointer text-sm font-normal"
                   >
                     {neighborhood}
                   </Label>
@@ -253,7 +261,7 @@ export default function EditProfilePage() {
               type="date"
               value={formData.moveInDate}
               onChange={(e) => handleInputChange('moveInDate', e.target.value)}
-              className="border-2 border-border focus:border-foreground max-w-xs"
+              className="border-border focus:border-foreground max-w-xs border-2"
             />
           </div>
 
@@ -270,10 +278,7 @@ export default function EditProfilePage() {
                     checked={formData.mustHaves.includes(item)}
                     onCheckedChange={() => toggleArrayItem('mustHaves', item)}
                   />
-                  <Label
-                    htmlFor={`must-${item}`}
-                    className="text-sm font-normal cursor-pointer"
-                  >
+                  <Label htmlFor={`must-${item}`} className="cursor-pointer text-sm font-normal">
                     {item}
                   </Label>
                 </div>
@@ -294,10 +299,7 @@ export default function EditProfilePage() {
                     checked={formData.niceToHaves.includes(item)}
                     onCheckedChange={() => toggleArrayItem('niceToHaves', item)}
                   />
-                  <Label
-                    htmlFor={`nice-${item}`}
-                    className="text-sm font-normal cursor-pointer"
-                  >
+                  <Label htmlFor={`nice-${item}`} className="cursor-pointer text-sm font-normal">
                     {item}
                   </Label>
                 </div>
@@ -308,7 +310,7 @@ export default function EditProfilePage() {
       </Card>
 
       {/* Additional Info */}
-      <Card className="border-2 border-foreground">
+      <Card className="border-foreground border-2">
         <CardHeader>
           <CardTitle>Additional Information</CardTitle>
           <CardDescription>Help landlords understand your situation better</CardDescription>
@@ -321,7 +323,7 @@ export default function EditProfilePage() {
               value={formData.employmentStatus}
               onValueChange={(value) => handleInputChange('employmentStatus', value)}
             >
-              <SelectTrigger className="border-2 border-border focus:border-foreground max-w-xs">
+              <SelectTrigger className="border-border focus:border-foreground max-w-xs border-2">
                 <SelectValue />
               </SelectTrigger>
               <SelectContent>
@@ -350,7 +352,7 @@ export default function EditProfilePage() {
             </div>
 
             {formData.hasPets && (
-              <div className="grid gap-4 md:grid-cols-2 pl-6">
+              <div className="grid gap-4 pl-6 md:grid-cols-2">
                 <div className="space-y-2">
                   <Label htmlFor="petType">Pet Type</Label>
                   <Input
@@ -358,7 +360,7 @@ export default function EditProfilePage() {
                     value={formData.petType}
                     onChange={(e) => handleInputChange('petType', e.target.value)}
                     placeholder="e.g., Dog, Cat"
-                    className="border-2 border-border focus:border-foreground"
+                    className="border-border focus:border-foreground border-2"
                   />
                 </div>
                 <div className="space-y-2">
@@ -369,7 +371,7 @@ export default function EditProfilePage() {
                     min="1"
                     value={formData.petCount}
                     onChange={(e) => handleInputChange('petCount', parseInt(e.target.value) || 0)}
-                    className="border-2 border-border focus:border-foreground"
+                    className="border-border focus:border-foreground border-2"
                   />
                 </div>
               </div>
@@ -388,9 +390,9 @@ export default function EditProfilePage() {
               max="10"
               value={formData.occupants}
               onChange={(e) => handleInputChange('occupants', parseInt(e.target.value) || 1)}
-              className="border-2 border-border focus:border-foreground max-w-xs"
+              className="border-border focus:border-foreground max-w-xs border-2"
             />
-            <p className="text-sm text-muted-foreground">
+            <p className="text-muted-foreground text-sm">
               Include yourself and anyone who will be living in the apartment
             </p>
           </div>
@@ -399,10 +401,10 @@ export default function EditProfilePage() {
 
       {/* Save/Cancel Buttons (Bottom) */}
       <div className="flex justify-end gap-2 pb-8">
-        <Button variant="outline" asChild className="border-2 border-foreground">
+        <Button variant="outline" asChild className="border-foreground border-2">
           <Link href="/tenant/profile">Cancel</Link>
         </Button>
-        <Button onClick={handleSave} className="border-2 border-foreground">
+        <Button onClick={handleSave} className="border-foreground border-2">
           Save Changes
         </Button>
       </div>

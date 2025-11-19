@@ -9,6 +9,7 @@
 **BEFORE implementing ANY feature, API, or library**:
 
 1. **Search the codebase FIRST**
+
    ```bash
    # Check for existing functionality
    rg "similar-keyword" --type ts
@@ -43,6 +44,7 @@
 **Input**: Human provides business idea/vision
 
 **Your Task**:
+
 1. Read any existing `README.md`
 2. Help create/update `README.md` using `README-template.md`
 3. Include:
@@ -61,6 +63,7 @@
 **Agent**: Product Manager subagent
 
 **Process**:
+
 1. Read `README.md` business plan
 2. Generate `docs/user-stories.md` master index
    - Brief description of each story
@@ -77,12 +80,14 @@
    - Batch file: `docs/hitl/REVIEW_BATCH_YYYY-MM-DD_user-stories.md`
 
 **HITL CHECKPOINT #1**:
+
 - **STOP and wait** for human to review batch
 - Human marks: APPROVED, NEEDS_REVISION, or REJECTED
 - **Resume when**: Human runs `pnpm hitl:resume`
 - **If NEEDS_REVISION**: Incorporate feedback, create new HITL
 
 **Templates**:
+
 - `docs/user-stories/template.md`
 - `docs/hitl/template.md`
 - `docs/hitl/REVIEW_BATCH_template.md`
@@ -94,6 +99,7 @@
 **Agent**: Architecture Agent subagent
 
 **Process**:
+
 1. Review APPROVED user stories
 2. Review existing `docs/adr/` directory
 3. Identify architectural decisions needed:
@@ -117,12 +123,14 @@
    - Batch file: `docs/hitl/REVIEW_BATCH_YYYY-MM-DD_adrs.md`
 
 **HITL CHECKPOINT #2**:
+
 - **STOP and wait** for human to review ADRs
 - Human marks: APPROVED, NEEDS_REVISION, REJECTED
 - **If APPROVED**: Update ADR status to APPROVED
 - **Resume when**: Human runs `pnpm hitl:resume`
 
 **Templates**:
+
 - `docs/adr/template.md`
 - `docs/adr/README.md` (process guide)
 
@@ -135,7 +143,9 @@
 **Process**:
 
 #### Backend Developer Creates:
+
 1. **ZenStack Models** (in `zschema/`):
+
    ```zmodel
    import "base.zmodel"
 
@@ -161,12 +171,14 @@
    - Business logic requirements
 
 #### Frontend Developer Creates:
+
 1. **Component Hierarchy** in `US-XXX.md`:
    - List all components needed
    - Props interfaces
    - State management approach
 
 2. **Hooks to Use**:
+
    ```typescript
    import {
      useCreate[Model],
@@ -182,15 +194,18 @@
    - Navigation flow
 
 #### Both Verify:
+
 - API contracts align (FE expects what BE provides)
 - Types match (use ZenStack-generated types)
 - No custom tRPC routes unless absolutely necessary
 
 **Create HITL batch**:
+
 - Individual HITL files for each tech spec
 - Batch file: `docs/hitl/REVIEW_BATCH_YYYY-MM-DD_tech-specs.md`
 
 **HITL CHECKPOINT #3**:
+
 - **STOP and wait** for human approval
 - Human verifies contracts align
 - **Resume when**: Human runs `pnpm hitl:resume`
@@ -202,7 +217,9 @@
 **Agents**: Backend + Frontend Developer agents
 
 #### Backend Implementation:
+
 1. **Create/Update ZenStack models**:
+
    ```bash
    # Edit files in zschema/
    vim zschema/feature.zmodel
@@ -213,9 +230,11 @@
    ```
 
 2. **Generate code**:
+
    ```bash
    pnpm gen:check
    ```
+
    This generates:
    - Prisma schema
    - tRPC routers
@@ -238,7 +257,9 @@
    ```
 
 #### Frontend Implementation:
+
 1. **Create components** in `components/`:
+
    ```typescript
    // Use generated hooks
    import { useCreate[Model] } from '@/lib/hooks/generated/tanstack-query'
@@ -255,6 +276,7 @@
    - Add new ui components if needed
 
 3. **Form validation**:
+
    ```typescript
    import { [Model]Schema } from '@/lib/generated/schema/zod'
    // Use or extend generated schema
@@ -265,6 +287,7 @@
    - Use PostHog or configured analytics
 
 #### Anti-Hallucination Checklist:
+
 - ✅ Searched for existing functionality
 - ✅ Used ZenStack-generated code
 - ✅ Verified library versions and APIs
@@ -272,6 +295,7 @@
 - ✅ Found working examples
 
 **If documentation is login-gated**:
+
 1. Create `docs/hitl/hitl-YYYY-MM-DD-XXX-library-docs.md`
 2. Document: Library name, goal, URLs found, alternatives
 3. **STOP work on this** story
@@ -285,8 +309,10 @@
 **Agent**: Quality Reviewer subagent
 
 **Process**:
+
 1. **Review acceptance criteria** from `US-XXX.md`
 2. **Run automated checks**:
+
    ```bash
    pnpm gen:check  # ZenStack + Prisma
    pnpm lint       # ESLint + Prettier
@@ -313,6 +339,7 @@
      - Accept as-is
 
 **HITL CHECKPOINT #4** (only if issues):
+
 - **STOP if critical issues** found
 - Human decides how to proceed
 - **Resume when**: Human runs `pnpm hitl:resume`
@@ -326,12 +353,14 @@
 **Agent**: Session Summary Agent
 
 **Triggers**:
+
 - Human says: "batch complete"
 - Human says: "summarize this work"
 - Human says: "create session summary"
 - Human runs: `pnpm session:summary`
 
 **Process**:
+
 1. Collect since last session:
    - Git commits
    - User stories created/completed
@@ -359,6 +388,7 @@
 ### Individual HITL Files
 
 **When to create**:
+
 - Need human decision on approach
 - Multiple valid options exist
 - Login-gated documentation encountered
@@ -370,6 +400,7 @@
 **Template**: `docs/hitl/template.md`
 
 **Contents**:
+
 - Problem statement
 - Research completed (codebase, web, docs)
 - Options considered (with pros/cons)
@@ -380,12 +411,14 @@
 ### Batch Review Files
 
 **When to create**:
+
 - At each of 4 HITL checkpoints
 - When multiple related decisions accumulate
 
 **Format**: `docs/hitl/REVIEW_BATCH_YYYY-MM-DD_[category].md`
 
 **Categories**:
+
 - `user-stories` - Gate #1
 - `adrs` - Gate #2
 - `tech-specs` - Gate #3
@@ -394,6 +427,7 @@
 **Template**: `docs/hitl/REVIEW_BATCH_template.md`
 
 **Contents**:
+
 - Executive summary
 - Statistics
 - Quick review options (bulk approve)
@@ -403,6 +437,7 @@
 ### Batch Review Process
 
 **For Claude Code**:
+
 1. Create individual HITL files as you work
 2. At checkpoints, create batch review file
 3. **STOP and wait** - do not proceed past gate
@@ -414,6 +449,7 @@
    - Archive REJECTED items
 
 **For Human** (your workflow):
+
 1. Claude creates batch file at checkpoint
 2. You open `docs/hitl/REVIEW_BATCH_*` file
 3. Review summary and decide:
@@ -433,6 +469,7 @@
 ### Schema Organization
 
 **Main File** (`schema.zmodel`):
+
 ```zmodel
 // Import non-user models
 import "zschema/config.zmodel"
@@ -444,6 +481,7 @@ import "zschema/auth.zmodel"
 ```
 
 **Auth Hub** (`zschema/auth.zmodel`):
+
 ```zmodel
 import "base.zmodel"
 import "profile.zmodel"      // Has user FK
@@ -456,6 +494,7 @@ model Account { ... }
 ```
 
 **Modular Files** (`zschema/*.zmodel`):
+
 - One domain per file
 - Use `extends BaseModel` for standard fields
 - Define access control in model
@@ -463,17 +502,20 @@ model Account { ... }
 ### Generated vs Custom Code
 
 **✅ ALWAYS Use Generated**:
+
 - tRPC routes (`server/routers/generated/trpc/`)
 - TanStack Query hooks (`lib/hooks/generated/`)
 - Zod schemas (`lib/generated/schema/zod/`)
 - Types from Prisma
 
 **❌ AVOID Custom Code**:
+
 - Custom tRPC routes (unless absolutely necessary)
 - Manual type definitions (use generated)
 - Duplicate CRUD operations
 
 **When Custom is Needed**:
+
 - Complex multi-model queries
 - Business logic beyond CRUD
 - External API integrations
@@ -484,20 +526,24 @@ model Account { ... }
 ## Project Context Reference
 
 ### Always Read These First:
+
 - `README.md` - Business plan and vision
 - `CLAUDE.md` - Project-specific instructions
 - `docs/WORKFLOW_GUIDE.md` - Complete process
 - `docs/HITL_GUIDE.md` - Batch HITL details
 
 ### For Architecture Decisions:
+
 - `docs/adr/` - All architectural decisions
 - `docs/ARCHITECTURE.md` - System design
 
 ### For Current Work:
+
 - `docs/user-stories.md` - Master story index
 - `docs/user-stories/US-XXX.md` - Individual stories
 
 ### For Agent Coordination:
+
 - `.claude/agents/README.md` - How agents work together
 - `.claude/agents/*` - Individual agent configs
 
@@ -533,6 +579,7 @@ vercel --prod           # Deploy to production
 ## Success Criteria
 
 ### Quality Indicators:
+
 - ✅ All 4 HITL checkpoints completed before proceeding
 - ✅ Research conducted before each implementation
 - ✅ No hallucinated APIs or libraries
@@ -543,6 +590,7 @@ vercel --prod           # Deploy to production
 - ✅ Session summary generated
 
 ### Anti-Patterns to Avoid:
+
 - ❌ Skipping HITL checkpoints
 - ❌ Implementing without researching
 - ❌ Creating custom tRPC routes when generated work
@@ -555,16 +603,19 @@ vercel --prod           # Deploy to production
 ## Agent Coordination
 
 ### Sequential Dependencies:
+
 ```
 Product Manager → Architecture Agent → Backend + Frontend (parallel) → Quality Reviewer → Session Summary
 ```
 
 ### Parallel Work Opportunities:
+
 - Multiple independent user stories
 - Frontend + Backend (after specs approved)
 - UI Designer + UX Researcher
 
 ### Shared Context:
+
 - All agents read `US-XXX.md` for requirements
 - All agents follow ADRs for architecture
 - All agents reference `CLAUDE.md` for process
@@ -640,6 +691,7 @@ Before considering any feature complete:
 ## Emergency Protocols
 
 ### If Stuck on Login-Gated Docs:
+
 1. Create HITL with all research done
 2. Document what you were trying to achieve
 3. List URLs found but couldn't access
@@ -647,6 +699,7 @@ Before considering any feature complete:
 5. Continue with other independent tasks
 
 ### If Approach Seems Wrong:
+
 1. Don't proceed with uncertainty
 2. Create HITL explaining concerns
 3. Present multiple approaches
@@ -654,6 +707,7 @@ Before considering any feature complete:
 5. Wait for human guidance
 
 ### If Tests Failing:
+
 1. Don't mark story complete
 2. Debug and fix issues
 3. If complex: Create HITL

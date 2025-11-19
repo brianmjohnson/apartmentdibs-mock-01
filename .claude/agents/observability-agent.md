@@ -28,6 +28,7 @@ Define comprehensive logging strategy, implement audit trails for compliance and
 ### 1. Audit Data Models for Sensitive Operations
 
 **Read First**:
+
 - `schema.zmodel` and `zschema/` - All data models
 - `zschema/auth.zmodel` - User and authentication models (critical)
 - `docs/legal/compliance-checklist.md` - GDPR/CCPA requirements
@@ -38,6 +39,7 @@ Define comprehensive logging strategy, implement audit trails for compliance and
 Better-Auth provides an [admin plugin](https://www.better-auth.com/docs/plugins/admin) that adds administrative capabilities and audit-relevant fields:
 
 **Schema Additions**:
+
 ```typescript
 // User table fields added by admin plugin
 model User {
@@ -60,6 +62,7 @@ model Session {
 ```
 
 **Key Admin Actions to Audit**:
+
 - User created by admin
 - User role changed (privilege escalation)
 - User banned/unbanned
@@ -75,6 +78,7 @@ For granular audit trails, create dedicated audit tables per audited model:
 **Pattern**: `Audit[ModelName]`
 
 **Examples**:
+
 - `AuditUser` - tracks User model changes
 - `AuditSession` - tracks Session model changes
 - `AuditDocument` - tracks Document model changes
@@ -134,6 +138,7 @@ model AuditSession extends ImmutableModel {
 ```
 
 **Benefits of Per-Model Audit Tables**:
+
 - ✅ Type-safe: Each audit table has model-specific fields
 - ✅ Query performance: Indexes scoped to specific model
 - ✅ Cascade deletes: Audit records deleted when parent deleted (GDPR right to deletion)
@@ -147,6 +152,7 @@ For simpler implementations, use a single generic AuditLog table (see section 2 
 **Identify Audit-Worthy Operations**:
 
 **User Authentication & Authorization**:
+
 ```zmodel
 model User {
   id String @id
@@ -166,6 +172,7 @@ model User {
 ```
 
 **Data Access (Read Operations)**:
+
 ```zmodel
 model ConfidentialDocument {
   id String @id
@@ -180,6 +187,7 @@ model ConfidentialDocument {
 ```
 
 **Data Modifications (Write Operations)**:
+
 ```zmodel
 model CriticalData {
   id String @id
@@ -193,6 +201,7 @@ model CriticalData {
 ```
 
 **Permission Changes**:
+
 ```zmodel
 model OrganizationMember {
   id String @id
@@ -206,6 +215,7 @@ model OrganizationMember {
 ```
 
 **Configuration Changes**:
+
 ```zmodel
 model SystemConfiguration {
   id String @id
@@ -223,7 +233,7 @@ model SystemConfiguration {
 
 **File**: `docs/observability/audit-requirements.md`
 
-```markdown
+````markdown
 # Audit Logging Requirements
 
 Last Updated: YYYY-MM-DD
@@ -233,51 +243,52 @@ Compliance: GDPR Article 30, SOC 2 (Security)
 
 ### 1. Authentication Events
 
-| Event | Fields | Retention | Purpose |
-|-------|--------|-----------|---------|
-| `user.login.success` | userId, email, ipAddress, userAgent, timestamp | 1 year | Security investigation |
-| `user.login.failed` | email, ipAddress, reason, timestamp | 1 year | Detect brute force |
-| `user.password.changed` | userId, ipAddress, timestamp | 1 year | Security audit |
-| `user.mfa.enabled` | userId, method, timestamp | 1 year | Compliance |
-| `user.mfa.disabled` | userId, reason, timestamp | 1 year | Security alert |
-| `user.session.revoked` | userId, sessionId, reason, timestamp | 1 year | Security |
+| Event                   | Fields                                         | Retention | Purpose                |
+| ----------------------- | ---------------------------------------------- | --------- | ---------------------- |
+| `user.login.success`    | userId, email, ipAddress, userAgent, timestamp | 1 year    | Security investigation |
+| `user.login.failed`     | email, ipAddress, reason, timestamp            | 1 year    | Detect brute force     |
+| `user.password.changed` | userId, ipAddress, timestamp                   | 1 year    | Security audit         |
+| `user.mfa.enabled`      | userId, method, timestamp                      | 1 year    | Compliance             |
+| `user.mfa.disabled`     | userId, reason, timestamp                      | 1 year    | Security alert         |
+| `user.session.revoked`  | userId, sessionId, reason, timestamp           | 1 year    | Security               |
 
 ### 2. Authorization Events
 
-| Event | Fields | Retention | Purpose |
-|-------|--------|-----------|---------|
-| `user.role.changed` | userId, changedBy, oldRole, newRole, timestamp | 3 years | Privilege escalation audit |
-| `org.member.added` | orgId, userId, addedBy, role, timestamp | 3 years | Access control |
-| `org.member.removed` | orgId, userId, removedBy, timestamp | 3 years | Access control |
-| `org.permission.granted` | orgId, userId, resource, permission, grantedBy | 3 years | Access control |
+| Event                    | Fields                                         | Retention | Purpose                    |
+| ------------------------ | ---------------------------------------------- | --------- | -------------------------- |
+| `user.role.changed`      | userId, changedBy, oldRole, newRole, timestamp | 3 years   | Privilege escalation audit |
+| `org.member.added`       | orgId, userId, addedBy, role, timestamp        | 3 years   | Access control             |
+| `org.member.removed`     | orgId, userId, removedBy, timestamp            | 3 years   | Access control             |
+| `org.permission.granted` | orgId, userId, resource, permission, grantedBy | 3 years   | Access control             |
 
 ### 3. Data Access Events
 
-| Event | Fields | Retention | Purpose |
-|-------|--------|-----------|---------|
-| `data.viewed` | userId, resourceType, resourceId, timestamp, ipAddress | 90 days | GDPR access logs |
-| `data.exported` | userId, resourceType, recordCount, format, timestamp | 1 year | Data breach investigation |
-| `data.shared` | userId, resourceId, sharedWith, permissions, timestamp | 1 year | Compliance |
+| Event           | Fields                                                 | Retention | Purpose                   |
+| --------------- | ------------------------------------------------------ | --------- | ------------------------- |
+| `data.viewed`   | userId, resourceType, resourceId, timestamp, ipAddress | 90 days   | GDPR access logs          |
+| `data.exported` | userId, resourceType, recordCount, format, timestamp   | 1 year    | Data breach investigation |
+| `data.shared`   | userId, resourceId, sharedWith, permissions, timestamp | 1 year    | Compliance                |
 
 ### 4. Data Modification Events
 
-| Event | Fields | Retention | Purpose |
-|-------|--------|-----------|---------|
-| `data.created` | userId, resourceType, resourceId, timestamp | 1 year | Audit trail |
-| `data.updated` | userId, resourceType, resourceId, changes (old→new), timestamp | 1 year | Change tracking |
-| `data.deleted` | userId, resourceType, resourceId, timestamp, soft/hard | 3 years | Recovery & compliance |
+| Event          | Fields                                                         | Retention | Purpose               |
+| -------------- | -------------------------------------------------------------- | --------- | --------------------- |
+| `data.created` | userId, resourceType, resourceId, timestamp                    | 1 year    | Audit trail           |
+| `data.updated` | userId, resourceType, resourceId, changes (old→new), timestamp | 1 year    | Change tracking       |
+| `data.deleted` | userId, resourceType, resourceId, timestamp, soft/hard         | 3 years   | Recovery & compliance |
 
 ### 5. Configuration Events
 
-| Event | Fields | Retention | Purpose |
-|-------|--------|-----------|---------|
-| `config.changed` | userId, key, oldValue, newValue, timestamp | 3 years | System audit |
-| `integration.connected` | userId, service, scopes, timestamp | 1 year | Security |
-| `integration.disconnected` | userId, service, timestamp | 1 year | Security |
+| Event                      | Fields                                     | Retention | Purpose      |
+| -------------------------- | ------------------------------------------ | --------- | ------------ |
+| `config.changed`           | userId, key, oldValue, newValue, timestamp | 3 years   | System audit |
+| `integration.connected`    | userId, service, scopes, timestamp         | 1 year    | Security     |
+| `integration.disconnected` | userId, service, timestamp                 | 1 year    | Security     |
 
 ## PII Handling in Logs
 
 ### ✅ ALLOWED in Audit Logs
+
 - User ID (reference, not name)
 - Email (hashed if not needed for investigation)
 - Timestamp
@@ -285,6 +296,7 @@ Compliance: GDPR Article 30, SOC 2 (Security)
 - Resource ID (reference)
 
 ### ❌ NEVER LOG
+
 - Passwords (even hashed)
 - Credit card numbers
 - Full session tokens (log last 4 chars only)
@@ -300,9 +312,11 @@ Compliance: GDPR Article 30, SOC 2 (Security)
 **Implementation**: Create a custom reporter that detects ZenStack `@meta(sensitivity)` tagged fields and automatically applies redaction.
 
 **Install**:
+
 ```bash
 pnpm add consola
 ```
+````
 
 **Custom Reporter Implementation**:
 
@@ -322,7 +336,7 @@ const sensitiveFieldRedactor = {
 
     // Pass to default reporter with redacted data
     consola.withTag(logObj.tag || 'app').log(...redactedArgs)
-  }
+  },
 }
 
 /**
@@ -412,9 +426,9 @@ export const logger = createConsola({
   fancy: true,
   formatOptions: {
     date: true,
-    columns: 80
+    columns: 80,
   },
-  reporters: [sensitiveFieldRedactor]
+  reporters: [sensitiveFieldRedactor],
 })
 
 /**
@@ -434,7 +448,7 @@ import { db } from '@/lib/db'
 // Fetch user with sensitive fields (email, phoneNumber marked @meta(sensitivity))
 const user = await db.user.findUnique({
   where: { id: userId },
-  include: { __meta: true }  // Include metadata for redaction
+  include: { __meta: true }, // Include metadata for redaction
 })
 
 // Log user object - sensitive fields automatically redacted
@@ -444,7 +458,7 @@ logger.info('User fetched', { user })
 // Log financial data
 const payment = await db.payment.findUnique({
   where: { id: paymentId },
-  include: { __meta: true }
+  include: { __meta: true },
 })
 
 logger.info('Payment processed', { payment })
@@ -462,7 +476,7 @@ export const getUserProfile = procedure
   .query(async ({ input, ctx }) => {
     const user = await ctx.db.user.findUnique({
       where: { id: input.userId },
-      include: { __meta: true }  // Required for redaction to work
+      include: { __meta: true }, // Required for redaction to work
     })
 
     // Safe to log - sensitive fields will be redacted
@@ -473,6 +487,7 @@ export const getUserProfile = procedure
 ```
 
 **Benefits**:
+
 - ✅ **Automatic**: No manual redaction in every log statement
 - ✅ **Consistent**: Same redaction rules across entire application
 - ✅ **Compliance**: GDPR/HIPAA compliant logging by default
@@ -481,14 +496,15 @@ export const getUserProfile = procedure
 
 **Anti-Pattern to Avoid**:
 ❌ Don't manually redact in every log call:
+
 ```typescript
 // BAD: Manual redaction (inconsistent, easy to forget)
 logger.info('User', {
-  email: user.email.replace(/(?<=.).(?=[^@]*@)/g, '*')  // Easy to mess up
+  email: user.email.replace(/(?<=.).(?=[^@]*@)/g, '*'), // Easy to mess up
 })
 
 // GOOD: Automatic redaction
-logger.info('User', { user })  // Redactor handles it
+logger.info('User', { user }) // Redactor handles it
 ```
 
 ---
@@ -496,20 +512,24 @@ logger.info('User', { user })  // Redactor handles it
 ### Encryption for Audit Logs
 
 **Encryption at Rest**:
+
 - Audit logs stored in dedicated database table: `AuditLog`
 - Database encryption via Neon (enabled by default)
 
 **Access Control**:
+
 - Only admin users can query audit logs
 - Audit log exports require MFA
 - Logs immutable (insert-only, no updates/deletes)
 
 **Pseudonymization** (GDPR Article 32):
 After retention period:
+
 - Replace IP addresses with hashed version
 - Replace email with userId reference
 - Keep audit trail, reduce PII exposure
-```
+
+````
 
 ---
 
@@ -546,7 +566,7 @@ abstract model ImmutableModel {
   // Note: Deletion should only happen via retention policy cron jobs
   // that bypass ZenStack and use raw Prisma/SQL for cleanup
 }
-```
+````
 
 **Usage Pattern**:
 
@@ -578,12 +598,12 @@ Automated retention cleanup should use raw Prisma (bypasses ZenStack policies):
 // app/api/cron/cleanup-audit-logs/route.ts
 import { PrismaClient } from '@prisma/client'
 
-const rawPrisma = new PrismaClient()  // NOT enhanced ZenStack client
+const rawPrisma = new PrismaClient() // NOT enhanced ZenStack client
 
 export async function GET(request: Request) {
   // Bypass immutability for retention cleanup
   const deleted = await rawPrisma.auditLog.deleteMany({
-    where: { retentionDate: { lt: new Date() } }
+    where: { retentionDate: { lt: new Date() } },
   })
 
   return Response.json({ deleted: deleted.count })
@@ -716,6 +736,7 @@ model AuditLogSnapshot extends Base {
 **Benefits of Typed JSON**:
 
 ✅ **Type Safety**: TypeScript types generated for JSON fields
+
 ```typescript
 import { AuditMetadata } from '@zenstackhq/runtime/models'
 
@@ -726,19 +747,20 @@ const metadata: AuditMetadata = {
   requestId: 'req_abc123',
   duration: 250,
   errorCode: 'AUTH_FAILED',
-  errorMessage: 'Invalid credentials'
+  errorMessage: 'Invalid credentials',
 }
 
 // Compiler catches typos and type mismatches
 await db.auditLog.create({
   data: {
     eventType: 'user.login.failed',
-    metadata  // Type-checked!
-  }
+    metadata, // Type-checked!
+  },
 })
 ```
 
 ✅ **Validation**: Field-level validation enforced at runtime
+
 ```zmodel
 type AuditMetadata {
   ipAddress String? @length(7, 45)  // IPv4/IPv6 validation
@@ -748,19 +770,23 @@ type AuditMetadata {
 ```
 
 ✅ **IntelliSense**: Auto-completion in IDE
+
 - No more guessing field names
 - See field descriptions in tooltips
 - Navigate to type definitions
 
 ✅ **Refactoring**: Safe renames across codebase
+
 - Rename type field → TypeScript errors where used
 - Find all references to nested JSON fields
 
 **Limitations**:
+
 - ⚠️ **PostgreSQL only**: Typed JSON requires PostgreSQL database
 - ⚠️ **No relations**: Cannot reference other models in types (use relational fields instead)
 
 **Add to `schema.zmodel`**:
+
 ```zmodel
 import './zschema/audit'
 ```
@@ -776,6 +802,7 @@ import './zschema/audit'
 Implement a **three-tier observability stack**:
 
 ### Tier 1: Application Logs (Development & Debugging)
+
 - **Library**: Consola (elegant console logger with custom reporters)
 - **Format**: Fancy (dev), JSON (production)
 - **Levels**: trace, debug, info, warn, error, fatal
@@ -784,6 +811,7 @@ Implement a **three-tier observability stack**:
 - **PII Redaction**: Custom reporter auto-redacts `@meta(sensitivity)` fields
 
 ### Tier 2: Audit Logs (Compliance & Security)
+
 - **Storage**: PostgreSQL (dedicated `AuditLog` table via ZenStack)
 - **Format**: Typed JSON structures (see section 2 above)
 - **Retention**: 1-3 years (event-dependent)
@@ -791,12 +819,14 @@ Implement a **three-tier observability stack**:
 - **Encryption**: At-rest via Neon, in-transit via HTTPS
 
 ### Tier 3: Analytics Events (Product Insights)
+
 - **Tool**: PostHog (existing, see ADR-005)
 - **Purpose**: User behavior, feature adoption, funnels
 - **Retention**: 90 days
 - **Privacy**: Respects Do Not Track, allows opt-out
 
 ### Tier 4: Distributed Tracing & Metrics (NEW)
+
 - **Library**: OpenTelemetry (vendor-neutral standard)
 - **Traces**: Distributed tracing across tRPC routes, DB queries, external APIs
 - **Metrics**: LETS metrics (Lead time, Error rate, Throughput, Saturation)
@@ -810,6 +840,7 @@ Implement a **three-tier observability stack**:
 ## Implementation Phases (from ADR-007)
 
 ### Phase 1: Consola (1 day) ✅ **DONE**
+
 - [x] Install consola (`pnpm add consola`)
 - [ ] Create `lib/logger.ts` with PII redaction reporter
 - [ ] Create `lib/redactor.ts` with `@meta(sensitivity)` detection
@@ -817,6 +848,7 @@ Implement a **three-tier observability stack**:
 - [ ] Add logger to tRPC context
 
 ### Phase 2: OpenTelemetry (2-3 days)
+
 - [ ] Install OpenTelemetry packages
 - [ ] Create `lib/telemetry/instrumentation.ts`
 - [ ] Create `lib/telemetry/metrics.ts` for LETS metrics
@@ -824,6 +856,7 @@ Implement a **three-tier observability stack**:
 - [ ] Configure OTLP exporter (Jaeger local, Grafana Cloud production)
 
 ### Phase 3: Audit Logging (3 days)
+
 - [ ] Create `zschema/audit.zmodel` (already documented above)
 - [ ] Run `pnpm gen:check` (generate tRPC routes)
 - [ ] Create `lib/audit.ts` helper functions
@@ -831,6 +864,7 @@ Implement a **three-tier observability stack**:
 - [ ] Create admin dashboard to view audit logs
 
 ### Phase 4: Retention & Cleanup (2 days)
+
 - [ ] Create retention policy mapping (event type → retention period)
 - [ ] Create cron job in `vercel.json`
 - [ ] Implement pseudonymization (IP/email hashing after 90 days)
@@ -841,6 +875,7 @@ Implement a **three-tier observability stack**:
 **Status**: ADR-007 created, awaiting implementation
 
 **Next Steps**:
+
 1. Implement Phase 1 (Consola logging with PII redaction)
 2. Deploy to staging and verify PII redaction works
 3. Proceed with Phase 2 (OpenTelemetry) after Phase 1 validated
@@ -855,7 +890,7 @@ Implement a **three-tier observability stack**:
 **Metrics Framework**: LETS (Lead time, Error rate, Throughput, Saturation)
 **Instrumentation**: OpenTelemetry for traces, metrics, and logs
 
-```markdown
+````markdown
 # Monitoring Dashboards
 
 Last Updated: YYYY-MM-DD
@@ -872,43 +907,44 @@ Tool: OpenTelemetry (LETS metrics), PostHog (Analytics), Vercel Dashboard (Infra
 
 **L - Lead Time** (Time from code commit → production deployment):
 
-| Metric | Source | Alert Threshold |
-|--------|--------|-----------------|
-| **Request Duration (p50)** | OpenTelemetry traces | >500ms |
-| **Request Duration (p95)** | OpenTelemetry traces | >2 seconds |
-| **Request Duration (p99)** | OpenTelemetry traces | >5 seconds |
-| **Database Query Time (p95)** | OpenTelemetry DB instrumentation | >500ms |
+| Metric                        | Source                           | Alert Threshold |
+| ----------------------------- | -------------------------------- | --------------- |
+| **Request Duration (p50)**    | OpenTelemetry traces             | >500ms          |
+| **Request Duration (p95)**    | OpenTelemetry traces             | >2 seconds      |
+| **Request Duration (p99)**    | OpenTelemetry traces             | >5 seconds      |
+| **Database Query Time (p95)** | OpenTelemetry DB instrumentation | >500ms          |
 
 **E - Error Rate** (Percentage of failed requests):
 
-| Metric | Source | Alert Threshold |
-|--------|--------|-----------------|
-| **HTTP 4xx Rate** | OpenTelemetry HTTP instrumentation | >5% of requests |
-| **HTTP 5xx Rate** | OpenTelemetry HTTP instrumentation | >1% of requests |
-| **tRPC Error Rate** | OpenTelemetry custom spans | >2% of requests |
-| **Database Error Rate** | OpenTelemetry DB instrumentation | >0.1% of queries |
-| **Failed Logins** | AuditLog (custom metric) | >10 per hour |
+| Metric                  | Source                             | Alert Threshold  |
+| ----------------------- | ---------------------------------- | ---------------- |
+| **HTTP 4xx Rate**       | OpenTelemetry HTTP instrumentation | >5% of requests  |
+| **HTTP 5xx Rate**       | OpenTelemetry HTTP instrumentation | >1% of requests  |
+| **tRPC Error Rate**     | OpenTelemetry custom spans         | >2% of requests  |
+| **Database Error Rate** | OpenTelemetry DB instrumentation   | >0.1% of queries |
+| **Failed Logins**       | AuditLog (custom metric)           | >10 per hour     |
 
 **T - Throughput** (Requests per second):
 
-| Metric | Source | Alert Threshold |
-|--------|--------|-----------------|
-| **HTTP Requests/sec** | OpenTelemetry HTTP instrumentation | Baseline ±50% |
-| **tRPC Calls/sec** | OpenTelemetry custom spans | Baseline ±50% |
-| **Database Queries/sec** | OpenTelemetry DB instrumentation | Baseline ±50% |
+| Metric                   | Source                             | Alert Threshold |
+| ------------------------ | ---------------------------------- | --------------- |
+| **HTTP Requests/sec**    | OpenTelemetry HTTP instrumentation | Baseline ±50%   |
+| **tRPC Calls/sec**       | OpenTelemetry custom spans         | Baseline ±50%   |
+| **Database Queries/sec** | OpenTelemetry DB instrumentation   | Baseline ±50%   |
 
 **S - Saturation** (Resource utilization):
 
-| Metric | Source | Alert Threshold |
-|--------|--------|-----------------|
-| **Node.js Heap Used** | OpenTelemetry runtime metrics | >85% of max |
-| **Event Loop Lag** | OpenTelemetry runtime metrics | >100ms |
-| **Database Connection Pool** | OpenTelemetry DB instrumentation | >90% utilized |
-| **API Rate Limit Hits** | Application logs | >100 per hour |
+| Metric                       | Source                           | Alert Threshold |
+| ---------------------------- | -------------------------------- | --------------- |
+| **Node.js Heap Used**        | OpenTelemetry runtime metrics    | >85% of max     |
+| **Event Loop Lag**           | OpenTelemetry runtime metrics    | >100ms          |
+| **Database Connection Pool** | OpenTelemetry DB instrumentation | >90% utilized   |
+| **API Rate Limit Hits**      | Application logs                 | >100 per hour   |
 
 ### Alerts
 
 **Critical** (Page on-call):
+
 - **Error rate** >5% for >5 minutes (E metric)
 - **Lead time p99** >10s for >5 minutes (L metric)
 - **Saturation** >95% heap or connections for >2 minutes (S metric)
@@ -916,6 +952,7 @@ Tool: OpenTelemetry (LETS metrics), PostHog (Analytics), Vercel Dashboard (Infra
 - Authentication service down
 
 **Warning** (Slack notification):
+
 - **Error rate** >1% for >15 minutes (E metric)
 - **Lead time p95** >2s for >10 minutes (L metric)
 - **Throughput** deviates >50% from baseline for >10 minutes (T metric)
@@ -934,17 +971,18 @@ Tool: OpenTelemetry (LETS metrics), PostHog (Analytics), Vercel Dashboard (Infra
 
 ### Metrics
 
-| Event | Source | Alert Condition |
-|-------|--------|-----------------|
-| **Failed Login Attempts** | AuditLog | >10 from same IP in 1 hour |
-| **Role Changes** | AuditLog | Any role change (immediate alert) |
-| **Data Exports** | AuditLog | >5 per user per day |
-| **MFA Disabled** | AuditLog | Any MFA disable (immediate alert) |
-| **Admin Actions** | AuditLog | Track all admin operations |
+| Event                     | Source   | Alert Condition                   |
+| ------------------------- | -------- | --------------------------------- |
+| **Failed Login Attempts** | AuditLog | >10 from same IP in 1 hour        |
+| **Role Changes**          | AuditLog | Any role change (immediate alert) |
+| **Data Exports**          | AuditLog | >5 per user per day               |
+| **MFA Disabled**          | AuditLog | Any MFA disable (immediate alert) |
+| **Admin Actions**         | AuditLog | Track all admin operations        |
 
 ### Alerts
 
 **Critical**:
+
 - Role escalation detected (user.role.changed)
 - MFA disabled (user.mfa.disabled)
 - Bulk data export (>1000 records)
@@ -952,6 +990,7 @@ Tool: OpenTelemetry (LETS metrics), PostHog (Analytics), Vercel Dashboard (Infra
 **Implementation**: PostHog Insight with Slack webhook
 
 **Query Example** (PostHog):
+
 ```sql
 SELECT
   date_trunc('hour', timestamp) as hour,
@@ -961,6 +1000,7 @@ WHERE event_type = 'user.login.failed'
 GROUP BY hour
 HAVING COUNT(*) > 10
 ```
+````
 
 ---
 
@@ -972,12 +1012,12 @@ HAVING COUNT(*) > 10
 
 ### Metrics
 
-| Metric | Definition | Target |
-|--------|------------|--------|
-| **Daily Active Users (DAU)** | Unique users per day | Growth >5% WoW |
-| **Feature Adoption** | % users who used Feature X | >30% within 30 days |
-| **Activation Rate** | % users who completed onboarding | >60% |
-| **Retention (D7, D30)** | % users returning after 7/30 days | D7: >40%, D30: >20% |
+| Metric                       | Definition                        | Target              |
+| ---------------------------- | --------------------------------- | ------------------- |
+| **Daily Active Users (DAU)** | Unique users per day              | Growth >5% WoW      |
+| **Feature Adoption**         | % users who used Feature X        | >30% within 30 days |
+| **Activation Rate**          | % users who completed onboarding  | >60%                |
+| **Retention (D7, D30)**      | % users returning after 7/30 days | D7: >40%, D30: >20% |
 
 **Implementation**: PostHog Trends & Funnels
 
@@ -991,12 +1031,12 @@ HAVING COUNT(*) > 10
 
 ### Metrics
 
-| Metric | Source | Calculation |
-|--------|--------|-------------|
-| **MRR** | Stripe + Database | SUM(active_subscriptions) |
-| **Churn Rate** | Database | Canceled / Total customers |
-| **ARPU** | Calculated | MRR / Paid customers |
-| **Conversion Rate** | PostHog Funnel | Sign-ups → Paid |
+| Metric              | Source            | Calculation                |
+| ------------------- | ----------------- | -------------------------- |
+| **MRR**             | Stripe + Database | SUM(active_subscriptions)  |
+| **Churn Rate**      | Database          | Canceled / Total customers |
+| **ARPU**            | Calculated        | MRR / Paid customers       |
+| **Conversion Rate** | PostHog Funnel    | Sign-ups → Paid            |
 
 **Implementation**: Manual report (see Unit Economics Agent)
 
@@ -1009,11 +1049,13 @@ HAVING COUNT(*) > 10
 **Channel**: `#alerts-production`
 
 **Critical Alerts** (@ channel):
+
 - Error rate spike
 - Security event (role change, MFA disabled)
 - Payment failure spike
 
 **Warning Alerts**:
+
 - Performance degradation
 - Failed login spike
 - Unusual data export activity
@@ -1023,6 +1065,7 @@ HAVING COUNT(*) > 10
 **Recipients**: Founders, on-call engineer
 
 **Triggers**:
+
 - Database backup failure
 - SSL certificate expiring (<7 days)
 - Audit log retention job failure
@@ -1034,6 +1077,7 @@ HAVING COUNT(*) > 10
 ### Step 1: PostHog Insights
 
 Create insights for each metric:
+
 1. Go to PostHog → Insights → New Insight
 2. Select event (e.g., `user.login.failed`)
 3. Add filters (e.g., `timestamp > now() - 1 hour`)
@@ -1043,6 +1087,7 @@ Create insights for each metric:
 ### Step 2: Alerts
 
 For each critical metric:
+
 1. Create insight
 2. Click "Set Alert"
 3. Configure threshold (e.g., "count > 10")
@@ -1052,6 +1097,7 @@ For each critical metric:
 ### Step 3: Vercel Monitoring
 
 Enable in Vercel dashboard:
+
 1. Project Settings → Monitoring
 2. Enable Error Tracking
 3. Enable Performance Monitoring
@@ -1067,6 +1113,7 @@ Enable in Vercel dashboard:
 **Likely Cause**: Brute force attack
 
 **Response**:
+
 1. Check AuditLog for IP address and affected accounts
 2. If same email targeted: Lock account temporarily
 3. If distributed IPs: Rate limit login endpoint
@@ -1082,6 +1129,7 @@ Enable in Vercel dashboard:
 **Likely Cause**: Admin granted privileges OR unauthorized escalation
 
 **Response**:
+
 1. Check AuditLog for who changed whose role
 2. Verify with admin (Slack message): "Did you promote user X?"
 3. If unauthorized: Immediately revoke, reset admin credentials
@@ -1097,6 +1145,7 @@ Enable in Vercel dashboard:
 **Likely Cause**: Missing index, N+1 query, table scan
 
 **Response**:
+
 1. Check Vercel logs for slow queries
 2. Identify table and query pattern
 3. Check Prisma schema for missing indexes
@@ -1104,7 +1153,8 @@ Enable in Vercel dashboard:
 5. If N+1 query: Optimize with `include` in Prisma
 
 **Prevention**: Load testing before major releases
-```
+
+````
 
 ---
 
@@ -1184,15 +1234,15 @@ Compliance: GDPR Article 5(e), CCPA
 -- Cron job runs daily
 DELETE FROM users WHERE deleted_at < NOW() - INTERVAL '30 days';
 -- Cascade deletes all related data (posts, comments, etc.)
-```
+````
 
 ---
 
 ### Financial Data (Stripe)
 
-| Data Type | Retention | Justification |
-|-----------|-----------|---------------|
-| **Invoices** | 7 years | Tax compliance (IRS/HMRC) |
+| Data Type           | Retention             | Justification              |
+| ------------------- | --------------------- | -------------------------- |
+| **Invoices**        | 7 years               | Tax compliance (IRS/HMRC)  |
 | **Payment Methods** | Until removed by user | PCI-DSS, managed by Stripe |
 
 **Note**: Managed by Stripe, not stored in our database.
@@ -1206,6 +1256,7 @@ DELETE FROM users WHERE deleted_at < NOW() - INTERVAL '30 days';
 > "Personal data shall be kept in a form which permits identification of data subjects for no longer than is necessary."
 
 **Implementation**:
+
 - ✅ Defined retention periods for each data type
 - ✅ Pseudonymization after initial period (reduce PII exposure)
 - ✅ Hard deletion after business/legal requirement expires
@@ -1213,6 +1264,7 @@ DELETE FROM users WHERE deleted_at < NOW() - INTERVAL '30 days';
 ### CCPA: Right to Deletion
 
 **User Request Process**:
+
 1. User emails privacy@[company].com
 2. Verify identity (send confirmation email)
 3. Trigger hard delete immediately (override soft delete grace period)
@@ -1229,10 +1281,10 @@ Add `retentionDate` field to audit logs:
 ```typescript
 // lib/audit.ts
 const RETENTION_PERIODS = {
-  'user.login.success': 365,      // 1 year (days)
+  'user.login.success': 365, // 1 year (days)
   'user.login.failed': 365,
-  'user.role.changed': 1095,      // 3 years
-  'data.viewed': 90,              // 90 days
+  'user.role.changed': 1095, // 3 years
+  'data.viewed': 90, // 90 days
   'data.updated': 365,
   'config.changed': 1095,
 } as const
@@ -1248,6 +1300,7 @@ export function calculateRetentionDate(eventType: string): Date {
 **File**: `app/api/cron/cleanup/route.ts`
 
 **Convention-Based Approach**:
+
 - Auto-discover all models extending `ImmutableModel` (audit tables)
 - Auto-discover all models with `deletedAt` field (soft-deleted records)
 - Auto-discover all models with `retentionDate` field (expirable records)
@@ -1257,15 +1310,16 @@ export function calculateRetentionDate(eventType: string): Date {
 
 **Convention Rules**:
 
-| Field/Model Pattern | Action | Default Retention |
-|---------------------|--------|-------------------|
-| `extends ImmutableModel` | Delete records where `retentionDate < now()` | Per-event type (1-3 years) |
-| `deletedAt DateTime?` | Hard delete where `deletedAt < now() - 30 days` | 30 days grace period |
-| `expiredAt DateTime?` | Delete where `expiredAt < now()` | Immediate after expiry |
-| `ipAddress String?` in audit model | Pseudonymize (SHA-256) after 90 days | GDPR requirement |
-| `session` table | Delete expired sessions | Per Better-Auth config |
+| Field/Model Pattern                | Action                                          | Default Retention          |
+| ---------------------------------- | ----------------------------------------------- | -------------------------- |
+| `extends ImmutableModel`           | Delete records where `retentionDate < now()`    | Per-event type (1-3 years) |
+| `deletedAt DateTime?`              | Hard delete where `deletedAt < now() - 30 days` | 30 days grace period       |
+| `expiredAt DateTime?`              | Delete where `expiredAt < now()`                | Immediate after expiry     |
+| `ipAddress String?` in audit model | Pseudonymize (SHA-256) after 90 days            | GDPR requirement           |
+| `session` table                    | Delete expired sessions                         | Per Better-Auth config     |
 
 **Smart Defaults from auth.zmodel**:
+
 ```typescript
 // Auto-detected from schema
 const SCHEMA_CONVENTIONS = {
@@ -1273,24 +1327,25 @@ const SCHEMA_CONVENTIONS = {
   immutableModels: ['AuditLog', 'AuditUser', 'AuditSession', 'AuditLogSnapshot'],
 
   // Models with soft delete (deletedAt field)
-  softDeleteModels: ['User', 'Organization', 'Document'],  // Auto-detected
+  softDeleteModels: ['User', 'Organization', 'Document'], // Auto-detected
 
   // Models with expiry (session, tokens)
   expirableModels: [
     { model: 'Session', field: 'expiresAt', immediate: true },
     { model: 'VerificationToken', field: 'expiresAt', immediate: true },
-    { model: 'PasswordResetToken', field: 'expiresAt', immediate: true }
+    { model: 'PasswordResetToken', field: 'expiresAt', immediate: true },
   ],
 
   // PII pseudonymization (GDPR compliance)
   pseudonymizeFields: [
-    { model: 'AuditLog', field: 'ipAddress', after: 90 },  // 90 days
-    { model: 'AuditUser', field: 'ipAddress', after: 90 }
-  ]
+    { model: 'AuditLog', field: 'ipAddress', after: 90 }, // 90 days
+    { model: 'AuditUser', field: 'ipAddress', after: 90 },
+  ],
 }
 ```
 
 **Job Execution Flow**:
+
 1. **Discover** → Scan schema for conventions (run once at startup)
 2. **Pseudonymize** → Hash PII fields in audit tables after 90 days
 3. **Expire** → Delete records past `retentionDate` or `expiresAt`
@@ -1311,11 +1366,13 @@ const SCHEMA_CONVENTIONS = {
 ```
 
 **Environment Variable**:
+
 ```env
 CRON_SECRET="<generate with openssl rand -base64 32>"
 ```
 
 **Benefits of Convention Over Configuration**:
+
 - ✅ **Zero boilerplate**: Add `deletedAt` field → auto-cleanup enabled
 - ✅ **Consistent**: All audit tables cleaned up the same way
 - ✅ **Safe defaults**: GDPR-compliant retention periods built-in
@@ -1352,17 +1409,20 @@ model AuditDocument extends ImmutableModel {
 ### Test Scenarios
 
 **Test 1: Pseudonymization**
+
 1. Create audit log with IP address
 2. Set timestamp to 91 days ago (manually for testing)
 3. Run cleanup cron
 4. Verify: `ipAddress` is now a SHA-256 hash, `pseudonymized = true`
 
 **Test 2: Hard Deletion**
+
 1. Create audit log with `retentionDate` in the past
 2. Run cleanup cron
 3. Verify: Audit log no longer exists
 
 **Test 3: Soft Delete Grace Period**
+
 1. User deletes account (`deletedAt = NOW()`)
 2. User data hidden from app
 3. After 30 days (or manually set for testing), run cleanup cron
@@ -1373,12 +1433,14 @@ model AuditDocument extends ImmutableModel {
 ## Monitoring Retention Policy
 
 **Metrics to Track**:
+
 - Audit logs deleted per day (should be predictable)
 - Database size trend (should not grow indefinitely)
 - Pseudonymization success rate (100%)
 - User data deletion success rate (100%)
 
 **Alerts**:
+
 - Cleanup cron failure (Vercel cron monitoring)
 - Audit log table size exceeds threshold (>10GB)
 
@@ -1391,8 +1453,10 @@ model AuditDocument extends ImmutableModel {
 > "We retain your personal data for as long as necessary to provide our services. Audit logs are kept for 1-3 years depending on the type of activity. After your account is deleted, we retain your data for 30 days to allow for account recovery, after which all personal data is permanently deleted."
 
 **User Dashboard** should show:
+
 - "Your account will be permanently deleted on YYYY-MM-DD" (during soft delete grace period)
 - "Request data deletion" button (GDPR/CCPA right)
+
 ```
 
 ---
@@ -1491,3 +1555,4 @@ model AuditDocument extends ImmutableModel {
 - `.claude/agents/compliance-agent.md` - Compliance coordination
 - `.claude/agents/backend-developer.md` - Implementation
 - `docs/PHILOSOPHY.md` - Governance and accountability principles
+```

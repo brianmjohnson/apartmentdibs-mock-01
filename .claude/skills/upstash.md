@@ -15,6 +15,7 @@ The Upstash CLI allows you to manage Upstash Redis databases, Kafka clusters, an
 The Upstash CLI is automatically installed via `scripts/install-cli-tools.sh` during session startup.
 
 **Manual Installation** (if needed):
+
 ```bash
 npm install -g @upstash/cli
 ```
@@ -24,23 +25,27 @@ npm install -g @upstash/cli
 Upstash CLI requires two environment variables for authentication:
 
 **Required Environment Variables**:
+
 ```env
 UPSTASH_EMAIL="your-email@example.com"    # The email you use on upstash.com
 UPSTASH_API_KEY="your-api-key-here"       # API key from upstash.com dashboard
 ```
 
 **How to Get API Key**:
+
 1. Log in to https://console.upstash.com
 2. Go to Account → API Keys
 3. Create a new API key
 4. Copy the key and set `UPSTASH_API_KEY` environment variable
 
 **Check Authentication Status**:
+
 ```bash
 upstash auth whoami
 ```
 
 Expected output when authenticated:
+
 ```
 Email: your-email@example.com
 Team: your-team-name
@@ -84,6 +89,7 @@ upstash redis connection <database-id>
 Upstash Redis is fully compatible with the standard Redis CLI tool (`redis-cli`). You can use any Redis-compatible client to interact with Upstash databases.
 
 **Install redis-cli** (if not already installed):
+
 ```bash
 # macOS
 brew install redis
@@ -122,6 +128,7 @@ redis-cli -u $UPSTASH_REDIS_REST_URL
 **Recommended: Method 1** (using `REDISCLI_AUTH`) keeps credentials out of command history and process lists.
 
 **Example Session**:
+
 ```bash
 # Set authentication token from Upstash console
 export REDISCLI_AUTH="AYfgASQgYjM1NjYwNmItZDU5Ny00YmQ2LWJmNGMtOWYzMzk3NmQ5MTc2..."
@@ -254,6 +261,7 @@ upstash redis list --format json | \
 ### Environment Variable Setup
 
 Add to `.env.local` (not committed to git):
+
 ```env
 UPSTASH_EMAIL="your-email@example.com"
 UPSTASH_API_KEY="your-api-key-here"
@@ -264,6 +272,7 @@ UPSTASH_REDIS_REST_TOKEN="your-redis-token"
 ```
 
 Add placeholders to `.env.example`:
+
 ```env
 # Upstash CLI (for database management)
 UPSTASH_EMAIL="<your upstash account email>"

@@ -1,14 +1,17 @@
 'use client'
 
-import { Mail, MessageSquare, FileText, CheckCircle, XCircle, Clock, ExternalLink } from 'lucide-react'
+import {
+  Mail,
+  MessageSquare,
+  FileText,
+  CheckCircle,
+  XCircle,
+  Clock,
+  ExternalLink,
+} from 'lucide-react'
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipProvider,
-  TooltipTrigger,
-} from '@/components/ui/tooltip'
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip'
 
 type DeliveryStatus = 'pending' | 'sent' | 'delivered' | 'opened' | 'failed' | 'bounced'
 
@@ -31,7 +34,10 @@ interface DeliveryStatusTrackerProps {
   className?: string
 }
 
-const statusConfig: Record<DeliveryStatus, { label: string; icon: React.ReactNode; color: string }> = {
+const statusConfig: Record<
+  DeliveryStatus,
+  { label: string; icon: React.ReactNode; color: string }
+> = {
   pending: {
     label: 'Pending',
     icon: <Clock className="h-4 w-4" />,
@@ -92,7 +98,7 @@ export function DeliveryStatusTracker({
   )
 
   return (
-    <Card className={`border-2 border-foreground ${className || ''}`}>
+    <Card className={`border-foreground border-2 ${className || ''}`}>
       <CardHeader>
         <div className="flex items-center justify-between">
           <CardTitle className="text-lg">Delivery Status</CardTitle>
@@ -109,9 +115,7 @@ export function DeliveryStatusTracker({
       </CardHeader>
 
       <CardContent className="space-y-4">
-        <div className="text-xs text-muted-foreground">
-          Letter ID: {letterId}
-        </div>
+        <div className="text-muted-foreground text-xs">Letter ID: {letterId}</div>
 
         <div className="space-y-3">
           {channels.map((channel, index) => {
@@ -121,33 +125,27 @@ export function DeliveryStatusTracker({
             return (
               <div
                 key={index}
-                className="flex items-center justify-between p-3 bg-muted/50 rounded-md border border-border"
+                className="bg-muted/50 border-border flex items-center justify-between rounded-md border p-3"
               >
                 <div className="flex items-center gap-3">
-                  <div className="p-2 bg-background rounded border border-border">
+                  <div className="bg-background border-border rounded border p-2">
                     {channelInfo.icon}
                   </div>
                   <div>
-                    <p className="font-medium text-sm">{channelInfo.label}</p>
+                    <p className="text-sm font-medium">{channelInfo.label}</p>
                     {channel.sentAt && (
-                      <p className="text-xs text-muted-foreground">
-                        Sent: {channel.sentAt}
-                      </p>
+                      <p className="text-muted-foreground text-xs">Sent: {channel.sentAt}</p>
                     )}
                     {channel.deliveredAt && (
-                      <p className="text-xs text-muted-foreground">
+                      <p className="text-muted-foreground text-xs">
                         Delivered: {channel.deliveredAt}
                       </p>
                     )}
                     {channel.openedAt && (
-                      <p className="text-xs text-green-600">
-                        Opened: {channel.openedAt}
-                      </p>
+                      <p className="text-xs text-green-600">Opened: {channel.openedAt}</p>
                     )}
                     {channel.errorMessage && (
-                      <p className="text-xs text-destructive">
-                        {channel.errorMessage}
-                      </p>
+                      <p className="text-destructive text-xs">{channel.errorMessage}</p>
                     )}
                   </div>
                 </div>
@@ -182,7 +180,7 @@ export function DeliveryStatusTracker({
           })}
         </div>
 
-        <div className="text-xs text-muted-foreground pt-2 border-t border-border">
+        <div className="text-muted-foreground border-border border-t pt-2 text-xs">
           All delivery attempts are logged and archived for 3 years for compliance purposes.
         </div>
       </CardContent>

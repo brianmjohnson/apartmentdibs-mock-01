@@ -11,12 +11,7 @@ import {
   SelectValue,
 } from '@/components/ui/select'
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipProvider,
-  TooltipTrigger,
-} from '@/components/ui/tooltip'
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip'
 
 interface DenialReason {
   value: string
@@ -112,7 +107,7 @@ export function DenialReasonSelector({
 
   return (
     <div className={className}>
-      <div className="flex items-center gap-2 mb-2">
+      <div className="mb-2 flex items-center gap-2">
         <Label htmlFor="denial-reason" className="font-medium">
           Denial Reason <span className="text-destructive">*</span>
         </Label>
@@ -145,7 +140,7 @@ export function DenialReasonSelector({
         >
           <SelectValue placeholder="Select a denial reason" />
         </SelectTrigger>
-        <SelectContent className="border-2 border-foreground max-h-80">
+        <SelectContent className="border-foreground max-h-80 border-2">
           {denialReasons.map((reason) => (
             <SelectItem
               key={reason.value}
@@ -155,16 +150,16 @@ export function DenialReasonSelector({
             >
               <div className="flex items-center gap-2">
                 {reason.disabled ? (
-                  <X className="h-4 w-4 text-destructive shrink-0" />
+                  <X className="text-destructive h-4 w-4 shrink-0" />
                 ) : (
-                  <Check className="h-4 w-4 text-primary shrink-0 opacity-0" />
+                  <Check className="text-primary h-4 w-4 shrink-0 opacity-0" />
                 )}
                 <span>{reason.label}</span>
                 {reason.disabled && (
                   <TooltipProvider>
                     <Tooltip>
                       <TooltipTrigger asChild>
-                        <AlertCircle className="h-4 w-4 text-destructive shrink-0" />
+                        <AlertCircle className="text-destructive h-4 w-4 shrink-0" />
                       </TooltipTrigger>
                       <TooltipContent>
                         <p>{reason.disabledReason}</p>
@@ -187,10 +182,10 @@ export function DenialReasonSelector({
       )}
 
       {selectedReason && !selectedReason.disabled && (
-        <div className="mt-3 p-3 bg-muted rounded-md border border-border">
-          <p className="text-sm text-muted-foreground">{selectedReason.description}</p>
+        <div className="bg-muted border-border mt-3 rounded-md border p-3">
+          <p className="text-muted-foreground text-sm">{selectedReason.description}</p>
           {selectedReason.requiresCreditBureau && (
-            <p className="text-xs text-primary mt-2 font-medium">
+            <p className="text-primary mt-2 text-xs font-medium">
               Credit bureau information will be included in the adverse action letter
             </p>
           )}

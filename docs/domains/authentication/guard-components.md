@@ -11,6 +11,7 @@
 Declarative React components for route-level and feature-level authorization, eliminating duplicate authentication logic across your codebase.
 
 **Problem Solved**: Prevents scattered `useAuth` hooks that duplicate:
+
 - Session loading state management
 - Authentication status checks
 - Login modal rendering
@@ -31,6 +32,7 @@ Protects routes that require any authenticated user.
 ```
 
 **Use Cases**:
+
 - User dashboards
 - Settings pages
 - Profile pages
@@ -49,6 +51,7 @@ Protects routes requiring specific user roles.
 ```
 
 **Use Cases**:
+
 - Admin panels
 - Moderator tools
 - Role-specific features
@@ -66,6 +69,7 @@ Protects routes scoped to organization/team membership (when using Better Auth O
 ```
 
 **Use Cases**:
+
 - Team dashboards
 - Organization settings
 - Workspace-specific content
@@ -84,6 +88,7 @@ Fine-grained permission checking for advanced authorization.
 ```
 
 **Use Cases**:
+
 - Feature flags
 - Plan-based access (free vs paid)
 - Custom RBAC systems
@@ -96,12 +101,12 @@ While guard components control **route-level access**, permission hooks enable *
 
 ### When to Use Guards vs Hooks
 
-| Authorization Level | Use | Example |
-|---------------------|-----|---------|
-| **Route/Page** | Guard Components | Protect entire page/layout |
-| **Feature/Button** | Permission Hooks | Show/hide button within page |
-| **Section** | Permission Hooks | Conditional rendering of sections |
-| **Action** | Permission Hooks | Enable/disable specific actions |
+| Authorization Level | Use              | Example                           |
+| ------------------- | ---------------- | --------------------------------- |
+| **Route/Page**      | Guard Components | Protect entire page/layout        |
+| **Feature/Button**  | Permission Hooks | Show/hide button within page      |
+| **Section**         | Permission Hooks | Conditional rendering of sections |
+| **Action**          | Permission Hooks | Enable/disable specific actions   |
 
 ### Hook Examples
 
@@ -165,6 +170,7 @@ export function RequireAuth({
 ```
 
 **Key Features**:
+
 - Accepts custom fallback UI
 - Handles loading state separately
 - Type-safe props with TypeScript
@@ -221,6 +227,7 @@ Combine multiple guards for layered authorization:
 **Evaluation Order**: Outside → Inside (RequireAuth → RequireOrgMember → RequireRole)
 
 **Use Cases**:
+
 - Destructive actions (delete team, remove members)
 - Billing/payment actions (team owner only)
 - Administrative features (team admin or higher)
@@ -243,6 +250,7 @@ export default function SettingsLayout({ children }) {
 ```
 
 **Problems**:
+
 - Scattered auth logic
 - Imperative checks in every layout
 - Difficult to test
@@ -261,6 +269,7 @@ export default function SettingsLayout({ children }) {
 ```
 
 **Benefits**:
+
 - DRY (Don't Repeat Yourself)
 - Clear intent from component tree
 - Easy to update auth behavior globally
@@ -323,6 +332,7 @@ describe("RequireAuth", () => {
 ### Step 1: Create Guard Components
 
 Create guard components in `components/auth/`:
+
 - `RequireAuth.tsx`
 - `RequireRole.tsx`
 - `RequirePermission.tsx` (optional)
@@ -405,10 +415,11 @@ For feature-level authorization (buttons, sections):
 ### Higher-Order Components (HOCs)
 
 ```typescript
-export default withAuth(withRole("admin")(AdminPage));
+export default withAuth(withRole('admin')(AdminPage))
 ```
 
 **Rejected**:
+
 - Wrapper hell (difficult to debug)
 - Poor TypeScript inference
 - Dated pattern in modern React
@@ -418,10 +429,11 @@ export default withAuth(withRole("admin")(AdminPage));
 
 ```typescript
 // middleware.ts
-if (!session) return NextResponse.redirect("/login")
+if (!session) return NextResponse.redirect('/login')
 ```
 
 **Rejected**:
+
 - Cannot show custom fallback UI
 - Forces full page redirects
 - Poor UX (full page loads)
@@ -436,6 +448,7 @@ if (!isAuth) return renderLogin()
 ```
 
 **Rejected**:
+
 - Violates DRY principle
 - Imperative (not declarative)
 - Duplicated logic across files
@@ -454,20 +467,21 @@ if (!isAuth) return renderLogin()
 
 ## Framework Compatibility
 
-| Framework | Compatibility | Notes |
-|-----------|---------------|-------|
-| **Next.js App Router** | ✅ Full | Use "use client" directive |
-| **Next.js Pages Router** | ✅ Full | Works with `_app.tsx` wrapper |
-| **React (SPA)** | ✅ Full | Standard React patterns |
-| **Remix** | ✅ Full | Use in route components |
-| **Better Auth** | ✅ Native | `useSession()` hook |
-| **NextAuth.js** | ✅ Compatible | Use `useSession()` from NextAuth |
-| **Clerk** | ✅ Compatible | Use `useUser()` from Clerk |
-| **Auth0** | ✅ Compatible | Use `useAuth0()` |
+| Framework                | Compatibility | Notes                            |
+| ------------------------ | ------------- | -------------------------------- |
+| **Next.js App Router**   | ✅ Full       | Use "use client" directive       |
+| **Next.js Pages Router** | ✅ Full       | Works with `_app.tsx` wrapper    |
+| **React (SPA)**          | ✅ Full       | Standard React patterns          |
+| **Remix**                | ✅ Full       | Use in route components          |
+| **Better Auth**          | ✅ Native     | `useSession()` hook              |
+| **NextAuth.js**          | ✅ Compatible | Use `useSession()` from NextAuth |
+| **Clerk**                | ✅ Compatible | Use `useUser()` from Clerk       |
+| **Auth0**                | ✅ Compatible | Use `useAuth0()`                 |
 
 ---
 
 **See Also**:
+
 - Session Design Patterns: `docs/domains/authentication/session-design.md`
 - Cookie Configuration: `docs/domains/authentication/cookie-configuration.md`
 - TypeScript Type Safety: `docs/adr/ADR-013-typescript-type-safety-enforcement.md`

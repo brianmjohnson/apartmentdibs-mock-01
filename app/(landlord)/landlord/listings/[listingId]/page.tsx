@@ -13,7 +13,7 @@ import {
   formatCurrency,
   formatDate,
   getListingStatusColor,
-  getApplicantStatusColor
+  getApplicantStatusColor,
 } from '@/lib/mock-data/landlord'
 
 interface ListingDetailPageProps {
@@ -33,28 +33,24 @@ export default function ListingDetailPage({ params }: ListingDetailPageProps) {
       <div className="space-y-6">
         <div className="flex items-center gap-4">
           <Link href="/landlord/listings">
-            <Button variant="ghost" size="icon" className="border-2 border-foreground">
+            <Button variant="ghost" size="icon" className="border-foreground border-2">
               <ArrowLeft className="h-4 w-4" />
             </Button>
           </Link>
           <div>
             <h1 className="text-3xl font-bold tracking-tight">Listing Not Found</h1>
-            <p className="text-muted-foreground">
-              The requested listing could not be found
-            </p>
+            <p className="text-muted-foreground">The requested listing could not be found</p>
           </div>
         </div>
       </div>
     )
   }
 
-  const shortlistedApplicants = applicants.filter(a => a.status === 'shortlisted')
+  const shortlistedApplicants = applicants.filter((a) => a.status === 'shortlisted')
 
   const toggleApplicant = (applicantId: string) => {
-    setSelectedApplicants(prev =>
-      prev.includes(applicantId)
-        ? prev.filter(id => id !== applicantId)
-        : [...prev, applicantId]
+    setSelectedApplicants((prev) =>
+      prev.includes(applicantId) ? prev.filter((id) => id !== applicantId) : [...prev, applicantId]
     )
   }
 
@@ -64,29 +60,24 @@ export default function ListingDetailPage({ params }: ListingDetailPageProps) {
       <div className="flex items-start justify-between gap-4">
         <div className="flex items-center gap-4">
           <Link href="/landlord/listings">
-            <Button variant="ghost" size="icon" className="border-2 border-foreground">
+            <Button variant="ghost" size="icon" className="border-foreground border-2">
               <ArrowLeft className="h-4 w-4" />
             </Button>
           </Link>
           <div>
-            <h1 className="text-3xl font-bold tracking-tight">
-              {listing.propertyAddress}
-            </h1>
+            <h1 className="text-3xl font-bold tracking-tight">{listing.propertyAddress}</h1>
             <p className="text-muted-foreground">
               Unit {listing.unitNumber} - {formatCurrency(listing.price)}/mo
             </p>
           </div>
         </div>
-        <Badge
-          variant="outline"
-          className={`${getListingStatusColor(listing.status)} border-2`}
-        >
+        <Badge variant="outline" className={`${getListingStatusColor(listing.status)} border-2`}>
           {listing.status === 'pending_review' ? 'Pending Review' : listing.status}
         </Badge>
       </div>
 
       {/* Listing Info */}
-      <Card className="border-2 border-foreground">
+      <Card className="border-foreground border-2">
         <CardHeader>
           <CardTitle>Listing Information</CardTitle>
         </CardHeader>
@@ -111,8 +102,8 @@ export default function ListingDetailPage({ params }: ListingDetailPageProps) {
               <p className="font-medium">{listing.shortlistedCount}</p>
             </div>
           </div>
-          <div className="mt-4 pt-4 border-t-2 border-border">
-            <p className="text-muted-foreground text-sm mb-2">Screening Criteria</p>
+          <div className="border-border mt-4 border-t-2 pt-4">
+            <p className="text-muted-foreground mb-2 text-sm">Screening Criteria</p>
             <div className="flex flex-wrap gap-2">
               <Badge variant="outline" className="border-2">
                 Min Credit: {listing.screeningCriteria.minCreditScore}
@@ -130,7 +121,7 @@ export default function ListingDetailPage({ params }: ListingDetailPageProps) {
 
       {/* Shortlisted Applicants */}
       {shortlistedApplicants.length > 0 && (
-        <Card className="border-2 border-foreground">
+        <Card className="border-foreground border-2">
           <CardHeader>
             <div className="flex items-center justify-between">
               <div>
@@ -138,9 +129,7 @@ export default function ListingDetailPage({ params }: ListingDetailPageProps) {
                   <Users className="h-5 w-5" />
                   Shortlisted Applicants
                 </CardTitle>
-                <CardDescription>
-                  Review and select your preferred applicant
-                </CardDescription>
+                <CardDescription>Review and select your preferred applicant</CardDescription>
               </div>
               {selectedApplicants.length === 2 && (
                 <Button variant="outline" className="border-2">
@@ -155,7 +144,7 @@ export default function ListingDetailPage({ params }: ListingDetailPageProps) {
               {shortlistedApplicants.map((applicant) => (
                 <div
                   key={applicant.id}
-                  className={`p-4 border-2 ${
+                  className={`border-2 p-4 ${
                     selectedApplicants.includes(applicant.id)
                       ? 'border-primary bg-primary/5'
                       : 'border-border'
@@ -170,8 +159,8 @@ export default function ListingDetailPage({ params }: ListingDetailPageProps) {
                     <div className="flex-1 space-y-3">
                       <div className="flex items-center justify-between">
                         <div>
-                          <p className="font-bold text-lg">{applicant.displayId}</p>
-                          <p className="text-sm text-muted-foreground">
+                          <p className="text-lg font-bold">{applicant.displayId}</p>
+                          <p className="text-muted-foreground text-sm">
                             Applied {formatDate(applicant.appliedAt)}
                           </p>
                         </div>
@@ -184,7 +173,7 @@ export default function ListingDetailPage({ params }: ListingDetailPageProps) {
                       </div>
 
                       {/* Applicant Stats Grid */}
-                      <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-sm">
+                      <div className="grid grid-cols-2 gap-4 text-sm md:grid-cols-4">
                         <div>
                           <p className="text-muted-foreground">Income Ratio</p>
                           <p className="font-bold">{applicant.incomeRatio}x</p>
@@ -223,20 +212,26 @@ export default function ListingDetailPage({ params }: ListingDetailPageProps) {
                       </div>
 
                       {/* Competitive Edge */}
-                      <div className="p-3 bg-muted/50 border-2 border-border">
-                        <p className="text-xs text-muted-foreground mb-1">Competitive Edge</p>
+                      <div className="bg-muted/50 border-border border-2 p-3">
+                        <p className="text-muted-foreground mb-1 text-xs">Competitive Edge</p>
                         <p className="text-sm">{applicant.competitiveEdge}</p>
                       </div>
 
                       {/* Action Buttons */}
                       <div className="flex gap-2 pt-2">
-                        <Link href={`/landlord/listings/${listingId}/applicants?select=${applicant.id}`} className="flex-1">
-                          <Button className="w-full border-2 border-foreground" size="sm">
+                        <Link
+                          href={`/landlord/listings/${listingId}/applicants?select=${applicant.id}`}
+                          className="flex-1"
+                        >
+                          <Button className="border-foreground w-full border-2" size="sm">
                             <CheckCircle className="mr-2 h-4 w-4" />
                             Select Applicant
                           </Button>
                         </Link>
-                        <Link href={`/landlord/listings/${listingId}/applicants?deny=${applicant.id}`} className="flex-1">
+                        <Link
+                          href={`/landlord/listings/${listingId}/applicants?deny=${applicant.id}`}
+                          className="flex-1"
+                        >
                           <Button variant="outline" className="w-full border-2" size="sm">
                             <XCircle className="mr-2 h-4 w-4" />
                             Deny
@@ -253,35 +248,35 @@ export default function ListingDetailPage({ params }: ListingDetailPageProps) {
       )}
 
       {/* Other Applicants */}
-      {applicants.filter(a => a.status !== 'shortlisted').length > 0 && (
-        <Card className="border-2 border-foreground">
+      {applicants.filter((a) => a.status !== 'shortlisted').length > 0 && (
+        <Card className="border-foreground border-2">
           <CardHeader>
             <CardTitle>Other Applicants</CardTitle>
-            <CardDescription>
-              Applicants not yet shortlisted by your agent
-            </CardDescription>
+            <CardDescription>Applicants not yet shortlisted by your agent</CardDescription>
           </CardHeader>
           <CardContent>
             <div className="space-y-3">
-              {applicants.filter(a => a.status !== 'shortlisted').map((applicant) => (
-                <div
-                  key={applicant.id}
-                  className="p-3 border-2 border-border flex items-center justify-between"
-                >
-                  <div>
-                    <p className="font-medium">{applicant.displayId}</p>
-                    <p className="text-sm text-muted-foreground">
-                      {applicant.incomeRatio}x income - {applicant.creditBand} credit
-                    </p>
-                  </div>
-                  <Badge
-                    variant="outline"
-                    className={`${getApplicantStatusColor(applicant.status)} border-2`}
+              {applicants
+                .filter((a) => a.status !== 'shortlisted')
+                .map((applicant) => (
+                  <div
+                    key={applicant.id}
+                    className="border-border flex items-center justify-between border-2 p-3"
                   >
-                    {applicant.status}
-                  </Badge>
-                </div>
-              ))}
+                    <div>
+                      <p className="font-medium">{applicant.displayId}</p>
+                      <p className="text-muted-foreground text-sm">
+                        {applicant.incomeRatio}x income - {applicant.creditBand} credit
+                      </p>
+                    </div>
+                    <Badge
+                      variant="outline"
+                      className={`${getApplicantStatusColor(applicant.status)} border-2`}
+                    >
+                      {applicant.status}
+                    </Badge>
+                  </div>
+                ))}
             </div>
           </CardContent>
         </Card>
@@ -289,10 +284,10 @@ export default function ListingDetailPage({ params }: ListingDetailPageProps) {
 
       {/* No Applicants */}
       {applicants.length === 0 && (
-        <Card className="border-2 border-dashed border-muted-foreground">
+        <Card className="border-muted-foreground border-2 border-dashed">
           <CardContent className="flex flex-col items-center justify-center py-12">
-            <Users className="h-12 w-12 text-muted-foreground mb-4" />
-            <h3 className="font-semibold text-lg mb-2">No applicants yet</h3>
+            <Users className="text-muted-foreground mb-4 h-12 w-12" />
+            <h3 className="mb-2 text-lg font-semibold">No applicants yet</h3>
             <p className="text-muted-foreground text-center">
               Applications will appear here once tenants apply
             </p>

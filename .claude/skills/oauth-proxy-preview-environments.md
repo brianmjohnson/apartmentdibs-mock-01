@@ -28,6 +28,7 @@ Preview Deployment:
 ```
 
 **Why This Happens**:
+
 - Preview URLs are dynamic (`abc123` changes per deployment)
 - OAuth providers require exact URL matches
 - Can't pre-register thousands of possible preview URLs
@@ -46,6 +47,7 @@ User → Preview Deployment → OAuth Proxy (Production) → OAuth Provider
 ```
 
 **Flow**:
+
 1. User clicks "Sign in with Google" on preview deployment
 2. Preview redirects to production proxy: `https://yourdomain.com/auth/proxy?destination=<preview-url>`
 3. Proxy initiates OAuth with provider
@@ -60,21 +62,21 @@ User → Preview Deployment → OAuth Proxy (Production) → OAuth Provider
 
 ```typescript
 // app/auth/proxy/route.ts (deployed to production domain)
-import { NextRequest, NextResponse } from "next/server"
-import { auth } from "@/lib/auth/auth-server"
+import { NextRequest, NextResponse } from 'next/server'
+import { auth } from '@/lib/auth/auth-server'
 
 export async function GET(request: NextRequest) {
-  const destination = request.nextUrl.searchParams.get("destination")
-  const provider = request.nextUrl.searchParams.get("provider") || "google"
+  const destination = request.nextUrl.searchParams.get('destination')
+  const provider = request.nextUrl.searchParams.get('provider') || 'google'
 
   // Validate destination (security check)
   if (!isValidPreviewUrl(destination)) {
-    return new Response("Invalid destination", { status: 400 })
+    return new Response('Invalid destination', { status: 400 })
   }
 
   // Store destination in session/cookie for later
   const session = new Session()
-  session.set("oauth_destination", destination)
+  session.set('oauth_destination', destination)
 
   // Redirect to OAuth provider
   // OAuth will callback to production URL (allowed in OAuth config)
@@ -88,10 +90,7 @@ function isValidPreviewUrl(url: string | null): boolean {
   if (!url) return false
 
   // Only allow preview deployments
-  return (
-    url.startsWith("https://") &&
-    (url.includes(".vercel.app") || url.includes(".netlify.app"))
-  )
+  return url.startsWith('https://') && (url.includes('.vercel.app') || url.includes('.netlify.app'))
 }
 ```
 
@@ -99,13 +98,10 @@ function isValidPreviewUrl(url: string | null): boolean {
 
 ```typescript
 // app/api/auth/callback/[provider]/route.ts
-import { NextRequest, NextResponse } from "next/server"
-import { auth } from "@/lib/auth/auth-server"
+import { NextRequest, NextResponse } from 'next/server'
+import { auth } from '@/lib/auth/auth-server'
 
-export async function GET(
-  request: NextRequest,
-  { params }: { params: { provider: string } }
-) {
+export async function GET(request: NextRequest, { params }: { params: { provider: string } }) {
   // Complete OAuth with provider
   const session = await auth.api.signIn.social({
     provider: params.provider,
@@ -113,11 +109,11 @@ export async function GET(
   })
 
   // Get destination from session
-  const destination = session.get("oauth_destination")
+  const destination = session.get('oauth_destination')
 
   if (!destination || !isValidPreviewUrl(destination)) {
     // Fallback to production if no valid destination
-    return NextResponse.redirect("https://yourdomain.com/dashboard")
+    return NextResponse.redirect('https://yourdomain.com/dashboard')
   }
 
   // Create auth token to send to preview
@@ -132,27 +128,27 @@ export async function GET(
 
 ```typescript
 // app/auth/callback/route.ts (preview deployment)
-import { NextRequest, NextResponse } from "next/server"
+import { NextRequest, NextResponse } from 'next/server'
 
 export async function GET(request: NextRequest) {
-  const token = request.nextUrl.searchParams.get("auth_token")
+  const token = request.nextUrl.searchParams.get('auth_token')
 
   if (!token) {
-    return NextResponse.redirect("/signin?error=no_token")
+    return NextResponse.redirect('/signin?error=no_token')
   }
 
   // Verify token and create session
   const session = await verifyAuthToken(token)
 
   if (!session) {
-    return NextResponse.redirect("/signin?error=invalid_token")
+    return NextResponse.redirect('/signin?error=invalid_token')
   }
 
   // Create session in preview deployment
   await createSession(session)
 
   // Redirect to dashboard
-  return NextResponse.redirect("/dashboard")
+  return NextResponse.redirect('/dashboard')
 }
 ```
 
@@ -206,12 +202,12 @@ function isValidPreviewUrl(url: string | null): boolean {
     const parsed = new URL(url)
 
     // Only allow HTTPS
-    if (parsed.protocol !== "https:") return false
+    if (parsed.protocol !== 'https:') return false
 
     // Only allow known preview domains
     const allowedDomains = [
-      ".vercel.app",
-      ".netlify.app",
+      '.vercel.app',
+      '.netlify.app',
       // Add other trusted deployment platforms
     ]
 
@@ -229,14 +225,17 @@ function isValidPreviewUrl(url: string | null): boolean {
 Some OAuth providers support wildcard domains:
 
 **Google OAuth**:
+
 - Allowed: `https://*.vercel.app/api/auth/callback/google`
 - Check provider documentation for wildcard support
 
 **GitHub OAuth**:
+
 - Does NOT support wildcards
 - Requires OAuth proxy pattern
 
 **Configuration**:
+
 ```typescript
 // If provider supports wildcards
 socialProviders: {
@@ -281,13 +280,13 @@ curl -H "Cookie: ..." https://my-app-feat-new-abc123.vercel.app/api/me
 
 ## Comparison: Proxy vs Wildcard
 
-| Aspect | OAuth Proxy | Wildcard Callback |
-|--------|-------------|-------------------|
-| **Provider Support** | All providers | Some (Google, not GitHub) |
-| **Complexity** | Higher (extra endpoint) | Lower (native support) |
-| **Security** | Controlled via validation | Relies on provider |
-| **Setup** | Requires production proxy | Just configure provider |
-| **Maintenance** | Proxy code to maintain | None |
+| Aspect               | OAuth Proxy               | Wildcard Callback         |
+| -------------------- | ------------------------- | ------------------------- |
+| **Provider Support** | All providers             | Some (Google, not GitHub) |
+| **Complexity**       | Higher (extra endpoint)   | Lower (native support)    |
+| **Security**         | Controlled via validation | Relies on provider        |
+| **Setup**            | Requires production proxy | Just configure provider   |
+| **Maintenance**      | Proxy code to maintain    | None                      |
 
 **Recommendation**: Use wildcard if provider supports it, otherwise use OAuth proxy pattern.
 

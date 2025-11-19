@@ -54,15 +54,18 @@ Tenants relocating to NYC (like Maya) don't know neighborhood characteristics. T
 **Then** they see:
 
 **List of neighborhoods**:
+
 - NYC: Williamsburg, Park Slope, Fort Greene, Bushwick, Greenpoint
 
 **Each Card Shows**:
+
 - Neighborhood photo
 - Name
 - Average rent (1BR)
 - "Vibe" summary (e.g., "Trendy, nightlife, creative")
 
 **Verification**:
+
 - [ ] All neighborhoods listed
 - [ ] ItemList schema
 - [ ] Cards link correctly
@@ -74,38 +77,46 @@ Tenants relocating to NYC (like Maya) don't know neighborhood characteristics. T
 **Then** they see:
 
 **Overview Section**:
+
 - Hero image
 - Headline with keywords
 - Introduction (history, character, who it's best for)
 
 **Rent Prices Section**:
+
 - Average by unit type
 - Rent trend chart (12 months)
 - Comparison to city average
 
 **Transit Section**:
+
 - Subway lines
 - Travel times to major hubs
 - Walk score, bike score
 
 **Schools Section**:
+
 - Public schools with ratings
 - Private options
 - Relevance for families
 
 **Things to Do Section**:
+
 - Restaurants, bars, parks
 - "Best of" lists
 
 **Available Listings CTA**:
+
 - "Ready to find your apartment?"
 - 3-4 featured listings preview
 - Search link
 
 **Related Neighborhoods**:
+
 - "Also consider: Greenpoint, Bushwick"
 
 **Verification**:
+
 - [ ] All sections display
 - [ ] Content is helpful
 - [ ] CTAs work
@@ -131,6 +142,7 @@ Tenants relocating to NYC (like Maya) don't know neighborhood characteristics. T
 ```
 
 **Verification**:
+
 - [ ] Valid schema
 - [ ] Featured snippet eligible
 
@@ -139,12 +151,14 @@ Tenants relocating to NYC (like Maya) don't know neighborhood characteristics. T
 **Given** SEO needs
 **When** content created
 **Then**:
+
 - Word count: 1,500+ words
 - Internal links to property search, building pages, related neighborhoods
 - External links to sources (MTA, GreatSchools)
 - Updates: Rent data quarterly, "Things to Do" annually
 
 **Verification**:
+
 - [ ] Word count met
 - [ ] Links included
 - [ ] Sources cited
@@ -154,10 +168,12 @@ Tenants relocating to NYC (like Maya) don't know neighborhood characteristics. T
 **Given** guide page
 **When** rendered
 **Then** includes:
+
 - Title: "Williamsburg, Brooklyn | Apartments, Rent Prices, Things to Do"
 - Description: "Complete guide to renting in Williamsburg. Average rent: $3,200..."
 
 **Verification**:
+
 - [ ] Keywords included
 - [ ] Description compelling
 
@@ -196,13 +212,14 @@ components/
 
 ## Analytics Tracking
 
-| Event Name | When Triggered | Properties |
-|------------|----------------|------------|
-| `guide_viewed` | Page loads | `{neighborhood, source}` |
-| `listing_cta_clicked` | Search initiated | `{neighborhood}` |
+| Event Name                 | When Triggered   | Properties                  |
+| -------------------------- | ---------------- | --------------------------- |
+| `guide_viewed`             | Page loads       | `{neighborhood, source}`    |
+| `listing_cta_clicked`      | Search initiated | `{neighborhood}`            |
 | `featured_listing_clicked` | Listing selected | `{neighborhood, listingId}` |
 
 **Success Metrics**:
+
 - 40% organic traffic from guide pages
 - 15% guide-to-search conversion
 - Featured snippet capture for rent queries
@@ -220,9 +237,11 @@ components/
 ## Dependencies
 
 ### Blocked By
+
 - US-030: Property Page (for listing links)
 
 ### Related Stories
+
 - US-031: Building Directory
 - US-034: Dynamic Sitemap
 

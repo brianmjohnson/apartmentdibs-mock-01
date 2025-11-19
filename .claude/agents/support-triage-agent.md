@@ -28,6 +28,7 @@ Document common support issues, create self-service troubleshooting guides, defi
 ### 1. Analyze Common Support Issues
 
 **Read First**:
+
 - `docs/user-stories.md` - Feature descriptions and user flows
 - `docs/testing/qa-reports/` - QA findings on confusing UX
 - Production error logs - Identify user-facing errors (see `.claude/agents/observability-agent.md`)
@@ -45,14 +46,14 @@ Period: [Month]
 
 ## Ticket Volume by Category
 
-| Category | Count | % of Total | Trend |
-|----------|-------|------------|-------|
-| Login/Authentication | 15 | 30% | ↑ (was 20% last month) |
-| Billing/Payments | 12 | 24% | → (stable) |
-| Feature Questions | 10 | 20% | ↓ (was 30%, FAQ helped) |
-| Bug Reports | 8 | 16% | ↑ (new feature issues) |
-| Data Export/Deletion | 5 | 10% | → (stable) |
-| **Total** | **50** | **100%** | ↑ 15% MoM |
+| Category             | Count  | % of Total | Trend                   |
+| -------------------- | ------ | ---------- | ----------------------- |
+| Login/Authentication | 15     | 30%        | ↑ (was 20% last month)  |
+| Billing/Payments     | 12     | 24%        | → (stable)              |
+| Feature Questions    | 10     | 20%        | ↓ (was 30%, FAQ helped) |
+| Bug Reports          | 8      | 16%        | ↑ (new feature issues)  |
+| Data Export/Deletion | 5      | 10%        | → (stable)              |
+| **Total**            | **50** | **100%**   | ↑ 15% MoM               |
 
 ## Top 5 Issues This Month
 
@@ -60,18 +61,21 @@ Period: [Month]
 
 **Symptoms**: User clicks "Forgot Password", doesn't receive email
 **Root Causes**:
+
 - Email in spam folder (8 cases)
 - Wrong email address (2 cases)
 - Resend delivery delay (2 cases)
 
 **Resolution**:
+
 - Check spam folder first
 - Verify email address on file
 - Resend after 5 minutes if not received
 
 **Action Items**:
+
 - [ ] US-XXX: Add "Check spam folder" message on password reset page
-- [ ] US-XXX: Show masked email address ("Email sent to j***@example.com")
+- [ ] US-XXX: Show masked email address ("Email sent to j\*\*\*@example.com")
 - [ ] Update FAQ with troubleshooting steps
 
 ---
@@ -82,11 +86,13 @@ Period: [Month]
 **Root Cause**: Feature is in Settings → Team → Invite (buried 3 levels deep)
 
 **Resolution**:
+
 - Navigate to Settings → Team → Invite
 - Enter email addresses
 - Assign role (Member or Admin)
 
 **Action Items**:
+
 - [ ] US-XXX: Add "Invite Team" button to dashboard (more prominent)
 - [ ] US-XXX: In-app onboarding tooltip for team invite
 - [ ] Add to FAQ and create video walkthrough
@@ -97,15 +103,18 @@ Period: [Month]
 
 **Symptoms**: User clicked cancel, still charged next month
 **Root Causes**:
+
 - Canceled after billing cycle cutoff (5 cases)
 - Didn't confirm cancellation modal (3 cases)
 
 **Resolution**:
+
 - Show "Cancels on YYYY-MM-DD" in subscription page
 - Send cancellation confirmation email
 - Refund if charged after cancellation (policy decision)
 
 **Action Items**:
+
 - [ ] US-XXX: Show "Active until YYYY-MM-DD" after cancellation
 - [ ] US-XXX: Send cancellation confirmation email with details
 - [ ] Update billing FAQ with cancellation timeline
@@ -116,16 +125,19 @@ Period: [Month]
 
 **Symptoms**: File upload fails or hangs
 **Root Causes**:
+
 - File too large (>10MB limit, 4 cases)
 - Unsupported file type (2 cases)
 - Network timeout (1 case)
 
 **Resolution**:
+
 - Check file size (Settings → Limits shows max)
 - Check file type (only .pdf, .docx, .txt supported)
 - Try again with stable connection
 
 **Action Items**:
+
 - [ ] US-XXX: Show file size and type limits before upload
 - [ ] US-XXX: Better error message ("File too large, max 10MB")
 - [ ] Add to FAQ with supported formats list
@@ -138,11 +150,13 @@ Period: [Month]
 **Root Cause**: GDPR data export feature is hidden in Settings → Privacy
 
 **Resolution**:
+
 - Navigate to Settings → Privacy → Export Data
 - Click "Request Export"
 - Receive download link via email (within 24 hours)
 
 **Action Items**:
+
 - [ ] US-XXX: Add "Export Data" to main Settings menu (more visible)
 - [ ] Update Privacy Policy with export instructions
 - [ ] Add to FAQ
@@ -152,6 +166,7 @@ Period: [Month]
 ## Escalation Criteria
 
 **Escalate to Engineering** if:
+
 - Bug affects multiple users (>3 reports of same issue)
 - Data loss or corruption
 - Security vulnerability reported
@@ -159,6 +174,7 @@ Period: [Month]
 - Critical feature completely broken
 
 **Escalate to Founder** if:
+
 - Legal/compliance question (GDPR request, subpoena)
 - Refund request >$500
 - Angry customer threatening legal action
@@ -188,6 +204,7 @@ Last Updated: YYYY-MM-DD
 5. Click the link and set a new password
 
 **Still not receiving the email?**
+
 - Verify you're using the correct email address (the one you signed up with)
 - Check spam/junk folder
 - Add `noreply@example.com` to your contacts and try again
@@ -204,6 +221,7 @@ Last Updated: YYYY-MM-DD
 5. You'll receive a confirmation email
 
 **Important**:
+
 - You retain access until the end of your billing period
 - No refunds for partial months (per our Terms of Service)
 - You can reactivate anytime before the end date
@@ -216,11 +234,13 @@ Contact support with your account email and we'll process it manually.
 ### Can I get a refund?
 
 **Standard Policy**:
+
 - First month: Full refund if requested within 7 days
 - After first month: No refunds for partial months
 - Annual plans: Prorated refund if requested within 30 days
 
 **Exceptions** (contact support):
+
 - Service outage affecting your usage
 - Billing error (charged incorrectly)
 - Accidental upgrade (within 24 hours)
@@ -239,6 +259,7 @@ Email support@example.com with your account details.
 6. They'll receive an email invitation
 
 **Team members not receiving invite?**
+
 - Check their spam folder
 - Verify email address is correct
 - Resend invite from Team page
@@ -252,16 +273,19 @@ Email support@example.com with your account details.
 
 **Supported Formats**: PDF, DOCX, TXT, PNG, JPG
 **Max File Size**:
+
 - Free/Starter: 10MB
 - Pro/Enterprise: 50MB
 
 **Steps**:
+
 1. Navigate to the project
 2. Click "Upload" button or drag-and-drop
 3. Select file(s)
 4. Wait for upload progress bar to complete
 
 **Upload failing?**
+
 - Check file size (right-click file → Properties to see size)
 - Check file format (only types listed above)
 - Try a smaller file to test
@@ -275,6 +299,7 @@ Email support@example.com with your account details.
 **What's Included**: All your projects, documents, and account data in JSON format
 
 **Steps**:
+
 1. Go to Settings → Privacy
 2. Click "Request Data Export"
 3. Confirm request
@@ -291,6 +316,7 @@ We compile your data securely in the background. Most exports are ready within 1
 **Warning**: This is permanent and cannot be undone!
 
 **Steps**:
+
 1. Cancel your subscription first (Settings → Billing)
 2. Go to Settings → Privacy
 3. Scroll to "Delete Account"
@@ -299,6 +325,7 @@ We compile your data securely in the background. Most exports are ready within 1
 6. All data will be deleted after 30-day grace period
 
 **Grace Period**:
+
 - 30 days to change your mind
 - Reactivate by logging in within 30 days
 - After 30 days, all data is permanently deleted
@@ -315,14 +342,17 @@ If you need immediate deletion (GDPR/CCPA request), email privacy@example.com.
 **Common Causes**:
 
 **1. Not logged in**:
+
 - Your session may have expired
 - Log out and log back in
 
 **2. Insufficient permissions**:
+
 - You're a Member trying to access Admin features
 - Ask your team Admin to upgrade your role
 
 **3. Resource ownership**:
+
 - You're trying to edit someone else's private project
 - Ask the owner to share it with you
 
@@ -336,22 +366,27 @@ Send us a screenshot of the error at support@example.com.
 **Quick Fixes**:
 
 **1. Check your internet connection**:
+
 - Run a speed test (speedtest.net)
 - Try reloading the page
 
 **2. Clear browser cache**:
+
 - Chrome: Settings → Privacy → Clear browsing data
 - Safari: Preferences → Privacy → Manage Website Data
 - Select "Cached images and files" and clear
 
 **3. Try a different browser**:
+
 - We support Chrome, Firefox, Safari, Edge (latest versions)
 
 **4. Check our status page**:
+
 - Visit status.example.com for outages
 
 **Still slow?**
 Email support with:
+
 - Your browser and version
 - Your location (city/country)
 - Screenshot of Network tab in DevTools (if possible)
@@ -373,6 +408,7 @@ Email support with:
    - Add `noreply@example.com` to your contacts
 
 **Testing**:
+
 - Click "Send Test Email" in Settings → Notifications
 - Should receive within 2 minutes
 
@@ -392,6 +428,7 @@ Email support@example.com from the email address on your account.
 5. Return to our app (should show "Connected")
 
 **Connection failing?**
+
 - Ensure you're an admin in [Integration]
 - Allow popups in your browser
 - Try disconnecting and reconnecting
@@ -412,6 +449,7 @@ Email support@example.com from the email address on your account.
 - ✅ **SOC 2 compliant**: (in progress, target Q2 2026)
 
 **We NEVER**:
+
 - ❌ Sell your data to third parties
 - ❌ Use your data to train AI models
 - ❌ Share data without your consent
@@ -423,15 +461,18 @@ See our [Privacy Policy](/legal/privacy) for details.
 ### Who can see my data?
 
 **Your Data Visibility**:
+
 - **Private projects**: Only you (unless you share)
 - **Shared projects**: You and users you explicitly invite
 - **Organization projects**: All members of your organization (based on roles)
 
 **Our Team**:
+
 - We can only access your data for support purposes (with your permission)
 - We log all admin access to your data (audit trail)
 
 **Third Parties**:
+
 - Analytics: PostHog (anonymized usage data, no content)
 - Hosting: Vercel, Neon (infrastructure providers, GDPR-compliant)
 
@@ -448,10 +489,12 @@ See [Privacy Policy](/legal/privacy) for full list.
 > **TODO (Bootstrap)**: Set up support email templates for common responses (see "Response Templates" section below). Consider using a helpdesk tool like Zendesk, Intercom, or Help Scout to manage canned responses and ticket tracking.
 
 **Response Time**:
+
 - Paid plans: <24 hours (weekdays)
 - Free plan: <48 hours (weekdays)
 
 **Include in your email**:
+
 - Your account email address
 - Description of the issue
 - Screenshots (if applicable)
@@ -467,7 +510,7 @@ Add "[URGENT]" to subject line.
 
 **File**: `docs/support/troubleshooting.md`
 
-```markdown
+````markdown
 # Troubleshooting Guide
 
 For Support Team & Power Users
@@ -478,6 +521,7 @@ Last Updated: YYYY-MM-DD
 ## Administrative Tooling
 
 > **TODO (Bootstrap)**: Create a customer-service CLI tool with service account credentials for safe admin operations. This tool should provide commands like:
+>
 > - `cs-cli user verify-email user@example.com` (instead of raw SQL)
 > - `cs-cli user unlock user@example.com`
 > - `cs-cli user reset-password user@example.com`
@@ -494,10 +538,12 @@ Last Updated: YYYY-MM-DD
 ### Issue: User can't log in (correct password)
 
 **Symptoms**:
+
 - User enters correct email/password
 - Login fails with "Invalid credentials" or timeout
 
 **Diagnosis**:
+
 1. **Look up user's PostHog session** (see `.claude/agents/observability-agent.md` and `docs/adr/ADR-005`):
    - Go to PostHog → Persons → Search by email
    - View recent session recordings to see what user experienced
@@ -506,21 +552,26 @@ Last Updated: YYYY-MM-DD
    ```sql
    SELECT id, email, emailVerified FROM User WHERE email = 'user@example.com';
    ```
+````
+
 3. Check if email is verified (some features require verification)
 4. Check for account lockout (too many failed attempts)
 
 **Solutions**:
 
 **If email not verified**:
+
 - Resend verification email from admin panel
 - Or manually verify: `UPDATE User SET emailVerified = true WHERE email = '...'`
 
 **If account locked**:
+
 - Check `AuditLog` for failed login attempts
 - Unlock account (admin panel)
 - Investigate if brute force attack
 
 **If session issue**:
+
 - Clear user's sessions: `DELETE FROM Session WHERE userId = '...'`
 - Ask user to clear browser cookies and try again
 
@@ -529,6 +580,7 @@ Last Updated: YYYY-MM-DD
 ### Issue: "Forgot Password" email not received
 
 **Diagnosis**:
+
 1. Check email is correct in database:
    ```sql
    SELECT email FROM User WHERE email = 'user@example.com';
@@ -541,14 +593,17 @@ Last Updated: YYYY-MM-DD
 **Solutions**:
 
 **If email bounced**:
+
 - User's email provider rejected it (full inbox, invalid address)
 - Ask user to provide alternative email
 
 **If marked as spam**:
+
 - User needs to check spam folder
 - Advise to whitelist `noreply@example.com`
 
 **If not sent at all**:
+
 - Check Resend API key is valid
 - Check error logs for failed email send
 - Manually trigger password reset from admin panel
@@ -560,16 +615,19 @@ Last Updated: YYYY-MM-DD
 ### Issue: Subscription payment failed
 
 **Symptoms**:
+
 - User's subscription shows "Past Due" or "Canceled"
 - User claims card is valid
 
 **Diagnosis**:
+
 1. Check Stripe dashboard for payment failure reason:
    - Card declined (insufficient funds, fraud alert)
    - Card expired
    - Authentication required (3D Secure)
 
    **Using Stripe CLI** (see `.claude/skills/stripe.md` for setup):
+
    ```bash
    # Get customer payment details
    stripe customers retrieve <customer-id>
@@ -589,14 +647,17 @@ Last Updated: YYYY-MM-DD
 **Solutions**:
 
 **Card declined**:
+
 - Ask user to update payment method
 - Send Stripe update payment link
 
 **3D Secure required**:
+
 - User needs to complete authentication in bank app
 - Send Stripe payment link (triggers 3DS flow)
 
 **Subscription canceled**:
+
 - Reactivate subscription from admin panel
 - Charge immediately or wait for next cycle (policy decision)
 
@@ -605,16 +666,19 @@ Last Updated: YYYY-MM-DD
 ### Issue: User charged twice
 
 **Diagnosis**:
+
 1. Check Stripe invoices for duplicate charges
 2. Check if user has multiple subscriptions (accidentally created two accounts)
 
 **Solutions**:
 
 **Duplicate charge**:
+
 - Refund duplicate payment in Stripe
 - Confirm with user via email
 
 **Multiple accounts**:
+
 - Merge accounts (manual process, requires engineering)
 - Cancel one subscription, refund
 
@@ -625,11 +689,13 @@ Last Updated: YYYY-MM-DD
 ### Issue: File upload fails
 
 **Symptoms**:
+
 - Upload progress bar hangs
 - Error message: "Upload failed"
 - No error message (silent failure)
 
 **Diagnosis**:
+
 1. Check file size:
    - Free/Starter: 10MB limit
    - Pro/Enterprise: 50MB limit
@@ -640,18 +706,22 @@ Last Updated: YYYY-MM-DD
 **Solutions**:
 
 **File too large**:
+
 - Advise user to compress file
 - Or upgrade to Pro plan (higher limit)
 
 **Unsupported file type**:
+
 - Advise user to convert file (e.g., .pages → .pdf)
 - Or request support for new file type (US-XXX)
 
 **Storage quota exceeded**:
+
 - User needs to delete old files
 - Or upgrade plan (higher storage)
 
 **Vercel Blob error**:
+
 - Check Vercel dashboard for outages
 - Check Blob API key is valid
 - Check error logs for specific error message
@@ -661,10 +731,12 @@ Last Updated: YYYY-MM-DD
 ### Issue: Shared project not visible to team member
 
 **Symptoms**:
+
 - User A shared project with User B
 - User B doesn't see it in their project list
 
 **Diagnosis**:
+
 1. Check if invitation was sent:
    ```sql
    SELECT * FROM ProjectMember
@@ -677,13 +749,16 @@ Last Updated: YYYY-MM-DD
 **Solutions**:
 
 **Invitation not sent**:
+
 - Resend invitation from project settings
 
 **Invitation not accepted**:
+
 - Check User B's email (spam folder)
 - Resend invitation
 
 **Permission issue**:
+
 - Check ZenStack @@allow rules for project visibility
 - Update User B's role if needed
 
@@ -694,10 +769,12 @@ Last Updated: YYYY-MM-DD
 ### Issue: Data export stuck "Processing"
 
 **Symptoms**:
+
 - User requested data export
 - Status shows "Processing" for >24 hours
 
 **Diagnosis**:
+
 1. Check background job status:
    - If using queue: Check job status in queue dashboard
    - If using cron: Check last run time
@@ -706,14 +783,17 @@ Last Updated: YYYY-MM-DD
 **Solutions**:
 
 **Job failed**:
+
 - Manually trigger export job
 - Check error (likely database timeout or large dataset)
 
 **Job stuck**:
+
 - Cancel and restart job
 - If dataset is huge (>10GB), may need to split export
 
 **Job completed but email not sent**:
+
 - Check Resend for email delivery
 - Manually send export link to user
 
@@ -722,10 +802,12 @@ Last Updated: YYYY-MM-DD
 ### Issue: Account deletion not working
 
 **Symptoms**:
+
 - User clicked "Delete Account"
 - Account still active after 30 days
 
 **Diagnosis**:
+
 1. Check user's `deletedAt` field:
    ```sql
    SELECT id, email, deletedAt FROM User WHERE email = '...';
@@ -736,13 +818,16 @@ Last Updated: YYYY-MM-DD
 **Solutions**:
 
 **`deletedAt` not set**:
+
 - Manually set: `UPDATE User SET deletedAt = NOW() WHERE id = '...'`
 
 **Cron job not running**:
+
 - Check Vercel cron configuration
 - Manually trigger cron job for this user
 
 **Active subscription blocking**:
+
 - Cancel subscription first
 - Then delete account
 
@@ -753,10 +838,12 @@ Last Updated: YYYY-MM-DD
 ### Issue: App loading slowly for specific user
 
 **Symptoms**:
+
 - User reports slow page loads (>10 seconds)
 - Other users not affected
 
 **Diagnosis**:
+
 1. Check user's data size:
    ```sql
    SELECT COUNT(*) FROM Project WHERE ownerId = '...';
@@ -768,14 +855,17 @@ Last Updated: YYYY-MM-DD
 **Solutions**:
 
 **Large dataset**:
+
 - Add pagination to user's views
 - Suggest archiving old projects
 
 **Geographic latency**:
+
 - Explain our servers are in [region]
 - If enterprise customer, consider regional deployment
 
 **Slow query**:
+
 - Identify N+1 query or missing index
 - Create bug report for engineering (US-XXX)
 
@@ -787,14 +877,15 @@ Last Updated: YYYY-MM-DD
 
 Use these severity levels when creating bug reports and escalations:
 
-| **Priority** | **Severity** | **Description** | **Response Time** | **Examples** |
-|--------------|--------------|-----------------|-------------------|--------------|
-| **P0** | Critical | System down, data loss, security breach | Immediate (drop everything) | • Complete service outage<br>• Data corruption/loss<br>• Security vulnerability<br>• Payment processing broken |
-| **P1** | High | Core feature broken, major user impact | <4 hours | • Login system broken<br>• Can't create/edit resources<br>• Subscription signup broken<br>• Affecting >10% of users |
-| **P2** | Medium | Feature degraded, workaround available | <2 business days | • Slow performance (non-blocking)<br>• Minor feature broken<br>• UI bugs (cosmetic issues)<br>• Affects <10% of users |
-| **P3** | Low | Nice-to-have, minor inconvenience | <1 week | • Feature requests<br>• UX improvements<br>• Documentation errors<br>• Edge case bugs |
+| **Priority** | **Severity** | **Description**                         | **Response Time**           | **Examples**                                                                                                          |
+| ------------ | ------------ | --------------------------------------- | --------------------------- | --------------------------------------------------------------------------------------------------------------------- |
+| **P0**       | Critical     | System down, data loss, security breach | Immediate (drop everything) | • Complete service outage<br>• Data corruption/loss<br>• Security vulnerability<br>• Payment processing broken        |
+| **P1**       | High         | Core feature broken, major user impact  | <4 hours                    | • Login system broken<br>• Can't create/edit resources<br>• Subscription signup broken<br>• Affecting >10% of users   |
+| **P2**       | Medium       | Feature degraded, workaround available  | <2 business days            | • Slow performance (non-blocking)<br>• Minor feature broken<br>• UI bugs (cosmetic issues)<br>• Affects <10% of users |
+| **P3**       | Low          | Nice-to-have, minor inconvenience       | <1 week                     | • Feature requests<br>• UX improvements<br>• Documentation errors<br>• Edge case bugs                                 |
 
 **Severity Factors**:
+
 - **Impact**: How many users affected? (All, Many, Some, Few)
 - **Frequency**: How often does it happen? (Always, Often, Sometimes, Rarely)
 - **Workaround**: Is there a viable workaround? (None, Difficult, Easy)
@@ -805,22 +896,26 @@ Use these severity levels when creating bug reports and escalations:
 ### When to Escalate to Engineering
 
 **Immediate (create P0 bug)**:
+
 - Data loss or corruption
 - Security vulnerability
 - Payment processing completely broken
 - Critical feature down for >1 hour
 
 **Within 24 hours (create P1 bug)**:
+
 - Bug affecting >10 users
 - Feature partially broken
 - Performance degradation (>2x normal response time)
 
 **Backlog (create P2)**:
+
 - Feature request from paying customer
 - UX improvement based on support tickets
 - Documentation gap
 
 **Template**:
+
 ```markdown
 # Bug Report from Support
 
@@ -828,6 +923,7 @@ Use these severity levels when creating bug reports and escalations:
 **Affected Users**: [Count or specific user IDs]
 **Impact**: [High/Medium/Low]
 **Reproduction Steps**:
+
 1. ...
 2. ...
 
@@ -843,22 +939,26 @@ Use these severity levels when creating bug reports and escalations:
 ### When to Escalate to Founder
 
 **Immediate**:
+
 - Legal threat or subpoena
 - Security breach or data leak
 - Major customer threatening to churn (>$1k MRR)
 - Press/media inquiry
 
 **Within 24 hours**:
+
 - Refund request >$500
 - GDPR/CCPA complaint
 - Enterprise customer escalation
 - Competitor inquiry (user asking about switching)
 
 **Notification Method**:
+
 - Slack DM (for urgent)
 - Email with [ESCALATION] subject (for non-urgent)
 - Include: User details, issue summary, recommended action
-```
+
+````
 
 ---
 
@@ -963,7 +1063,7 @@ flowchart TD
     I -->|NO| K{High-value user?<br/>>$500 MRR or >1yr}
     K -->|YES| L[Escalate to founder<br/>retention opportunity]
     K -->|NO| M[Politely decline<br/>cite Terms of Service]
-```
+````
 
 ---
 
@@ -1225,15 +1325,18 @@ For Support Team - Best Practices & Processes
 ## Before Responding
 
 ### 1. Read the Full Ticket
+
 - Don't skim - understand the full context
 - Check if user already tried common solutions
 
 ### 2. Check User's Account
+
 - Plan type (Free/Starter/Pro/Enterprise) → affects SLA
 - Account age → new user may need more hand-holding
 - Previous tickets → recurring issue or first-time?
 
 ### 3. Reproduce the Issue (if applicable)
+
 - Can you reproduce in your test account?
 - If yes → likely bug
 - If no → may be user-specific (permissions, data, browser)
@@ -1245,12 +1348,14 @@ For Support Team - Best Practices & Processes
 ### Tone & Style
 
 **Do**:
+
 - Be empathetic ("I understand this is frustrating")
 - Be clear and concise
 - Use bullet points and numbered steps
 - Provide screenshots/GIFs when helpful
 
 **Don't**:
+
 - Use jargon or technical terms (unless user is technical)
 - Be defensive ("That's not a bug, it's a feature")
 - Make promises you can't keep ("We'll fix this by tomorrow")
@@ -1261,18 +1366,22 @@ For Support Team - Best Practices & Processes
 ### Response Structure
 
 **1. Acknowledge**:
+
 - "Thanks for reaching out"
 - "I'm sorry you're experiencing this"
 
 **2. Diagnose** (if needed):
+
 - "I've checked your account and..."
 - "It looks like..."
 
 **3. Solve**:
+
 - "Here's how to fix this:"
 - [Clear steps]
 
 **4. Follow-up**:
+
 - "Does this solve your issue?"
 - "Let me know if you need anything else"
 
@@ -1282,20 +1391,25 @@ For Support Team - Best Practices & Processes
 
 **Bad**:
 ```
+
 The feature is in settings.
+
 ```
 
 **Good**:
 ```
+
 Thanks for reaching out! You can find this feature in Settings.
 
 Here's how:
+
 1. Click your profile icon (top right)
 2. Select "Settings"
 3. Go to the "Team" tab
 4. Click "Invite Member"
 
 Let me know if you have any trouble finding it!
+
 ```
 
 ---
@@ -1312,11 +1426,13 @@ Let me know if you have any trouble finding it!
 
 **Example**:
 ```
+
 I'm really sorry you're experiencing this issue. I can see how disruptive this must be to your workflow.
 
 Let me [solution]. I'm prioritizing this and will personally follow up within [timeframe].
 
 If you'd like, I can also escalate this to our leadership team for additional attention.
+
 ```
 
 ---
@@ -1330,11 +1446,13 @@ If you'd like, I can also escalate this to our leadership team for additional at
 
 **Example**:
 ```
+
 No problem, this happens! Let me help you fix it.
 
 [Solution steps]
 
 For future reference, [gentle tip to prevent recurrence]. But don't worry - you're all set now!
+
 ```
 
 ---
@@ -1348,11 +1466,13 @@ For future reference, [gentle tip to prevent recurrence]. But don't worry - you'
 
 **Example**:
 ```
+
 Thanks for the suggestion! Unfortunately, we don't currently support [feature] due to [reason].
 
 However, you might be able to achieve this by [workaround].
 
 If you'd like to share more about your use case, I can pass this to our product team as a feature request!
+
 ```
 
 ---
@@ -1436,30 +1556,36 @@ Create templates for common issues, but **personalize** before sending:
 ### 6. Coordinate with Other Agents
 
 **Quality Reviewer Agent**:
+
 - **Input from QA**: Common user confusion points, UX issues
 - **Output to QA**: FAQ documentation for testing (verify instructions match reality)
 - **Coordination**: QA should test FAQ instructions as part of acceptance criteria
 
 **Frontend Developer Agent**:
+
 - **Input to Frontend**: UX improvement tickets based on support patterns
 - **Example**: "10 users couldn't find Team Invite" → US-XXX: Make Team Invite more prominent
 - **Coordination**: Frontend should review support documentation before implementing features
 
 **Backend Developer Agent**:
+
 - **Input to Backend**: Bug reports escalated from support
 - **Coordination**: Backend provides status updates for escalated bugs
 
 **Product Manager Agent**:
+
 - **Input to PM**: Feature requests from support tickets (with frequency data)
 - **Example**: "15 users asked for API access" → Consider for roadmap
 - **Coordination**: PM prioritizes based on support ticket volume
 
 **Observability Agent**:
+
 - **Input from Observability**: Audit logs for support investigations
 - **Example**: User claims they didn't cancel subscription → Check audit logs
 - **Coordination**: Support team needs read access to certain audit events
 
 **Compliance Agent**:
+
 - **Input from Compliance**: GDPR/CCPA request procedures
 - **Output to Compliance**: Track data deletion and export requests
 - **Coordination**: Support escalates compliance requests to Compliance Agent
@@ -1469,22 +1595,27 @@ Create templates for common issues, but **personalize** before sending:
 ## Anti-Patterns to Avoid
 
 ❌ **Response Theater**:
+
 - Sending quick but unhelpful responses just to meet SLA
 - "Thanks for your message!" without actually solving the issue
 
 ❌ **Copy-Paste Fatigue**:
+
 - Blindly copy-pasting canned responses without personalization
 - User can tell they're getting a robot response
 
 ❌ **Over-Promising**:
+
 - "We'll fix this by tomorrow" (without checking with engineering)
 - "This will definitely be in the next release" (product may deprioritize)
 
 ❌ **Under-Documenting**:
+
 - Not updating FAQ when same question comes up 5+ times
 - Reinventing the wheel for every ticket instead of creating documentation
 
 ❌ **Blame Culture**:
+
 - "You should have read the documentation" (even if true, unhelpful tone)
 - "This is a known issue" (without offering solution or workaround)
 
@@ -1505,23 +1636,27 @@ Create templates for common issues, but **personalize** before sending:
 ## Success Metrics
 
 **Support Efficiency**:
+
 - ✅ First response time <24 hours (paid), <48 hours (free)
 - ✅ Resolution time <3 days average
 - ✅ Escalation rate <20% (most issues resolved by support team)
 - ✅ Reopened ticket rate <10% (responses actually solve the issue)
 
 **Documentation Quality**:
+
 - ✅ FAQ covers top 80% of questions (measured by ticket volume)
 - ✅ FAQ is updated monthly based on new patterns
 - ✅ Troubleshooting guide used by support team weekly
 - ✅ Escalation protocol followed 100% of the time
 
 **User Satisfaction**:
+
 - ✅ Customer Satisfaction (CSAT) >90%
 - ✅ Positive sentiment in support ticket responses
 - ✅ Reduced ticket volume over time (better self-service documentation)
 
 **Proactive Improvements**:
+
 - ✅ Support patterns inform UX improvements (3+ user stories created per quarter)
 - ✅ Common issues are fixed, not just documented (reduce recurring tickets)
 - ✅ FAQ documentation created BEFORE feature launches (proactive vs reactive)
@@ -1529,6 +1664,7 @@ Create templates for common issues, but **personalize** before sending:
 ---
 
 **See Also**:
+
 - `docs/user-stories.md` - Feature descriptions for support team reference
 - `.claude/agents/quality-reviewer.md` - QA findings inform support documentation
 - `.claude/agents/frontend-developer.md` - UX improvements based on support feedback

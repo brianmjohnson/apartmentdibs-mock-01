@@ -1,26 +1,27 @@
 export interface BlogAuthor {
-  name: string;
-  avatar: string;
-  role: string;
+  name: string
+  avatar: string
+  role: string
 }
 
 export interface BlogPost {
-  slug: string;
-  title: string;
-  excerpt: string;
-  content: string;
-  featuredImage: string;
-  category: 'Fair Housing' | 'Renting Tips' | 'Market Updates' | 'Product News';
-  author: BlogAuthor;
-  publishedAt: string;
-  readTime: number;
+  slug: string
+  title: string
+  excerpt: string
+  content: string
+  featuredImage: string
+  category: 'Fair Housing' | 'Renting Tips' | 'Market Updates' | 'Product News'
+  author: BlogAuthor
+  publishedAt: string
+  readTime: number
 }
 
 export const mockBlogPosts: BlogPost[] = [
   {
-    slug: "understanding-fair-housing-act",
-    title: "Understanding the Fair Housing Act: A Complete Guide",
-    excerpt: "Learn about protected classes, prohibited practices, and how to ensure compliance with federal fair housing laws.",
+    slug: 'understanding-fair-housing-act',
+    title: 'Understanding the Fair Housing Act: A Complete Guide',
+    excerpt:
+      'Learn about protected classes, prohibited practices, and how to ensure compliance with federal fair housing laws.',
     content: `
 ## Introduction
 
@@ -74,20 +75,21 @@ Every decision is logged, creating a defensible record of fair housing complianc
 
 Understanding and following fair housing laws isn't just about avoiding lawsuits—it's about creating a more equitable housing market for everyone. ApartmentDibs is committed to making this easier for landlords while protecting tenants from discrimination.
     `.trim(),
-    featuredImage: "/images/blog/fair-housing.jpg",
-    category: "Fair Housing",
+    featuredImage: '/images/blog/fair-housing.jpg',
+    category: 'Fair Housing',
     author: {
-      name: "Sarah Johnson",
-      avatar: "/images/avatars/avatar-1.jpg",
-      role: "Fair Housing Expert"
+      name: 'Sarah Johnson',
+      avatar: '/images/avatars/avatar-1.jpg',
+      role: 'Fair Housing Expert',
     },
-    publishedAt: "2025-11-15",
-    readTime: 8
+    publishedAt: '2025-11-15',
+    readTime: 8,
   },
   {
-    slug: "tips-for-first-time-renters",
-    title: "10 Essential Tips for First-Time Renters",
-    excerpt: "Moving into your first apartment? Here's everything you need to know to make the process smooth and stress-free.",
+    slug: 'tips-for-first-time-renters',
+    title: '10 Essential Tips for First-Time Renters',
+    excerpt:
+      "Moving into your first apartment? Here's everything you need to know to make the process smooth and stress-free.",
     content: `
 ## Starting Your Rental Journey
 
@@ -160,20 +162,21 @@ Create your portable screening report once and apply to multiple listings withou
 
 Renting your first apartment doesn't have to be stressful. With the right preparation and knowledge, you can find a great place that fits your needs and budget.
     `.trim(),
-    featuredImage: "/images/blog/first-time-renters.jpg",
-    category: "Renting Tips",
+    featuredImage: '/images/blog/first-time-renters.jpg',
+    category: 'Renting Tips',
     author: {
-      name: "Michael Chen",
-      avatar: "/images/avatars/avatar-2.jpg",
-      role: "Content Writer"
+      name: 'Michael Chen',
+      avatar: '/images/avatars/avatar-2.jpg',
+      role: 'Content Writer',
     },
-    publishedAt: "2025-11-10",
-    readTime: 6
+    publishedAt: '2025-11-10',
+    readTime: 6,
   },
   {
-    slug: "creating-strong-rental-application",
-    title: "How to Create a Strong Rental Application",
-    excerpt: "Stand out from other applicants with these proven strategies for building a compelling rental application.",
+    slug: 'creating-strong-rental-application',
+    title: 'How to Create a Strong Rental Application',
+    excerpt:
+      'Stand out from other applicants with these proven strategies for building a compelling rental application.',
     content: `
 ## Why Your Application Matters
 
@@ -255,20 +258,21 @@ With ApartmentDibs:
 
 A strong rental application demonstrates reliability and responsibility. Take the time to prepare your materials thoroughly, and you'll significantly improve your chances of securing your ideal apartment.
     `.trim(),
-    featuredImage: "/images/blog/rental-application.jpg",
-    category: "Renting Tips",
+    featuredImage: '/images/blog/rental-application.jpg',
+    category: 'Renting Tips',
     author: {
-      name: "Emily Rodriguez",
-      avatar: "/images/avatars/avatar-3.jpg",
-      role: "Tenant Success Manager"
+      name: 'Emily Rodriguez',
+      avatar: '/images/avatars/avatar-3.jpg',
+      role: 'Tenant Success Manager',
     },
-    publishedAt: "2025-11-08",
-    readTime: 7
+    publishedAt: '2025-11-08',
+    readTime: 7,
   },
   {
-    slug: "portable-screening-reports-explained",
-    title: "Why Portable Screening Reports Save Time and Money",
-    excerpt: "Discover how portable tenant screening reports are revolutionizing the rental application process for both tenants and landlords.",
+    slug: 'portable-screening-reports-explained',
+    title: 'Why Portable Screening Reports Save Time and Money',
+    excerpt:
+      'Discover how portable tenant screening reports are revolutionizing the rental application process for both tenants and landlords.',
     content: `
 ## The Problem with Traditional Screening
 
@@ -344,20 +348,21 @@ Portable screening reports represent a major shift toward a more efficient, tena
 
 Create your portable screening report on ApartmentDibs and start applying to apartments immediately. Your verified profile makes you a more attractive candidate to landlords while saving you time and money.
     `.trim(),
-    featuredImage: "/images/blog/credit-score.jpg",
-    category: "Product News",
+    featuredImage: '/images/blog/credit-score.jpg',
+    category: 'Product News',
     author: {
-      name: "David Park",
-      avatar: "/images/avatars/avatar-4.jpg",
-      role: "Product Manager"
+      name: 'David Park',
+      avatar: '/images/avatars/avatar-4.jpg',
+      role: 'Product Manager',
     },
-    publishedAt: "2025-11-05",
-    readTime: 5
+    publishedAt: '2025-11-05',
+    readTime: 5,
   },
   {
-    slug: "brooklyn-rental-market-trends-2025",
-    title: "Brooklyn Rental Market Update: November 2025",
-    excerpt: "Explore the latest trends in Brooklyn's rental market, including median rents, inventory levels, and neighborhood highlights.",
+    slug: 'brooklyn-rental-market-trends-2025',
+    title: 'Brooklyn Rental Market Update: November 2025',
+    excerpt:
+      "Explore the latest trends in Brooklyn's rental market, including median rents, inventory levels, and neighborhood highlights.",
     content: `
 ## Market Overview
 
@@ -440,20 +445,21 @@ We currently have over 500 active listings in Brooklyn, from studios to 3+ bedro
 
 Start your Brooklyn apartment search on ApartmentDibs today.
     `.trim(),
-    featuredImage: "/images/blog/lease-agreement.jpg",
-    category: "Market Updates",
+    featuredImage: '/images/blog/lease-agreement.jpg',
+    category: 'Market Updates',
     author: {
-      name: "Jessica Martinez",
-      avatar: "/images/avatars/avatar-5.jpg",
-      role: "Market Analyst"
+      name: 'Jessica Martinez',
+      avatar: '/images/avatars/avatar-5.jpg',
+      role: 'Market Analyst',
     },
-    publishedAt: "2025-11-01",
-    readTime: 6
+    publishedAt: '2025-11-01',
+    readTime: 6,
   },
   {
-    slug: "reducing-discrimination-risk-landlords",
-    title: "How Landlords Can Reduce Discrimination Risk",
-    excerpt: "Practical steps property owners can take to ensure fair housing compliance and protect themselves from costly lawsuits.",
+    slug: 'reducing-discrimination-risk-landlords',
+    title: 'How Landlords Can Reduce Discrimination Risk',
+    excerpt:
+      'Practical steps property owners can take to ensure fair housing compliance and protect themselves from costly lawsuits.',
     content: `
 ## The Cost of Non-Compliance
 
@@ -575,20 +581,21 @@ Fair housing compliance isn't just about avoiding lawsuits—it's about creating
 
 Join ApartmentDibs today and let our platform handle compliance for you.
     `.trim(),
-    featuredImage: "/images/blog/moving-guide.jpg",
-    category: "Fair Housing",
+    featuredImage: '/images/blog/moving-guide.jpg',
+    category: 'Fair Housing',
     author: {
-      name: "Robert Thompson",
-      avatar: "/images/avatars/avatar-6.jpg",
-      role: "Legal Compliance Advisor"
+      name: 'Robert Thompson',
+      avatar: '/images/avatars/avatar-6.jpg',
+      role: 'Legal Compliance Advisor',
     },
-    publishedAt: "2025-10-28",
-    readTime: 9
+    publishedAt: '2025-10-28',
+    readTime: 9,
   },
   {
-    slug: "apartment-viewing-checklist",
-    title: "The Ultimate Apartment Viewing Checklist",
-    excerpt: "Don't miss crucial details during your apartment tour. Use this comprehensive checklist to evaluate any rental property.",
+    slug: 'apartment-viewing-checklist',
+    title: 'The Ultimate Apartment Viewing Checklist',
+    excerpt:
+      "Don't miss crucial details during your apartment tour. Use this comprehensive checklist to evaluate any rental property.",
     content: `
 ## Before You Go
 
@@ -742,48 +749,48 @@ Be cautious if:
 
 A thorough viewing helps you avoid surprises after moving in. Take your time, ask questions, and trust your instincts. When you find the right apartment, having your ApartmentDibs profile ready means you can apply immediately.
     `.trim(),
-    featuredImage: "/images/blog/pet-friendly.jpg",
-    category: "Renting Tips",
+    featuredImage: '/images/blog/pet-friendly.jpg',
+    category: 'Renting Tips',
     author: {
-      name: "Amanda Lee",
-      avatar: "/images/avatars/avatar-7.jpg",
-      role: "Real Estate Advisor"
+      name: 'Amanda Lee',
+      avatar: '/images/avatars/avatar-7.jpg',
+      role: 'Real Estate Advisor',
     },
-    publishedAt: "2025-10-20",
-    readTime: 8
-  }
-];
+    publishedAt: '2025-10-20',
+    readTime: 8,
+  },
+]
 
 export const blogCategories = [
   'Fair Housing',
   'Renting Tips',
   'Market Updates',
-  'Product News'
-] as const;
+  'Product News',
+] as const
 
 export function getBlogPostBySlug(slug: string): BlogPost | undefined {
-  return mockBlogPosts.find(post => post.slug === slug);
+  return mockBlogPosts.find((post) => post.slug === slug)
 }
 
 export function getBlogPostsByCategory(category: string): BlogPost[] {
-  return mockBlogPosts.filter(post => post.category === category);
+  return mockBlogPosts.filter((post) => post.category === category)
 }
 
 export function getRelatedPosts(currentSlug: string, limit: number = 3): BlogPost[] {
-  const currentPost = getBlogPostBySlug(currentSlug);
-  if (!currentPost) return [];
+  const currentPost = getBlogPostBySlug(currentSlug)
+  if (!currentPost) return []
 
   return mockBlogPosts
-    .filter(post => post.slug !== currentSlug)
-    .filter(post => post.category === currentPost.category)
-    .slice(0, limit);
+    .filter((post) => post.slug !== currentSlug)
+    .filter((post) => post.category === currentPost.category)
+    .slice(0, limit)
 }
 
 export function formatBlogDate(dateString: string): string {
-  const date = new Date(dateString);
+  const date = new Date(dateString)
   return date.toLocaleDateString('en-US', {
     month: 'long',
     day: 'numeric',
-    year: 'numeric'
-  });
+    year: 'numeric',
+  })
 }

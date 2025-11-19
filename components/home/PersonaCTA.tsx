@@ -16,29 +16,30 @@ export function PersonaCTA() {
   }
 
   return (
-    <section className="py-16 md:py-24 bg-muted/30">
+    <section className="bg-muted/30 py-16 md:py-24">
       <div className="container mx-auto px-4">
-        <h2 className="text-3xl md:text-4xl font-bold text-center mb-4">
+        <h2 className="mb-4 text-center text-3xl font-bold md:text-4xl">
           Built for Everyone in the Rental Process
         </h2>
-        <p className="text-center text-muted-foreground mb-12 max-w-2xl mx-auto">
-          Whether you&apos;re managing properties or representing clients, we&apos;ve got you covered
+        <p className="text-muted-foreground mx-auto mb-12 max-w-2xl text-center">
+          Whether you&apos;re managing properties or representing clients, we&apos;ve got you
+          covered
         </p>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-5xl mx-auto">
+        <div className="mx-auto grid max-w-5xl grid-cols-1 gap-8 md:grid-cols-2">
           {/* For Landlords */}
-          <Card className="border-2 border-foreground hover:shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] transition-all">
+          <Card className="border-foreground border-2 transition-all hover:shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]">
             <CardHeader>
-              <div className="h-12 w-12 bg-primary text-primary-foreground flex items-center justify-center mb-4">
+              <div className="bg-primary text-primary-foreground mb-4 flex h-12 w-12 items-center justify-center">
                 <Shield className="h-6 w-6" />
               </div>
               <CardTitle className="text-2xl">For Landlords</CardTitle>
-              <CardDescription className="text-lg font-medium text-foreground">
+              <CardDescription className="text-foreground text-lg font-medium">
                 Protect Your Investment, Fill Faster
               </CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">
-              <ul className="space-y-2 text-muted-foreground">
+              <ul className="text-muted-foreground space-y-2">
                 <li className="flex items-start gap-2">
                   <span className="text-primary font-bold">&#x2713;</span>
                   Audit trails for compliance protection
@@ -54,20 +55,21 @@ export function PersonaCTA() {
               </ul>
 
               {/* Testimonial */}
-              <div className="bg-muted/50 p-4 rounded-md mt-4 border border-border">
+              <div className="bg-muted/50 border-border mt-4 rounded-md border p-4">
                 <div className="flex items-start gap-2">
-                  <Quote className="h-4 w-4 text-muted-foreground shrink-0 mt-1" />
+                  <Quote className="text-muted-foreground mt-1 h-4 w-4 shrink-0" />
                   <div>
-                    <p className="text-sm italic text-muted-foreground">
-                      &quot;The audit trail is bulletproof. I sleep better knowing I&apos;m protected from lawsuits.&quot;
+                    <p className="text-muted-foreground text-sm italic">
+                      &quot;The audit trail is bulletproof. I sleep better knowing I&apos;m
+                      protected from lawsuits.&quot;
                     </p>
-                    <p className="text-xs font-medium mt-2">David R., Property Owner</p>
+                    <p className="mt-2 text-xs font-medium">David R., Property Owner</p>
                   </div>
                 </div>
               </div>
 
               <Button
-                className="w-full mt-4 border-2 border-foreground"
+                className="border-foreground mt-4 w-full border-2"
                 asChild
                 onClick={() => handleCTAClick('landlord', '/for-landlords')}
               >
@@ -77,18 +79,18 @@ export function PersonaCTA() {
           </Card>
 
           {/* For Agents */}
-          <Card className="border-2 border-foreground hover:shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] transition-all">
+          <Card className="border-foreground border-2 transition-all hover:shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]">
             <CardHeader>
-              <div className="h-12 w-12 bg-primary text-primary-foreground flex items-center justify-center mb-4">
+              <div className="bg-primary text-primary-foreground mb-4 flex h-12 w-12 items-center justify-center">
                 <Clock className="h-6 w-6" />
               </div>
               <CardTitle className="text-2xl">For Agents</CardTitle>
-              <CardDescription className="text-lg font-medium text-foreground">
+              <CardDescription className="text-foreground text-lg font-medium">
                 Close 25% More Leases, Save 20 Hours/Week
               </CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">
-              <ul className="space-y-2 text-muted-foreground">
+              <ul className="text-muted-foreground space-y-2">
                 <li className="flex items-start gap-2">
                   <span className="text-primary font-bold">&#x2713;</span>
                   CRM auto-matching with verified applicants
@@ -104,20 +106,21 @@ export function PersonaCTA() {
               </ul>
 
               {/* Testimonial */}
-              <div className="bg-muted/50 p-4 rounded-md mt-4 border border-border">
+              <div className="bg-muted/50 border-border mt-4 rounded-md border p-4">
                 <div className="flex items-start gap-2">
-                  <Quote className="h-4 w-4 text-muted-foreground shrink-0 mt-1" />
+                  <Quote className="text-muted-foreground mt-1 h-4 w-4 shrink-0" />
                   <div>
-                    <p className="text-sm italic text-muted-foreground">
-                      &quot;I close 25% more leases now. The CRM auto-matching is a game changer.&quot;
+                    <p className="text-muted-foreground text-sm italic">
+                      &quot;I close 25% more leases now. The CRM auto-matching is a game
+                      changer.&quot;
                     </p>
-                    <p className="text-xs font-medium mt-2">Jessica L., Licensed Agent</p>
+                    <p className="mt-2 text-xs font-medium">Jessica L., Licensed Agent</p>
                   </div>
                 </div>
               </div>
 
               <Button
-                className="w-full mt-4 border-2 border-foreground"
+                className="border-foreground mt-4 w-full border-2"
                 asChild
                 onClick={() => handleCTAClick('agent', '/for-agents')}
               >

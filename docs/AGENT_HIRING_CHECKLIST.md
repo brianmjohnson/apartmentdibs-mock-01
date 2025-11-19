@@ -11,6 +11,7 @@
 > **RULE**: Before hiring a human for ANY function, CREATE THE AGENT FIRST.
 
 **Why?**
+
 - Agents work 24/7 with low incremental cost
 - Agents scale infinitely without hiring overhead
 - Agents enforce consistency and best practices
@@ -22,25 +23,25 @@
 
 ## Agent Coverage by Business Function
 
-| Business Function | Agent Responsible | Human Oversight Required? |
-|------------------|-------------------|---------------------------|
-| Product Strategy | Product Manager Agent | Yes (CEO/Founder) |
-| Architecture Decisions | Architecture Agent | Yes (CTO) |
-| Frontend Development | Frontend Developer Agent | Code review only |
-| Backend Development | Backend Developer Agent | Code review only |
-| UI/UX Design | UI Designer Agent | Design review only |
-| User Research | UX Researcher Agent | Research validation |
-| Quality Assurance | Quality Reviewer Agent | Critical path testing |
-| Customer Support | Support Triage Agent | Escalations only |
-| Content Marketing | Content Marketing Agent | Brand alignment |
-| SEO & Analytics | SEO/Analytics Agent | Strategy validation |
-| Financial Planning | Unit Economics Agent | CFO approval |
-| Legal Compliance | Compliance Agent | Attorney review required |
-| Security & Privacy | Observability Agent | CISO oversight |
-| Sales & Growth | Growth Strategy Agent | VP Sales collaboration |
-| Recruiting | Recruiting Coordinator Agent | Final interviews only |
-| Operations | Operations Manager Agent | Strategic direction |
-| Process Improvement | Operations Excellence Agent | Continuous improvement |
+| Business Function      | Agent Responsible            | Human Oversight Required? |
+| ---------------------- | ---------------------------- | ------------------------- |
+| Product Strategy       | Product Manager Agent        | Yes (CEO/Founder)         |
+| Architecture Decisions | Architecture Agent           | Yes (CTO)                 |
+| Frontend Development   | Frontend Developer Agent     | Code review only          |
+| Backend Development    | Backend Developer Agent      | Code review only          |
+| UI/UX Design           | UI Designer Agent            | Design review only        |
+| User Research          | UX Researcher Agent          | Research validation       |
+| Quality Assurance      | Quality Reviewer Agent       | Critical path testing     |
+| Customer Support       | Support Triage Agent         | Escalations only          |
+| Content Marketing      | Content Marketing Agent      | Brand alignment           |
+| SEO & Analytics        | SEO/Analytics Agent          | Strategy validation       |
+| Financial Planning     | Unit Economics Agent         | CFO approval              |
+| Legal Compliance       | Compliance Agent             | Attorney review required  |
+| Security & Privacy     | Observability Agent          | CISO oversight            |
+| Sales & Growth         | Growth Strategy Agent        | VP Sales collaboration    |
+| Recruiting             | Recruiting Coordinator Agent | Final interviews only     |
+| Operations             | Operations Manager Agent     | Strategic direction       |
+| Process Improvement    | Operations Excellence Agent  | Continuous improvement    |
 
 ---
 
@@ -182,6 +183,7 @@
 **Template**: `.claude/agents/template.md`
 **Location**: `.claude/agents/[function]-agent.md`
 **Required Sections**:
+
 - Role & Responsibilities
 - Scope & Boundaries
 - Tools & Resources
@@ -197,13 +199,13 @@
 
 Track agent effectiveness:
 
-| Metric | Target | Review Frequency |
-|--------|--------|------------------|
-| Tasks completed without human intervention | >80% | Weekly |
-| Time saved vs human equivalent | >50% | Monthly |
-| Quality (bugs/errors introduced) | <5% | Per task |
-| Human satisfaction with agent output | >4/5 | After each HITL |
-| Cost savings vs human salary | Calculate monthly | Monthly |
+| Metric                                     | Target            | Review Frequency |
+| ------------------------------------------ | ----------------- | ---------------- |
+| Tasks completed without human intervention | >80%              | Weekly           |
+| Time saved vs human equivalent             | >50%              | Monthly          |
+| Quality (bugs/errors introduced)           | <5%               | Per task         |
+| Human satisfaction with agent output       | >4/5              | After each HITL  |
+| Cost savings vs human salary               | Calculate monthly | Monthly          |
 
 ---
 
@@ -220,6 +222,7 @@ Track agent effectiveness:
 7. **People Management**: Managing human employees, culture building
 
 **Hiring Priority** (after exhausting agent capabilities):
+
 1. CEO/Founder (strategic vision)
 2. CTO (technical leadership + agent orchestration)
 3. Designer (brand identity + creative direction)
@@ -235,6 +238,7 @@ Track agent effectiveness:
 **Conflict Resolution**: Architecture Agent arbitrates technical disputes
 
 **Multi-Agent Workflows**:
+
 - PM Agent creates stories → Frontend + Backend agents implement → QA Agent reviews
 - Growth Agent proposes experiment → PM Agent creates stories → Dev agents implement
 - Support Agent identifies common issues → Content Agent creates documentation

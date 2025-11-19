@@ -26,6 +26,7 @@ Use the start script to launch `vercel dev` in the background:
 ```
 
 This will:
+
 - Start `vercel dev` on http://localhost:3000
 - Run in background mode
 - Log output to `.logs/vercel-dev.log`
@@ -54,6 +55,7 @@ Use the stop script to kill the server:
 ```
 
 This will:
+
 - Find the process running on port 3000
 - Terminate it gracefully (SIGTERM)
 - Fall back to force kill (SIGKILL) if needed
@@ -94,6 +96,7 @@ grep -i error .logs/vercel-dev.log
 **Log file**: `.logs/vercel-dev.log`
 
 This location is:
+
 - Well-known for automation tools
 - Gitignored (add `.logs/` to `.gitignore` if not already)
 - Easy to tail and search

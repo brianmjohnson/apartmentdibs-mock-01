@@ -2,14 +2,7 @@
 
 import { useState } from 'react'
 import Link from 'next/link'
-import {
-  Search,
-  Filter,
-  Eye,
-  UserX,
-  LogIn,
-  MoreHorizontal,
-} from 'lucide-react'
+import { Search, Filter, Eye, UserX, LogIn, MoreHorizontal } from 'lucide-react'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
@@ -44,12 +37,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from '@/components/ui/dialog'
-import {
-  mockUsers,
-  getUserStatusColor,
-  getPersonaColor,
-  formatDate,
-} from '@/lib/mock-data/admin'
+import { mockUsers, getUserStatusColor, getPersonaColor, formatDate } from '@/lib/mock-data/admin'
 
 export default function UserManagementPage() {
   const [searchQuery, setSearchQuery] = useState('')
@@ -77,28 +65,26 @@ export default function UserManagementPage() {
       {/* Page Header */}
       <div>
         <h1 className="text-3xl font-bold tracking-tight">User Management</h1>
-        <p className="text-muted-foreground">
-          View and manage all platform users
-        </p>
+        <p className="text-muted-foreground">View and manage all platform users</p>
       </div>
 
       {/* Filters */}
-      <Card className="border-2 border-foreground">
+      <Card className="border-foreground border-2">
         <CardContent className="pt-6">
-          <div className="flex flex-col md:flex-row gap-4">
+          <div className="flex flex-col gap-4 md:flex-row">
             <div className="flex-1">
               <div className="relative">
-                <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                <Search className="text-muted-foreground absolute top-1/2 left-3 h-4 w-4 -translate-y-1/2" />
                 <Input
                   placeholder="Search by name or email..."
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
-                  className="pl-9 border-2"
+                  className="border-2 pl-9"
                 />
               </div>
             </div>
             <Select value={personaFilter} onValueChange={setPersonaFilter}>
-              <SelectTrigger className="w-full md:w-[180px] border-2">
+              <SelectTrigger className="w-full border-2 md:w-[180px]">
                 <SelectValue placeholder="All Personas" />
               </SelectTrigger>
               <SelectContent>
@@ -110,7 +96,7 @@ export default function UserManagementPage() {
               </SelectContent>
             </Select>
             <Select value={statusFilter} onValueChange={setStatusFilter}>
-              <SelectTrigger className="w-full md:w-[180px] border-2">
+              <SelectTrigger className="w-full border-2 md:w-[180px]">
                 <SelectValue placeholder="All Statuses" />
               </SelectTrigger>
               <SelectContent>
@@ -126,7 +112,7 @@ export default function UserManagementPage() {
       </Card>
 
       {/* Users Table */}
-      <Card className="border-2 border-foreground">
+      <Card className="border-foreground border-2">
         <CardHeader>
           <CardTitle>Users ({filteredUsers.length})</CardTitle>
           <CardDescription>
@@ -134,7 +120,7 @@ export default function UserManagementPage() {
           </CardDescription>
         </CardHeader>
         <CardContent>
-          <div className="rounded-md border-2 border-border">
+          <div className="border-border rounded-md border-2">
             <Table>
               <TableHeader>
                 <TableRow>
@@ -208,11 +194,12 @@ export default function UserManagementPage() {
 
       {/* Suspend Dialog */}
       <Dialog open={suspendDialogOpen} onOpenChange={setSuspendDialogOpen}>
-        <DialogContent className="border-2 border-foreground">
+        <DialogContent className="border-foreground border-2">
           <DialogHeader>
             <DialogTitle>Suspend User</DialogTitle>
             <DialogDescription>
-              Are you sure you want to suspend this user? They will not be able to access the platform until reinstated.
+              Are you sure you want to suspend this user? They will not be able to access the
+              platform until reinstated.
             </DialogDescription>
           </DialogHeader>
           <DialogFooter>

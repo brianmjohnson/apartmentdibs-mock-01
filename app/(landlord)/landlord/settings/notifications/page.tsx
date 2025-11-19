@@ -26,7 +26,7 @@ const initialSettings: Record<string, NotificationSetting[]> = {
       description: 'When a tenant submits a rent payment',
       email: true,
       sms: false,
-      push: true
+      push: true,
     },
     {
       id: 'payment_late',
@@ -34,7 +34,7 @@ const initialSettings: Record<string, NotificationSetting[]> = {
       description: 'When a rent payment is overdue',
       email: true,
       sms: true,
-      push: true
+      push: true,
     },
     {
       id: 'payment_failed',
@@ -42,8 +42,8 @@ const initialSettings: Record<string, NotificationSetting[]> = {
       description: 'When a payment attempt fails',
       email: true,
       sms: true,
-      push: true
-    }
+      push: true,
+    },
   ],
   maintenance: [
     {
@@ -52,7 +52,7 @@ const initialSettings: Record<string, NotificationSetting[]> = {
       description: 'When a tenant submits a maintenance request',
       email: true,
       sms: false,
-      push: true
+      push: true,
     },
     {
       id: 'maintenance_urgent',
@@ -60,7 +60,7 @@ const initialSettings: Record<string, NotificationSetting[]> = {
       description: 'When an urgent maintenance issue is reported',
       email: true,
       sms: true,
-      push: true
+      push: true,
     },
     {
       id: 'maintenance_completed',
@@ -68,8 +68,8 @@ const initialSettings: Record<string, NotificationSetting[]> = {
       description: 'When a maintenance request is marked complete',
       email: true,
       sms: false,
-      push: false
-    }
+      push: false,
+    },
   ],
   leases: [
     {
@@ -78,7 +78,7 @@ const initialSettings: Record<string, NotificationSetting[]> = {
       description: 'Reminder when a lease is about to expire',
       email: true,
       sms: false,
-      push: true
+      push: true,
     },
     {
       id: 'lease_renewed',
@@ -86,7 +86,7 @@ const initialSettings: Record<string, NotificationSetting[]> = {
       description: 'When a tenant accepts a renewal offer',
       email: true,
       sms: false,
-      push: true
+      push: true,
     },
     {
       id: 'lease_terminated',
@@ -94,8 +94,8 @@ const initialSettings: Record<string, NotificationSetting[]> = {
       description: 'When a lease is terminated',
       email: true,
       sms: true,
-      push: true
-    }
+      push: true,
+    },
   ],
   applications: [
     {
@@ -104,7 +104,7 @@ const initialSettings: Record<string, NotificationSetting[]> = {
       description: 'When someone applies for a listing',
       email: true,
       sms: false,
-      push: true
+      push: true,
     },
     {
       id: 'application_shortlisted',
@@ -112,7 +112,7 @@ const initialSettings: Record<string, NotificationSetting[]> = {
       description: 'When your agent shortlists an applicant',
       email: true,
       sms: false,
-      push: true
+      push: true,
     },
     {
       id: 'screening_complete',
@@ -120,9 +120,9 @@ const initialSettings: Record<string, NotificationSetting[]> = {
       description: 'When tenant screening results are ready',
       email: true,
       sms: false,
-      push: true
-    }
-  ]
+      push: true,
+    },
+  ],
 }
 
 export default function NotificationsSettingsPage() {
@@ -133,13 +133,11 @@ export default function NotificationsSettingsPage() {
     settingId: string,
     channel: 'email' | 'sms' | 'push'
   ) => {
-    setSettings(prev => ({
+    setSettings((prev) => ({
       ...prev,
-      [category]: prev[category].map(setting =>
-        setting.id === settingId
-          ? { ...setting, [channel]: !setting[channel] }
-          : setting
-      )
+      [category]: prev[category].map((setting) =>
+        setting.id === settingId ? { ...setting, [channel]: !setting[channel] } : setting
+      ),
     }))
   }
 
@@ -154,27 +152,27 @@ export default function NotificationsSettingsPage() {
       </div>
 
       {/* Settings Navigation */}
-      <div className="flex gap-2 flex-wrap">
+      <div className="flex flex-wrap gap-2">
         <Link href="/landlord/settings">
           <Button variant="outline" className="border-2">
-            <User className="h-4 w-4 mr-2" />
+            <User className="mr-2 h-4 w-4" />
             Account
           </Button>
         </Link>
         <Link href="/landlord/settings/billing">
           <Button variant="outline" className="border-2">
-            <CreditCard className="h-4 w-4 mr-2" />
+            <CreditCard className="mr-2 h-4 w-4" />
             Billing
           </Button>
         </Link>
-        <Button variant="default" className="border-2 border-foreground">
-          <Bell className="h-4 w-4 mr-2" />
+        <Button variant="default" className="border-foreground border-2">
+          <Bell className="mr-2 h-4 w-4" />
           Notifications
         </Button>
       </div>
 
       {/* Payments Notifications */}
-      <Card className="border-2 border-foreground">
+      <Card className="border-foreground border-2">
         <CardHeader>
           <CardTitle>Payment Notifications</CardTitle>
           <CardDescription>Alerts related to rent payments</CardDescription>
@@ -182,18 +180,21 @@ export default function NotificationsSettingsPage() {
         <CardContent>
           <div className="space-y-4">
             {/* Header */}
-            <div className="grid grid-cols-[1fr,60px,60px,60px] gap-4 text-sm font-medium text-muted-foreground">
+            <div className="text-muted-foreground grid grid-cols-[1fr,60px,60px,60px] gap-4 text-sm font-medium">
               <div></div>
               <div className="text-center">Email</div>
               <div className="text-center">SMS</div>
               <div className="text-center">Push</div>
             </div>
             <Separator />
-            {settings.payments.map(setting => (
-              <div key={setting.id} className="grid grid-cols-[1fr,60px,60px,60px] gap-4 items-center">
+            {settings.payments.map((setting) => (
+              <div
+                key={setting.id}
+                className="grid grid-cols-[1fr,60px,60px,60px] items-center gap-4"
+              >
                 <div>
                   <Label className="font-medium">{setting.label}</Label>
-                  <p className="text-sm text-muted-foreground">{setting.description}</p>
+                  <p className="text-muted-foreground text-sm">{setting.description}</p>
                 </div>
                 <div className="flex justify-center">
                   <Switch
@@ -220,7 +221,7 @@ export default function NotificationsSettingsPage() {
       </Card>
 
       {/* Maintenance Notifications */}
-      <Card className="border-2 border-foreground">
+      <Card className="border-foreground border-2">
         <CardHeader>
           <CardTitle>Maintenance Notifications</CardTitle>
           <CardDescription>Alerts for maintenance requests</CardDescription>
@@ -228,18 +229,21 @@ export default function NotificationsSettingsPage() {
         <CardContent>
           <div className="space-y-4">
             {/* Header */}
-            <div className="grid grid-cols-[1fr,60px,60px,60px] gap-4 text-sm font-medium text-muted-foreground">
+            <div className="text-muted-foreground grid grid-cols-[1fr,60px,60px,60px] gap-4 text-sm font-medium">
               <div></div>
               <div className="text-center">Email</div>
               <div className="text-center">SMS</div>
               <div className="text-center">Push</div>
             </div>
             <Separator />
-            {settings.maintenance.map(setting => (
-              <div key={setting.id} className="grid grid-cols-[1fr,60px,60px,60px] gap-4 items-center">
+            {settings.maintenance.map((setting) => (
+              <div
+                key={setting.id}
+                className="grid grid-cols-[1fr,60px,60px,60px] items-center gap-4"
+              >
                 <div>
                   <Label className="font-medium">{setting.label}</Label>
-                  <p className="text-sm text-muted-foreground">{setting.description}</p>
+                  <p className="text-muted-foreground text-sm">{setting.description}</p>
                 </div>
                 <div className="flex justify-center">
                   <Switch
@@ -266,7 +270,7 @@ export default function NotificationsSettingsPage() {
       </Card>
 
       {/* Lease Notifications */}
-      <Card className="border-2 border-foreground">
+      <Card className="border-foreground border-2">
         <CardHeader>
           <CardTitle>Lease Notifications</CardTitle>
           <CardDescription>Alerts for lease-related events</CardDescription>
@@ -274,18 +278,21 @@ export default function NotificationsSettingsPage() {
         <CardContent>
           <div className="space-y-4">
             {/* Header */}
-            <div className="grid grid-cols-[1fr,60px,60px,60px] gap-4 text-sm font-medium text-muted-foreground">
+            <div className="text-muted-foreground grid grid-cols-[1fr,60px,60px,60px] gap-4 text-sm font-medium">
               <div></div>
               <div className="text-center">Email</div>
               <div className="text-center">SMS</div>
               <div className="text-center">Push</div>
             </div>
             <Separator />
-            {settings.leases.map(setting => (
-              <div key={setting.id} className="grid grid-cols-[1fr,60px,60px,60px] gap-4 items-center">
+            {settings.leases.map((setting) => (
+              <div
+                key={setting.id}
+                className="grid grid-cols-[1fr,60px,60px,60px] items-center gap-4"
+              >
                 <div>
                   <Label className="font-medium">{setting.label}</Label>
-                  <p className="text-sm text-muted-foreground">{setting.description}</p>
+                  <p className="text-muted-foreground text-sm">{setting.description}</p>
                 </div>
                 <div className="flex justify-center">
                   <Switch
@@ -312,7 +319,7 @@ export default function NotificationsSettingsPage() {
       </Card>
 
       {/* Application Notifications */}
-      <Card className="border-2 border-foreground">
+      <Card className="border-foreground border-2">
         <CardHeader>
           <CardTitle>Application Notifications</CardTitle>
           <CardDescription>Alerts for rental applications</CardDescription>
@@ -320,18 +327,21 @@ export default function NotificationsSettingsPage() {
         <CardContent>
           <div className="space-y-4">
             {/* Header */}
-            <div className="grid grid-cols-[1fr,60px,60px,60px] gap-4 text-sm font-medium text-muted-foreground">
+            <div className="text-muted-foreground grid grid-cols-[1fr,60px,60px,60px] gap-4 text-sm font-medium">
               <div></div>
               <div className="text-center">Email</div>
               <div className="text-center">SMS</div>
               <div className="text-center">Push</div>
             </div>
             <Separator />
-            {settings.applications.map(setting => (
-              <div key={setting.id} className="grid grid-cols-[1fr,60px,60px,60px] gap-4 items-center">
+            {settings.applications.map((setting) => (
+              <div
+                key={setting.id}
+                className="grid grid-cols-[1fr,60px,60px,60px] items-center gap-4"
+              >
                 <div>
                   <Label className="font-medium">{setting.label}</Label>
-                  <p className="text-sm text-muted-foreground">{setting.description}</p>
+                  <p className="text-muted-foreground text-sm">{setting.description}</p>
                 </div>
                 <div className="flex justify-center">
                   <Switch
@@ -359,8 +369,8 @@ export default function NotificationsSettingsPage() {
 
       {/* Save Button */}
       <div className="flex justify-end">
-        <Button className="border-2 border-foreground">
-          <Save className="h-4 w-4 mr-2" />
+        <Button className="border-foreground border-2">
+          <Save className="mr-2 h-4 w-4" />
           Save Preferences
         </Button>
       </div>

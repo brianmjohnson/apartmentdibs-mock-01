@@ -105,12 +105,10 @@ export default function CompliancePage() {
   return (
     <div className="space-y-6">
       {/* Page Header */}
-      <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+      <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
         <div>
           <h1 className="text-3xl font-bold tracking-tight">Compliance Monitoring</h1>
-          <p className="text-muted-foreground">
-            Monitor and respond to compliance alerts
-          </p>
+          <p className="text-muted-foreground">Monitor and respond to compliance alerts</p>
         </div>
         <Link href="/admin/compliance/rules">
           <Button variant="outline" className="border-2">
@@ -122,49 +120,43 @@ export default function CompliancePage() {
 
       {/* Dashboard Cards */}
       <div className="grid gap-4 md:grid-cols-3">
-        <Card className="border-2 border-foreground">
+        <Card className="border-foreground border-2">
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium">Pending Review</CardTitle>
             <AlertTriangle className="h-5 w-5 text-yellow-500" />
           </CardHeader>
           <CardContent>
             <div className="text-3xl font-bold">{pendingCount}</div>
-            <p className="text-xs text-muted-foreground mt-1">
-              Requires attention
-            </p>
+            <p className="text-muted-foreground mt-1 text-xs">Requires attention</p>
           </CardContent>
         </Card>
 
-        <Card className="border-2 border-foreground">
+        <Card className="border-foreground border-2">
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium">Under Investigation</CardTitle>
             <Eye className="h-5 w-5 text-blue-500" />
           </CardHeader>
           <CardContent>
             <div className="text-3xl font-bold">{investigatingCount}</div>
-            <p className="text-xs text-muted-foreground mt-1">
-              Being reviewed
-            </p>
+            <p className="text-muted-foreground mt-1 text-xs">Being reviewed</p>
           </CardContent>
         </Card>
 
-        <Card className="border-2 border-foreground">
+        <Card className="border-foreground border-2">
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium">Compliance Score</CardTitle>
             <TrendingUp className="h-5 w-5 text-green-500" />
           </CardHeader>
           <CardContent>
             <div className="text-3xl font-bold">94%</div>
-            <p className="text-xs text-muted-foreground mt-1">
-              +2% from last month
-            </p>
+            <p className="text-muted-foreground mt-1 text-xs">+2% from last month</p>
           </CardContent>
         </Card>
       </div>
 
       {/* Alerts Table */}
       <Tabs value={activeTab} onValueChange={setActiveTab}>
-        <TabsList className="border-2 border-foreground">
+        <TabsList className="border-foreground border-2">
           <TabsTrigger value="all">All Alerts</TabsTrigger>
           <TabsTrigger value="pending_review">Pending</TabsTrigger>
           <TabsTrigger value="investigating">Investigating</TabsTrigger>
@@ -173,15 +165,13 @@ export default function CompliancePage() {
         </TabsList>
 
         <TabsContent value={activeTab} className="mt-4">
-          <Card className="border-2 border-foreground">
+          <Card className="border-foreground border-2">
             <CardHeader>
               <CardTitle>Compliance Alerts ({filteredAlerts.length})</CardTitle>
-              <CardDescription>
-                Review and respond to compliance issues
-              </CardDescription>
+              <CardDescription>Review and respond to compliance issues</CardDescription>
             </CardHeader>
             <CardContent>
-              <div className="rounded-md border-2 border-border">
+              <div className="border-border rounded-md border-2">
                 <Table>
                   <TableHeader>
                     <TableRow>
@@ -201,10 +191,7 @@ export default function CompliancePage() {
                           {getAlertTypeLabel(alert.type)}
                         </TableCell>
                         <TableCell>
-                          <Link
-                            href={`/admin/users/${alert.userId}`}
-                            className="hover:underline"
-                          >
+                          <Link href={`/admin/users/${alert.userId}`} className="hover:underline">
                             {alert.userName}
                           </Link>
                         </TableCell>
@@ -270,7 +257,7 @@ export default function CompliancePage() {
       {/* Review Dialog */}
       {selectedAlertData && (
         <Dialog open={reviewDialogOpen} onOpenChange={setReviewDialogOpen}>
-          <DialogContent className="border-2 border-foreground max-w-2xl">
+          <DialogContent className="border-foreground max-w-2xl border-2">
             <DialogHeader>
               <DialogTitle>Review Compliance Alert</DialogTitle>
               <DialogDescription>
@@ -280,21 +267,21 @@ export default function CompliancePage() {
             <div className="space-y-4 py-4">
               <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <p className="text-sm font-medium text-muted-foreground">Severity</p>
+                  <p className="text-muted-foreground text-sm font-medium">Severity</p>
                   <Badge
                     variant="outline"
-                    className={`border mt-1 ${getComplianceSeverityColor(selectedAlertData.severity)}`}
+                    className={`mt-1 border ${getComplianceSeverityColor(selectedAlertData.severity)}`}
                   >
                     {selectedAlertData.severity}
                   </Badge>
                 </div>
                 <div>
-                  <p className="text-sm font-medium text-muted-foreground">Created</p>
+                  <p className="text-muted-foreground text-sm font-medium">Created</p>
                   <p className="mt-1">{formatDateTime(selectedAlertData.createdAt)}</p>
                 </div>
               </div>
               <div>
-                <p className="text-sm font-medium text-muted-foreground">Description</p>
+                <p className="text-muted-foreground text-sm font-medium">Description</p>
                 <p className="mt-1">{selectedAlertData.description}</p>
               </div>
               <div>
@@ -315,9 +302,7 @@ export default function CompliancePage() {
                 Close
               </Button>
               <Button variant="destructive">Dismiss</Button>
-              <Button className="border-2 border-foreground">
-                Mark Resolved
-              </Button>
+              <Button className="border-foreground border-2">Mark Resolved</Button>
             </DialogFooter>
           </DialogContent>
         </Dialog>

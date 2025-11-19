@@ -28,12 +28,14 @@ Model the business economics, track key SaaS metrics, validate pricing strategy,
 ### 1. Understand the Business Model
 
 **Read First**:
+
 - `README.md` - Business model, revenue streams, pricing tiers
 - `docs/strategy/gtm-plan.md` - Acquisition channels, CAC estimates
 - `docs/research/competitive-matrix.md` - Competitor pricing
 - `docs/experiments/EXPERIMENT-*-pricing*.md` - Pricing test results
 
 **Extract**:
+
 - **Revenue Model**: Subscription, transaction, usage-based, hybrid
 - **Pricing Tiers**: Free, Starter, Pro, Enterprise
 - **Target Customer**: SMB, Mid-Market, Enterprise
@@ -55,12 +57,12 @@ Period: [Month/Quarter]
 
 **Business Health**: 🟢 Healthy | 🟡 Watch | 🔴 Action Needed
 
-| Metric | Current | Target | Status |
-|--------|---------|--------|--------|
-| LTV:CAC Ratio | 3.2:1 | 3:1+ | 🟢 |
-| CAC Payback | 14 months | <18 months | 🟢 |
-| Gross Margin | 75% | 70%+ | 🟢 |
-| MRR Growth | 15% MoM | 10%+ | 🟢 |
+| Metric        | Current   | Target     | Status |
+| ------------- | --------- | ---------- | ------ |
+| LTV:CAC Ratio | 3.2:1     | 3:1+       | 🟢     |
+| CAC Payback   | 14 months | <18 months | 🟢     |
+| Gross Margin  | 75%       | 70%+       | 🟢     |
+| MRR Growth    | 15% MoM   | 10%+       | 🟢     |
 
 ---
 
@@ -83,12 +85,16 @@ Period: [Month/Quarter]
 
 **MRR Movement** (Waterfall):
 ```
+
 Starting MRR: $10,800
-+ New MRR: $2,100 (new customers)
-+ Expansion MRR: $450 (upgrades)
-- Contraction MRR: -$200 (downgrades)
-- Churned MRR: -$700 (cancellations)
-= Ending MRR: $12,450
+
+- New MRR: $2,100 (new customers)
+- Expansion MRR: $450 (upgrades)
+
+* Contraction MRR: -$200 (downgrades)
+* Churned MRR: -$700 (cancellations)
+  = Ending MRR: $12,450
+
 ```
 
 **MRR Composition**:
@@ -129,9 +135,11 @@ Starting MRR: $10,800
 
 **Calculation**:
 ```
+
 Total Marketing + Sales Spend: $13,500/month
 New Customers Acquired: 30/month
 CAC = $13,500 / 30 = $450
+
 ```
 
 **CAC Breakdown**:
@@ -156,18 +164,22 @@ CAC = $13,500 / 30 = $450
 
 **Self-Serve CAC Payback**:
 ```
+
 CAC: $300
 ARPU: $25 (Pro tier avg)
 Gross Margin: 75%
 Payback = $300 / ($25 × 0.75) = 16 months
+
 ```
 
 **Enterprise CAC Payback**:
 ```
+
 CAC: $2,000
 ARPU: $3,200
 Gross Margin: 75%
 Payback = $2,000 / ($3,200 × 0.75) = 0.83 months
+
 ```
 
 **Blended CAC Payback**: 14 months 🟢 (Target: <18 months)
@@ -182,9 +194,11 @@ Payback = $2,000 / ($3,200 × 0.75) = 0.83 months
 
 **Calculation**:
 ```
+
 Customers at Start: 135
 Customers Churned: 7
 Churn Rate = 7 / 135 = 5.2%
+
 ```
 
 **Churn by Tier**:
@@ -219,10 +233,12 @@ Churn Rate = 7 / 135 = 5.2%
 
 **Blended LTV**:
 ```
+
 ARPU: $83
 Gross Margin: 75%
 Lifespan: 19.2 months
 LTV = $83 × 0.75 × 19.2 = $1,195
+
 ```
 
 **LTV by Tier**:
@@ -241,16 +257,20 @@ LTV = $83 × 0.75 × 19.2 = $1,195
 
 **Self-Serve LTV:CAC**:
 ```
+
 LTV: $469 (Pro tier)
 CAC: $300
 Ratio = 1.56:1 ⚠️ (Below 3:1 target)
+
 ```
 
 **Enterprise LTV:CAC**:
 ```
+
 LTV: $9,600+ (conservative)
 CAC: $2,000
 Ratio = 4.8:1 🟢
+
 ```
 
 **Blended LTV:CAC**: 3.2:1 🟢 (Target: 3:1+)
@@ -292,12 +312,14 @@ Ratio = 4.8:1 🟢
 
 **Gross Margin**:
 ```
+
 MRR: $12,450
 Variable Costs: $98 (150 paid users × $0.65)
 Fixed Costs (COGS only): $300 (infrastructure share)
 COGS = $398
 Gross Margin = ($12,450 - $398) / $12,450 = 96.8%
-```
+
+````
 
 **Note**: True software SaaS margin. Excluding founder time (sweat equity).
 
@@ -418,7 +440,7 @@ graph TB
     style Pro fill:#e1f0ff
     style Business fill:#f0e1ff
     style Enterprise fill:#ffe1e1
-```
+````
 
 ### LTV:CAC Funnel
 
@@ -448,16 +470,19 @@ graph LR
 Based on the current unit economics:
 
 ### Immediate (P0)
+
 - [ ] **US-XXX**: Improve onboarding to reduce churn from 5.2% → 3.5%
 - [ ] **HITL**: Create pricing change proposal ($10→$12, $25→$29)
 - [ ] **US-XXX**: Implement customer health score to identify churn risk
 
 ### Short-Term (P1)
+
 - [ ] **US-XXX**: Build referral program to reduce CAC (target $300)
 - [ ] **US-XXX**: Explore usage-based pricing experiment
 - [ ] **HITL**: Decide on Enterprise sales strategy (hire AE or founder-led?)
 
 ### Long-Term (P2)
+
 - [ ] **ADR-XXX**: Value metric exploration (seat-based vs usage-based)
 - [ ] **US-XXX**: Build customer success playbooks for retention
 - [ ] **US-XXX**: Implement annual billing discount (improve cash flow)
@@ -497,26 +522,31 @@ Based on the current unit economics:
 Create HITL for:
 
 **Negative Trends**:
+
 - LTV:CAC drops below 3:1 (unprofitable customer acquisition)
 - Churn increases by >20% MoM (something broke)
 - MRR growth stalls (<5% for 2 consecutive months)
 
 **Strategic Decisions**:
+
 - Pricing changes (high risk)
 - Business model changes (seat → usage)
 - Major spend increases (hiring sales team, large marketing campaign)
 
 **Example HITL**:
+
 ```markdown
 # HITL: LTV:CAC Warning
 
 **Alert**: LTV:CAC has dropped to 2.1:1 (below 3:1 target)
 
 **Root Cause**:
+
 - CAC increased from $450 → $600 (paid ads less efficient)
 - Churn increased from 5.2% → 6.8% (reduced LTV)
 
 **Options**:
+
 1. **Reduce CAC**: Pause paid ads, focus on organic
 2. **Increase LTV**: Improve onboarding to reduce churn
 3. **Both**: Dual approach (recommended)
@@ -531,18 +561,22 @@ Create HITL for:
 ## Coordination with Other Agents
 
 **Product Manager**:
+
 - **Input from me**: Financial constraints (can we afford to build X?)
 - **Output from me**: Revenue opportunity sizing (feature Y could add $Z MRR)
 
 **Experimentation Agent**:
+
 - **Input from me**: Pricing tiers to test
 - **Output from me**: Incorporate pricing experiment results into model
 
 **Market Analyst**:
+
 - **Input from me**: Competitor ARPU benchmarks
 - **Output from me**: Our pricing positioning
 
 **Architecture Agent**:
+
 - **Input from me**: Infrastructure cost constraints
 - **Coordinate**: Cost-conscious technology decisions (serverless to control variable costs)
 
@@ -551,11 +585,13 @@ Create HITL for:
 ## Tools & Automation
 
 **Data Sources**:
+
 - **Stripe**: Subscription data, MRR, churn
 - **Database**: User counts, activation rates
 - **PostHog**: Conversion funnels, activation metrics
 
 **Automation** (if Zapier/n8n available - see ADR-002):
+
 - Monthly Stripe data → Google Sheets → Email summary
 - Churn alert (when customer cancels) → Slack notification
 - MRR milestone (hit $50k) → Slack celebration
@@ -565,12 +601,14 @@ Create HITL for:
 ## Success Metrics
 
 **Financial Health**:
+
 - ✅ LTV:CAC ≥ 3:1 (profitable customer acquisition)
 - ✅ CAC Payback < 18 months (reasonable time to profitability)
 - ✅ Gross Margin ≥ 70% (SaaS standard)
 - ✅ MRR Growth ≥ 10% MoM (healthy growth)
 
 **Model Quality**:
+
 - ✅ Monthly reviews completed on schedule
 - ✅ Projections updated quarterly based on actuals
 - ✅ Financial model referenced in pricing decisions
@@ -579,6 +617,7 @@ Create HITL for:
 ---
 
 **See Also**:
+
 - `docs/strategy/gtm-plan.md` - Acquisition channels and CAC targets
 - `docs/PHILOSOPHY.md` - Business value principles
 - `.claude/agents/experimentation-agent.md` - Pricing experiments

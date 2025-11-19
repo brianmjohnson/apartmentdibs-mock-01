@@ -14,7 +14,7 @@ import {
   Shield,
   CreditCard,
   UserCheck,
-  ArrowRight
+  ArrowRight,
 } from 'lucide-react'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
@@ -27,7 +27,7 @@ import {
   mockDocuments,
   getVerificationStatusColor,
   getDocumentStatusColor,
-  formatDate
+  formatDate,
 } from '@/lib/mock-data/tenant'
 
 export default function ProfilePage() {
@@ -38,7 +38,7 @@ export default function ProfilePage() {
       description: 'Government-issued ID verification',
       icon: UserCheck,
       status: mockTenantProfile.verifications.identity,
-      href: '/tenant/profile/verification/identity'
+      href: '/tenant/profile/verification/identity',
     },
     {
       key: 'income',
@@ -46,7 +46,7 @@ export default function ProfilePage() {
       description: 'Employment and income verification',
       icon: FileText,
       status: mockTenantProfile.verifications.income,
-      href: '/tenant/profile/verification/income'
+      href: '/tenant/profile/verification/income',
     },
     {
       key: 'credit',
@@ -54,7 +54,7 @@ export default function ProfilePage() {
       description: 'Soft credit check authorization',
       icon: CreditCard,
       status: mockTenantProfile.verifications.credit,
-      href: '/tenant/profile/verification/credit'
+      href: '/tenant/profile/verification/credit',
     },
     {
       key: 'background',
@@ -62,8 +62,8 @@ export default function ProfilePage() {
       description: 'Background screening authorization',
       icon: Shield,
       status: mockTenantProfile.verifications.background,
-      href: '/tenant/profile/verification/background'
-    }
+      href: '/tenant/profile/verification/background',
+    },
   ]
 
   const getStatusIcon = (status: 'verified' | 'pending' | 'not_started') => {
@@ -91,22 +91,24 @@ export default function ProfilePage() {
   // Check if profile is expiring soon (within 30 days)
   const profileValidDate = new Date(mockTenantProfile.profileValidUntil)
   const today = new Date()
-  const daysUntilExpiry = Math.ceil((profileValidDate.getTime() - today.getTime()) / (1000 * 60 * 60 * 24))
+  const daysUntilExpiry = Math.ceil(
+    (profileValidDate.getTime() - today.getTime()) / (1000 * 60 * 60 * 24)
+  )
   const isExpiringSoon = daysUntilExpiry <= 30 && daysUntilExpiry > 0
 
   return (
     <div className="space-y-8">
       {/* Header */}
-      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+      <div className="flex flex-col justify-between gap-4 md:flex-row md:items-center">
         <div>
           <h1 className="text-3xl font-bold tracking-tight">Your Profile</h1>
           <p className="text-muted-foreground">
             Profile completion: {mockTenantProfile.profileCompletion}%
           </p>
         </div>
-        <Button asChild className="border-2 border-foreground">
+        <Button asChild className="border-foreground border-2">
           <Link href="/tenant/profile/edit">
-            <Edit className="h-4 w-4 mr-2" />
+            <Edit className="mr-2 h-4 w-4" />
             Edit Profile
           </Link>
         </Button>
@@ -115,7 +117,7 @@ export default function ProfilePage() {
       {/* Progress Bar */}
       <div className="space-y-2">
         <Progress value={mockTenantProfile.profileCompletion} className="h-3" />
-        <p className="text-sm text-muted-foreground">
+        <p className="text-muted-foreground text-sm">
           {mockTenantProfile.profileCompletion === 100
             ? 'Your profile is complete!'
             : 'Complete your profile to improve your application success rate'}
@@ -124,26 +126,27 @@ export default function ProfilePage() {
 
       <div className="grid gap-6 md:grid-cols-2">
         {/* Profile Summary Card */}
-        <Card className="border-2 border-foreground">
+        <Card className="border-foreground border-2">
           <CardHeader>
             <CardTitle>Profile Summary</CardTitle>
           </CardHeader>
           <CardContent className="space-y-6">
             <div className="flex items-center gap-4">
-              <Avatar className="h-16 w-16 border-2 border-foreground">
+              <Avatar className="border-foreground h-16 w-16 border-2">
                 <AvatarImage
                   src={undefined}
                   alt={`${mockTenantProfile.firstName} ${mockTenantProfile.lastName}`}
                 />
                 <AvatarFallback className="text-lg">
-                  {mockTenantProfile.firstName[0]}{mockTenantProfile.lastName[0]}
+                  {mockTenantProfile.firstName[0]}
+                  {mockTenantProfile.lastName[0]}
                 </AvatarFallback>
               </Avatar>
               <div>
                 <h3 className="text-xl font-bold">
                   {mockTenantProfile.firstName} {mockTenantProfile.lastName}
                 </h3>
-                <p className="text-sm text-muted-foreground">
+                <p className="text-muted-foreground text-sm">
                   Member since {formatDate(mockTenantProfile.memberSince)}
                 </p>
               </div>
@@ -153,17 +156,18 @@ export default function ProfilePage() {
 
             <div className="space-y-3">
               <div className="flex items-center gap-3">
-                <Mail className="h-4 w-4 text-muted-foreground" />
+                <Mail className="text-muted-foreground h-4 w-4" />
                 <span className="text-sm">{mockTenantProfile.email}</span>
               </div>
               <div className="flex items-center gap-3">
-                <Phone className="h-4 w-4 text-muted-foreground" />
+                <Phone className="text-muted-foreground h-4 w-4" />
                 <span className="text-sm">{mockTenantProfile.phone}</span>
               </div>
               <div className="flex items-center gap-3">
-                <User className="h-4 w-4 text-muted-foreground" />
+                <User className="text-muted-foreground h-4 w-4" />
                 <span className="text-sm">
-                  {mockTenantProfile.address.street}, {mockTenantProfile.address.city}, {mockTenantProfile.address.state} {mockTenantProfile.address.zip}
+                  {mockTenantProfile.address.street}, {mockTenantProfile.address.city},{' '}
+                  {mockTenantProfile.address.state} {mockTenantProfile.address.zip}
                 </span>
               </div>
             </div>
@@ -183,19 +187,17 @@ export default function ProfilePage() {
               <p className="text-2xl font-bold">
                 Valid until {formatDate(mockTenantProfile.profileValidUntil)}
               </p>
-              <p className="text-sm text-muted-foreground">
-                {daysUntilExpiry > 0
-                  ? `${daysUntilExpiry} days remaining`
-                  : 'Profile has expired'}
+              <p className="text-muted-foreground text-sm">
+                {daysUntilExpiry > 0 ? `${daysUntilExpiry} days remaining` : 'Profile has expired'}
               </p>
             </div>
 
             {isExpiringSoon && (
-              <div className="p-3 bg-yellow-50 border border-yellow-200 rounded-lg">
-                <p className="text-sm text-yellow-800 font-medium">
+              <div className="rounded-lg border border-yellow-200 bg-yellow-50 p-3">
+                <p className="text-sm font-medium text-yellow-800">
                   Your profile is expiring soon. Renew to continue applying to listings.
                 </p>
-                <Button size="sm" className="mt-2 border-2 border-foreground">
+                <Button size="sm" className="border-foreground mt-2 border-2">
                   Renew Profile
                 </Button>
               </div>
@@ -205,7 +207,7 @@ export default function ProfilePage() {
       </div>
 
       {/* Verification Status Cards */}
-      <Card className="border-2 border-foreground">
+      <Card className="border-foreground border-2">
         <CardHeader>
           <CardTitle>Verification Status</CardTitle>
           <CardDescription>
@@ -219,15 +221,15 @@ export default function ProfilePage() {
               return (
                 <div
                   key={item.key}
-                  className="flex items-center justify-between p-4 border-2 border-border rounded-lg"
+                  className="border-border flex items-center justify-between rounded-lg border-2 p-4"
                 >
                   <div className="flex items-center gap-3">
-                    <div className="p-2 bg-muted rounded-lg">
+                    <div className="bg-muted rounded-lg p-2">
                       <Icon className="h-5 w-5" />
                     </div>
                     <div>
                       <p className="font-medium">{item.label}</p>
-                      <p className="text-sm text-muted-foreground">{item.description}</p>
+                      <p className="text-muted-foreground text-sm">{item.description}</p>
                     </div>
                   </div>
                   <div className="flex items-center gap-3">
@@ -236,7 +238,7 @@ export default function ProfilePage() {
                       variant="outline"
                       size="sm"
                       asChild
-                      className="border-2 border-foreground"
+                      className="border-foreground border-2"
                     >
                       <Link href={item.href}>
                         {item.status === 'not_started' ? 'Start' : 'View'}
@@ -251,27 +253,27 @@ export default function ProfilePage() {
       </Card>
 
       {/* Documents Section */}
-      <Card className="border-2 border-foreground">
+      <Card className="border-foreground border-2">
         <CardHeader>
           <div className="flex items-center justify-between">
             <div>
               <CardTitle>Documents</CardTitle>
               <CardDescription>Your uploaded verification documents</CardDescription>
             </div>
-            <Button variant="outline" asChild className="border-2 border-foreground">
+            <Button variant="outline" asChild className="border-foreground border-2">
               <Link href="/tenant/profile/documents">
                 Manage Documents
-                <ArrowRight className="h-4 w-4 ml-2" />
+                <ArrowRight className="ml-2 h-4 w-4" />
               </Link>
             </Button>
           </div>
         </CardHeader>
         <CardContent>
           {mockDocuments.length === 0 ? (
-            <div className="text-center py-8">
-              <FileText className="h-12 w-12 mx-auto text-muted-foreground mb-4" />
+            <div className="py-8 text-center">
+              <FileText className="text-muted-foreground mx-auto mb-4 h-12 w-12" />
               <p className="text-muted-foreground">No documents uploaded yet</p>
-              <Button asChild className="mt-4 border-2 border-foreground">
+              <Button asChild className="border-foreground mt-4 border-2">
                 <Link href="/tenant/profile/documents">Upload Documents</Link>
               </Button>
             </div>
@@ -280,24 +282,28 @@ export default function ProfilePage() {
               {mockDocuments.slice(0, 4).map((doc) => (
                 <div
                   key={doc.id}
-                  className="flex items-center justify-between p-3 border border-border rounded-lg"
+                  className="border-border flex items-center justify-between rounded-lg border p-3"
                 >
                   <div className="flex items-center gap-3">
-                    <FileText className="h-4 w-4 text-muted-foreground" />
+                    <FileText className="text-muted-foreground h-4 w-4" />
                     <div>
                       <p className="text-sm font-medium">{doc.name}</p>
-                      <p className="text-xs text-muted-foreground">
+                      <p className="text-muted-foreground text-xs">
                         Uploaded {formatDate(doc.uploadedAt)}
                       </p>
                     </div>
                   </div>
                   <Badge className={`${getDocumentStatusColor(doc.status)} border text-xs`}>
-                    {doc.status === 'pending_review' ? 'Pending' : doc.status === 'verified' ? 'Verified' : 'Rejected'}
+                    {doc.status === 'pending_review'
+                      ? 'Pending'
+                      : doc.status === 'verified'
+                        ? 'Verified'
+                        : 'Rejected'}
                   </Badge>
                 </div>
               ))}
               {mockDocuments.length > 4 && (
-                <p className="text-sm text-muted-foreground text-center pt-2">
+                <p className="text-muted-foreground pt-2 text-center text-sm">
                   +{mockDocuments.length - 4} more documents
                 </p>
               )}

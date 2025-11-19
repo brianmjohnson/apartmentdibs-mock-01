@@ -13,12 +13,14 @@ This template embodies a fundamental shift in how we build software: **Hire Agen
 Every business function—from product management to compliance to market research—must first be represented by an **autonomous AI agent** before considering human resources for that role.
 
 **Why**:
+
 - Agents provide **24/7 availability** and **instant scalability**
 - Agents follow **documented processes** and create **audit trails**
 - Agents reduce **cognitive load** on humans by handling routine decisions
 - Agents enable **small teams** to operate like much larger organizations
 
 **When Humans Are Essential**:
+
 - Strategic decision-making (C-level choices, pivots, acquisitions)
 - Ethical judgment and edge cases requiring empathy
 - Final approval at HITL (Human-in-the-Loop) gates
@@ -47,27 +49,31 @@ Agents operate autonomously within boundaries, but humans maintain final authori
 
 ### 2. Declarative Goals Over Imperative Instructions
 
-**Principle**: Define *what* (goals) and *constraints* (guardrails), not *how* (implementation).
+**Principle**: Define _what_ (goals) and _constraints_ (guardrails), not _how_ (implementation).
 
 **Examples**:
 
 ✅ **Good (Declarative)**:
+
 ```
 Goal: Users can only access their own data
 Guardrail: ZenStack @@allow policy enforces ownership
 ```
 
 ❌ **Bad (Imperative)**:
+
 ```
 Instruction: Add if-check in every API route to verify user.id === record.userId
 ```
 
 **Why Declarative**:
+
 - Agents can explore multiple implementation approaches
 - Constraints prevent dangerous actions (security, data loss)
 - Goals allow creativity within safe boundaries
 
 **Implementation**:
+
 - **ADRs** define architectural guardrails ("use ZenStack for access control")
 - **User Stories** define goals ("users can export their data")
 - **ZenStack policies** enforce constraints declaratively (`@@allow`)
@@ -83,12 +89,14 @@ Instruction: Add if-check in every API route to verify user.id === record.userId
 Traditional QA validates happy paths. Agentic QA builds **evaluation suites** that evolve:
 
 **Process**:
+
 1. Bug is discovered (e.g., "empty array crashes dashboard")
 2. Quality Reviewer creates regression test for that specific failure
 3. Test is added to **failure modes suite**
 4. Future iterations can never reintroduce that bug
 
 **Eval Suite Structure**:
+
 - `__tests__/failure-modes/` - Captured regression tests
 - `__tests__/adversarial/` - Security and robustness tests (SQL injection, XSS)
 - `__tests__/e2e/` - Full user flows (Playwright)
@@ -106,12 +114,14 @@ Traditional QA validates happy paths. Agentic QA builds **evaluation suites** th
 **Anti-Hallucination Protocol**:
 
 Before writing any code:
+
 1. **Search codebase** for existing solutions (don't duplicate)
 2. **Web search** for official documentation (verify APIs exist)
 3. **Find examples** in official repos or tutorials
 4. **Create HITL** if documentation is login-gated
 
 **For Every New Library**:
+
 ```
 1. Web search: "[library] getting started 2025"
 2. Web search: "[library] nextjs integration"
@@ -120,6 +130,7 @@ Before writing any code:
 ```
 
 **Why This Matters**:
+
 - Agents can hallucinate non-existent APIs
 - 2025 documentation is more reliable than 2023 patterns
 - Official examples prevent integration mistakes
@@ -133,12 +144,14 @@ Before writing any code:
 **Principle**: Governance is not periodic paperwork—it's continuous, automated, and observable.
 
 **Observability Requirements**:
+
 - **Audit logs** capture who/what/when/where for every sensitive action
 - **Monitoring dashboards** track error rates, latency, user flows
 - **Alerting** notifies humans when thresholds breach
 - **Retention policies** comply with GDPR (30-90 days for most data)
 
 **Audit Trail Format** (see `docs/adr/ADR-008`):
+
 ```json
 {
   "timestamp": "2025-11-16T10:30:00Z",
@@ -152,6 +165,7 @@ Before writing any code:
 ```
 
 **Governance as Code**:
+
 - ZenStack `@@allow` policies are governance rules
 - Database migrations include rollback instructions
 - Feature flags enable instant rollback without deploys
@@ -165,11 +179,13 @@ Before writing any code:
 ### Autonomy with Accountability
 
 **Agents Have**:
+
 - Authority to make implementation decisions within ADR guardrails
 - Responsibility to document decisions (ADRs, comments, tests)
 - Obligation to create HITL when uncertainty exists
 
 **Agents Don't Have**:
+
 - Authority to skip HITL gates
 - Permission to implement without research
 - Freedom to choose technologies contradicting existing ADRs
@@ -177,11 +193,13 @@ Before writing any code:
 ### Parallel Execution When Independent
 
 **Sequential** (dependencies):
+
 ```
 Product Manager → Architecture Agent → Developers → QA
 ```
 
 **Parallel** (independent):
+
 ```
 Frontend Developer ⟺ Backend Developer (shared API contract)
 Market Analyst ⟺ Compliance Agent (independent research)
@@ -192,12 +210,14 @@ Market Analyst ⟺ Compliance Agent (independent research)
 ### Fail Fast, Learn Faster
 
 **When Things Go Wrong**:
+
 1. **Document the failure** in session summary
 2. **Create regression test** to prevent recurrence
 3. **Update agent instructions** if process failed
 4. **Create ADR** if architectural decision caused issue
 
 **Never**:
+
 - Hide failures or ship broken code
 - Skip tests to meet deadlines
 - Ignore tech debt (create stories for it)
@@ -205,11 +225,13 @@ Market Analyst ⟺ Compliance Agent (independent research)
 ### Deterministic Over Clever
 
 **Prefer**:
+
 - ZenStack-generated tRPC routes over custom API handlers
 - Generated TanStack Query hooks over manual fetching
 - Declarative access policies over imperative checks
 
 **Why**: Generated code is:
+
 - Type-safe by default
 - Tested by the framework
 - Documented automatically
@@ -221,7 +243,7 @@ Market Analyst ⟺ Compliance Agent (independent research)
 
 ### 1. Documentation as Artifact
 
-Code comments explain *why*, not *what*.
+Code comments explain _why_, not _what_.
 
 ```typescript
 // ❌ Bad
@@ -239,6 +261,7 @@ Every significant decision has an ADR. Every feature has a User Story. Every ses
 ### 2. Quality is Non-Negotiable
 
 Ship fast, but never ship broken:
+
 - All tests must pass (`pnpm test`)
 - Type-check must pass (`pnpm build`)
 - Linting must pass (`pnpm lint`)
@@ -256,11 +279,13 @@ If QA finds critical issues, create HITL—don't rush the fix.
 ### 4. User Value Over Technical Perfection
 
 **Prefer**:
+
 - Working MVP over perfect architecture
 - User feedback over assumptions
 - A/B testing over opinions
 
 **But**:
+
 - Security and data integrity are never compromised
 - Accessibility is not optional
 - Technical debt must be tracked (create stories)
@@ -272,19 +297,24 @@ If QA finds critical issues, create HITL—don't rush the fix.
 When faced with a choice, agents (and humans) use this hierarchy:
 
 ### Level 1: Is there an existing ADR?
+
 ✅ Follow the ADR (don't relitigate decisions)
 ❌ No ADR? → Check if significant enough to create one
 
 ### Level 2: Is there a codebase pattern?
+
 ✅ Follow established patterns (consistency > novelty)
 ❌ No pattern? → Create one and document
 
 ### Level 3: Is there official documentation?
+
 ✅ Follow official best practices (research-first)
 ❌ Conflicting sources? → Create HITL for decision
 
 ### Level 4: Create HITL
+
 If the decision is:
+
 - Ambiguous (multiple valid approaches)
 - High-stakes (security, data, breaking changes)
 - Unprecedented (no ADR, no pattern, no docs)
@@ -310,6 +340,7 @@ Every feature flows through the same cycle:
 ```
 
 **Why This Order**:
+
 - Business justifies investment (no "because it's cool" features)
 - Architecture prevents rework (decide before coding)
 - Parallel execution maximizes velocity (FE+BE simultaneously)
@@ -323,6 +354,7 @@ HITL is not bureaucracy—it's **batch decision-making**:
 **With HITL**: Human reviews 20 decisions in 30 minutes, once
 
 **Batch Efficiency**:
+
 - Product Manager creates 10 user stories → 1 HITL review
 - Architecture Agent creates 3 ADRs → 1 HITL review
 - Quality Reviewer finds 5 issues → 1 HITL review
@@ -334,6 +366,7 @@ HITL is not bureaucracy—it's **batch decision-making**:
 ### Generated Over Manual
 
 **Prefer**:
+
 - ZenStack models → Prisma schema → tRPC routes → React hooks
 - Tailwind utilities over custom CSS
 - Zod schemas for validation
@@ -344,6 +377,7 @@ HITL is not bureaucracy—it's **batch decision-making**:
 ### Type Safety is Non-Negotiable
 
 TypeScript everywhere:
+
 - No `any` types (use `unknown` if truly dynamic)
 - Strict mode enabled
 - Shared types between FE/BE (tRPC)
@@ -384,6 +418,7 @@ Not "we'll add logging later"—logging is **part of the feature**:
 ### This Philosophy Evolves
 
 When we discover better approaches:
+
 1. Create ADR documenting the new approach
 2. Update this philosophy document
 3. Deprecate old patterns (don't just delete)
@@ -421,6 +456,7 @@ This template operationalizes a philosophy of **Agentic First** development wher
 ---
 
 **See Also**:
+
 - `docs/WORKFLOW_GUIDE.md` - How the 7-phase process works
 - `docs/HITL_GUIDE.md` - How batch HITL reviews work
 - `docs/adr/README.md` - How to create Architecture Decision Records

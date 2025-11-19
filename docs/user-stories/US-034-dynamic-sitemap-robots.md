@@ -54,6 +54,7 @@ Without a sitemap, Google may not discover or prioritize all pages. With thousan
 **Then** includes:
 
 **All Pages**:
+
 - All property pages: `/property/[slug]`
 - All building pages: `/building/[slug]`
 - All business pages: `/business/[slug]`
@@ -63,12 +64,14 @@ Without a sitemap, Google may not discover or prioritize all pages. With thousan
 - Static pages: `/`, `/about`, `/pricing`, `/faq`, `/contact`
 
 **Per-URL Metadata**:
+
 - `<loc>`: Full canonical URL
 - `<lastmod>`: Last modification date
 - `<changefreq>`: Update frequency (daily for listings, monthly for static)
 - `<priority>`: Importance (1.0 for homepage, 0.8 for properties)
 
 **Verification**:
+
 - [ ] All page types included
 - [ ] Metadata accurate
 - [ ] Valid XML format
@@ -80,6 +83,7 @@ Without a sitemap, Google may not discover or prioritize all pages. With thousan
 **Then** create sitemap index with multiple child sitemaps
 
 **Verification**:
+
 - [ ] Index structure works
 - [ ] Each child sitemap <50MB
 - [ ] Each child sitemap <50,000 URLs
@@ -102,6 +106,7 @@ Sitemap: https://apartmentdibs.com/sitemap.xml
 ```
 
 **Verification**:
+
 - [ ] Public pages allowed
 - [ ] Private pages blocked
 - [ ] Sitemap reference included
@@ -111,11 +116,13 @@ Sitemap: https://apartmentdibs.com/sitemap.xml
 **Given** sitemap exists
 **When** submitted to GSC
 **Then**:
+
 - Monitor index coverage
 - Track crawl errors
 - Request re-indexing on major updates
 
 **Verification**:
+
 - [ ] Sitemap submitted
 - [ ] Coverage monitored
 - [ ] Errors addressed
@@ -125,11 +132,13 @@ Sitemap: https://apartmentdibs.com/sitemap.xml
 **Given** content changes
 **When** listings created/updated
 **Then**:
+
 - Sitemap regenerates daily (or on-demand)
 - New URLs appear within 24 hours
 - Stale URLs removed
 
 **Verification**:
+
 - [ ] Generation is automatic
 - [ ] New content appears quickly
 - [ ] Removed content excluded
@@ -137,13 +146,16 @@ Sitemap: https://apartmentdibs.com/sitemap.xml
 ### AC-6: Non-Functional Requirements
 
 **Performance**:
+
 - [ ] Generation completes in <10 seconds (even with 50,000 URLs)
 
 **Compliance**:
+
 - [ ] Valid per sitemap protocol
 - [ ] Gzip compression
 
 **Caching**:
+
 - [ ] Cache sitemap
 - [ ] Invalidate on content change
 
@@ -155,14 +167,14 @@ Sitemap: https://apartmentdibs.com/sitemap.xml
 
 ```typescript
 // app/(public)/sitemap.ts
-import { MetadataRoute } from 'next';
-import { prisma } from '@/lib/prisma';
+import { MetadataRoute } from 'next'
+import { prisma } from '@/lib/prisma'
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const properties = await prisma.listing.findMany({
     where: { status: 'active' },
     select: { slug: true, updatedAt: true },
-  });
+  })
 
   return [
     {
@@ -178,7 +190,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       priority: 0.8,
     })),
     // ... buildings, businesses, neighborhoods, blog
-  ];
+  ]
 }
 ```
 
@@ -197,12 +209,13 @@ Query listings, buildings, businesses, neighborhoods tables
 
 ## Analytics Tracking
 
-| Event Name | When Triggered | Properties |
-|------------|----------------|------------|
-| `sitemap_generated` | Daily regeneration | `{urlCount, duration}` |
-| `gsc_error_detected` | Crawl error | `{errorType, url}` |
+| Event Name           | When Triggered     | Properties             |
+| -------------------- | ------------------ | ---------------------- |
+| `sitemap_generated`  | Daily regeneration | `{urlCount, duration}` |
+| `gsc_error_detected` | Crawl error        | `{errorType, url}`     |
 
 **Success Metrics**:
+
 - 95%+ of pages indexed within 7 days
 - <1% crawl errors
 - Daily sitemap generation <10 seconds
@@ -220,9 +233,11 @@ Query listings, buildings, businesses, neighborhoods tables
 ## Dependencies
 
 ### Blocked By
+
 - US-030: Property Page (URL structure)
 
 ### Related Stories
+
 - US-030-033: All content pages
 
 ---

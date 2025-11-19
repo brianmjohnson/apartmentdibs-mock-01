@@ -15,6 +15,7 @@ Implement backend functionality using ZenStack-generated Tanstack Query and tRPC
 ## Core Principle: Use Generated Code
 
 **✅ ALWAYS Use**:
+
 - ZenStack-generated Tanstack Query via generated tRPC routes
 - Generated Prisma types
 - Generated Zod schemas
@@ -22,6 +23,7 @@ Implement backend functionality using ZenStack-generated Tanstack Query and tRPC
 - Use Better-Auth for user Authentication and Authorization
 
 **❌ NEVER Create** (unless absolutely necessary):
+
 - Custom tRPC routes
 - Manual type definitions
 - Duplicate CRUD operations
@@ -36,12 +38,14 @@ Implement backend functionality using ZenStack-generated Tanstack Query and tRPC
 ### Before Creating ANY Custom Route, STOP and Check:
 
 **1. Search for existing generated routes**:
+
 ```bash
 rg "ModelName" lib/hooks/generated/
 rg "ModelName" server/routers/generated/
 ```
 
 **2. If routes don't exist, regenerate**:
+
 ```bash
 pnpm zenstack generate && pnpm prisma generate
 ```
@@ -49,27 +53,29 @@ pnpm zenstack generate && pnpm prisma generate
 This command MUST be run after ANY modification to zmodel files. The initial project setup handles this automatically, but after any zmodel changes YOU must run it.
 
 **3. Check generated hooks exist**:
+
 ```bash
 ls lib/hooks/generated/tanstack-query/
 ```
 
 ### When to Run Generation Commands
 
-| Change Type | Run Generation? | Run Migration? |
-|-------------|-----------------|----------------|
-| Add/modify `model` | ✅ Yes | ✅ Yes |
-| Add/modify `enum` | ✅ Yes | ✅ Yes |
-| Add/modify fields | ✅ Yes | ✅ Yes |
-| Add/modify `type` (JSON) | ✅ Yes | ❌ No |
-| Change `@` attributes | ✅ Yes | ❌ No |
-| Change `@@allow`/`@@deny` | ✅ Yes | ❌ No |
-| Change `@@index` | ✅ Yes | ✅ Yes |
+| Change Type               | Run Generation? | Run Migration? |
+| ------------------------- | --------------- | -------------- |
+| Add/modify `model`        | ✅ Yes          | ✅ Yes         |
+| Add/modify `enum`         | ✅ Yes          | ✅ Yes         |
+| Add/modify fields         | ✅ Yes          | ✅ Yes         |
+| Add/modify `type` (JSON)  | ✅ Yes          | ❌ No          |
+| Change `@` attributes     | ✅ Yes          | ❌ No          |
+| Change `@@allow`/`@@deny` | ✅ Yes          | ❌ No          |
+| Change `@@index`          | ✅ Yes          | ✅ Yes         |
 
 **Key insight**: `@` and `@@` access control rules only affect runtime behavior, not database schema. They only require code regeneration, not migrations.
 
 ### The ONLY Valid Reasons for Custom Routes
 
 Custom tRPC routes are justified ONLY for:
+
 1. **Complex multi-model transactions** - Operations spanning multiple models that must be atomic
 2. **External API integrations** - Calling third-party services
 3. **Complex business logic** - Beyond simple CRUD (calculations, workflows)
@@ -81,6 +87,7 @@ Custom tRPC routes are justified ONLY for:
 
 ❌ **WRONG thinking**: "I don't see a route for User, I'll create one"
 ✅ **CORRECT approach**:
+
 1. Run `rg "User" lib/hooks/generated/`
 2. If not found, run `pnpm zenstack generate && pnpm prisma generate`
 3. Check again - the routes WILL exist
@@ -103,12 +110,14 @@ Custom tRPC routes are justified ONLY for:
 ### 1. Review Requirements
 
 **Read**:
+
 - `docs/user-stories/US-XXX.md` - Acceptance criteria
 - Technical spec section in US file
 - Relevant ADRs in `docs/adr/`
 - Existing schema files in `zschema/`
 
 **Understand**:
+
 - What data needs to be stored?
 - Who can access what data?
 - What business rules apply?
@@ -118,6 +127,7 @@ Custom tRPC routes are justified ONLY for:
 ### 2. Design Data Models
 
 **Check existing models, typed Json, and enums first**:
+
 ```bash
 ls zschema/
 rg "model ModelName" zschema/
@@ -126,6 +136,7 @@ rg "enum ModelEnum" zschema/
 ```
 
 **Decide**:
+
 - Can I extend existing model?
 - Do I need a new model?
 - Where should it live? (auth.zmodel vs separate file)
@@ -139,10 +150,12 @@ The `schema.zmodel` file is ONLY for imports. ALL model/enum/type definitions MU
 **Mutual Imports Are Expected**: ZenStack flattens all imports before processing. Circular/mutual imports between zmodel files are **NOT a bug** - they are the intended design pattern! When models in different files reference each other, you MUST have imports in BOTH files.
 
 **File placement rules**:
+
 - **Has user FK?** → Create in `zschema/<domain>.zmodel`, import in `zschema/auth.zmodel`
 - **No user FK?** → Create in `zschema/<domain>.zmodel`, import in `schema.zmodel`
 
 **Example - User FK** (most common):
+
 ```zmodel
 // File: zschema/wishlist.zmodel
 import "base.zmodel"
@@ -175,11 +188,13 @@ model WishlistItem extends BaseModel {
 ```
 
 Then in `zschema/auth.zmodel`:
+
 ```zmodel
 import "wishlist.zmodel"
 ```
 
 **Example - No User FK**:
+
 ```zmodel
 // File: zschema/config.zmodel
 model ConfigParameter extends BaseModel {
@@ -192,6 +207,7 @@ model ConfigParameter extends BaseModel {
 ```
 
 Import in `schema.zmodel`:
+
 ```zmodel
 import "zschema/config.zmodel"
 ```
@@ -199,6 +215,7 @@ import "zschema/config.zmodel"
 ### 2.1 Bidirectional Foreign Key Relationships
 
 ⚠️ **CRITICAL: When adding FK relationships, you MUST**:
+
 1. Add the relation field on BOTH models
 2. Add reciprocal imports in BOTH zmodel files
 
@@ -233,6 +250,7 @@ model Listing extends BaseModel {
 ```
 
 **Common Mistake to AVOID**:
+
 ```zmodel
 // ❌ WRONG - Missing reciprocal relation
 model Property {
@@ -260,12 +278,14 @@ model Listing {
 All fields containing sensitive information **MUST** be marked with `@meta(sensitivity: "...")`. This enables automated compliance, logging obfuscation, and data protection.
 
 **Sensitivity Categories** (comma-separated if multiple apply):
+
 - **`"personal information"`** - Names, emails, SSNs, addresses, phone numbers, IPs
 - **`"financial information"`** - Credit cards, bank accounts, tax info, billing data
 - **`"health information"`** - Medical records, PHI, insurance details
 - **`"confidential business information"`** - Trade secrets, IP, strategic plans
 
 **Example with Sensitive Data**:
+
 ```zmodel
 model User extends BaseModel {
   // Personal Information
@@ -289,21 +309,25 @@ model User extends BaseModel {
 **Additional Field-Level Security Attributes**:
 
 1. **`@password`** - Automatically hashes passwords using bcrypt
+
    ```zmodel
    password String @password @omit  // Hashed, never returned in queries
    ```
 
 2. **`@omit`** - Excludes field from query results by default
+
    ```zmodel
    email String @omit  // Not returned unless explicitly selected
    ```
 
 3. **`@encrypted`** - Encrypts field at rest (when supported by database)
+
    ```zmodel
    email String @encrypted @meta(sensitivity: "personal information")
    ```
 
 4. **Field-level `@@deny` / `@@allow`** - Granular access control
+
    ```zmodel
    model User {
      ssn String @meta(sensitivity: "personal information")
@@ -317,12 +341,14 @@ model User extends BaseModel {
    ```
 
 **Best Practices**:
+
 - **Passwords**: `@password` + `@omit` (always)
 - **PII**: `@meta(sensitivity)` + consider `@omit` or field-level `@@deny`
 - **Financial**: `@meta(sensitivity)` + `@@deny` for non-admins
 - **Emails**: `@encrypted` (if database supports) + `@meta(sensitivity)`
 
 **Coordinate with Compliance Agent**:
+
 - Compliance Agent provides sensitivity classifications
 - Review with Compliance Agent if unsure about field sensitivity
 - All sensitive fields must be properly tagged for regulatory compliance
@@ -330,6 +356,7 @@ model User extends BaseModel {
 ### 3. Define Access Control
 
 **Think about**:
+
 - Who can create?
 - Who can read?
 - Who can update?
@@ -343,6 +370,7 @@ Some commonly used patterns for modeling authorization are listed below (with in
 Users are directly assigned with permissions to resources. For example, a document can be directly shared with a specific user or a list of users.
 
 **Example**:
+
 ```zmodel
 model Document extends BaseModel {
   sharedWith String[]  // List of user IDs
@@ -355,6 +383,7 @@ model Document extends BaseModel {
 Users are assigned roles, and roles are configured with permissions to resources. For example, an "editor" role may have permission to edit documents in a workspace.
 
 **Example**:
+
 ```zmodel
 model Document extends BaseModel {
   workspaceId String
@@ -383,6 +412,7 @@ model WorkspaceMember extends BaseModel {
 Permissions are defined over attributes of the user and the resource. For example, a document can only be read by users in the same department as the document's owner.
 
 **Example**:
+
 ```zmodel
 model Document extends BaseModel {
   ownerId String
@@ -402,6 +432,7 @@ model User {
 Permissions are defined by the presence of relationships between the subjects and resources. For example, members of a space can view documents created in the space. Or, friends of the document owner can view private documents.
 
 **Example**:
+
 ```zmodel
 model Document extends BaseModel {
   spaceId String
@@ -428,14 +459,15 @@ model SpaceMember extends BaseModel {
 
 **Pattern Selection Guide**:
 
-| Pattern | Complexity | Flexibility | Best For |
-|---------|-----------|-------------|----------|
-| **ACL** | Low | Low | Simple sharing (share doc with user A, B, C) |
-| **RBAC** | Medium | Medium | Teams with defined roles (admin, editor, viewer) |
-| **ABAC** | High | High | Complex rules based on attributes (same dept, same location) |
-| **ReBAC** | High | Very High | Social/hierarchical relationships (org members, friends) |
+| Pattern   | Complexity | Flexibility | Best For                                                     |
+| --------- | ---------- | ----------- | ------------------------------------------------------------ |
+| **ACL**   | Low        | Low         | Simple sharing (share doc with user A, B, C)                 |
+| **RBAC**  | Medium     | Medium      | Teams with defined roles (admin, editor, viewer)             |
+| **ABAC**  | High       | High        | Complex rules based on attributes (same dept, same location) |
+| **ReBAC** | High       | Very High   | Social/hierarchical relationships (org members, friends)     |
 
 **Hybrid Approach** (Most Common):
+
 ```zmodel
 model Document extends BaseModel {
   ownerId     String
@@ -465,6 +497,7 @@ model Document extends BaseModel {
 **Common Patterns**:
 
 **Owner-only access**:
+
 ```zmodel
 @@allow('create', auth() != null)
 @@allow('read', auth() == user)
@@ -473,6 +506,7 @@ model Document extends BaseModel {
 ```
 
 **Public read, owner write**:
+
 ```zmodel
 @@allow('create', auth() != null)
 @@allow('read', true)  // Anyone can read
@@ -481,18 +515,21 @@ model Document extends BaseModel {
 ```
 
 **Conditional access**:
+
 ```zmodel
 @@allow('read', auth() == user || isPublic)
 @@allow('update', auth() == user && !isArchived)
 ```
 
 **Organization-based**:
+
 ```zmodel
 @@allow('create', auth().members?[organizationId == this.organizationId])
 @@allow('read', organization.members?[userId == auth().id])
 ```
 
 **Admin override**:
+
 ```zmodel
 @@allow('all', auth().role == 'admin')
 ```
@@ -506,12 +543,14 @@ model Document extends BaseModel {
 #### `create` Operation
 
 Controls the following Prisma methods:
+
 - `create`
 - `createMany`
 - `upsert`
 - Nested `create` / `createMany` / `connectOrCreate` in `create`/`update` calls
 
 **Example**:
+
 ```zmodel
 model Post {
   @@allow('create', auth() != null)  // Authenticated users can create posts
@@ -519,6 +558,7 @@ model Post {
 ```
 
 **Governs**:
+
 ```typescript
 // Direct creation - controlled by 'create' rule
 await prisma.post.create({ data: { title: 'Hello' } })
@@ -540,6 +580,7 @@ await prisma.user.update({
 #### `read` Operation
 
 Controls the following Prisma methods:
+
 - `findMany`
 - `findUnique`
 - `findUniqueOrThrow`
@@ -552,6 +593,7 @@ Controls the following Prisma methods:
 **CRITICAL**: The `read` operation also determines whether values returned from `create`, `update`, and `delete` methods can be read.
 
 **Example**:
+
 ```zmodel
 model Post {
   @@allow('read', true)  // Public read
@@ -561,6 +603,7 @@ model Post {
 ```
 
 **Governs**:
+
 ```typescript
 // Direct reads - controlled by 'read' rule
 await prisma.post.findMany()
@@ -569,13 +612,13 @@ await prisma.post.count()
 
 // Return values - ALSO controlled by 'read' rule
 const post = await prisma.post.create({
-  data: { title: 'Hello' }
+  data: { title: 'Hello' },
 })
 // ↑ If user can't 'read' post, this will throw or return null fields
 
 const updated = await prisma.post.update({
   where: { id: '123' },
-  data: { title: 'Updated' }
+  data: { title: 'Updated' },
 })
 // ↑ Return value filtered by 'read' rule
 ```
@@ -589,6 +632,7 @@ const updated = await prisma.post.update({
 **Important Behavior**: When you include relations in a query, the `read` rules on the **nested model** can filter out the **parent records** entirely.
 
 **Example Scenario**:
+
 ```zmodel
 model User {
   id    String @id
@@ -609,26 +653,29 @@ model Post {
 ```
 
 **Query with Include**:
+
 ```typescript
 // Non-author tries to read user with posts included
 const user = await prisma.user.findUnique({
   where: { id: someUserId },
-  include: { posts: true }
+  include: { posts: true },
 })
 ```
 
 **Result**: If the current user is NOT the author of the posts:
+
 - ✅ The `User` record IS readable (@@allow('read', true))
 - ❌ The nested `Post` records are NOT readable (@@allow('read', auth() == author) fails)
 - **Behavior**: The `posts` array will be **empty** `[]` OR the entire parent `User` record may be **filtered out** depending on the query type and ZenStack configuration
 
 **Real-World Impact**:
+
 ```typescript
 // Listing all users with their post counts
 const users = await prisma.user.findMany({
   include: {
-    posts: true  // ← This can filter users!
-  }
+    posts: true, // ← This can filter users!
+  },
 })
 
 // If user A can't read user B's posts, user B might not appear in results
@@ -636,19 +683,21 @@ const users = await prisma.user.findMany({
 ```
 
 **Solution - Use Aggregates Instead**:
+
 ```typescript
 // Better: Use _count for post counts (doesn't filter parent)
 const users = await prisma.user.findMany({
   include: {
     _count: {
-      select: { posts: true }
-    }
-  }
+      select: { posts: true },
+    },
+  },
 })
 // ↑ Returns all users with post count, even if you can't read the posts
 ```
 
 **Best Practice**:
+
 - Be aware that `include` with restricted child models can affect parent results
 - Use `_count` for counts without reading actual records
 - Test queries with different user roles to verify filtering behavior
@@ -659,12 +708,14 @@ const users = await prisma.user.findMany({
 #### `update` Operation
 
 Controls the following Prisma methods:
+
 - `update`
 - `updateMany`
 - `upsert`
 - Nested `update` / `updateMany` / `set` / `connect` / `connectOrCreate` / `disconnect` in `create`/`update` calls
 
 **Example**:
+
 ```zmodel
 model Post {
   @@allow('update', auth() == author)  // Only author can update
@@ -672,6 +723,7 @@ model Post {
 ```
 
 **Governs**:
+
 ```typescript
 // Direct updates - controlled by 'update' rule
 await prisma.post.update({
@@ -703,11 +755,13 @@ await prisma.post.upsert({
 #### `delete` Operation
 
 Controls the following Prisma methods:
+
 - `delete`
 - `deleteMany`
 - Nested `delete` in `update` calls
 
 **Example**:
+
 ```zmodel
 model Post {
   @@allow('delete', auth() == author)  // Only author can delete
@@ -715,6 +769,7 @@ model Post {
 ```
 
 **Governs**:
+
 ```typescript
 // Direct deletes - controlled by 'delete' rule
 await prisma.post.delete({ where: { id: '123' } })
@@ -725,9 +780,9 @@ await prisma.user.update({
   where: { id: userId },
   data: {
     posts: {
-      delete: { id: '123' }  // ← Post 'delete' rule applies
-    }
-  }
+      delete: { id: '123' }, // ← Post 'delete' rule applies
+    },
+  },
 })
 ```
 
@@ -758,10 +813,11 @@ model BlogPost extends BaseModel {
 ```
 
 **What this allows**:
+
 ```typescript
 // ✅ Authenticated user creates post
 await prisma.blogPost.create({
-  data: { title: 'Draft', content: '...', authorId: userId, published: false }
+  data: { title: 'Draft', content: '...', authorId: userId, published: false },
 })
 
 // ✅ Anyone can read published posts
@@ -774,13 +830,13 @@ await prisma.blogPost.findUnique({ where: { id: draftId } })
 // ✅ Author can update draft
 await prisma.blogPost.update({
   where: { id: draftId },
-  data: { title: 'Updated Draft' }
+  data: { title: 'Updated Draft' },
 })
 
 // ❌ Author CANNOT update published post
 await prisma.blogPost.update({
   where: { id: publishedId },
-  data: { title: 'Updated' }
+  data: { title: 'Updated' },
 })
 // ↑ Throws error (violates `!published` constraint)
 
@@ -810,6 +866,7 @@ Use `all` to grant all CRUD operations at once:
 #### Best Practices for Access Control
 
 **✅ DO**:
+
 - Use `@@allow('read', true)` for public data (blog posts, products)
 - Use `@@allow('create', auth() != null)` for authenticated-only creation
 - Use relational checks: `auth() == user` for ownership
@@ -817,12 +874,14 @@ Use `all` to grant all CRUD operations at once:
 - Use `@@deny` for explicit denials (takes precedence over `@@allow`)
 
 **❌ DON'T**:
+
 - Mix imperative checks (if statements in API) with declarative policies (confusing)
 - Forget that `read` controls return values of `create`/`update`/`delete`
 - Assume `upsert` only needs one permission (needs both `create` AND `update`)
 - Hardcode user IDs in policies (use `auth()` and relations)
 
 **Example of `@@deny` (takes precedence)**:
+
 ```zmodel
 model SensitiveData {
   @@allow('read', auth().role == 'admin')
@@ -835,17 +894,20 @@ model SensitiveData {
 ### 4. Generate Code
 
 **After creating/updating models**:
+
 ```bash
 pnpm gen:check
 ```
 
 **This generates**:
+
 - `prisma/schema.prisma` - Prisma schema
 - `server/routers/generated/trpc/` - tRPC routers
 - `lib/hooks/generated/tanstack-query/` - React hooks
 - `lib/generated/schema/zod/` - Zod schemas
 
 **Verify generated files**:
+
 - Check tRPC routes created
 - Verify types are correct
 - Ensure access control policies compiled
@@ -853,17 +915,20 @@ pnpm gen:check
 ### 5. Create Database Migration
 
 **Development** (can reset):
+
 ```bash
 pnpm db:push
 ```
 
 **Production** (must preserve data):
+
 ```bash
 pnpm db:migrate
 # Follow prompts to name migration
 ```
 
 **Migration naming**:
+
 - `add_wishlist_model`
 - `add_is_public_to_wishlist`
 - `create_wishlist_items_table`
@@ -871,12 +936,14 @@ pnpm db:migrate
 ### 6. Implement Business Logic (if needed)
 
 **When generated routes aren't enough**:
+
 - Complex queries across multiple models
 - Business rules beyond access control
 - External API integrations
 - Data transformations
 
 **Create service file**:
+
 ```typescript
 // lib/services/wishlist-service.ts
 import { prisma } from '@/lib/db'
@@ -884,7 +951,7 @@ import { prisma } from '@/lib/db'
 export async function generateWishlistSuggestions(userId: string) {
   // Complex business logic here
   const userPreferences = await prisma.userPreference.findUnique({
-    where: { userId }
+    where: { userId },
   })
 
   // External API call
@@ -895,21 +962,22 @@ export async function generateWishlistSuggestions(userId: string) {
 ```
 
 **Use in custom tRPC route** (only if needed):
+
 ```typescript
 // server/routers/wishlist.ts
 import { generateWishlistSuggestions } from '@/lib/services/wishlist-service'
 
 export const wishlistRouter = router({
-  getSuggestions: protectedProcedure
-    .query(async ({ ctx }) => {
-      return generateWishlistSuggestions(ctx.user.id)
-    })
+  getSuggestions: protectedProcedure.query(async ({ ctx }) => {
+    return generateWishlistSuggestions(ctx.user.id)
+  }),
 })
 ```
 
 ### 7. Write Tests
 
 **Unit tests for business logic**:
+
 ```typescript
 // lib/services/__tests__/wishlist-service.test.ts
 describe('generateWishlistSuggestions', () => {
@@ -921,6 +989,7 @@ describe('generateWishlistSuggestions', () => {
 ```
 
 **Integration tests for access control**:
+
 ```typescript
 // Verify policies work as expected
 it('user can only read their own wishlists', async () => {
@@ -931,6 +1000,7 @@ it('user can only read their own wishlists', async () => {
 ### 8. Add Analytics
 
 **Track events per US requirements**:
+
 ```typescript
 import { analytics } from '@/lib/analytics'
 
@@ -939,9 +1009,9 @@ function handleCreate() {
     onSuccess: (wishlist) => {
       analytics.track('wishlist_created', {
         wishlistId: wishlist.id,
-        userId: user.id
+        userId: user.id,
       })
-    }
+    },
   })
 }
 ```
@@ -949,6 +1019,7 @@ function handleCreate() {
 ### 9. Anti-Hallucination Checklist
 
 **Before implementing, verify**:
+
 - [ ] Searched for existing models/functions
 - [ ] Checked what's already in zschema/
 - [ ] Reviewed relevant ADRs
@@ -957,6 +1028,7 @@ function handleCreate() {
 - [ ] Access control in model (not API layer)
 
 **If using new library/API**:
+
 - [ ] Web searched for official docs
 - [ ] Found working examples
 - [ ] Verified API methods exist
@@ -968,9 +1040,11 @@ function handleCreate() {
 ## ZenStack Best Practices
 
 ### Model Design
+
 @see: https://zenstack.dev/docs/reference/zmodel-language#model
 
 **Use base models**:
+
 ```zmodel
 model MyModel extends BaseModel {  // Gets id, createdAt, updatedAt
   // Your fields
@@ -978,6 +1052,7 @@ model MyModel extends BaseModel {  // Gets id, createdAt, updatedAt
 ```
 
 **Or with user tracking**:
+
 ```zmodel
 model MyModel extends BaseModelWithUser {  // Adds createdBy, updatedBy
   // Your fields
@@ -985,6 +1060,7 @@ model MyModel extends BaseModelWithUser {  // Adds createdBy, updatedBy
 ```
 
 **Field types**:
+
 - `String` - Text
 - `Int` - Integer
 - `Float` - Decimal
@@ -992,26 +1068,28 @@ model MyModel extends BaseModelWithUser {  // Adds createdBy, updatedBy
 - `DateTime` - Timestamp
 - `Json` - JSON data - use @json, and a type to create typesafe JSON fields
 - `String[]` - Array of strings
-- `BigInt` - 
-- `Decimal` - 
+- `BigInt` -
+- `Decimal` -
 - `Bytes` - raw byte sequences
 - `enum` - Reference to an enum
 - `type` - Used for typesafe @json columns
 
-
 **Optional fields**:
+
 ```zmodel
 email String?  // Nullable
 bio   String?
 ```
 
 **Default values**:
+
 ```zmodel
 isActive Boolean @default(true)
 role     String  @default("user")
 ```
 
 **Unique constraints**:
+
 ```zmodel
 email String @unique
 slug  String @unique
@@ -1019,6 +1097,7 @@ slug  String @unique
 
 **Enum Fields**:
 @see: https://zenstack.dev/docs/reference/zmodel-language#enum
+
 ```zmodel
 model Wishlist {
   status WishlistStatus
@@ -1035,6 +1114,7 @@ enum WishlistStatus {
 ⚠️ **CRITICAL: ALWAYS use typed JSON for end-to-end type safety!**
 
 When adding a JSON field, you MUST:
+
 1. Define a `type` model for the JSON structure
 2. Reference the type with `@json` attribute
 3. NEVER use raw `Json` type - always use a named type
@@ -1094,6 +1174,7 @@ type PropertyCustomField {
 This provides full TypeScript type safety from database to frontend while allowing flexible JSON structures.
 
 **Indexes**:
+
 ```zmodel
 @@index([userId])
 @@index([createdAt])
@@ -1103,6 +1184,7 @@ This provides full TypeScript type safety from database to frontend while allowi
 ### Relations
 
 **One-to-many**:
+
 ```zmodel
 model User {
   id        String   @id
@@ -1117,6 +1199,7 @@ model Wishlist {
 ```
 
 **One-to-one**:
+
 ```zmodel
 model User {
   id      String   @id
@@ -1131,6 +1214,7 @@ model Profile {
 ```
 
 **Many-to-many**:
+
 ```zmodel
 model Post {
   id   String @id
@@ -1146,28 +1230,33 @@ model Tag {
 ### Access Control Patterns
 
 **Authenticated users only**:
+
 ```zmodel
 @@allow('all', auth() != null)
 ```
 
 **Owner-only access**:
+
 ```zmodel
 @@allow('all', auth() == user)
 ```
 
 **Public read**:
+
 ```zmodel
 @@allow('read', true)
 @@allow('create,update,delete', auth() == user)
 ```
 
 **Field-level control**:
+
 ```zmodel
 @@allow('read', true, email)  // Email readable by all
 @@deny('read', auth() != user, privateNotes)  // Private field
 ```
 
 **Conditional logic**:
+
 ```zmodel
 @@allow('update', auth() == user && !isLocked)
 @@allow('delete', auth() == user && items.length == 0)
@@ -1176,10 +1265,12 @@ model Tag {
 ---
 
 ## Use Generated Tanstack Query and tRPC Routes
+
 @see https://zenstack.dev/docs/reference/plugins/tanstack-query (basic information, setup)
 @see https://tanstack.com/query/latest/docs/framework/react/overview (extensive setup and usage documentation)
 
 ZenStack queryKeys always formatted with "zenstack" first with "Operation" optional and often not required or recommended.
+
 ```
 queryClient.invalidateQuery(["zenstack", "ModelName", "Operation"])
 ```
@@ -1187,9 +1278,11 @@ queryClient.invalidateQuery(["zenstack", "ModelName", "Operation"])
 **ZenStack generates these for each model**:
 
 _Query Hooks:_
+
 ```
 function use[Suspense?][Infinite?][Operation][ModelName](args?, options?);
 ```
+
 [Suspense]: use with React's Suspense feature @see https://tanstack.com/query/latest/docs/framework/react/guides/suspense
 
 [Infinite]: for continuous scroll experiences @see https://tanstack.com/query/latest/docs/framework/react/guides/infinite-queries
@@ -1209,16 +1302,18 @@ The data field contains the Prisma query result.
 The queryKey field is the query key used to cache the query result. It can be used to manipulate the cache directly or cancel the query.
 
 _Mutation Hooks_
+
 ```
 function use[Operation][ModelName](options?);
 ```
-[Operation]: mutation operation. "Create", "CreateMany", "Update", "UpdateMany", "Upsert", "Delete", "DeleteMany", 
+
+[Operation]: mutation operation. "Create", "CreateMany", "Update", "UpdateMany", "Upsert", "Delete", "DeleteMany",
 
 [ModelName]: the name of the model. E.g., "Wishlist".
 
 options: TanStack-Query options.
 
-The hook function returns a standard TanStack Query useMutation result. mutate and mutateAsync functions returned take  corresponding Prisma mutation args as input. 
+The hook function returns a standard TanStack Query useMutation result. mutate and mutateAsync functions returned take corresponding Prisma mutation args as input.
 
 ```prisma_mutation
 { data: { title: "Form Data" } }.
@@ -1227,6 +1322,7 @@ The hook function returns a standard TanStack Query useMutation result. mutate a
 **✅ Use these** - Don't recreate!
 
 **Example frontend usage**:
+
 ```typescript
 import {
   useFindManyWishlist,
@@ -1243,6 +1339,7 @@ const { mutate } = useCreateWishlist(...)
 ## When to Create Custom Routes
 
 **Only when**:
+
 - Complex multi-model queries
 - Business logic beyond CRUD
 - External API integration
@@ -1257,17 +1354,20 @@ const { mutate } = useCreateWishlist(...)
 ### We agree on:
 
 **API Contract** (in US-XXX.md):
+
 - Model structure (what fields exist)
 - Access control (who can do what)
 - Generated routes to use
 - Custom routes if any
 
 **Types** (automatically synced):
+
 - Frontend uses same Prisma types
 - Zod schemas for validation
 - Full type safety FE ↔ BE
 
 **No coordination needed for**:
+
 - Internal implementation
 - Database indexes
 - Service layer organization
@@ -1310,6 +1410,7 @@ Before marking backend complete:
 ## Reference Documentation
 
 **Always consult**:
+
 - ZenStack docs: https://zenstack.dev
 - Prisma docs: https://prisma.io/docs
 - `schema.zmodel` - Main schema file
@@ -1325,6 +1426,7 @@ When working on multiple user stories, **push after completing each story** to c
 ### After Completing Each Story
 
 **1. Run Validation**:
+
 ```bash
 pnpm gen:check         # ZenStack generation
 pnpm test              # All tests passing
@@ -1333,6 +1435,7 @@ tsc --noEmit && pnpm build  # Build successful
 ```
 
 **2. Commit the Story**:
+
 ```bash
 git add .
 git commit -m "feat: implement US-XXX - [story title]
@@ -1348,11 +1451,13 @@ Co-Authored-By: Claude <noreply@anthropic.com>"
 ```
 
 **3. Push After Build Succeeds**:
+
 ```bash
 git push
 ```
 
 **4. Monitor Deployment**:
+
 - Use `vercel build` locally to reproduce any CI/CD failures
 - Monitor GitHub PR comments for feedback
 - Check migration status if schema changed

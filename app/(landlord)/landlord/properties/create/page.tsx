@@ -27,7 +27,7 @@ export default function CreatePropertyPage() {
     setIsSubmitting(true)
 
     // Simulate API call
-    await new Promise(resolve => setTimeout(resolve, 1000))
+    await new Promise((resolve) => setTimeout(resolve, 1000))
 
     // Redirect to properties list
     router.push('/properties')
@@ -38,28 +38,24 @@ export default function CreatePropertyPage() {
       {/* Page Header */}
       <div className="flex items-center gap-4">
         <Link href="/landlord/properties">
-          <Button variant="ghost" size="icon" className="border-2 border-foreground">
+          <Button variant="ghost" size="icon" className="border-foreground border-2">
             <ArrowLeft className="h-4 w-4" />
           </Button>
         </Link>
         <div>
           <h1 className="text-3xl font-bold tracking-tight">Add Property</h1>
-          <p className="text-muted-foreground">
-            Enter details about your rental property
-          </p>
+          <p className="text-muted-foreground">Enter details about your rental property</p>
         </div>
       </div>
 
       {/* Form Card */}
-      <Card className="border-2 border-foreground max-w-2xl">
+      <Card className="border-foreground max-w-2xl border-2">
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
             <Building className="h-5 w-5" />
             Property Details
           </CardTitle>
-          <CardDescription>
-            Provide basic information about your property
-          </CardDescription>
+          <CardDescription>Provide basic information about your property</CardDescription>
         </CardHeader>
         <CardContent>
           <form onSubmit={handleSubmit} className="space-y-6">
@@ -102,7 +98,7 @@ export default function CreatePropertyPage() {
                 required
                 className="border-2"
               />
-              <p className="text-xs text-muted-foreground">
+              <p className="text-muted-foreground text-xs">
                 Total number of rentable units in this property
               </p>
             </div>
@@ -124,24 +120,24 @@ export default function CreatePropertyPage() {
             <div className="space-y-3">
               <Label>Property Manager *</Label>
               <RadioGroup defaultValue="self" className="space-y-2">
-                <div className="flex items-center space-x-3 p-3 border-2 border-border rounded-md">
+                <div className="border-border flex items-center space-x-3 rounded-md border-2 p-3">
                   <RadioGroupItem value="self" id="self" />
                   <div className="flex-1">
-                    <Label htmlFor="self" className="font-medium cursor-pointer">
+                    <Label htmlFor="self" className="cursor-pointer font-medium">
                       Self-managed
                     </Label>
-                    <p className="text-xs text-muted-foreground">
+                    <p className="text-muted-foreground text-xs">
                       You will manage this property directly
                     </p>
                   </div>
                 </div>
-                <div className="flex items-center space-x-3 p-3 border-2 border-border rounded-md">
+                <div className="border-border flex items-center space-x-3 rounded-md border-2 p-3">
                   <RadioGroupItem value="agent" id="agent" />
                   <div className="flex-1">
-                    <Label htmlFor="agent" className="font-medium cursor-pointer">
+                    <Label htmlFor="agent" className="cursor-pointer font-medium">
                       Agent-managed
                     </Label>
-                    <p className="text-xs text-muted-foreground">
+                    <p className="text-muted-foreground text-xs">
                       An agent will handle tenant screening and management
                     </p>
                   </div>
@@ -150,12 +146,8 @@ export default function CreatePropertyPage() {
             </div>
 
             {/* Form Actions */}
-            <div className="flex gap-3 pt-4 border-t-2 border-border">
-              <Button
-                type="submit"
-                disabled={isSubmitting}
-                className="border-2 border-foreground"
-              >
+            <div className="border-border flex gap-3 border-t-2 pt-4">
+              <Button type="submit" disabled={isSubmitting} className="border-foreground border-2">
                 {isSubmitting ? 'Adding Property...' : 'Add Property'}
               </Button>
               <Link href="/landlord/properties">
@@ -169,10 +161,11 @@ export default function CreatePropertyPage() {
       </Card>
 
       {/* Help Text */}
-      <Card className="border-2 border-border max-w-2xl">
+      <Card className="border-border max-w-2xl border-2">
         <CardContent className="py-4">
-          <p className="text-sm text-muted-foreground">
-            <strong>Note:</strong> After adding your property, you&apos;ll be able to add individual units with their specific details like bedrooms, bathrooms, and rent amounts.
+          <p className="text-muted-foreground text-sm">
+            <strong>Note:</strong> After adding your property, you&apos;ll be able to add individual
+            units with their specific details like bedrooms, bathrooms, and rent amounts.
           </p>
         </CardContent>
       </Card>

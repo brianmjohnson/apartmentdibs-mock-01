@@ -2,15 +2,7 @@
 
 import { useState } from 'react'
 import Link from 'next/link'
-import {
-  Users,
-  Filter,
-  Eye,
-  ThumbsUp,
-  ThumbsDown,
-  Calendar,
-  Search
-} from 'lucide-react'
+import { Users, Filter, Eye, ThumbsUp, ThumbsDown, Calendar, Search } from 'lucide-react'
 import { Card, CardContent } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
@@ -34,7 +26,7 @@ import {
   mockApplicants,
   mockAgentListings,
   getApplicantStatusColor,
-  formatDate
+  formatDate,
 } from '@/lib/mock-data/agent'
 
 type StatusFilter = 'all' | 'new' | 'reviewed' | 'shortlisted' | 'denied'
@@ -46,12 +38,12 @@ export default function AllApplicantsPage() {
 
   // Get listing address by ID
   const getListingAddress = (listingId: string) => {
-    const listing = mockAgentListings.find(l => l.id === listingId)
+    const listing = mockAgentListings.find((l) => l.id === listingId)
     return listing ? listing.address : 'Unknown'
   }
 
   // Filter applicants
-  const filteredApplicants = mockApplicants.filter(applicant => {
+  const filteredApplicants = mockApplicants.filter((applicant) => {
     if (statusFilter !== 'all' && applicant.status !== statusFilter) return false
     if (listingFilter !== 'all' && applicant.listingId !== listingFilter) return false
 
@@ -80,11 +72,11 @@ export default function AllApplicantsPage() {
       </div>
 
       {/* Filters */}
-      <Card className="border-2 border-foreground">
+      <Card className="border-foreground border-2">
         <CardContent className="p-4">
-          <div className="flex flex-col sm:flex-row gap-4">
+          <div className="flex flex-col gap-4 sm:flex-row">
             <div className="flex items-center gap-2">
-              <Filter className="h-4 w-4 text-muted-foreground" />
+              <Filter className="text-muted-foreground h-4 w-4" />
               <span className="text-sm font-medium">Filters:</span>
             </div>
 
@@ -109,7 +101,7 @@ export default function AllApplicantsPage() {
               </SelectTrigger>
               <SelectContent>
                 <SelectItem value="all">All Listings</SelectItem>
-                {mockAgentListings.map(listing => (
+                {mockAgentListings.map((listing) => (
                   <SelectItem key={listing.id} value={listing.id}>
                     {listing.address.split(',')[0]}
                   </SelectItem>
@@ -135,40 +127,40 @@ export default function AllApplicantsPage() {
 
       {/* Results Count */}
       <div className="flex items-center justify-between">
-        <p className="text-sm text-muted-foreground">
+        <p className="text-muted-foreground text-sm">
           Showing {filteredApplicants.length} of {mockApplicants.length} applicants
         </p>
       </div>
 
       {/* Applicants Table */}
       {filteredApplicants.length > 0 ? (
-        <Card className="border-2 border-foreground">
+        <Card className="border-foreground border-2">
           <div className="overflow-x-auto">
             <Table>
               <TableHeader>
-                <TableRow className="border-b-2 border-foreground">
+                <TableRow className="border-foreground border-b-2">
                   <TableHead className="font-bold">Applicant ID</TableHead>
                   <TableHead className="font-bold">Listing</TableHead>
                   <TableHead className="font-bold">Income Ratio</TableHead>
                   <TableHead className="font-bold">Credit Band</TableHead>
                   <TableHead className="font-bold">Status</TableHead>
                   <TableHead className="font-bold">Applied</TableHead>
-                  <TableHead className="font-bold text-right">Actions</TableHead>
+                  <TableHead className="text-right font-bold">Actions</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
                 {filteredApplicants.map((applicant) => (
                   <TableRow key={applicant.id} className="border-b">
-                    <TableCell className="font-medium">
-                      {applicant.displayId}
-                    </TableCell>
+                    <TableCell className="font-medium">{applicant.displayId}</TableCell>
                     <TableCell>
                       <span className="text-sm">
                         {getListingAddress(applicant.listingId).split(',')[0]}
                       </span>
                     </TableCell>
                     <TableCell>
-                      <span className={applicant.incomeRatio >= 4 ? 'text-green-600 font-bold' : ''}>
+                      <span
+                        className={applicant.incomeRatio >= 4 ? 'font-bold text-green-600' : ''}
+                      >
                         {applicant.incomeRatio}x
                       </span>
                     </TableCell>
@@ -221,12 +213,10 @@ export default function AllApplicantsPage() {
           </div>
         </Card>
       ) : (
-        <div className="text-center py-12">
-          <Users className="h-12 w-12 mx-auto text-muted-foreground mb-4" />
+        <div className="py-12 text-center">
+          <Users className="text-muted-foreground mx-auto mb-4 h-12 w-12" />
           <h3 className="text-lg font-semibold">No applicants found</h3>
-          <p className="text-muted-foreground">
-            Try adjusting your filters to see more results.
-          </p>
+          <p className="text-muted-foreground">Try adjusting your filters to see more results.</p>
         </div>
       )}
     </div>

@@ -2,17 +2,16 @@
 
 import { useState } from 'react'
 import Link from 'next/link'
-import {
-  Check,
-  X,
-  HelpCircle,
-  ArrowRight,
-  Building2,
-  Users,
-  Shield,
-} from 'lucide-react'
+import { Check, X, HelpCircle, ArrowRight, Building2, Users, Shield } from 'lucide-react'
 import { Button } from '@/components/ui/button'
-import { Card, CardContent, CardHeader, CardTitle, CardDescription, CardFooter } from '@/components/ui/card'
+import {
+  Card,
+  CardContent,
+  CardHeader,
+  CardTitle,
+  CardDescription,
+  CardFooter,
+} from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import {
   Accordion,
@@ -86,19 +85,23 @@ const pricingTiers = [
 const pricingFaqs = [
   {
     question: 'Can I switch plans later?',
-    answer: 'Yes! You can upgrade or downgrade your plan at any time. If you upgrade, you\'ll be charged the prorated difference. If you downgrade, you\'ll receive credit toward future billing.',
+    answer:
+      "Yes! You can upgrade or downgrade your plan at any time. If you upgrade, you'll be charged the prorated difference. If you downgrade, you'll receive credit toward future billing.",
   },
   {
     question: 'Is there a free trial for paid plans?',
-    answer: 'Yes, both Professional and Enterprise plans come with a 14-day free trial. No credit card required to start. You can explore all features before committing.',
+    answer:
+      'Yes, both Professional and Enterprise plans come with a 14-day free trial. No credit card required to start. You can explore all features before committing.',
   },
   {
     question: 'What payment methods do you accept?',
-    answer: 'We accept all major credit cards (Visa, MasterCard, American Express) and ACH bank transfers for annual Enterprise plans. All payments are processed securely through Stripe.',
+    answer:
+      'We accept all major credit cards (Visa, MasterCard, American Express) and ACH bank transfers for annual Enterprise plans. All payments are processed securely through Stripe.',
   },
   {
     question: 'Do you offer discounts for nonprofits or housing authorities?',
-    answer: 'Yes! We offer special pricing for nonprofit organizations and public housing authorities. Contact our sales team to learn more about our social impact program.',
+    answer:
+      'Yes! We offer special pricing for nonprofit organizations and public housing authorities. Contact our sales team to learn more about our social impact program.',
   },
 ]
 
@@ -108,36 +111,40 @@ export default function PricingPage() {
   return (
     <div className="flex flex-col">
       {/* Hero Section */}
-      <section className="relative bg-background border-b-4 border-foreground">
+      <section className="bg-background border-foreground relative border-b-4">
         <div className="absolute inset-0 bg-[linear-gradient(45deg,transparent_25%,rgba(0,0,0,0.02)_25%,rgba(0,0,0,0.02)_50%,transparent_50%,transparent_75%,rgba(0,0,0,0.02)_75%)] bg-[length:4px_4px]" />
-        <div className="container mx-auto px-4 py-20 md:py-32 relative">
-          <div className="max-w-4xl mx-auto text-center">
-            <h1 className="text-4xl md:text-6xl font-bold tracking-tight mb-6">
+        <div className="relative container mx-auto px-4 py-20 md:py-32">
+          <div className="mx-auto max-w-4xl text-center">
+            <h1 className="mb-6 text-4xl font-bold tracking-tight md:text-6xl">
               Simple, Transparent Pricing
             </h1>
-            <p className="text-xl md:text-2xl text-muted-foreground mb-10 max-w-2xl mx-auto">
+            <p className="text-muted-foreground mx-auto mb-10 max-w-2xl text-xl md:text-2xl">
               Choose the plan that works for you. Tenants always free.
             </p>
 
             {/* Billing Toggle */}
             <div className="flex items-center justify-center gap-4">
-              <span className={`text-lg font-medium ${!isAnnual ? 'text-foreground' : 'text-muted-foreground'}`}>
+              <span
+                className={`text-lg font-medium ${!isAnnual ? 'text-foreground' : 'text-muted-foreground'}`}
+              >
                 Monthly
               </span>
               <button
                 onClick={() => setIsAnnual(!isAnnual)}
-                className={`relative h-8 w-14 rounded-full border-2 border-foreground transition-colors ${
+                className={`border-foreground relative h-8 w-14 rounded-full border-2 transition-colors ${
                   isAnnual ? 'bg-primary' : 'bg-muted'
                 }`}
                 aria-label="Toggle annual billing"
               >
                 <div
-                  className={`absolute top-1 h-5 w-5 rounded-full bg-background border border-foreground transition-transform ${
+                  className={`bg-background border-foreground absolute top-1 h-5 w-5 rounded-full border transition-transform ${
                     isAnnual ? 'translate-x-7' : 'translate-x-1'
                   }`}
                 />
               </button>
-              <span className={`text-lg font-medium ${isAnnual ? 'text-foreground' : 'text-muted-foreground'}`}>
+              <span
+                className={`text-lg font-medium ${isAnnual ? 'text-foreground' : 'text-muted-foreground'}`}
+              >
                 Annual
               </span>
               {isAnnual && (
@@ -153,7 +160,7 @@ export default function PricingPage() {
       {/* Pricing Cards */}
       <section className="py-16 md:py-24">
         <div className="container mx-auto px-4">
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-6xl mx-auto">
+          <div className="mx-auto grid max-w-6xl grid-cols-1 gap-6 md:grid-cols-3">
             {pricingTiers.map((tier) => {
               const Icon = tier.icon
               const price = isAnnual ? tier.annualPrice : tier.monthlyPrice
@@ -161,7 +168,7 @@ export default function PricingPage() {
               return (
                 <Card
                   key={tier.name}
-                  className={`border-2 border-foreground relative flex flex-col ${
+                  className={`border-foreground relative flex flex-col border-2 ${
                     tier.popular
                       ? 'shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] md:-mt-4 md:mb-4'
                       : 'hover:shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]'
@@ -169,13 +176,11 @@ export default function PricingPage() {
                 >
                   {tier.popular && (
                     <div className="absolute -top-3 left-1/2 -translate-x-1/2">
-                      <Badge className="bg-primary text-primary-foreground">
-                        Most Popular
-                      </Badge>
+                      <Badge className="bg-primary text-primary-foreground">Most Popular</Badge>
                     </div>
                   )}
-                  <CardHeader className="text-center pb-4">
-                    <div className="h-12 w-12 bg-primary text-primary-foreground flex items-center justify-center mx-auto mb-4">
+                  <CardHeader className="pb-4 text-center">
+                    <div className="bg-primary text-primary-foreground mx-auto mb-4 flex h-12 w-12 items-center justify-center">
                       <Icon className="h-6 w-6" />
                     </div>
                     <CardTitle className="text-2xl">{tier.name}</CardTitle>
@@ -184,17 +189,13 @@ export default function PricingPage() {
                     </CardDescription>
                   </CardHeader>
                   <CardContent className="flex-1">
-                    <div className="text-center mb-6">
+                    <div className="mb-6 text-center">
                       <div className="flex items-baseline justify-center gap-1">
-                        <span className="text-4xl font-bold">
-                          ${price}
-                        </span>
-                        {price > 0 && (
-                          <span className="text-muted-foreground">/mo</span>
-                        )}
+                        <span className="text-4xl font-bold">${price}</span>
+                        {price > 0 && <span className="text-muted-foreground">/mo</span>}
                       </div>
                       {isAnnual && price > 0 && (
-                        <p className="text-sm text-muted-foreground mt-1">
+                        <p className="text-muted-foreground mt-1 text-sm">
                           Billed annually (${price * 12}/year)
                         </p>
                       )}
@@ -203,9 +204,9 @@ export default function PricingPage() {
                       {tier.features.map((feature) => (
                         <li key={feature.text} className="flex items-start gap-3">
                           {feature.included ? (
-                            <Check className="h-5 w-5 text-primary shrink-0 mt-0.5" />
+                            <Check className="text-primary mt-0.5 h-5 w-5 shrink-0" />
                           ) : (
-                            <X className="h-5 w-5 text-muted-foreground shrink-0 mt-0.5" />
+                            <X className="text-muted-foreground mt-0.5 h-5 w-5 shrink-0" />
                           )}
                           <span className={feature.included ? '' : 'text-muted-foreground'}>
                             {feature.text}
@@ -216,7 +217,7 @@ export default function PricingPage() {
                   </CardContent>
                   <CardFooter className="pt-4">
                     <Button
-                      className={`w-full border-2 border-foreground ${
+                      className={`border-foreground w-full border-2 ${
                         tier.popular ? '' : 'bg-background text-foreground hover:bg-muted'
                       }`}
                       variant={tier.popular ? 'default' : 'outline'}
@@ -234,11 +235,11 @@ export default function PricingPage() {
       </section>
 
       {/* Feature Comparison Note */}
-      <section className="py-8 bg-muted/30 border-y-2 border-foreground">
+      <section className="bg-muted/30 border-foreground border-y-2 py-8">
         <div className="container mx-auto px-4 text-center">
           <p className="text-muted-foreground">
             All plans include SSL encryption, GDPR compliance, and 99.9% uptime SLA.
-            <Link href="/contact" className="text-primary hover:underline ml-2">
+            <Link href="/contact" className="text-primary ml-2 hover:underline">
               Need a custom plan?
             </Link>
           </p>
@@ -248,29 +249,25 @@ export default function PricingPage() {
       {/* Pricing FAQs */}
       <section className="py-16 md:py-24">
         <div className="container mx-auto px-4">
-          <div className="max-w-3xl mx-auto">
-            <div className="text-center mb-12">
-              <div className="flex items-center justify-center mb-4">
-                <HelpCircle className="h-8 w-8 text-primary" />
+          <div className="mx-auto max-w-3xl">
+            <div className="mb-12 text-center">
+              <div className="mb-4 flex items-center justify-center">
+                <HelpCircle className="text-primary h-8 w-8" />
               </div>
-              <h2 className="text-3xl md:text-4xl font-bold mb-4">
-                Pricing Questions
-              </h2>
-              <p className="text-muted-foreground">
-                Common questions about our pricing and plans
-              </p>
+              <h2 className="mb-4 text-3xl font-bold md:text-4xl">Pricing Questions</h2>
+              <p className="text-muted-foreground">Common questions about our pricing and plans</p>
             </div>
-            <Accordion type="single" collapsible className="border-2 border-foreground">
+            <Accordion type="single" collapsible className="border-foreground border-2">
               {pricingFaqs.map((faq, index) => (
                 <AccordionItem
                   key={faq.question}
                   value={`faq-${index}`}
-                  className={index < pricingFaqs.length - 1 ? 'border-b-2 border-foreground' : ''}
+                  className={index < pricingFaqs.length - 1 ? 'border-foreground border-b-2' : ''}
                 >
                   <AccordionTrigger className="px-6 text-left font-medium hover:no-underline">
                     {faq.question}
                   </AccordionTrigger>
-                  <AccordionContent className="px-6 text-muted-foreground">
+                  <AccordionContent className="text-muted-foreground px-6">
                     {faq.answer}
                   </AccordionContent>
                 </AccordionItem>
@@ -281,19 +278,17 @@ export default function PricingPage() {
       </section>
 
       {/* Enterprise CTA */}
-      <section className="py-16 md:py-24 bg-primary text-primary-foreground">
+      <section className="bg-primary text-primary-foreground py-16 md:py-24">
         <div className="container mx-auto px-4 text-center">
-          <h2 className="text-3xl md:text-4xl font-bold mb-4">
-            Need a Custom Solution?
-          </h2>
-          <p className="text-xl mb-8 opacity-90 max-w-2xl mx-auto">
+          <h2 className="mb-4 text-3xl font-bold md:text-4xl">Need a Custom Solution?</h2>
+          <p className="mx-auto mb-8 max-w-2xl text-xl opacity-90">
             Managing 50+ properties? We offer custom enterprise plans with volume discounts,
             dedicated support, and custom integrations.
           </p>
           <Button
             size="lg"
             variant="secondary"
-            className="border-2 border-primary-foreground text-lg px-8"
+            className="border-primary-foreground border-2 px-8 text-lg"
             asChild
           >
             <Link href="/contact?subject=sales">

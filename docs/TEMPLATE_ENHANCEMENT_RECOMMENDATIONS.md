@@ -33,6 +33,7 @@ This document provides a thorough evaluation of the current project template aga
 #### 1. Agent Autonomy and Specialization ✅ **EXCELLENT**
 
 **Current State**:
+
 - 7 specialized role-based agents (Product Manager, Architecture, Frontend, Backend, UI Designer, UX Researcher, Quality Reviewer)
 - 3 task-specific agents (PR Finalization, GitHub Integration, Session Summary)
 - Clear coordination patterns (sequential, parallel, iterative)
@@ -45,6 +46,7 @@ This document provides a thorough evaluation of the current project template aga
 #### 2. Efficient HITL System ✅ **EXCELLENT**
 
 **Current State**:
+
 - 4 mandatory gates (User Stories, ADRs, Tech Specs, QA Issues)
 - Batch review system consolidates 10-20 decisions per session
 - `hitl-resume.ts` script automates approval processing
@@ -57,6 +59,7 @@ This document provides a thorough evaluation of the current project template aga
 #### 3. Comprehensive Workflow & Artifacts ✅ **STRONG**
 
 **Current State**:
+
 - 7-phase development workflow (Business Plan → Session Summary)
 - ZenStack-first architecture for type-safe, generated code
 - User Story templates with RICE scoring
@@ -128,6 +131,7 @@ Based on 2025 research, the following APDLC principles are **critical** for matu
 **Definition**: Define "what" (goals) and "constraints" (guardrails) rather than "how" (implementation).
 
 **Current State**:
+
 - ADRs define architectural guardrails
 - ZenStack `@@allow` policies define access control declaratively
 - User stories define goals via acceptance criteria
@@ -141,6 +145,7 @@ Based on 2025 research, the following APDLC principles are **critical** for matu
 **Definition**: Build evaluation suites that capture failure modes and test edge cases, not just happy paths.
 
 **Current State**:
+
 - Quality Reviewer checks acceptance criteria
 - Automated tests required (`pnpm test`)
 - Focus on happy path validation
@@ -156,6 +161,7 @@ Based on 2025 research, the following APDLC principles are **critical** for matu
 **Definition**: Governance must be real-time, data-driven, and embedded in the workflow, not periodic reviews.
 
 **Current State**:
+
 - HITL gates provide periodic governance
 - No real-time monitoring/observability
 
@@ -170,6 +176,7 @@ Based on 2025 research, the following APDLC principles are **critical** for matu
 **Definition**: Establish dedicated tooling/automation to reduce cognitive load and ensure consistency.
 
 **Current State**:
+
 - ZenStack generates tRPC/Prisma/hooks (reduces boilerplate)
 - `pnpm gen:check` automates schema generation
 - Research-first protocol embedded in agent instructions
@@ -186,14 +193,14 @@ Based on 2025 research, the following APDLC principles are **critical** for matu
 
 The template currently has **10 agents** covering product development but **0 agents** for business operations. Based on 2025 best practices, the following **6 new operational agents** are required:
 
-| Gap Area | New Agent Required | Mission | Key Artifacts |
-|----------|-------------------|---------|---------------|
-| **Market Intelligence** | Market Analyst Agent | Monitor competitors, pricing, feature releases | `docs/research/competitive-matrix.md` |
-| **Experimentation** | Experimentation Agent | Design A/B tests, configure PostHog flags, track success metrics | `docs/experiments/EXPERIMENT-XXX.md`, ADR on A/B framework |
-| **Compliance & Legal** | Compliance Agent | Monitor GDPR/CCPA changes, draft TOS/Privacy Policy | `docs/legal/compliance-checklist.md` |
-| **Financial Modeling** | Unit Economics Agent | Model pricing tiers, track LTV/CAC, revenue metrics | `docs/finance/unit-economics-model.md` |
-| **Observability** | Observability Agent | Define logging, audit trails, data retention policies | ADR on observability, logging structure |
-| **Support Operations** | Support Triage Agent | Document common issues, define escalation paths | `docs/support/escalation-protocol.md` |
+| Gap Area                | New Agent Required    | Mission                                                          | Key Artifacts                                              |
+| ----------------------- | --------------------- | ---------------------------------------------------------------- | ---------------------------------------------------------- |
+| **Market Intelligence** | Market Analyst Agent  | Monitor competitors, pricing, feature releases                   | `docs/research/competitive-matrix.md`                      |
+| **Experimentation**     | Experimentation Agent | Design A/B tests, configure PostHog flags, track success metrics | `docs/experiments/EXPERIMENT-XXX.md`, ADR on A/B framework |
+| **Compliance & Legal**  | Compliance Agent      | Monitor GDPR/CCPA changes, draft TOS/Privacy Policy              | `docs/legal/compliance-checklist.md`                       |
+| **Financial Modeling**  | Unit Economics Agent  | Model pricing tiers, track LTV/CAC, revenue metrics              | `docs/finance/unit-economics-model.md`                     |
+| **Observability**       | Observability Agent   | Define logging, audit trails, data retention policies            | ADR on observability, logging structure                    |
+| **Support Operations**  | Support Triage Agent  | Document common issues, define escalation paths                  | `docs/support/escalation-protocol.md`                      |
 
 **Rationale**: Following "AI First" philosophy, every business function must have an agent **before** hiring a human for that role.
 
@@ -212,6 +219,7 @@ The template currently has **10 agents** covering product development but **0 ag
 **Why**: Visual Business Model Canvas is industry standard (Strategyzer) and makes strategy explicit.
 
 **How**:
+
 1. Create template at `docs/strategy/bmc-template.md`
 2. Update Product Manager Agent to generate BMC from `README.md` in Phase 1
 3. Include 9-block Mermaid diagram:
@@ -258,6 +266,7 @@ graph TB
 **Why**: Go-to-Market strategy should be a living document, not just sections in README.
 
 **How**:
+
 1. Extract GTM sections from `README-template.md`
 2. Create dedicated template with sections:
    - Target ICP (Ideal Customer Profile)
@@ -284,6 +293,7 @@ graph TB
 **Why**: Single source of truth for visual consistency before Frontend Developer starts coding.
 
 **How**:
+
 1. Create template at `docs/design/style-guide-template.md` with sections:
    - **Design Tokens**: Document all CSS variables from `tailwind.config.ts`
    - **Color Palette**: Primary, secondary, destructive, muted, accent (with HSL values)
@@ -310,7 +320,9 @@ graph TB
 **Why**: Tailwind 4 provides better design token management with CSS variables as first-class citizens.
 
 **How**:
+
 1. Add `@theme` block in global CSS:
+
 ```css
 @theme {
   --color-primary: hsl(222.2 47.4% 11.2%);
@@ -319,6 +331,7 @@ graph TB
   --font-sans: ui-sans-serif, system-ui, sans-serif;
 }
 ```
+
 2. Update documentation in style guide
 3. Generate from Figma tokens if design file exists (using Figma Tokens plugin)
 
@@ -339,15 +352,18 @@ graph TB
 **Mission**: Monitor competitor features, pricing changes, market trends; output competitive intelligence.
 
 **Activation**:
+
 - Weekly scheduled task (if cron available)
 - On-demand when Product Manager needs market validation
 - Before pricing decisions
 
 **Artifacts**:
+
 - `docs/research/competitive-matrix.md` - Feature comparison table
 - `docs/research/market-insights-YYYY-MM.md` - Monthly reports
 
 **Process**:
+
 1. Web search for competitor changelogs, pricing pages, feature releases
 2. Update competitive matrix with new features
 3. Flag significant market shifts for HITL review
@@ -367,15 +383,18 @@ graph TB
 **Mission**: Design A/B tests, configure PostHog feature flags, track success metrics.
 
 **Activation**:
+
 - After P0 features implemented (to test variations)
 - When User Story has unclear UX approach
 - For pricing/monetization experiments
 
 **Artifacts**:
+
 - `docs/experiments/EXPERIMENT-XXX.md` - Experiment plan (hypothesis, variants, metrics, duration)
 - ADR on A/B testing framework (PostHog integration)
 
 **Process**:
+
 1. Identify high-RICE stories with uncertainty
 2. Design A/B test with control/variant
 3. Define success metrics (conversion rate, engagement, etc.)
@@ -399,16 +418,19 @@ graph TB
 **Mission**: Monitor legal/regulatory changes (GDPR, CCPA, SOC2), draft compliance checklists, generate TOS/Privacy Policy.
 
 **Activation**:
+
 - Before MVP launch (draft legal docs)
 - Quarterly compliance reviews
 - When adding new data collection
 
 **Artifacts**:
+
 - `docs/legal/compliance-checklist.md` - GDPR, CCPA, SOC2 requirements
 - `docs/legal/privacy-policy.md` - Generated from data practices
 - `docs/legal/terms-of-service.md` - Generated from business model
 
 **Process**:
+
 1. Web search for latest GDPR/CCPA/SOC2 requirements
 2. Audit ZenStack models for PII fields
 3. Verify data retention policies exist
@@ -430,16 +452,19 @@ graph TB
 **Mission**: Model pricing tiers, track LTV/CAC, project revenue, calculate key SaaS metrics.
 
 **Activation**:
+
 - After Business Plan created (initial modeling)
 - Monthly financial reviews
 - Before pricing changes
 - For investor updates
 
 **Artifacts**:
+
 - `docs/finance/unit-economics-model.md` - Mermaid diagram + calculations
 - `docs/finance/pricing-strategy.md` - Tier definitions, ARPU targets
 
 **Metrics Tracked**:
+
 - LTV (Lifetime Value)
 - CAC (Customer Acquisition Cost)
 - LTV:CAC ratio (target 3:1 to 5:1)
@@ -449,6 +474,7 @@ graph TB
 - CAC payback period (target 12-18 months)
 
 **Process**:
+
 1. Extract pricing from README.md
 2. Calculate LTV = (ARPU × Gross Margin) / Churn Rate
 3. Estimate CAC from marketing channels
@@ -470,16 +496,19 @@ graph TB
 **Mission**: Define logging strategy, audit trails, data retention policies, monitoring dashboards.
 
 **Activation**:
+
 - During Phase 3 (Architecture) for logging ADR
 - Before production deployment
 - After security incidents
 
 **Artifacts**:
+
 - ADR on observability strategy
 - `docs/ops/logging-standards.md` - What to log, formats, retention
 - `docs/ops/audit-trail-spec.md` - Audit log requirements
 
 **Process**:
+
 1. Review ZenStack models for sensitive operations (create/update/delete)
 2. Define audit log structure: `{ who, what, where, when, why }`
 3. Specify retention policies (GDPR compliance)
@@ -488,6 +517,7 @@ graph TB
 6. Recommend alerting thresholds
 
 **Key Audit Events**:
+
 - User authentication (login, logout, failed attempts)
 - Data access (who viewed sensitive records)
 - Data modifications (creates, updates, deletes with diffs)
@@ -509,16 +539,19 @@ graph TB
 **Mission**: Document common support issues, create troubleshooting guides, define escalation paths.
 
 **Activation**:
+
 - After MVP launch (initial docs)
 - After QA identifies confusing UX
 - When support tickets accumulate
 
 **Artifacts**:
+
 - `docs/support/faq.md` - Frequently asked questions
 - `docs/support/troubleshooting.md` - Common error resolutions
 - `docs/support/escalation-protocol.md` - When to escalate, to whom
 
 **Process**:
+
 1. Review QA reports for common user confusion points
 2. Create FAQ entries for likely questions
 3. Document error messages and resolutions
@@ -549,6 +582,7 @@ Add new section to Quality Reviewer agent:
 ### 6. Build Evaluation Suite
 
 **After Finding Any Bug**:
+
 1. **Capture the Failure Mode**:
    - What input caused the failure?
    - What was the incorrect output?
@@ -565,12 +599,14 @@ Add new section to Quality Reviewer agent:
    - Explain the failure mode for future reference
 
 **Types of Failure Modes to Capture**:
+
 - Edge cases (empty arrays, null values, boundary conditions)
 - Error scenarios (network failures, invalid input, race conditions)
 - Security issues (injection attempts, unauthorized access)
 - Performance issues (large datasets, slow queries)
 
 **Eval Suite Structure**:
+
 - `__tests__/unit/` - Component-level tests
 - `__tests__/integration/` - API contract tests
 - `__tests__/e2e/` - Full user flow tests (Playwright)
@@ -599,6 +635,7 @@ Add section to Quality Reviewer:
 ### 7. Adversarial Testing
 
 **Security Test Cases**:
+
 - [ ] SQL injection attempts (in form inputs)
 - [ ] XSS injection attempts (<script> tags)
 - [ ] CSRF token validation
@@ -606,6 +643,7 @@ Add section to Quality Reviewer:
 - [ ] Rate limiting (excessive requests)
 
 **Robustness Test Cases**:
+
 - [ ] Very large inputs (10MB file uploads, 10k character strings)
 - [ ] Concurrent requests (race conditions)
 - [ ] Invalid data types (string where number expected)
@@ -613,6 +651,7 @@ Add section to Quality Reviewer:
 - [ ] Malformed JSON/requests
 
 **Tools**:
+
 - OWASP ZAP for security scanning
 - Playwright for E2E adversarial flows
 ```
@@ -690,6 +729,7 @@ echo "Run 'pnpm dev' to start development server"
 ```
 
 **Integration**:
+
 1. Add to `package.json`: `"diagnose": "bash scripts/diagnose-web-environment.sh"`
 2. Update `docs/GETTING_STARTED.md` to recommend running `pnpm diagnose` first
 3. Add to Vercel build: `vercel.json` build command prepends diagnostic
@@ -716,19 +756,22 @@ Add to PR Finalization Agent:
 ### Database Migration Handling
 
 **If schema.prisma changed**:
+
 1. Run `pnpm prisma migrate dev` to create migration
 2. Capture migration name (timestamp format: `20250116123045_migration_name`)
 3. Include in PR description:
-   ```
-   ## Database Changes
+```
 
-   Migration: `20250116123045_add_user_preferences`
+## Database Changes
 
-   **Rollback**:
-   \`\`\`bash
-   pnpm prisma migrate resolve --rolled-back 20250116123045_add_user_preferences
-   \`\`\`
-   ```
+Migration: `20250116123045_add_user_preferences`
+
+**Rollback**:
+\`\`\`bash
+pnpm prisma migrate resolve --rolled-back 20250116123045_add_user_preferences
+\`\`\`
+
+```
 
 **Why**: Immutable release marker for deployment snapshots and clear rollback procedure.
 ```
@@ -748,6 +791,7 @@ Add to PR Finalization Agent:
 **What**: Create ADRs for components mentioned in CLAUDE.md but not fully specified.
 
 **Missing ADRs**:
+
 1. **ADR-XXX: Redis Caching Strategy** (Upstash Redis is optional)
    - When to use Redis vs in-memory cache
    - Rate limiting implementation
@@ -790,6 +834,7 @@ Add to PR Finalization Agent:
 Before requesting human resources for any business function, verify an agent exists:
 
 ## Product Development ✅
+
 - [x] Product Manager Agent
 - [x] Architecture Agent
 - [x] Backend Developer Agent
@@ -799,6 +844,7 @@ Before requesting human resources for any business function, verify an agent exi
 - [x] Quality Reviewer Agent
 
 ## Business Operations
+
 - [ ] Market Analyst Agent (Recommendation 3.1)
 - [ ] Experimentation Agent (Recommendation 3.2)
 - [ ] Compliance Agent (Recommendation 3.3)
@@ -807,6 +853,7 @@ Before requesting human resources for any business function, verify an agent exi
 - [ ] Support Triage Agent (Recommendation 3.6)
 
 ## Deployment & Operations ✅
+
 - [x] PR Finalization Agent
 - [x] GitHub Integration Agent
 - [x] Session Summary Agent
@@ -873,14 +920,14 @@ Before requesting human resources for any business function, verify an agent exi
 
 ### Template Maturity Scorecard
 
-| Dimension | Before | After Phase 1 | After Phase 2 | Target |
-|-----------|--------|---------------|---------------|--------|
-| **Agent Coverage** | 10 agents (dev only) | 16 agents (full ops) | 16 agents | ✅ Complete |
-| **HITL Efficiency** | 4 gates, batch review | Same | Same | ✅ Optimal |
-| **Business Artifacts** | README only | Same | BMC + GTM | ✅ Formal |
-| **Design System** | Tailwind config | Style guide | @theme upgrade | ✅ Modern |
-| **Eval Maturity** | AC validation | Failure mode capture | Same | ✅ Robust |
-| **Deployment Safety** | Manual validation | Automated diagnostics | Migration docs | ✅ Safe |
+| Dimension              | Before                | After Phase 1         | After Phase 2  | Target      |
+| ---------------------- | --------------------- | --------------------- | -------------- | ----------- |
+| **Agent Coverage**     | 10 agents (dev only)  | 16 agents (full ops)  | 16 agents      | ✅ Complete |
+| **HITL Efficiency**    | 4 gates, batch review | Same                  | Same           | ✅ Optimal  |
+| **Business Artifacts** | README only           | Same                  | BMC + GTM      | ✅ Formal   |
+| **Design System**      | Tailwind config       | Style guide           | @theme upgrade | ✅ Modern   |
+| **Eval Maturity**      | AC validation         | Failure mode capture  | Same           | ✅ Robust   |
+| **Deployment Safety**  | Manual validation     | Automated diagnostics | Migration docs | ✅ Safe     |
 
 ### KPIs for Template Users
 
@@ -894,40 +941,47 @@ Before requesting human resources for any business function, verify an agent exi
 ## Appendix A: Research Sources
 
 ### Business Model Canvas
+
 - Strategyzer 2025 survey (1,300+ users)
 - Business Model Canvas Wikipedia (updated 2025)
 - Numberanalytics BMC guide
 
 ### APDLC / Agent Governance
+
 - IBM/Anthropic Agent Development Lifecycle (ADLC) guide (Oct 2025)
 - Architecture & Governance Magazine - Agentic SDLC (2025)
 - McKinsey "The Agentic Organization" (2025)
 - Gartner 2025 Agentic AI research
 
 ### Design Systems
+
 - Medium: "Tailwind CSS 4 @theme" (Oct 2025)
 - Bootstrapdash: Tailwind Best Practices 2025
 - Figma Tokens plugin + Style Dictionary integration
 
 ### SaaS GTM & Unit Economics
+
 - Ramp 2025 Unit Economics Guide
 - SaaStorm GTM Strategy 2025
 - Amplitude Go-to-Market Guide
 - Axis Intelligence B2B SaaS Framework 2025
 
 ### AI Agent Evaluation
+
 - Confident AI: Definitive AI Agent Evaluation Guide
 - Maxim AI: Agent Evaluation Metrics 2025
 - Monte Carlo Data: Agent Evaluation Lessons
 - Testmo: 10 Essential Practices for Testing AI Systems
 
 ### Observability & Audit Logging
+
 - Google Cloud Audit Logging Best Practices (2025)
 - New Relic: What is an Audit Trail
 - StrongDM: Audit Log Management
 - Middleware: Comprehensive Audit Logs Guide
 
 ### Multi-Agent Orchestration
+
 - IBM Think: AI Agents 2025 Expectations vs Reality
 - Credo AI: Governing Autonomous AI
 - Medium: AI Agent Orchestration (Jose F. Sosa)

@@ -45,18 +45,18 @@ export function ProfileShareQR({
 
   // Generate a simple QR code placeholder (in production, use a QR library)
   const qrCodePlaceholder = (
-    <div className="w-48 h-48 bg-white p-4 flex items-center justify-center border-2 border-foreground">
+    <div className="border-foreground flex h-48 w-48 items-center justify-center border-2 bg-white p-4">
       <div className="text-center">
-        <QrCode className="h-24 w-24 mx-auto text-foreground" />
-        <p className="text-xs text-muted-foreground mt-2">QR Code</p>
+        <QrCode className="text-foreground mx-auto h-24 w-24" />
+        <p className="text-muted-foreground mt-2 text-xs">QR Code</p>
       </div>
     </div>
   )
 
   return (
-    <Card className={`border-2 border-foreground ${className || ''}`}>
+    <Card className={`border-foreground border-2 ${className || ''}`}>
       <CardHeader>
-        <CardTitle className="text-lg flex items-center gap-2">
+        <CardTitle className="flex items-center gap-2 text-lg">
           <Share2 className="h-5 w-5" />
           Share Your Profile
         </CardTitle>
@@ -66,19 +66,16 @@ export function ProfileShareQR({
       </CardHeader>
 
       <CardContent className="space-y-4">
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+        <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
           {/* QR Code Dialog */}
           <Dialog>
             <DialogTrigger asChild>
-              <Button
-                variant="outline"
-                className="w-full border-2 border-foreground"
-              >
-                <QrCode className="h-4 w-4 mr-2" />
+              <Button variant="outline" className="border-foreground w-full border-2">
+                <QrCode className="mr-2 h-4 w-4" />
                 QR Code
               </Button>
             </DialogTrigger>
-            <DialogContent className="border-2 border-foreground">
+            <DialogContent className="border-foreground border-2">
               <DialogHeader>
                 <DialogTitle>Profile Verification QR Code</DialogTitle>
                 <DialogDescription>
@@ -87,29 +84,29 @@ export function ProfileShareQR({
               </DialogHeader>
               <div className="flex flex-col items-center py-6">
                 {qrCodePlaceholder}
-                <p className="text-sm font-medium mt-4">{tenantName}</p>
-                <p className="text-xs text-muted-foreground">Profile ID: {profileId}</p>
+                <p className="mt-4 text-sm font-medium">{tenantName}</p>
+                <p className="text-muted-foreground text-xs">Profile ID: {profileId}</p>
               </div>
               <div className="flex gap-2">
                 <Button
                   variant="outline"
-                  className="flex-1 border-2 border-foreground"
+                  className="border-foreground flex-1 border-2"
                   onClick={handleCopyLink}
                 >
                   {copied ? (
                     <>
-                      <Check className="h-4 w-4 mr-2" />
+                      <Check className="mr-2 h-4 w-4" />
                       Copied!
                     </>
                   ) : (
                     <>
-                      <Copy className="h-4 w-4 mr-2" />
+                      <Copy className="mr-2 h-4 w-4" />
                       Copy Link
                     </>
                   )}
                 </Button>
-                <Button className="flex-1 border-2 border-foreground">
-                  <Download className="h-4 w-4 mr-2" />
+                <Button className="border-foreground flex-1 border-2">
+                  <Download className="mr-2 h-4 w-4" />
                   Save QR
                 </Button>
               </div>
@@ -119,10 +116,10 @@ export function ProfileShareQR({
           {/* Download PDF */}
           <Button
             variant="outline"
-            className="w-full border-2 border-foreground"
+            className="border-foreground w-full border-2"
             onClick={onDownloadPDF}
           >
-            <FileText className="h-4 w-4 mr-2" />
+            <FileText className="mr-2 h-4 w-4" />
             Download PDF
           </Button>
         </div>
@@ -134,12 +131,10 @@ export function ProfileShareQR({
               View all export options
             </Button>
           </DialogTrigger>
-          <DialogContent className="border-2 border-foreground max-w-md">
+          <DialogContent className="border-foreground max-w-md border-2">
             <DialogHeader>
               <DialogTitle>Export Profile</DialogTitle>
-              <DialogDescription>
-                Choose your preferred export format
-              </DialogDescription>
+              <DialogDescription>Choose your preferred export format</DialogDescription>
             </DialogHeader>
 
             <Tabs defaultValue="pdf" className="mt-4">
@@ -149,51 +144,43 @@ export function ProfileShareQR({
                 <TabsTrigger value="json">JSON</TabsTrigger>
               </TabsList>
 
-              <TabsContent value="pdf" className="space-y-3 mt-4">
-                <p className="text-sm text-muted-foreground">
+              <TabsContent value="pdf" className="mt-4 space-y-3">
+                <p className="text-muted-foreground text-sm">
                   Download a PDF summary of your verified profile for manual sharing with landlords.
                 </p>
-                <ul className="text-xs text-muted-foreground space-y-1">
+                <ul className="text-muted-foreground space-y-1 text-xs">
                   <li>&#x2713; Includes all verified data</li>
                   <li>&#x2713; Professional formatting</li>
                   <li>&#x2713; Meets PTSR standards</li>
                 </ul>
-                <Button
-                  className="w-full border-2 border-foreground"
-                  onClick={onDownloadPDF}
-                >
-                  <FileText className="h-4 w-4 mr-2" />
+                <Button className="border-foreground w-full border-2" onClick={onDownloadPDF}>
+                  <FileText className="mr-2 h-4 w-4" />
                   Download PDF Summary
                 </Button>
               </TabsContent>
 
-              <TabsContent value="qr" className="space-y-3 mt-4">
-                <p className="text-sm text-muted-foreground">
+              <TabsContent value="qr" className="mt-4 space-y-3">
+                <p className="text-muted-foreground text-sm">
                   Generate a QR code that links to your verification page for instant verification.
                 </p>
-                <div className="flex justify-center py-4">
-                  {qrCodePlaceholder}
-                </div>
-                <Button className="w-full border-2 border-foreground">
-                  <Download className="h-4 w-4 mr-2" />
+                <div className="flex justify-center py-4">{qrCodePlaceholder}</div>
+                <Button className="border-foreground w-full border-2">
+                  <Download className="mr-2 h-4 w-4" />
                   Download QR Code
                 </Button>
               </TabsContent>
 
-              <TabsContent value="json" className="space-y-3 mt-4">
-                <p className="text-sm text-muted-foreground">
+              <TabsContent value="json" className="mt-4 space-y-3">
+                <p className="text-muted-foreground text-sm">
                   Export your profile data in JSON format for integration with other platforms.
                 </p>
-                <ul className="text-xs text-muted-foreground space-y-1">
+                <ul className="text-muted-foreground space-y-1 text-xs">
                   <li>&#x2713; Machine-readable format</li>
                   <li>&#x2713; API integrations</li>
                   <li>&#x2713; Portable data</li>
                 </ul>
-                <Button
-                  className="w-full border-2 border-foreground"
-                  onClick={onDownloadJSON}
-                >
-                  <Download className="h-4 w-4 mr-2" />
+                <Button className="border-foreground w-full border-2" onClick={onDownloadJSON}>
+                  <Download className="mr-2 h-4 w-4" />
                   Export JSON
                 </Button>
               </TabsContent>

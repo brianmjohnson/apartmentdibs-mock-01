@@ -61,7 +61,7 @@ async function parseHITLFile(filePath: string): Promise<HITLFile | null> {
       category: categoryMatch ? categoryMatch[1].trim() : 'other',
       related: relatedMatch ? relatedMatch[1].trim() : 'None',
       status: statusMatch[1].trim() as HITLFile['status'],
-      feedback: feedbackMatch ? feedbackMatch[1].trim() : undefined
+      feedback: feedbackMatch ? feedbackMatch[1].trim() : undefined,
     }
   } catch (error) {
     console.error(`❌ Error parsing ${filePath}:`, error)
@@ -72,10 +72,8 @@ async function parseHITLFile(filePath: string): Promise<HITLFile | null> {
 async function scanHITLDirectory(): Promise<HITLFile[]> {
   try {
     const files = await fs.readdir(HITL_DIR)
-    const hitlFiles = files.filter(f =>
-      f.startsWith('hitl-') &&
-      f.endsWith('.md') &&
-      !f.includes('template')
+    const hitlFiles = files.filter(
+      (f) => f.startsWith('hitl-') && f.endsWith('.md') && !f.includes('template')
     )
 
     const parsed = await Promise.all(
@@ -98,10 +96,10 @@ async function scanHITLDirectory(): Promise<HITLFile[]> {
 
 function categorizeByStatus(files: HITLFile[]): HITLSummary {
   return {
-    approved: files.filter(f => f.status === 'APPROVED'),
-    needsRevision: files.filter(f => f.status === 'NEEDS_REVISION'),
-    rejected: files.filter(f => f.status === 'REJECTED'),
-    pending: files.filter(f => f.status === 'PENDING')
+    approved: files.filter((f) => f.status === 'APPROVED'),
+    needsRevision: files.filter((f) => f.status === 'NEEDS_REVISION'),
+    rejected: files.filter((f) => f.status === 'REJECTED'),
+    pending: files.filter((f) => f.status === 'PENDING'),
   }
 }
 
@@ -120,8 +118,11 @@ function groupByCategory(files: HITLFile[]): Map<string, HITLFile[]> {
 }
 
 function generateReport(summary: HITLSummary): string {
-  const total = summary.approved.length + summary.needsRevision.length +
-                summary.rejected.length + summary.pending.length
+  const total =
+    summary.approved.length +
+    summary.needsRevision.length +
+    summary.rejected.length +
+    summary.pending.length
 
   const report: string[] = []
 
@@ -149,7 +150,7 @@ function generateReport(summary: HITLSummary): string {
     const byCategory = groupByCategory(summary.approved)
     byCategory.forEach((files, category) => {
       report.push(`\n${category.toUpperCase()}: ${files.length} items`)
-      files.forEach(f => {
+      files.forEach((f) => {
         report.push(`  • ${f.title}`)
         report.push(`    Related: ${f.related}`)
         report.push(`    File: ${f.filename}`)
@@ -163,7 +164,7 @@ function generateReport(summary: HITLSummary): string {
     report.push('🔄 NEEDS REVISION Items')
     report.push('─'.repeat(60))
 
-    summary.needsRevision.forEach(f => {
+    summary.needsRevision.forEach((f) => {
       report.push(`\n• ${f.title}`)
       report.push(`  Category: ${f.category}`)
       report.push(`  Related: ${f.related}`)
@@ -171,7 +172,7 @@ function generateReport(summary: HITLSummary): string {
       if (f.feedback) {
         report.push(`  Human Feedback:`)
         const feedbackLines = f.feedback.split('\n')
-        feedbackLines.forEach(line => {
+        feedbackLines.forEach((line) => {
           if (line.trim()) report.push(`    ${line.trim()}`)
         })
       }
@@ -184,7 +185,7 @@ function generateReport(summary: HITLSummary): string {
     report.push('❌ REJECTED Items')
     report.push('─'.repeat(60))
 
-    summary.rejected.forEach(f => {
+    summary.rejected.forEach((f) => {
       report.push(`\n• ${f.title}`)
       report.push(`  Category: ${f.category}`)
       report.push(`  Related: ${f.related}`)
@@ -192,7 +193,7 @@ function generateReport(summary: HITLSummary): string {
       if (f.feedback) {
         report.push(`  Rejection Reason:`)
         const feedbackLines = f.feedback.split('\n')
-        feedbackLines.forEach(line => {
+        feedbackLines.forEach((line) => {
           if (line.trim()) report.push(`    ${line.trim()}`)
         })
       }
@@ -209,7 +210,7 @@ function generateReport(summary: HITLSummary): string {
     const byCategory = groupByCategory(summary.pending)
     byCategory.forEach((files, category) => {
       report.push(`${category}: ${files.length} items`)
-      files.forEach(f => {
+      files.forEach((f) => {
         report.push(`  • ${f.title} (${f.filename})`)
       })
     })
@@ -234,13 +235,13 @@ function generateReport(summary: HITLSummary): string {
       report.push(`Proceed with ${summary.approved.length} approved items:`)
       const byCategory = groupByCategory(summary.approved)
       byCategory.forEach((files, category) => {
-        report.push(`  • ${category}: ${files.map(f => f.related).join(', ')}`)
+        report.push(`  • ${category}: ${files.map((f) => f.related).join(', ')}`)
       })
     }
     if (summary.needsRevision.length > 0) {
       report.push('')
       report.push(`Revise ${summary.needsRevision.length} items based on feedback:`)
-      summary.needsRevision.forEach(f => {
+      summary.needsRevision.forEach((f) => {
         report.push(`  • ${f.related}: ${f.title}`)
       })
     }
@@ -251,7 +252,7 @@ function generateReport(summary: HITLSummary): string {
   } else if (summary.rejected.length > 0) {
     report.push('All items were rejected. Review rejection reasons and create new approach.')
   } else {
-    report.push('No HITL files found. You\'re all caught up!')
+    report.push("No HITL files found. You're all caught up!")
   }
 
   report.push('')
@@ -263,10 +264,7 @@ function generateReport(summary: HITLSummary): string {
 async function archiveProcessedFiles(summary: HITLSummary): Promise<void> {
   const archiveDir = path.join(HITL_DIR, 'archive', new Date().toISOString().split('T')[0])
 
-  const toArchive = [
-    ...summary.approved,
-    ...summary.rejected
-  ]
+  const toArchive = [...summary.approved, ...summary.rejected]
 
   if (toArchive.length === 0) return
 
@@ -287,7 +285,7 @@ async function main() {
   const files = await scanHITLDirectory()
 
   if (files.length === 0) {
-    console.log('✨ No HITL files found. You\'re all caught up!')
+    console.log("✨ No HITL files found. You're all caught up!")
     return
   }
 
@@ -313,7 +311,10 @@ async function main() {
   // }
 
   // Save report to file
-  const reportPath = path.join(HITL_DIR, `resume-report-${new Date().toISOString().split('T')[0]}.txt`)
+  const reportPath = path.join(
+    HITL_DIR,
+    `resume-report-${new Date().toISOString().split('T')[0]}.txt`
+  )
   await fs.writeFile(reportPath, report)
   console.log(`\n📄 Report saved to: ${reportPath}`)
 }

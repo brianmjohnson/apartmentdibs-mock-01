@@ -56,6 +56,7 @@ Tenants apply to apartments without knowing if they meet basic criteria, wasting
 **Given** a tenant browses listings without a profile
 **When** they access pre-qualification
 **Then** they can answer:
+
 - "What's your annual income?"
 - "What's your estimated credit score range?"
 - "Do you have eviction history?"
@@ -63,6 +64,7 @@ Tenants apply to apartments without knowing if they meet basic criteria, wasting
 **And** receive: "Based on your answers, you qualify for apartments up to $X/month"
 
 **Verification**:
+
 - [ ] Calculator uses standard formulas (3x-4x income)
 - [ ] Results clearly explain qualification
 - [ ] Prompts to create profile for accurate assessment
@@ -72,11 +74,13 @@ Tenants apply to apartments without knowing if they meet basic criteria, wasting
 **Given** a tenant has income/credit info (from profile or quiz)
 **When** they view a listing
 **Then** they see qualification status:
+
 - Green check: "You meet all requirements"
 - Yellow warning: "You meet most requirements. Credit score below threshold."
 - Red X: "You don't meet income requirement (2.8x vs 3.0x required)"
 
 **Verification**:
+
 - [ ] Indicator shows on all listings
 - [ ] Specific gap identified
 - [ ] Suggestions provided (e.g., "Consider a co-signer")
@@ -86,10 +90,12 @@ Tenants apply to apartments without knowing if they meet basic criteria, wasting
 **Given** a listing has screening criteria
 **When** a tenant views the listing
 **Then** they see:
+
 - **Hard criteria**: "Minimum 3.0x income, 680+ credit, no evictions in 7 years"
 - **Soft criteria**: "Prefers 12-month lease, move-in within 30 days"
 
 **Verification**:
+
 - [ ] Criteria clearly categorized
 - [ ] Hard criteria marked as requirements
 - [ ] Soft criteria marked as preferences
@@ -99,11 +105,13 @@ Tenants apply to apartments without knowing if they meet basic criteria, wasting
 **Given** a tenant doesn't meet criteria
 **When** they see the gap
 **Then** they receive suggestions:
+
 - "Offer a co-signer to meet income requirement"
 - "Pay extra security deposit to offset credit score"
 - "Look at listings with lower requirements"
 
 **Verification**:
+
 - [ ] Tips are actionable
 - [ ] Alternative listings suggested
 - [ ] Co-signer flow available
@@ -121,6 +129,7 @@ Tenants apply to apartments without knowing if they meet basic criteria, wasting
 ### Frontend Specification
 
 **Components**:
+
 ```
 components/
   qualification/
@@ -133,13 +142,14 @@ components/
 
 ## Analytics Tracking
 
-| Event Name | When Triggered | Properties |
-|------------|----------------|------------|
-| `prequal_completed` | Quiz submitted | `{userId, maxBudget}` |
-| `qualification_viewed` | Badge seen on listing | `{listingId, qualified}` |
-| `tip_clicked` | Improvement tip accessed | `{userId, tipType}` |
+| Event Name             | When Triggered           | Properties               |
+| ---------------------- | ------------------------ | ------------------------ |
+| `prequal_completed`    | Quiz submitted           | `{userId, maxBudget}`    |
+| `qualification_viewed` | Badge seen on listing    | `{listingId, qualified}` |
+| `tip_clicked`          | Improvement tip accessed | `{userId, tipType}`      |
 
 **Success Metrics**:
+
 - 80% of applications are from qualified tenants
 - 25% reduction in unqualified applications
 - 90%+ of users find pre-qual helpful (survey)
@@ -149,9 +159,11 @@ components/
 ## Dependencies
 
 ### Blocked By
+
 - US-010: Reusable Profile (for accurate assessment)
 
 ### Related Stories
+
 - US-012: Adaptive Onboarding
 
 ---

@@ -35,6 +35,7 @@ scoop install stripe
 ```
 
 **Verify Installation**:
+
 ```bash
 stripe --version
 ```
@@ -44,17 +45,20 @@ stripe --version
 Stripe CLI requires API keys for authentication:
 
 **Required Environment Variable**:
+
 ```env
 STRIPE_API_KEY="sk_test_..."    # Secret key from Stripe Dashboard
 ```
 
 **How to Get API Key**:
+
 1. Log in to https://dashboard.stripe.com
 2. Go to Developers → API Keys
 3. Copy the "Secret key" (starts with `sk_test_` for test mode, `sk_live_` for production)
 4. Set `STRIPE_API_KEY` environment variable
 
 **Login to Stripe CLI**:
+
 ```bash
 # Interactive login (recommended for local development)
 stripe login
@@ -64,6 +68,7 @@ stripe listen --api-key sk_test_...
 ```
 
 **Check Authentication Status**:
+
 ```bash
 stripe config --list
 ```
@@ -269,6 +274,7 @@ stripe subscriptions create \
 ### Environment Variables
 
 Add to `.env.local` (not committed to git):
+
 ```env
 # Stripe API Keys
 STRIPE_SECRET_KEY="sk_test_..."       # For backend API calls
@@ -280,6 +286,7 @@ STRIPE_API_KEY="sk_test_..."          # Same as STRIPE_SECRET_KEY
 ```
 
 Add placeholders to `.env.example`:
+
 ```env
 # Stripe (Payment Processing)
 STRIPE_SECRET_KEY="<secret key from stripe dashboard>"
@@ -305,6 +312,7 @@ model User extends BaseModel {
 ```
 
 **Common Queries**:
+
 ```sql
 -- Find user by Stripe customer ID
 SELECT * FROM "User" WHERE "stripeCustomerId" = 'cus_xxxxx';
@@ -414,4 +422,3 @@ stripe charges list --stripe-version 2023-10-16
 **Installation Status**: Manual installation required via package manager
 **Authentication**: Requires `STRIPE_API_KEY` environment variable or `stripe login`
 **Skill Type**: Payment management, subscription billing, customer support
-

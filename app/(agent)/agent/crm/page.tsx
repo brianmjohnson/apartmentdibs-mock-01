@@ -1,16 +1,7 @@
 'use client'
 
 import Link from 'next/link'
-import {
-  Users,
-  UserPlus,
-  Info,
-  Building,
-  Calendar,
-  TrendingUp,
-  Send,
-  Eye
-} from 'lucide-react'
+import { Users, UserPlus, Info, Building, Calendar, TrendingUp, Send, Eye } from 'lucide-react'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
@@ -29,7 +20,7 @@ export const mockCRMLeads = [
     creditBand: '720-740',
     matchingListings: 3,
     matchScore: 92,
-    lastOutreach: null
+    lastOutreach: null,
   },
   {
     id: 'crm-002',
@@ -42,7 +33,7 @@ export const mockCRMLeads = [
     creditBand: '700-720',
     matchingListings: 2,
     matchScore: 85,
-    lastOutreach: '2025-11-01'
+    lastOutreach: '2025-11-01',
   },
   {
     id: 'crm-003',
@@ -55,7 +46,7 @@ export const mockCRMLeads = [
     creditBand: '760-780',
     matchingListings: 4,
     matchScore: 96,
-    lastOutreach: null
+    lastOutreach: null,
   },
   {
     id: 'crm-004',
@@ -68,7 +59,7 @@ export const mockCRMLeads = [
     creditBand: '680-700',
     matchingListings: 5,
     matchScore: 88,
-    lastOutreach: '2025-11-10'
+    lastOutreach: '2025-11-10',
   },
   {
     id: 'crm-005',
@@ -81,35 +72,34 @@ export const mockCRMLeads = [
     creditBand: '740-760',
     matchingListings: 3,
     matchScore: 91,
-    lastOutreach: null
-  }
+    lastOutreach: null,
+  },
 ]
 
 export default function CRMPage() {
   const totalLeads = mockCRMLeads.length
-  const noOutreachLeads = mockCRMLeads.filter(l => !l.lastOutreach).length
+  const noOutreachLeads = mockCRMLeads.filter((l) => !l.lastOutreach).length
 
   return (
     <div className="space-y-6">
       {/* Page Header */}
       <div>
         <h1 className="text-3xl font-bold tracking-tight">CRM - Warm Leads</h1>
-        <p className="text-muted-foreground">
-          {totalLeads} leads available for re-engagement
-        </p>
+        <p className="text-muted-foreground">{totalLeads} leads available for re-engagement</p>
       </div>
 
       {/* Explanation Card */}
       <Card className="border-2 border-blue-300 bg-blue-50 dark:bg-blue-900/20">
         <CardContent className="p-4">
           <div className="flex items-start gap-3">
-            <Info className="h-5 w-5 text-blue-600 shrink-0 mt-0.5" />
+            <Info className="mt-0.5 h-5 w-5 shrink-0 text-blue-600" />
             <div>
               <p className="font-medium text-blue-800 dark:text-blue-200">
                 These are denied applicants who match your current listings
               </p>
-              <p className="text-sm text-blue-700 dark:text-blue-300 mt-1">
-                Re-engage them with one-tap outreach. They&apos;ve already been verified and are actively looking for housing.
+              <p className="mt-1 text-sm text-blue-700 dark:text-blue-300">
+                Re-engage them with one-tap outreach. They&apos;ve already been verified and are
+                actively looking for housing.
               </p>
             </div>
           </div>
@@ -118,35 +108,35 @@ export default function CRMPage() {
 
       {/* Quick Stats */}
       <div className="grid gap-4 md:grid-cols-3">
-        <Card className="border-2 border-foreground">
+        <Card className="border-foreground border-2">
           <CardContent className="p-4">
             <div className="flex items-center gap-3">
-              <Users className="h-8 w-8 text-muted-foreground" />
+              <Users className="text-muted-foreground h-8 w-8" />
               <div>
                 <p className="text-2xl font-bold">{totalLeads}</p>
-                <p className="text-sm text-muted-foreground">Total Leads</p>
+                <p className="text-muted-foreground text-sm">Total Leads</p>
               </div>
             </div>
           </CardContent>
         </Card>
-        <Card className="border-2 border-foreground">
+        <Card className="border-foreground border-2">
           <CardContent className="p-4">
             <div className="flex items-center gap-3">
-              <UserPlus className="h-8 w-8 text-muted-foreground" />
+              <UserPlus className="text-muted-foreground h-8 w-8" />
               <div>
                 <p className="text-2xl font-bold">{noOutreachLeads}</p>
-                <p className="text-sm text-muted-foreground">Awaiting Outreach</p>
+                <p className="text-muted-foreground text-sm">Awaiting Outreach</p>
               </div>
             </div>
           </CardContent>
         </Card>
-        <Card className="border-2 border-foreground">
+        <Card className="border-foreground border-2">
           <CardContent className="p-4">
             <div className="flex items-center gap-3">
-              <TrendingUp className="h-8 w-8 text-muted-foreground" />
+              <TrendingUp className="text-muted-foreground h-8 w-8" />
               <div>
                 <p className="text-2xl font-bold">24%</p>
-                <p className="text-sm text-muted-foreground">Conversion Rate</p>
+                <p className="text-muted-foreground text-sm">Conversion Rate</p>
               </div>
             </div>
           </CardContent>
@@ -156,7 +146,7 @@ export default function CRMPage() {
       {/* Lead Cards */}
       <div className="grid gap-4 md:grid-cols-2">
         {mockCRMLeads.map((lead) => (
-          <Card key={lead.id} className="border-2 border-foreground">
+          <Card key={lead.id} className="border-foreground border-2">
             <CardHeader className="pb-2">
               <div className="flex items-start justify-between">
                 <div>
@@ -169,10 +159,10 @@ export default function CRMPage() {
                   variant="outline"
                   className={`${
                     lead.matchScore >= 90
-                      ? 'bg-green-100 text-green-800 border-green-300'
+                      ? 'border-green-300 bg-green-100 text-green-800'
                       : lead.matchScore >= 80
-                      ? 'bg-yellow-100 text-yellow-800 border-yellow-300'
-                      : 'bg-gray-100 text-gray-800 border-gray-300'
+                        ? 'border-yellow-300 bg-yellow-100 text-yellow-800'
+                        : 'border-gray-300 bg-gray-100 text-gray-800'
                   }`}
                 >
                   {lead.matchScore}% match
@@ -199,16 +189,17 @@ export default function CRMPage() {
               </div>
 
               {/* Matching Listings */}
-              <div className="flex items-center gap-2 p-2 bg-muted rounded-md">
-                <Building className="h-4 w-4 text-muted-foreground" />
+              <div className="bg-muted flex items-center gap-2 rounded-md p-2">
+                <Building className="text-muted-foreground h-4 w-4" />
                 <span className="text-sm">
-                  <span className="font-medium">{lead.matchingListings}</span> matching listings available
+                  <span className="font-medium">{lead.matchingListings}</span> matching listings
+                  available
                 </span>
               </div>
 
               {/* Last Outreach */}
               {lead.lastOutreach && (
-                <div className="flex items-center gap-2 text-xs text-muted-foreground">
+                <div className="text-muted-foreground flex items-center gap-2 text-xs">
                   <Calendar className="h-3 w-3" />
                   Last contacted: {formatDate(lead.lastOutreach)}
                 </div>
@@ -222,7 +213,7 @@ export default function CRMPage() {
                     View Details
                   </Button>
                 </Link>
-                <Button className="flex-1 border-2 border-foreground">
+                <Button className="border-foreground flex-1 border-2">
                   <Send className="mr-2 h-4 w-4" />
                   Invite to Apply
                 </Button>
@@ -234,8 +225,8 @@ export default function CRMPage() {
 
       {/* Empty State */}
       {mockCRMLeads.length === 0 && (
-        <div className="text-center py-12">
-          <Users className="h-12 w-12 mx-auto text-muted-foreground mb-4" />
+        <div className="py-12 text-center">
+          <Users className="text-muted-foreground mx-auto mb-4 h-12 w-12" />
           <h3 className="text-lg font-semibold">No CRM leads yet</h3>
           <p className="text-muted-foreground">
             Denied applicants who match your listings will appear here.

@@ -30,6 +30,7 @@ cp -r projects_template/ my-new-project/
 ```
 
 **Challenges**:
+
 - **Customizations**: Project has project-specific code
 - **Conflicts**: Same files modified in both repos
 - **Selective Sync**: Some template changes don't apply to all projects
@@ -54,6 +55,7 @@ This skill provides three scripts for safe template synchronization:
 **File**: `sync-from-template.sh`
 
 **What it does**:
+
 - ✅ Creates backup branch before any changes
 - ✅ Syncs new ADRs, domain guides, testing docs
 - ✅ Syncs new agents, skills, agents
@@ -91,6 +93,7 @@ git checkout -
 ```
 
 **What it syncs**:
+
 ```
 docs/adr/              → New ADRs
 docs/domains/          → New domain guides
@@ -102,6 +105,7 @@ docs/*.md              → Workflow guides (if missing)
 ```
 
 **Safety Features**:
+
 - Checks for clean working directory
 - Creates timestamped backup branch
 - Uses `--ignore-existing` (won't overwrite customizations)
@@ -114,6 +118,7 @@ docs/*.md              → Workflow guides (if missing)
 **File**: `sync-docs-only.sh`
 
 **What it does**:
+
 - ✅ Syncs only documentation files
 - ✅ Safest option (no code or config changes)
 - ✅ Perfect for weekly doc updates
@@ -138,6 +143,7 @@ git commit -m "docs: sync from template"
 ```
 
 **What it syncs**:
+
 ```
 docs/adr/              → ADRs only
 docs/domains/          → Domain guides only
@@ -145,6 +151,7 @@ docs/testing/          → Testing docs only
 ```
 
 **When to use**:
+
 - ✅ Weekly documentation updates
 - ✅ No risk to code or configuration
 - ✅ Safe to run anytime
@@ -156,6 +163,7 @@ docs/testing/          → Testing docs only
 **File**: `review-config-updates.sh`
 
 **What it does**:
+
 - ✅ Compares all configuration files
 - ✅ Shows diffs for each file
 - ✅ Identifies missing files
@@ -185,6 +193,7 @@ pnpm build
 ```
 
 **What it reviews**:
+
 ```
 package.json           → Dependencies, scripts
 tsconfig.json          → TypeScript configuration
@@ -198,6 +207,7 @@ CLAUDE.md              → Project instructions
 ```
 
 **When to use**:
+
 - ✅ Before syncing configuration
 - ✅ Understanding what changed in template
 - ✅ Planning manual updates

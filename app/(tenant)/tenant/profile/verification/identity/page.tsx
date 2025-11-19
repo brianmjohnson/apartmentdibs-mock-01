@@ -2,29 +2,20 @@
 
 import { useState } from 'react'
 import Link from 'next/link'
-import {
-  ArrowLeft,
-  Upload,
-  Camera,
-  CheckCircle2,
-  Clock,
-  AlertCircle,
-  Info
-} from 'lucide-react'
+import { ArrowLeft, Upload, Camera, CheckCircle2, Clock, AlertCircle, Info } from 'lucide-react'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
 import { Separator } from '@/components/ui/separator'
-import {
-  mockTenantProfile,
-  getVerificationStatusColor
-} from '@/lib/mock-data/tenant'
+import { mockTenantProfile, getVerificationStatusColor } from '@/lib/mock-data/tenant'
 
 export default function IdentityVerificationPage() {
   const status = mockTenantProfile.verifications.identity
   const [frontUploaded, setFrontUploaded] = useState(status === 'verified' || status === 'pending')
   const [backUploaded, setBackUploaded] = useState(status === 'verified' || status === 'pending')
-  const [selfieUploaded, setSelfieUploaded] = useState(status === 'verified' || status === 'pending')
+  const [selfieUploaded, setSelfieUploaded] = useState(
+    status === 'verified' || status === 'pending'
+  )
 
   const getStatusIcon = () => {
     switch (status) {
@@ -61,9 +52,7 @@ export default function IdentityVerificationPage() {
         </Button>
         <div className="flex-1">
           <h1 className="text-3xl font-bold tracking-tight">Identity Verification</h1>
-          <p className="text-muted-foreground">
-            Verify your identity with a government-issued ID
-          </p>
+          <p className="text-muted-foreground">Verify your identity with a government-issued ID</p>
         </div>
         <div className="flex items-center gap-2">
           {getStatusIcon()}
@@ -74,7 +63,7 @@ export default function IdentityVerificationPage() {
       </div>
 
       {/* Instructions */}
-      <Card className="border-2 border-foreground bg-muted/50">
+      <Card className="border-foreground bg-muted/50 border-2">
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
             <Info className="h-5 w-5" />
@@ -104,13 +93,13 @@ export default function IdentityVerificationPage() {
       </Card>
 
       {/* Accepted IDs */}
-      <Card className="border-2 border-foreground">
+      <Card className="border-foreground border-2">
         <CardHeader>
           <CardTitle>Accepted ID Types</CardTitle>
           <CardDescription>We accept the following government-issued IDs</CardDescription>
         </CardHeader>
         <CardContent>
-          <ul className="grid gap-2 md:grid-cols-2 text-sm">
+          <ul className="grid gap-2 text-sm md:grid-cols-2">
             <li className="flex items-center gap-2">
               <CheckCircle2 className="h-4 w-4 text-green-600" />
               Driver's License
@@ -134,31 +123,27 @@ export default function IdentityVerificationPage() {
       {/* Upload Areas */}
       <div className="grid gap-6 md:grid-cols-3">
         {/* Front of ID */}
-        <Card className="border-2 border-foreground">
+        <Card className="border-foreground border-2">
           <CardHeader>
             <CardTitle className="text-lg">Front of ID</CardTitle>
             <CardDescription>Photo side of your ID</CardDescription>
           </CardHeader>
           <CardContent>
             <div
-              className={`
-                border-2 border-dashed rounded-lg p-6 text-center cursor-pointer
-                transition-colors hover:border-primary hover:bg-primary/5
-                ${frontUploaded ? 'border-green-500 bg-green-50' : 'border-border'}
-              `}
+              className={`hover:border-primary hover:bg-primary/5 cursor-pointer rounded-lg border-2 border-dashed p-6 text-center transition-colors ${frontUploaded ? 'border-green-500 bg-green-50' : 'border-border'} `}
               onClick={() => {
                 if (status === 'not_started') setFrontUploaded(true)
               }}
             >
               {frontUploaded ? (
                 <div className="space-y-2">
-                  <CheckCircle2 className="h-8 w-8 mx-auto text-green-600" />
+                  <CheckCircle2 className="mx-auto h-8 w-8 text-green-600" />
                   <p className="text-sm font-medium text-green-600">Uploaded</p>
                 </div>
               ) : (
                 <div className="space-y-2">
-                  <Upload className="h-8 w-8 mx-auto text-muted-foreground" />
-                  <p className="text-sm text-muted-foreground">Click to upload</p>
+                  <Upload className="text-muted-foreground mx-auto h-8 w-8" />
+                  <p className="text-muted-foreground text-sm">Click to upload</p>
                 </div>
               )}
             </div>
@@ -166,31 +151,27 @@ export default function IdentityVerificationPage() {
         </Card>
 
         {/* Back of ID */}
-        <Card className="border-2 border-foreground">
+        <Card className="border-foreground border-2">
           <CardHeader>
             <CardTitle className="text-lg">Back of ID</CardTitle>
             <CardDescription>Back side of your ID</CardDescription>
           </CardHeader>
           <CardContent>
             <div
-              className={`
-                border-2 border-dashed rounded-lg p-6 text-center cursor-pointer
-                transition-colors hover:border-primary hover:bg-primary/5
-                ${backUploaded ? 'border-green-500 bg-green-50' : 'border-border'}
-              `}
+              className={`hover:border-primary hover:bg-primary/5 cursor-pointer rounded-lg border-2 border-dashed p-6 text-center transition-colors ${backUploaded ? 'border-green-500 bg-green-50' : 'border-border'} `}
               onClick={() => {
                 if (status === 'not_started') setBackUploaded(true)
               }}
             >
               {backUploaded ? (
                 <div className="space-y-2">
-                  <CheckCircle2 className="h-8 w-8 mx-auto text-green-600" />
+                  <CheckCircle2 className="mx-auto h-8 w-8 text-green-600" />
                   <p className="text-sm font-medium text-green-600">Uploaded</p>
                 </div>
               ) : (
                 <div className="space-y-2">
-                  <Upload className="h-8 w-8 mx-auto text-muted-foreground" />
-                  <p className="text-sm text-muted-foreground">Click to upload</p>
+                  <Upload className="text-muted-foreground mx-auto h-8 w-8" />
+                  <p className="text-muted-foreground text-sm">Click to upload</p>
                 </div>
               )}
             </div>
@@ -198,31 +179,27 @@ export default function IdentityVerificationPage() {
         </Card>
 
         {/* Selfie */}
-        <Card className="border-2 border-foreground">
+        <Card className="border-foreground border-2">
           <CardHeader>
             <CardTitle className="text-lg">Selfie</CardTitle>
             <CardDescription>For identity matching</CardDescription>
           </CardHeader>
           <CardContent>
             <div
-              className={`
-                border-2 border-dashed rounded-lg p-6 text-center cursor-pointer
-                transition-colors hover:border-primary hover:bg-primary/5
-                ${selfieUploaded ? 'border-green-500 bg-green-50' : 'border-border'}
-              `}
+              className={`hover:border-primary hover:bg-primary/5 cursor-pointer rounded-lg border-2 border-dashed p-6 text-center transition-colors ${selfieUploaded ? 'border-green-500 bg-green-50' : 'border-border'} `}
               onClick={() => {
                 if (status === 'not_started') setSelfieUploaded(true)
               }}
             >
               {selfieUploaded ? (
                 <div className="space-y-2">
-                  <CheckCircle2 className="h-8 w-8 mx-auto text-green-600" />
+                  <CheckCircle2 className="mx-auto h-8 w-8 text-green-600" />
                   <p className="text-sm font-medium text-green-600">Captured</p>
                 </div>
               ) : (
                 <div className="space-y-2">
-                  <Camera className="h-8 w-8 mx-auto text-muted-foreground" />
-                  <p className="text-sm text-muted-foreground">Click to capture</p>
+                  <Camera className="text-muted-foreground mx-auto h-8 w-8" />
+                  <p className="text-muted-foreground text-sm">Click to capture</p>
                 </div>
               )}
             </div>
@@ -233,10 +210,7 @@ export default function IdentityVerificationPage() {
       {/* Submit Button */}
       {status === 'not_started' && (
         <div className="flex justify-end">
-          <Button
-            disabled={!canSubmit}
-            className="border-2 border-foreground"
-          >
+          <Button disabled={!canSubmit} className="border-foreground border-2">
             Submit for Verification
           </Button>
         </div>

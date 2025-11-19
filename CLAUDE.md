@@ -55,6 +55,7 @@ All development follows an autonomous agent-driven approach with human governanc
 If the user says **"Use the [name] agent"** → You MUST use it.
 
 Do NOT respond with:
+
 - ❌ "That agent is for more complex tasks"
 - ❌ "I can handle this directly"
 - ❌ "This is too simple for the workflow"
@@ -90,6 +91,7 @@ If YES → That's a **WARNING SIGN**, not permission to skip the agent.
 **Complete process**: See `docs/WORKFLOW_GUIDE.md`
 
 **Summary**:
+
 1. Business Plan (README.md) → Create/update
 2. User Stories → Generate in `docs/user-stories/` → **HITL Review**
 3. Architecture (ADRs) → Create in `docs/adr/` → **HITL Review**
@@ -106,6 +108,7 @@ If YES → That's a **WARNING SIGN**, not permission to skip the agent.
 ## HITL Checkpoints (4 Gates)
 
 Human review required at these stages:
+
 1. **After user story creation** → Batch review all stories
 2. **After ADR creation/updates** → Approve DRAFT ADRs
 3. **Before implementation** → Approve technical specifications
@@ -121,6 +124,7 @@ Human review required at these stages:
 **Statuses**: DRAFT → APPROVED → DEPRECATED → SUPERSEDED
 
 Create ADR for:
+
 - Technology choices (libraries, frameworks)
 - Data modeling decisions
 - Authentication/authorization approaches
@@ -131,16 +135,19 @@ Create ADR for:
 
 **Schema Location**: `./schema.zmodel` (imports from `zschema/`)
 **Structure**:
+
 - `zschema/base.zmodel` - Abstract base models
 - `zschema/config.zmodel` - Non-user models
 - `zschema/auth.zmodel` - User + all user FK models
 
 **After schema changes**:
+
 ```bash
 pnpm gen:check  # Regenerates Prisma + tRPC + TanStack Query hooks
 ```
 
 **Generated Files**:
+
 - `prisma/schema.prisma` - Prisma schema
 - `server/routers/generated/trpc/` - tRPC routers
 - `lib/hooks/generated/tanstack-query/` - React hooks
@@ -151,12 +158,14 @@ pnpm gen:check  # Regenerates Prisma + tRPC + TanStack Query hooks
 ## Research-First Development
 
 Before implementing any feature:
+
 1. **Search codebase**: `docs/`, existing code, configuration
 2. **Web search**: Official docs, getting started guides, tutorials
 3. **Check for existing solutions**: Never duplicate functionality
 4. **Login-gated docs?** → Create HITL file in `docs/hitl/`
 
 **Anti-hallucination checklist**:
+
 - ✅ Searched for official documentation
 - ✅ Checked codebase for existing implementation
 - ✅ Verified API/library exists and is current
@@ -165,6 +174,7 @@ Before implementing any feature:
 ## Session Summaries
 
 **Auto-generated when**:
+
 - You say "batch complete"
 - You say "summarize this work"
 - You say "create session summary"
@@ -178,6 +188,7 @@ Before implementing any feature:
 **19 Specialized Agents** - See `docs/AGENT_HIRING_CHECKLIST.md` for complete list
 
 ### Product Development Agents (`.claude/agents/`)
+
 - `architecture-agent.md` - ADR creation and review
 - `product-manager.md` - User stories with RICE scoring
 - `frontend-developer.md` - React/Next.js components
@@ -187,6 +198,7 @@ Before implementing any feature:
 - `quality-reviewer.md` - QA testing + eval suite generation
 
 ### Business Operations Agents (`.claude/agents/`)
+
 - `market-analyst.md` - Competitive intelligence + market research
 - `experimentation-agent.md` - A/B testing + PostHog experiments
 - `data-engineer.md` - Data pipelines + ETL + warehouse design
@@ -198,6 +210,7 @@ Before implementing any feature:
 - `operations-excellence-agent.md` - PR feedback processing + retrospective improvements
 
 ### Task-Specific Agents (`.claude/agents/`)
+
 - `pr-finalization-agent.md` - PR workflow automation + migration rollback
 - `github-integration-agent.md` - Issue/PR synchronization
 - `session-summary-agent.md` - Generate session documentation
@@ -212,12 +225,14 @@ Before implementing any feature:
 **Bootstrap**: See `docs/GETTING_STARTED.md`
 
 **Required Environment Variables** (for local testing via web automation):
+
 - `NEON_DATABASE_URL` - Postgres connection URL (pooled)
 - `NEON_DATABASE_URL_UNPOOLED` - Postgres direct connection URL
 - `UPSTASH_KV_URL` - Redis/KV store URL
 - `VERCEL_BLOB_READ_WRITE_TOKEN` - Vercel Blob storage token
 
 **Cloud Environment** (Claude Code on the web):
+
 - **SessionStart Hook**: `.claude/settings.json` - Auto-installs CLI tools in cloud sessions
 - **CLI Tools Installed**: GitHub CLI (gh), Vercel CLI, Neon CLI, PostHog CLI, Upstash CLI
 - **Script**: `scripts/install-cli-tools.sh` (only runs in `CLAUDE_CODE_REMOTE=true`)

@@ -62,8 +62,7 @@ export default function ListingsModerationPage() {
     const matchesSearch =
       listing.address.toLowerCase().includes(searchQuery.toLowerCase()) ||
       listing.agentOrLandlord.toLowerCase().includes(searchQuery.toLowerCase())
-    const matchesTab =
-      activeTab === 'all' || listing.status === activeTab
+    const matchesTab = activeTab === 'all' || listing.status === activeTab
     return matchesSearch && matchesTab
   })
 
@@ -92,12 +91,10 @@ export default function ListingsModerationPage() {
   return (
     <div className="space-y-6">
       {/* Page Header */}
-      <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+      <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
         <div>
           <h1 className="text-3xl font-bold tracking-tight">Listing Moderation</h1>
-          <p className="text-muted-foreground">
-            Review and moderate platform listings
-          </p>
+          <p className="text-muted-foreground">Review and moderate platform listings</p>
         </div>
         <div className="flex items-center gap-2">
           {flaggedCount > 0 && (
@@ -107,7 +104,7 @@ export default function ListingsModerationPage() {
             </Badge>
           )}
           {underReviewCount > 0 && (
-            <Badge variant="outline" className="border-yellow-300 text-yellow-700 gap-1">
+            <Badge variant="outline" className="gap-1 border-yellow-300 text-yellow-700">
               <AlertTriangle className="h-3 w-3" />
               {underReviewCount} Under Review
             </Badge>
@@ -116,15 +113,15 @@ export default function ListingsModerationPage() {
       </div>
 
       {/* Search */}
-      <Card className="border-2 border-foreground">
+      <Card className="border-foreground border-2">
         <CardContent className="pt-6">
           <div className="relative">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+            <Search className="text-muted-foreground absolute top-1/2 left-3 h-4 w-4 -translate-y-1/2" />
             <Input
               placeholder="Search by address or user..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="pl-9 border-2"
+              className="border-2 pl-9"
             />
           </div>
         </CardContent>
@@ -132,7 +129,7 @@ export default function ListingsModerationPage() {
 
       {/* Tabs and Table */}
       <Tabs value={activeTab} onValueChange={setActiveTab}>
-        <TabsList className="border-2 border-foreground">
+        <TabsList className="border-foreground border-2">
           <TabsTrigger value="all">All</TabsTrigger>
           <TabsTrigger value="flagged">Flagged</TabsTrigger>
           <TabsTrigger value="under_review">Under Review</TabsTrigger>
@@ -141,7 +138,7 @@ export default function ListingsModerationPage() {
         </TabsList>
 
         <TabsContent value={activeTab} className="mt-4">
-          <Card className="border-2 border-foreground">
+          <Card className="border-foreground border-2">
             <CardHeader>
               <CardTitle>Listings ({filteredListings.length})</CardTitle>
               <CardDescription>
@@ -151,7 +148,7 @@ export default function ListingsModerationPage() {
               </CardDescription>
             </CardHeader>
             <CardContent>
-              <div className="rounded-md border-2 border-border">
+              <div className="border-border rounded-md border-2">
                 <Table>
                   <TableHeader>
                     <TableRow>
@@ -169,7 +166,7 @@ export default function ListingsModerationPage() {
                         <TableCell>
                           <div>
                             <p className="font-medium">{listing.address}</p>
-                            <p className="text-sm text-muted-foreground">
+                            <p className="text-muted-foreground text-sm">
                               {listing.beds} bed, {listing.baths} bath
                             </p>
                           </div>
@@ -177,7 +174,7 @@ export default function ListingsModerationPage() {
                         <TableCell>
                           <div>
                             <p className="font-medium">{listing.agentOrLandlord}</p>
-                            <p className="text-sm text-muted-foreground capitalize">
+                            <p className="text-muted-foreground text-sm capitalize">
                               {listing.userType}
                             </p>
                           </div>
@@ -198,19 +195,19 @@ export default function ListingsModerationPage() {
                                 <Badge
                                   key={flag.id}
                                   variant="outline"
-                                  className="border-red-300 text-red-700 text-xs"
+                                  className="border-red-300 text-xs text-red-700"
                                 >
                                   {getFlagTypeLabel(flag.type)}
                                 </Badge>
                               ))}
                               {listing.flags.length > 2 && (
-                                <span className="text-xs text-muted-foreground">
+                                <span className="text-muted-foreground text-xs">
                                   +{listing.flags.length - 2} more
                                 </span>
                               )}
                             </div>
                           ) : (
-                            <span className="text-sm text-muted-foreground">None</span>
+                            <span className="text-muted-foreground text-sm">None</span>
                           )}
                         </TableCell>
                         <TableCell className="text-right">
@@ -266,7 +263,7 @@ export default function ListingsModerationPage() {
       {/* Flag Details Dialog */}
       {selectedListing && (
         <Dialog open={removeDialogOpen} onOpenChange={setRemoveDialogOpen}>
-          <DialogContent className="border-2 border-foreground">
+          <DialogContent className="border-foreground border-2">
             <DialogHeader>
               <DialogTitle>Remove Listing</DialogTitle>
               <DialogDescription>

@@ -56,17 +56,20 @@ Identity theft in rental applications is increasing. Fraudsters use stolen IDs t
 **Given** applicant needs ID verification
 **When** they upload ID
 **Then** system accepts:
+
 - Driver's license
 - Passport
 - State ID
 
 **And** extracts:
+
 - Name, DOB, address
 - Photo
 - Document number
 - Expiration date
 
 **Verification**:
+
 - [ ] OCR extracts data accurately
 - [ ] Multiple ID types supported
 - [ ] Expired IDs rejected
@@ -76,11 +79,13 @@ Identity theft in rental applications is increasing. Fraudsters use stolen IDs t
 **Given** ID is uploaded
 **When** applicant takes selfie
 **Then** system performs:
+
 - Face match against ID photo
 - Liveness check (not a photo of a photo)
 - Multiple angles if needed
 
 **Verification**:
+
 - [ ] Face comparison works
 - [ ] Prevents photo spoofing
 - [ ] Clear instructions provided
@@ -90,11 +95,13 @@ Identity theft in rental applications is increasing. Fraudsters use stolen IDs t
 **Given** ID is uploaded
 **When** analyzed
 **Then** system checks:
+
 - Security features (holograms, patterns)
 - Font and format consistency
 - Barcode/MRZ validation
 
 **Verification**:
+
 - [ ] Authenticity checks run
 - [ ] Fakes detected
 - [ ] Confidence score provided
@@ -104,11 +111,13 @@ Identity theft in rental applications is increasing. Fraudsters use stolen IDs t
 **Given** identity is verified
 **When** profile displays
 **Then** landlord sees:
+
 - "Identity Verified" badge
 - Verification date
 - Method used
 
 **Verification**:
+
 - [ ] Badge displays correctly
 - [ ] Inspection shows details
 - [ ] Non-verified clearly marked
@@ -118,12 +127,14 @@ Identity theft in rental applications is increasing. Fraudsters use stolen IDs t
 **Given** sensitive ID data is collected
 **When** stored and used
 **Then** platform:
+
 - Encrypts at rest (AES-256)
 - Auto-deletes after 90 days
 - Only shows to verified parties
 - GDPR/CCPA compliant
 
 **Verification**:
+
 - [ ] Encryption implemented
 - [ ] Auto-deletion works
 - [ ] Access controls enforced
@@ -143,6 +154,7 @@ Identity theft in rental applications is increasing. Fraudsters use stolen IDs t
 ### Frontend Specification
 
 **Components**:
+
 ```
 components/
   identity/
@@ -155,13 +167,14 @@ components/
 
 ## Analytics Tracking
 
-| Event Name | When Triggered | Properties |
-|------------|----------------|------------|
-| `id_uploaded` | Document submitted | `{applicantId, idType}` |
-| `liveness_completed` | Selfie verified | `{applicantId, matched}` |
-| `identity_verified` | Full verification | `{applicantId, method}` |
+| Event Name           | When Triggered     | Properties               |
+| -------------------- | ------------------ | ------------------------ |
+| `id_uploaded`        | Document submitted | `{applicantId, idType}`  |
+| `liveness_completed` | Selfie verified    | `{applicantId, matched}` |
+| `identity_verified`  | Full verification  | `{applicantId, method}`  |
 
 **Success Metrics**:
+
 - 95%+ verification completion
 - <2% false rejection rate
 - 99%+ fraud prevention
@@ -171,9 +184,11 @@ components/
 ## Dependencies
 
 ### External Dependencies
+
 - Identity verification service (Onfido, Persona)
 
 ### Related Stories
+
 - US-022: Fraud Detection
 
 ---

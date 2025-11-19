@@ -25,6 +25,7 @@ These Terms constitute a legally binding agreement between you ("you," "your," o
 ## 2. Changes to Terms
 
 We reserve the right to modify these Terms at any time. We will notify you of changes by:
+
 - Posting updated Terms on this page
 - Updating the "Last Updated" date
 - Sending email notification for material changes (to registered users)
@@ -38,11 +39,13 @@ Your continued use of the Service after changes constitutes acceptance of the up
 [COMPANY NAME] provides [BRIEF DESCRIPTION OF SERVICE, e.g., "a web-based platform for project management and team collaboration"].
 
 **Key Features**:
+
 - [Feature 1]
 - [Feature 2]
 - [Feature 3]
 
 The Service is provided "as is" and we reserve the right to:
+
 - Modify or discontinue features
 - Change pricing and plans
 - Impose usage limits
@@ -53,6 +56,7 @@ The Service is provided "as is" and we reserve the right to:
 ## 4. Eligibility
 
 To use the Service, you must:
+
 - Be at least 13 years old (or 16 in the EU)
 - Have the legal capacity to enter into a binding contract
 - Not be prohibited from using the Service under applicable laws
@@ -67,6 +71,7 @@ To use the Service, you must:
 ### 5.1 Account Creation
 
 To access certain features, you must create an account by providing:
+
 - Valid email address
 - Password or OAuth authentication (Google, GitHub, etc.)
 - Organization name (if applicable)
@@ -74,6 +79,7 @@ To access certain features, you must create an account by providing:
 ### 5.2 Account Security
 
 You are responsible for:
+
 - Maintaining the confidentiality of your account credentials
 - All activities that occur under your account
 - Notifying us immediately of unauthorized access
@@ -87,6 +93,7 @@ You may delete your account at any time through account settings or by contactin
 ### 5.4 Account Termination by Us
 
 We may suspend or terminate your account if:
+
 - You violate these Terms
 - You engage in fraudulent activity
 - Your account is inactive for 12+ months
@@ -103,6 +110,7 @@ You agree to use the Service only for lawful purposes and in accordance with the
 ### 6.2 Prohibited Activities
 
 You may NOT:
+
 - Violate any laws or regulations
 - Infringe intellectual property rights
 - Transmit malware, viruses, or harmful code
@@ -119,6 +127,7 @@ You may NOT:
 ### 6.3 Consequences of Violations
 
 Violations may result in:
+
 - Warning or temporary suspension
 - Permanent account termination
 - Legal action
@@ -137,6 +146,7 @@ You retain ownership of your User Content.
 ### 7.2 License Grant to Us
 
 By uploading User Content, you grant us a limited, non-exclusive, worldwide, royalty-free license to:
+
 - Store, process, and display your User Content
 - Provide the Service to you
 - Make backups and ensure data integrity
@@ -147,6 +157,7 @@ This license terminates when you delete your User Content or account (subject to
 ### 7.3 Your Representations
 
 You represent and warrant that:
+
 - You own or have rights to your User Content
 - Your User Content does not violate these Terms
 - Your User Content does not infringe third-party rights
@@ -154,6 +165,7 @@ You represent and warrant that:
 ### 7.4 Content Moderation
 
 We reserve the right (but have no obligation) to:
+
 - Monitor User Content
 - Remove User Content that violates these Terms
 - Investigate suspected violations
@@ -169,6 +181,7 @@ The Service, including all content, features, and functionality, is owned by [CO
 **Our Trademarks**: [COMPANY NAME], [LOGO], [PRODUCT NAMES]
 
 You may not:
+
 - Copy, modify, or create derivative works of the Service
 - Use our trademarks without permission
 - Remove copyright or proprietary notices
@@ -184,6 +197,7 @@ If you provide feedback, suggestions, or ideas about the Service, we may use the
 ### 9.1 Subscription Plans
 
 The Service may offer:
+
 - **Free Plan**: [Description and limitations]
 - **Paid Plans**: [Description and pricing]
 
@@ -218,6 +232,7 @@ Prices do not include taxes. You are responsible for applicable sales tax, VAT, 
 ### 9.6 Late Payment
 
 If payment fails:
+
 - We will attempt to re-bill
 - Your account may be suspended after 7 days
 - Your account may be terminated after 30 days
@@ -229,6 +244,7 @@ If payment fails:
 We may offer a free trial of [DURATION] days.
 
 **Trial Terms**:
+
 - Credit card required (or not required)
 - Converts to paid subscription unless canceled
 - One trial per customer
@@ -241,6 +257,7 @@ We may offer a free trial of [DURATION] days.
 ### 11.1 Uptime
 
 We strive for high availability but do not guarantee uninterrupted access. The Service may be unavailable due to:
+
 - Scheduled maintenance
 - Emergency maintenance
 - Third-party service outages
@@ -280,6 +297,7 @@ We are not responsible for third-party services or their practices.
 ### 14.1 "As Is" Disclaimer
 
 THE SERVICE IS PROVIDED "AS IS" AND "AS AVAILABLE" WITHOUT WARRANTIES OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO:
+
 - MERCHANTABILITY
 - FITNESS FOR A PARTICULAR PURPOSE
 - NON-INFRINGEMENT
@@ -301,6 +319,7 @@ We do not endorse, verify, or take responsibility for User Content.
 TO THE MAXIMUM EXTENT PERMITTED BY LAW, [COMPANY NAME] AND ITS AFFILIATES, OFFICERS, DIRECTORS, EMPLOYEES, AND AGENTS SHALL NOT BE LIABLE FOR:
 
 **Indirect Damages**:
+
 - Lost profits
 - Lost data
 - Business interruption
@@ -309,6 +328,7 @@ TO THE MAXIMUM EXTENT PERMITTED BY LAW, [COMPANY NAME] AND ITS AFFILIATES, OFFIC
 **Direct Damages**: Our total liability shall not exceed the amount you paid us in the 12 months before the claim (or $100 if you have not paid us).
 
 **Exceptions**: This limitation does not apply to:
+
 - Gross negligence or willful misconduct
 - Death or personal injury caused by our negligence
 - Fraud or fraudulent misrepresentation
@@ -319,6 +339,7 @@ TO THE MAXIMUM EXTENT PERMITTED BY LAW, [COMPANY NAME] AND ITS AFFILIATES, OFFIC
 ## 16. Indemnification
 
 You agree to indemnify, defend, and hold harmless [COMPANY NAME] from any claims, damages, losses, or expenses (including attorney fees) arising from:
+
 - Your use of the Service
 - Your violation of these Terms
 - Your violation of third-party rights
@@ -351,6 +372,7 @@ You agree to resolve disputes individually and waive the right to participate in
 ### 18.1 By You
 
 You may terminate your account at any time. Upon termination:
+
 - Your access to the Service ends immediately
 - Your data will be deleted within 30 days
 - No refunds for unused subscription time
@@ -358,6 +380,7 @@ You may terminate your account at any time. Upon termination:
 ### 18.2 By Us
 
 We may terminate or suspend your account:
+
 - Immediately for Terms violations
 - With 30 days' notice if we discontinue the Service
 - Immediately if required by law
@@ -365,6 +388,7 @@ We may terminate or suspend your account:
 ### 18.3 Effect of Termination
 
 Upon termination:
+
 - All licenses granted to you terminate
 - You must stop using the Service
 - Provisions that should survive (indemnification, liability limitations, dispute resolution) remain in effect
@@ -409,9 +433,9 @@ For questions about these Terms:
 
 **Email**: [LEGAL EMAIL]
 **Mail**: [COMPANY NAME]
-        [STREET ADDRESS]
-        [CITY, STATE ZIP]
-        [COUNTRY]
+[STREET ADDRESS]
+[CITY, STATE ZIP]
+[COUNTRY]
 
 **Support**: [SUPPORT EMAIL]
 **Abuse Reports**: [ABUSE EMAIL]
@@ -441,6 +465,7 @@ For questions about these Terms:
 ## Notes for Attorney Review
 
 **Key Issues to Address**:
+
 1. Arbitration clause - required? Enforceable in your jurisdiction?
 2. Class action waiver - permitted in your jurisdiction?
 3. Limitation of liability - caps and exclusions enforceable?
@@ -453,6 +478,7 @@ For questions about these Terms:
 10. Accessibility - ADA compliance if applicable?
 
 **Recommended Reviews**:
+
 - Before launch
 - Annually
 - When adding new features

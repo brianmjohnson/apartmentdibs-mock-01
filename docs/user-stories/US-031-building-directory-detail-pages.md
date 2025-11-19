@@ -54,15 +54,18 @@ Tenants often prefer specific buildings (doorman buildings, new construction) bu
 **Then** they see:
 
 **Search/Filter**:
+
 - Filter by neighborhood, amenities, building size
 - Sort by: units, average rent, newest
 
 **Building Cards**:
+
 - Photo, name, neighborhood
 - Key amenities (icons)
 - Available units count
 
 **Verification**:
+
 - [ ] Filters work correctly
 - [ ] Cards display properly
 - [ ] ItemList schema implemented
@@ -74,24 +77,30 @@ Tenants often prefer specific buildings (doorman buildings, new construction) bu
 **Then** they see:
 
 **Building Overview**:
+
 - Photo gallery (exterior, lobby, amenities)
 - Name, address, year built
 - Total units, description
 
 **Amenities Grid**:
+
 - Icons + text: Doorman, gym, rooftop, parking, etc.
 
 **Available Units**:
+
 - Grid of current listings
 - Links to /property/[slug]
 
 **Property Manager Link**:
+
 - Link to /business/[slug]
 
 **Contact Form**:
+
 - "Interested? Contact property manager"
 
 **Verification**:
+
 - [ ] All sections display
 - [ ] Listings load correctly
 - [ ] Contact form works
@@ -118,6 +127,7 @@ Tenants often prefer specific buildings (doorman buildings, new construction) bu
 ```
 
 **Verification**:
+
 - [ ] Valid schema
 - [ ] Rich results eligible
 
@@ -128,6 +138,7 @@ Tenants often prefer specific buildings (doorman buildings, new construction) bu
 **Then** shows building exterior with name, neighborhood, amenities
 
 **Verification**:
+
 - [ ] Image generates correctly
 - [ ] Looks good on social
 
@@ -162,13 +173,14 @@ components/
 
 ## Analytics Tracking
 
-| Event Name | When Triggered | Properties |
-|------------|----------------|------------|
-| `building_viewed` | Page loads | `{buildingId, source}` |
-| `unit_clicked` | Listing selected | `{buildingId, listingId}` |
-| `contact_submitted` | Form sent | `{buildingId}` |
+| Event Name          | When Triggered   | Properties                |
+| ------------------- | ---------------- | ------------------------- |
+| `building_viewed`   | Page loads       | `{buildingId, source}`    |
+| `unit_clicked`      | Listing selected | `{buildingId, listingId}` |
+| `contact_submitted` | Form sent        | `{buildingId}`            |
 
 **Success Metrics**:
+
 - 30% of building views lead to listing clicks
 - 20% organic traffic from building searches
 - Higher engagement than direct listing search
@@ -186,9 +198,11 @@ components/
 ## Dependencies
 
 ### Blocked By
+
 - US-030: Property Page
 
 ### Related Stories
+
 - US-032: Business Profiles
 - US-033: Neighborhood Guides
 

@@ -2,15 +2,7 @@
 
 import { useState } from 'react'
 import Link from 'next/link'
-import {
-  ChevronLeft,
-  Users,
-  UserPlus,
-  Mail,
-  Trash2,
-  Crown,
-  Shield
-} from 'lucide-react'
+import { ChevronLeft, Users, UserPlus, Mail, Trash2, Crown, Shield } from 'lucide-react'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
@@ -41,7 +33,7 @@ const mockTeamMembers = [
     email: 'jessica@brooklynre.com',
     role: 'owner',
     status: 'active',
-    joinedAt: '2023-01-15'
+    joinedAt: '2023-01-15',
   },
   {
     id: '2',
@@ -49,7 +41,7 @@ const mockTeamMembers = [
     email: 'michael@brooklynre.com',
     role: 'admin',
     status: 'active',
-    joinedAt: '2024-03-20'
+    joinedAt: '2024-03-20',
   },
   {
     id: '3',
@@ -57,7 +49,7 @@ const mockTeamMembers = [
     email: 'sarah@brooklynre.com',
     role: 'member',
     status: 'active',
-    joinedAt: '2024-06-10'
+    joinedAt: '2024-06-10',
   },
   {
     id: '4',
@@ -65,8 +57,8 @@ const mockTeamMembers = [
     email: 'david@brooklynre.com',
     role: 'member',
     status: 'pending',
-    joinedAt: '2025-11-15'
-  }
+    joinedAt: '2025-11-15',
+  },
 ]
 
 const getRoleIcon = (role: string) => {
@@ -96,22 +88,22 @@ export default function TeamSettingsPage() {
   const [inviteRole, setInviteRole] = useState('member')
   const [inviteDialogOpen, setInviteDialogOpen] = useState(false)
 
-  const activeMembers = mockTeamMembers.filter(m => m.status === 'active').length
-  const pendingInvites = mockTeamMembers.filter(m => m.status === 'pending').length
+  const activeMembers = mockTeamMembers.filter((m) => m.status === 'active').length
+  const pendingInvites = mockTeamMembers.filter((m) => m.status === 'pending').length
 
   return (
     <div className="space-y-6">
       {/* Breadcrumb */}
       <Link
         href="/agent/settings"
-        className="inline-flex items-center text-sm text-muted-foreground hover:text-foreground"
+        className="text-muted-foreground hover:text-foreground inline-flex items-center text-sm"
       >
         <ChevronLeft className="mr-1 h-4 w-4" />
         Back to Settings
       </Link>
 
       {/* Page Header */}
-      <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4">
+      <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
         <div>
           <h1 className="text-3xl font-bold tracking-tight">Team</h1>
           <p className="text-muted-foreground">
@@ -120,12 +112,12 @@ export default function TeamSettingsPage() {
         </div>
         <Dialog open={inviteDialogOpen} onOpenChange={setInviteDialogOpen}>
           <DialogTrigger asChild>
-            <Button className="border-2 border-foreground">
+            <Button className="border-foreground border-2">
               <UserPlus className="mr-2 h-4 w-4" />
               Invite Member
             </Button>
           </DialogTrigger>
-          <DialogContent className="border-2 border-foreground">
+          <DialogContent className="border-foreground border-2">
             <DialogHeader>
               <DialogTitle>Invite Team Member</DialogTitle>
               <DialogDescription>
@@ -155,8 +147,9 @@ export default function TeamSettingsPage() {
                     <SelectItem value="member">Member</SelectItem>
                   </SelectContent>
                 </Select>
-                <p className="text-xs text-muted-foreground">
-                  Admins can manage listings and team members. Members can only view and manage their assigned listings.
+                <p className="text-muted-foreground text-xs">
+                  Admins can manage listings and team members. Members can only view and manage
+                  their assigned listings.
                 </p>
               </div>
             </div>
@@ -173,38 +166,42 @@ export default function TeamSettingsPage() {
       </div>
 
       {/* Team Members List */}
-      <Card className="border-2 border-foreground">
+      <Card className="border-foreground border-2">
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
             <Users className="h-5 w-5" />
             Team Members
           </CardTitle>
-          <CardDescription>
-            People who have access to your ApartmentDibs account
-          </CardDescription>
+          <CardDescription>People who have access to your ApartmentDibs account</CardDescription>
         </CardHeader>
         <CardContent>
           <div className="space-y-3">
-            {mockTeamMembers.map(member => (
+            {mockTeamMembers.map((member) => (
               <div
                 key={member.id}
-                className="flex items-center justify-between p-4 border-2 border-muted rounded-md"
+                className="border-muted flex items-center justify-between rounded-md border-2 p-4"
               >
                 <div className="flex items-center gap-4">
-                  <div className="w-10 h-10 rounded-full bg-muted flex items-center justify-center">
-                    {member.name.split(' ').map(n => n[0]).join('')}
+                  <div className="bg-muted flex h-10 w-10 items-center justify-center rounded-full">
+                    {member.name
+                      .split(' ')
+                      .map((n) => n[0])
+                      .join('')}
                   </div>
                   <div>
                     <div className="flex items-center gap-2">
                       <p className="font-medium">{member.name}</p>
                       {getRoleIcon(member.role)}
                       {member.status === 'pending' && (
-                        <Badge variant="outline" className="bg-yellow-100 text-yellow-800 border-yellow-300">
+                        <Badge
+                          variant="outline"
+                          className="border-yellow-300 bg-yellow-100 text-yellow-800"
+                        >
                           Pending
                         </Badge>
                       )}
                     </div>
-                    <p className="text-sm text-muted-foreground">{member.email}</p>
+                    <p className="text-muted-foreground text-sm">{member.email}</p>
                   </div>
                 </div>
                 <div className="flex items-center gap-3">
@@ -228,45 +225,43 @@ export default function TeamSettingsPage() {
       </Card>
 
       {/* Role Permissions */}
-      <Card className="border-2 border-foreground">
+      <Card className="border-foreground border-2">
         <CardHeader>
           <CardTitle>Role Permissions</CardTitle>
-          <CardDescription>
-            What each role can do in your account
-          </CardDescription>
+          <CardDescription>What each role can do in your account</CardDescription>
         </CardHeader>
         <CardContent>
           <div className="grid gap-4 md:grid-cols-3">
-            <div className="p-4 border-2 border-muted rounded-md">
-              <div className="flex items-center gap-2 mb-3">
+            <div className="border-muted rounded-md border-2 p-4">
+              <div className="mb-3 flex items-center gap-2">
                 <Crown className="h-5 w-5 text-yellow-600" />
                 <p className="font-medium">Owner</p>
               </div>
-              <ul className="space-y-2 text-sm text-muted-foreground">
+              <ul className="text-muted-foreground space-y-2 text-sm">
                 <li>- Full account access</li>
                 <li>- Manage billing</li>
                 <li>- Manage team members</li>
                 <li>- Delete account</li>
               </ul>
             </div>
-            <div className="p-4 border-2 border-muted rounded-md">
-              <div className="flex items-center gap-2 mb-3">
+            <div className="border-muted rounded-md border-2 p-4">
+              <div className="mb-3 flex items-center gap-2">
                 <Shield className="h-5 w-5 text-blue-600" />
                 <p className="font-medium">Admin</p>
               </div>
-              <ul className="space-y-2 text-sm text-muted-foreground">
+              <ul className="text-muted-foreground space-y-2 text-sm">
                 <li>- Manage all listings</li>
                 <li>- Invite/remove members</li>
                 <li>- View analytics</li>
                 <li>- Manage CRM</li>
               </ul>
             </div>
-            <div className="p-4 border-2 border-muted rounded-md">
-              <div className="flex items-center gap-2 mb-3">
+            <div className="border-muted rounded-md border-2 p-4">
+              <div className="mb-3 flex items-center gap-2">
                 <Users className="h-5 w-5 text-gray-600" />
                 <p className="font-medium">Member</p>
               </div>
-              <ul className="space-y-2 text-sm text-muted-foreground">
+              <ul className="text-muted-foreground space-y-2 text-sm">
                 <li>- View assigned listings</li>
                 <li>- Manage applicants</li>
                 <li>- Send messages</li>

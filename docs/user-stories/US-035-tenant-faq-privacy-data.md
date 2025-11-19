@@ -56,6 +56,7 @@ Maya's perspective: "I emailed PDFs with my SSN to 7 different landlords. I have
 **Given** tenant needs answers
 **When** viewing FAQ
 **Then** they see categories:
+
 - Privacy & Data Security
 - Profile & Verification
 - Application Process
@@ -63,6 +64,7 @@ Maya's perspective: "I emailed PDFs with my SSN to 7 different landlords. I have
 - Account Management
 
 **Verification**:
+
 - [ ] Categories logical
 - [ ] Navigation easy
 - [ ] Mobile-friendly accordion
@@ -82,6 +84,7 @@ Maya's perspective: "I emailed PDFs with my SSN to 7 different landlords. I have
 - "Do you sell my data to third parties?"
 
 **Verification**:
+
 - [ ] All questions answered
 - [ ] Plain language
 - [ ] Links to privacy policy
@@ -98,6 +101,7 @@ Maya's perspective: "I emailed PDFs with my SSN to 7 different landlords. I have
 - "What if my credit score is low?"
 
 **Verification**:
+
 - [ ] Practical answers
 - [ ] Steps clearly explained
 
@@ -115,6 +119,7 @@ Maya's perspective: "I emailed PDFs with my SSN to 7 different landlords. I have
 - "Is there a refund policy?"
 
 **Verification**:
+
 - [ ] Process explained
 - [ ] Value proposition clear
 
@@ -142,6 +147,7 @@ Maya's perspective: "I emailed PDFs with my SSN to 7 different landlords. I have
 ```
 
 **Verification**:
+
 - [ ] Valid schema
 - [ ] Rich results in search
 
@@ -150,10 +156,12 @@ Maya's perspective: "I emailed PDFs with my SSN to 7 different landlords. I have
 **Given** many questions
 **When** user searches
 **Then** they can:
+
 - Filter by keyword
 - See "Can't find your answer? Contact support"
 
 **Verification**:
+
 - [ ] Search works
 - [ ] Support fallback visible
 
@@ -162,10 +170,12 @@ Maya's perspective: "I emailed PDFs with my SSN to 7 different landlords. I have
 **Given** multiple user types
 **When** tenant on FAQ
 **Then** they see:
+
 - "Are you an agent? Visit Agent FAQ"
 - "Are you a landlord? Visit Landlord FAQ"
 
 **Verification**:
+
 - [ ] Links work correctly
 
 ---
@@ -195,14 +205,15 @@ components/
 
 ## Analytics Tracking
 
-| Event Name | When Triggered | Properties |
-|------------|----------------|------------|
-| `faq_viewed` | Page loads | `{source}` |
-| `question_expanded` | Answer viewed | `{questionId, category}` |
-| `faq_searched` | Search used | `{query, results}` |
-| `support_clicked` | Contact initiated | `{fromQuestion}` |
+| Event Name          | When Triggered    | Properties               |
+| ------------------- | ----------------- | ------------------------ |
+| `faq_viewed`        | Page loads        | `{source}`               |
+| `question_expanded` | Answer viewed     | `{questionId, category}` |
+| `faq_searched`      | Search used       | `{query, results}`       |
+| `support_clicked`   | Contact initiated | `{fromQuestion}`         |
 
 **Success Metrics**:
+
 - 80%+ of FAQ visitors find answer (no support ticket)
 - Top questions inform product improvements
 - Rich snippets in search results
@@ -220,6 +231,7 @@ components/
 ## Dependencies
 
 ### Related Stories
+
 - US-025: GDPR/CCPA Data Export
 - US-036: Tenant Pricing
 

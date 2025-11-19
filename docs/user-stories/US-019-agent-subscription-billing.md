@@ -58,12 +58,14 @@ Agents need predictable pricing that scales with their business. Transaction-bas
 **Given** an agent wants to subscribe
 **When** they view pricing
 **Then** they see tier comparison:
+
 - Features per tier
 - Price per month
 - "Most Popular" indicator
 - Annual discount option
 
 **Verification**:
+
 - [ ] Clear tier comparison
 - [ ] Feature matrix accurate
 - [ ] Annual saves 20%
@@ -73,11 +75,13 @@ Agents need predictable pricing that scales with their business. Transaction-bas
 **Given** agent selects a tier
 **When** they checkout
 **Then** Stripe processes:
+
 - Credit card payment
 - Recurring billing setup
 - Immediate access grant
 
 **Verification**:
+
 - [ ] Stripe integration works
 - [ ] Subscription created in database
 - [ ] Features unlocked immediately
@@ -87,11 +91,13 @@ Agents need predictable pricing that scales with their business. Transaction-bas
 **Given** agent on Starter tier (10 listings)
 **When** they approach limit
 **Then** they see:
+
 - "8 of 10 listings used"
 - Upgrade prompt when at limit
 - Cannot create 11th listing without upgrade
 
 **Verification**:
+
 - [ ] Usage counter accurate
 - [ ] Soft limit warning at 80%
 - [ ] Hard limit enforced
@@ -101,12 +107,14 @@ Agents need predictable pricing that scales with their business. Transaction-bas
 **Given** agent has active subscription
 **When** they manage account
 **Then** they can:
+
 - Upgrade/downgrade tier
 - Update payment method
 - Cancel subscription
 - View billing history
 
 **Verification**:
+
 - [ ] Plan changes prorate correctly
 - [ ] Payment updates work
 - [ ] Cancellation flows properly
@@ -116,12 +124,14 @@ Agents need predictable pricing that scales with their business. Transaction-bas
 **Given** payment fails
 **When** renewal is due
 **Then** platform:
+
 - Retries payment 3x over 7 days
 - Sends email notifications
 - Downgrades to free after 14 days
 - Preserves data for reactivation
 
 **Verification**:
+
 - [ ] Retry logic works
 - [ ] Notifications sent
 - [ ] Graceful downgrade
@@ -142,6 +152,7 @@ Agents need predictable pricing that scales with their business. Transaction-bas
 ### Frontend Specification
 
 **Components**:
+
 ```
 components/
   billing/
@@ -152,6 +163,7 @@ components/
 ```
 
 **Routing**:
+
 - `/agent/billing` - Manage subscription
 - `/pricing` - Public pricing page
 
@@ -159,14 +171,15 @@ components/
 
 ## Analytics Tracking
 
-| Event Name | When Triggered | Properties |
-|------------|----------------|------------|
-| `subscription_started` | New subscription | `{agentId, tier, price}` |
-| `subscription_upgraded` | Plan change up | `{agentId, fromTier, toTier}` |
-| `subscription_cancelled` | Cancellation | `{agentId, tier, reason}` |
-| `payment_failed` | Charge fails | `{agentId, failureReason}` |
+| Event Name               | When Triggered   | Properties                    |
+| ------------------------ | ---------------- | ----------------------------- |
+| `subscription_started`   | New subscription | `{agentId, tier, price}`      |
+| `subscription_upgraded`  | Plan change up   | `{agentId, fromTier, toTier}` |
+| `subscription_cancelled` | Cancellation     | `{agentId, tier, reason}`     |
+| `payment_failed`         | Charge fails     | `{agentId, failureReason}`    |
 
 **Success Metrics**:
+
 - 5% monthly churn or less
 - 60% annual plan adoption
 - $15,000 MRR by Month 6
@@ -176,9 +189,11 @@ components/
 ## Dependencies
 
 ### External Dependencies
+
 - Stripe API
 
 ### Related Stories
+
 - US-020: Tenant Screening Fees
 - US-021: Landlord Compliance Tier
 

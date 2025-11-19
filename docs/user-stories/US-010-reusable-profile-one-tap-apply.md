@@ -56,11 +56,13 @@ Maya's perspective: "I've spent $350 on application fees across 7 different land
 **Given** a tenant completes their profile (documents, verifications, references)
 **When** the profile is verified
 **Then** the profile is:
+
 - Valid for 60 days (Basic) or 90 days (Premium)
 - Reusable for unlimited applications during validity
 - Portable to any ApartmentDibs landlord
 
 **Verification**:
+
 - [ ] Profile validity tracked correctly
 - [ ] Expiration warnings sent before deadline
 - [ ] Profile renewal flow works
@@ -70,6 +72,7 @@ Maya's perspective: "I've spent $350 on application fees across 7 different land
 **Given** a tenant has a verified profile
 **When** they click "Apply" on a listing
 **Then** the application submits automatically with:
+
 - Credit report
 - Background check
 - Income verification
@@ -79,6 +82,7 @@ Maya's perspective: "I've spent $350 on application fees across 7 different land
 **And** no additional uploads or authorizations required
 
 **Verification**:
+
 - [ ] Application submits in <10 seconds
 - [ ] All profile data transferred correctly
 - [ ] No re-authorization prompts
@@ -90,6 +94,7 @@ Maya's perspective: "I've spent $350 on application fees across 7 different land
 **Then** they can apply to all with a single action
 
 **Verification**:
+
 - [ ] Bulk application works
 - [ ] Each listing receives complete profile
 - [ ] Status tracked per listing
@@ -99,11 +104,13 @@ Maya's perspective: "I've spent $350 on application fees across 7 different land
 **Given** a tenant wants to apply outside ApartmentDibs
 **When** they request profile export
 **Then** they receive:
+
 - PDF summary for manual sharing
 - QR code for instant verification
 - JSON export for integrations
 
 **Verification**:
+
 - [ ] PDF includes all verified data
 - [ ] QR code links to verification page
 - [ ] Export meets PTSR standards
@@ -113,11 +120,13 @@ Maya's perspective: "I've spent $350 on application fees across 7 different land
 **Given** a tenant's information changes
 **When** they update their profile
 **Then**:
+
 - Affected verifications are refreshed
 - Previously applied listings see updated data
 - Validation period may extend
 
 **Verification**:
+
 - [ ] Updates propagate correctly
 - [ ] Re-verification prompts when needed
 
@@ -134,6 +143,7 @@ Maya's perspective: "I've spent $350 on application fees across 7 different land
 ### Frontend Specification
 
 **Components**:
+
 ```
 components/
   profile/
@@ -146,13 +156,14 @@ components/
 
 ## Analytics Tracking
 
-| Event Name | When Triggered | Properties |
-|------------|----------------|------------|
-| `profile_created` | Tenant completes profile | `{tenantId, tier}` |
-| `one_tap_apply` | Application submitted | `{tenantId, listingId}` |
-| `profile_reused` | Second+ application | `{tenantId, applicationCount}` |
+| Event Name        | When Triggered           | Properties                     |
+| ----------------- | ------------------------ | ------------------------------ |
+| `profile_created` | Tenant completes profile | `{tenantId, tier}`             |
+| `one_tap_apply`   | Application submitted    | `{tenantId, listingId}`        |
+| `profile_reused`  | Second+ application      | `{tenantId, applicationCount}` |
 
 **Success Metrics**:
+
 - 50%+ of profiles used for 2+ applications
 - <10 seconds per application
 - 85% cost savings vs traditional ($54.99 vs $350+)
@@ -162,10 +173,12 @@ components/
 ## Dependencies
 
 ### Blocks
+
 - US-011: Group Application (builds on reusable profile)
 - All tenant application features
 
 ### Blocked By
+
 - US-001: PII Anonymization
 - US-012: Adaptive Onboarding
 

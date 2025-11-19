@@ -11,7 +11,7 @@ import {
   FileText,
   Users,
   Building,
-  Save
+  Save,
 } from 'lucide-react'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
@@ -37,7 +37,7 @@ export default function NotificationsSettingsPage() {
 
     // System
     weeklyReport: { email: true, sms: false, push: false },
-    billingReminder: { email: true, sms: false, push: false }
+    billingReminder: { email: true, sms: false, push: false },
   })
 
   const updateNotification = (
@@ -45,19 +45,19 @@ export default function NotificationsSettingsPage() {
     channel: 'email' | 'sms' | 'push',
     value: boolean
   ) => {
-    setNotifications(prev => ({
+    setNotifications((prev) => ({
       ...prev,
       [category]: {
         ...prev[category],
-        [channel]: value
-      }
+        [channel]: value,
+      },
     }))
   }
 
   const NotificationRow = ({
     label,
     description,
-    category
+    category,
   }: {
     label: string
     description: string
@@ -66,25 +66,25 @@ export default function NotificationsSettingsPage() {
     <div className="flex items-center justify-between py-3">
       <div className="space-y-0.5">
         <Label className="text-sm font-medium">{label}</Label>
-        <p className="text-xs text-muted-foreground">{description}</p>
+        <p className="text-muted-foreground text-xs">{description}</p>
       </div>
       <div className="flex items-center gap-4">
         <div className="flex items-center gap-2">
-          <Mail className="h-4 w-4 text-muted-foreground" />
+          <Mail className="text-muted-foreground h-4 w-4" />
           <Switch
             checked={notifications[category].email}
             onCheckedChange={(value) => updateNotification(category, 'email', value)}
           />
         </div>
         <div className="flex items-center gap-2">
-          <MessageSquare className="h-4 w-4 text-muted-foreground" />
+          <MessageSquare className="text-muted-foreground h-4 w-4" />
           <Switch
             checked={notifications[category].sms}
             onCheckedChange={(value) => updateNotification(category, 'sms', value)}
           />
         </div>
         <div className="flex items-center gap-2">
-          <Smartphone className="h-4 w-4 text-muted-foreground" />
+          <Smartphone className="text-muted-foreground h-4 w-4" />
           <Switch
             checked={notifications[category].push}
             onCheckedChange={(value) => updateNotification(category, 'push', value)}
@@ -99,7 +99,7 @@ export default function NotificationsSettingsPage() {
       {/* Breadcrumb */}
       <Link
         href="/agent/settings"
-        className="inline-flex items-center text-sm text-muted-foreground hover:text-foreground"
+        className="text-muted-foreground hover:text-foreground inline-flex items-center text-sm"
       >
         <ChevronLeft className="mr-1 h-4 w-4" />
         Back to Settings
@@ -108,26 +108,24 @@ export default function NotificationsSettingsPage() {
       {/* Page Header */}
       <div>
         <h1 className="text-3xl font-bold tracking-tight">Notifications</h1>
-        <p className="text-muted-foreground">
-          Choose how you want to be notified
-        </p>
+        <p className="text-muted-foreground">Choose how you want to be notified</p>
       </div>
 
       {/* Channel Legend */}
-      <Card className="border-2 border-foreground">
+      <Card className="border-foreground border-2">
         <CardContent className="p-4">
           <div className="flex items-center gap-6 text-sm">
             <span className="font-medium">Channels:</span>
             <div className="flex items-center gap-2">
-              <Mail className="h-4 w-4 text-muted-foreground" />
+              <Mail className="text-muted-foreground h-4 w-4" />
               <span>Email</span>
             </div>
             <div className="flex items-center gap-2">
-              <MessageSquare className="h-4 w-4 text-muted-foreground" />
+              <MessageSquare className="text-muted-foreground h-4 w-4" />
               <span>SMS</span>
             </div>
             <div className="flex items-center gap-2">
-              <Smartphone className="h-4 w-4 text-muted-foreground" />
+              <Smartphone className="text-muted-foreground h-4 w-4" />
               <span>Push</span>
             </div>
           </div>
@@ -135,15 +133,13 @@ export default function NotificationsSettingsPage() {
       </Card>
 
       {/* Applications */}
-      <Card className="border-2 border-foreground">
+      <Card className="border-foreground border-2">
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
             <FileText className="h-5 w-5" />
             Applications
           </CardTitle>
-          <CardDescription>
-            Notifications about applicant activity
-          </CardDescription>
+          <CardDescription>Notifications about applicant activity</CardDescription>
         </CardHeader>
         <CardContent className="divide-y">
           <NotificationRow
@@ -170,15 +166,13 @@ export default function NotificationsSettingsPage() {
       </Card>
 
       {/* CRM */}
-      <Card className="border-2 border-foreground">
+      <Card className="border-foreground border-2">
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
             <Users className="h-5 w-5" />
             CRM
           </CardTitle>
-          <CardDescription>
-            Notifications about CRM leads
-          </CardDescription>
+          <CardDescription>Notifications about CRM leads</CardDescription>
         </CardHeader>
         <CardContent className="divide-y">
           <NotificationRow
@@ -195,15 +189,13 @@ export default function NotificationsSettingsPage() {
       </Card>
 
       {/* Landlord */}
-      <Card className="border-2 border-foreground">
+      <Card className="border-foreground border-2">
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
             <Building className="h-5 w-5" />
             Landlord Decisions
           </CardTitle>
-          <CardDescription>
-            Notifications about landlord activity
-          </CardDescription>
+          <CardDescription>Notifications about landlord activity</CardDescription>
         </CardHeader>
         <CardContent className="divide-y">
           <NotificationRow
@@ -220,15 +212,13 @@ export default function NotificationsSettingsPage() {
       </Card>
 
       {/* System */}
-      <Card className="border-2 border-foreground">
+      <Card className="border-foreground border-2">
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
             <Bell className="h-5 w-5" />
             System
           </CardTitle>
-          <CardDescription>
-            Reports and account notifications
-          </CardDescription>
+          <CardDescription>Reports and account notifications</CardDescription>
         </CardHeader>
         <CardContent className="divide-y">
           <NotificationRow
@@ -246,7 +236,7 @@ export default function NotificationsSettingsPage() {
 
       {/* Save Button */}
       <div className="flex justify-end">
-        <Button className="border-2 border-foreground">
+        <Button className="border-foreground border-2">
           <Save className="mr-2 h-4 w-4" />
           Save Preferences
         </Button>

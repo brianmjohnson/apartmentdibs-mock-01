@@ -23,12 +23,7 @@ import {
 import { cn } from '@/lib/utils'
 import { Button } from '@/components/ui/button'
 import { Separator } from '@/components/ui/separator'
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipProvider,
-  TooltipTrigger,
-} from '@/components/ui/tooltip'
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip'
 
 interface NavItem {
   href: string
@@ -87,9 +82,7 @@ const secondaryItems: Record<string, NavItem[]> = {
     { href: '/landlord/settings', label: 'Settings', icon: Settings },
     { href: '/faq', label: 'Help & Support', icon: HelpCircle },
   ],
-  admin: [
-    { href: '/admin/settings', label: 'Settings', icon: Settings },
-  ],
+  admin: [{ href: '/admin/settings', label: 'Settings', icon: Settings }],
 }
 
 export function Sidebar({ persona = 'tenant' }: SidebarProps) {
@@ -103,16 +96,18 @@ export function Sidebar({ persona = 'tenant' }: SidebarProps) {
     <TooltipProvider delayDuration={0}>
       <aside
         className={cn(
-          'sticky top-16 h-[calc(100vh-4rem)] border-r-4 border-foreground bg-background transition-all duration-300',
+          'border-foreground bg-background sticky top-16 h-[calc(100vh-4rem)] border-r-4 transition-all duration-300',
           collapsed ? 'w-16' : 'w-64'
         )}
       >
-        <div className="flex flex-col h-full">
+        <div className="flex h-full flex-col">
           {/* Logo Section */}
-          <div className={cn(
-            'flex items-center h-16 px-4 border-b-2 border-border',
-            collapsed ? 'justify-center' : 'justify-between'
-          )}>
+          <div
+            className={cn(
+              'border-border flex h-16 items-center border-b-2 px-4',
+              collapsed ? 'justify-center' : 'justify-between'
+            )}
+          >
             {!collapsed && (
               <Link href="/" className="flex items-center gap-2">
                 <Building2 className="h-6 w-6" />
@@ -142,15 +137,13 @@ export function Sidebar({ persona = 'tenant' }: SidebarProps) {
                             href={item.href}
                             className={cn(
                               'flex items-center justify-center p-3 transition-colors',
-                              isActive
-                                ? 'bg-primary text-primary-foreground'
-                                : 'hover:bg-accent'
+                              isActive ? 'bg-primary text-primary-foreground' : 'hover:bg-accent'
                             )}
                           >
                             <Icon className="h-5 w-5" />
                           </Link>
                         </TooltipTrigger>
-                        <TooltipContent side="right" className="border-2 border-foreground">
+                        <TooltipContent side="right" className="border-foreground border-2">
                           {item.label}
                         </TooltipContent>
                       </Tooltip>
@@ -158,10 +151,8 @@ export function Sidebar({ persona = 'tenant' }: SidebarProps) {
                       <Link
                         href={item.href}
                         className={cn(
-                          'flex items-center gap-3 px-3 py-2 transition-colors font-medium',
-                          isActive
-                            ? 'bg-primary text-primary-foreground'
-                            : 'hover:bg-accent'
+                          'flex items-center gap-3 px-3 py-2 font-medium transition-colors',
+                          isActive ? 'bg-primary text-primary-foreground' : 'hover:bg-accent'
                         )}
                       >
                         <Icon className="h-5 w-5" />
@@ -175,7 +166,7 @@ export function Sidebar({ persona = 'tenant' }: SidebarProps) {
           </nav>
 
           {/* Secondary Navigation */}
-          <div className="border-t-2 border-border py-4">
+          <div className="border-border border-t-2 py-4">
             <ul className="space-y-1 px-2">
               {secondaryNav.map((item) => {
                 const isActive = pathname === item.href
@@ -190,15 +181,13 @@ export function Sidebar({ persona = 'tenant' }: SidebarProps) {
                             href={item.href}
                             className={cn(
                               'flex items-center justify-center p-3 transition-colors',
-                              isActive
-                                ? 'bg-primary text-primary-foreground'
-                                : 'hover:bg-accent'
+                              isActive ? 'bg-primary text-primary-foreground' : 'hover:bg-accent'
                             )}
                           >
                             <Icon className="h-5 w-5" />
                           </Link>
                         </TooltipTrigger>
-                        <TooltipContent side="right" className="border-2 border-foreground">
+                        <TooltipContent side="right" className="border-foreground border-2">
                           {item.label}
                         </TooltipContent>
                       </Tooltip>
@@ -207,9 +196,7 @@ export function Sidebar({ persona = 'tenant' }: SidebarProps) {
                         href={item.href}
                         className={cn(
                           'flex items-center gap-3 px-3 py-2 transition-colors',
-                          isActive
-                            ? 'bg-primary text-primary-foreground'
-                            : 'hover:bg-accent'
+                          isActive ? 'bg-primary text-primary-foreground' : 'hover:bg-accent'
                         )}
                       >
                         <Icon className="h-5 w-5" />
@@ -223,14 +210,11 @@ export function Sidebar({ persona = 'tenant' }: SidebarProps) {
           </div>
 
           {/* Collapse Toggle */}
-          <div className="border-t-2 border-border p-2">
+          <div className="border-border border-t-2 p-2">
             <Button
               variant="ghost"
               size="sm"
-              className={cn(
-                'w-full justify-center',
-                !collapsed && 'justify-end'
-              )}
+              className={cn('w-full justify-center', !collapsed && 'justify-end')}
               onClick={() => setCollapsed(!collapsed)}
             >
               {collapsed ? (

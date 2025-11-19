@@ -19,12 +19,14 @@ Pull request reviews generate dozens of comments requiring responses, verificati
 - **Lost context**: No structured verification trail linking comments to code changes
 
 **Background**:
+
 - Large PRs (500+ LOC) can generate 20-50 review comments
 - AI agents and automated tools (linters, security scanners) add structured comments
 - Manual response workflow: read comment → find code → verify → reply (repeat 30+ times)
 - Constant approval prompts interrupt flow when using GitHub CLI
 
 **Requirements**:
+
 - Programmatically reply to PR comments with verification details
 - Avoid approval spam for trusted GitHub operations
 - Maintain audit trail of bug fixes and verifications
@@ -63,15 +65,13 @@ gh pr view {pr_number} --json comments
 ```json
 {
   "permissions": {
-    "allow": [
-      "Bash(gh api:*)",
-      "Bash(gh pr:*)"
-    ]
+    "allow": ["Bash(gh api:*)", "Bash(gh pr:*)"]
   }
 }
 ```
 
 **Why Pre-approve**:
+
 - Eliminates ~30 approval prompts per PR review session
 - GitHub CLI is read-mostly (comments are non-destructive)
 - PAT can be scoped to `repo` with read/write access only
@@ -96,6 +96,7 @@ gh pr view {pr_number} --json comments
 **Verified**: [Issue description from comment]
 
 **Resolution**:
+
 - [What was done to fix the issue]
 - File: `path/to/file.ts:lines`
 - Commit: [commit-hash or "pending commit"]
@@ -106,22 +107,25 @@ gh pr view {pr_number} --json comments
 
 **Example Response**:
 
-```markdown
+````markdown
 **Verified**: Missing null check for `user.profile` access
 
 **Resolution**:
+
 - Added optional chaining to prevent null reference error
 - File: `lib/auth/helpers.ts:42-45`
 - Commit: `a1b2c3d`
 
 **Verification**: Tested with `user.profile === null` case
+
 ```typescript
 // Before
 const name = user.profile.displayName
 
 // After
-const name = user.profile?.displayName ?? "Anonymous"
+const name = user.profile?.displayName ?? 'Anonymous'
 ```
+````
 
 ---
 
@@ -143,17 +147,20 @@ const name = user.profile?.displayName ?? "Anonymous"
 ### Negative Consequences (More Difficult)
 
 ⚠️ **Security Risk**: `Bash(gh api:*)` allows all GitHub API operations
-   - *Mitigation*: Use read-only PAT scope when possible, limit to `repo` scope
-   - *Mitigation*: Audit all `gh api` commands before execution
-   - *Mitigation*: Rotate PATs regularly
+
+- _Mitigation_: Use read-only PAT scope when possible, limit to `repo` scope
+- _Mitigation_: Audit all `gh api` commands before execution
+- _Mitigation_: Rotate PATs regularly
 
 ⚠️ **Setup Required**: Need to configure GitHub CLI and PAT in development environment
-   - *Mitigation*: Document setup in `docs/GETTING_STARTED.md`
-   - *Mitigation*: Provide script to validate `gh` auth status
+
+- _Mitigation_: Document setup in `docs/GETTING_STARTED.md`
+- _Mitigation_: Provide script to validate `gh` auth status
 
 ⚠️ **Learning Curve**: Team needs to understand `gh api` usage patterns
-   - *Mitigation*: Provide examples and templates in this ADR
-   - *Mitigation*: Create wrapper scripts for common operations
+
+- _Mitigation_: Provide examples and templates in this ADR
+- _Mitigation_: Create wrapper scripts for common operations
 
 ### Neutral Consequences
 
@@ -170,11 +177,13 @@ const name = user.profile?.displayName ?? "Anonymous"
 **Description**: Continue using GitHub web interface for all PR comment replies
 
 **Pros**:
+
 - No setup required
 - Familiar workflow for all team members
 - No security considerations for CLI tools
 
 **Cons**:
+
 - Time-consuming for 30+ comments (10-20 seconds per comment)
 - No automation possible
 - Inconsistent response quality (easy to miss details)
@@ -190,11 +199,13 @@ const name = user.profile?.displayName ?? "Anonymous"
 **Description**: Build custom GitHub App to automatically reply to PR comments
 
 **Pros**:
+
 - Fully automated (no human intervention)
 - Centralized webhook-driven workflow
 - Can implement complex logic
 
 **Cons**:
+
 - Overhead of app infrastructure (hosting, webhooks, auth)
 - Complexity for one-time migration tasks or ad-hoc reviews
 - Would still need human verification for most comments
@@ -210,11 +221,13 @@ const name = user.profile?.displayName ?? "Anonymous"
 **Description**: Use GitHub Actions to automatically respond to PR comments
 
 **Pros**:
+
 - Integrated with CI/CD pipeline
 - No local setup required
 - Runs in GitHub-managed environment
 
 **Cons**:
+
 - Limited to CI/CD context (runs on events, not on-demand)
 - Can't provide real-time feedback during development
 - Less flexible than CLI for ad-hoc tasks
@@ -230,11 +243,13 @@ const name = user.profile?.displayName ?? "Anonymous"
 **Description**: Use tools like Review Board, Gerrit, or Phabricator
 
 **Pros**:
+
 - Purpose-built for code review workflows
 - Advanced features (inline discussions, approval chains)
 - Better UI/UX than GitHub
 
 **Cons**:
+
 - Additional tool to learn and maintain
 - May not integrate well with GitHub
 - Migration cost from existing GitHub workflow
@@ -247,13 +262,16 @@ const name = user.profile?.displayName ?? "Anonymous"
 ## Related
 
 **Related ADRs**:
+
 - None yet (this is a process ADR, not technical architecture)
 
 **Related Documentation**:
+
 - `docs/WORKFLOW_GUIDE.md` - PR review process
 - `.claude/settings.json` - Permission configuration
 
 **External References**:
+
 - [GitHub CLI Documentation](https://cli.github.com/manual/)
 - [GitHub API v3 - Pull Request Review Comments](https://docs.github.com/en/rest/pulls/comments)
 - [GitHub CLI API Reference](https://cli.github.com/manual/gh_api)
@@ -296,10 +314,7 @@ gh auth status
 ```json
 {
   "permissions": {
-    "allow": [
-      "Bash(gh api:*)",
-      "Bash(gh pr:*)"
-    ]
+    "allow": ["Bash(gh api:*)", "Bash(gh pr:*)"]
   }
 }
 ```
@@ -457,6 +472,6 @@ Potential improvements for this pattern:
 
 ## Revision History
 
-| Date | Author | Change |
-|------|--------|--------|
+| Date       | Author              | Change        |
+| ---------- | ------------------- | ------------- |
 | 2025-11-17 | System Architecture | Initial draft |

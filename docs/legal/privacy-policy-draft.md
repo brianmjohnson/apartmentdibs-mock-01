@@ -27,6 +27,7 @@ Please read this privacy policy carefully. If you do not agree with the terms of
 ### 2.1 Information You Provide to Us
 
 **Account Information**:
+
 - Full name
 - Email address
 - Password (encrypted)
@@ -34,17 +35,20 @@ Please read this privacy policy carefully. If you do not agree with the terms of
 - Organization/company name (if applicable)
 
 **Payment Information**:
+
 - Billing address
 - Payment method details (processed by third-party payment processors)
 - Invoicing information
 
 **User Content**:
+
 - Data you create, upload, or store using our Service
 - Communications with us (support tickets, emails, feedback)
 
 ### 2.2 Information We Collect Automatically
 
 **Usage Data**:
+
 - IP address
 - Browser type and version
 - Device information
@@ -55,6 +59,7 @@ Please read this privacy policy carefully. If you do not agree with the terms of
 - Referral source
 
 **Cookies and Similar Technologies**:
+
 - Session cookies (essential for Service functionality)
 - Preference cookies (remember your settings)
 - Analytics cookies (understand how you use the Service)
@@ -63,11 +68,13 @@ Please read this privacy policy carefully. If you do not agree with the terms of
 ### 2.3 Information from Third Parties
 
 **OAuth Authentication Providers**:
+
 - When you sign in with Google, GitHub, or other OAuth providers
 - We receive: name, email, profile picture
 - We do NOT receive: passwords, private repositories, or other account data
 
 **Payment Processors**:
+
 - Payment confirmation and transaction IDs
 - We do NOT store full credit card numbers
 
@@ -78,28 +85,33 @@ Please read this privacy policy carefully. If you do not agree with the terms of
 We use your information for the following purposes:
 
 ### 3.1 To Provide the Service
+
 - Create and maintain your account
 - Process transactions and send billing invoices
 - Provide customer support
 - Send service-related communications (password resets, updates)
 
 ### 3.2 To Improve the Service
+
 - Analyze usage patterns and trends
 - Identify and fix bugs
 - Develop new features
 - Optimize performance
 
 ### 3.3 To Communicate with You
+
 - Respond to your inquiries
 - Send important updates about the Service
 - Send marketing communications (with your consent, opt-out available)
 
 ### 3.4 To Ensure Security
+
 - Prevent fraud and abuse
 - Monitor for security incidents
 - Enforce our Terms of Service
 
 ### 3.5 Legal Compliance
+
 - Comply with legal obligations
 - Respond to legal requests
 - Protect our rights and property
@@ -115,28 +127,33 @@ We do NOT sell your personal information. We share your information only in the 
 We share data with third-party service providers who perform services on our behalf:
 
 **Hosting & Infrastructure**:
+
 - **Vercel** (hosting): [Link to Vercel privacy policy]
 - Purpose: Application hosting and delivery
 - Data shared: Usage logs, performance metrics
 
 **Database**:
+
 - **Neon** (PostgreSQL database): [Link to Neon privacy policy]
 - Purpose: Data storage
 - Data shared: All data you store in the Service
 - Location: [Data region, e.g., US-East]
 
 **Analytics**:
+
 - **PostHog** (product analytics): [Link to PostHog privacy policy]
 - Purpose: Usage analytics and product improvement
 - Data shared: Anonymized usage data, feature interactions
 - Configuration: IP anonymization enabled
 
 **Email**:
+
 - **Resend** (transactional emails): [Link to Resend privacy policy]
 - Purpose: Sending account and transactional emails
 - Data shared: Email address, name, email content
 
 **Error Tracking** (if applicable):
+
 - **Sentry** (error monitoring): [Link to Sentry privacy policy]
 - Purpose: Error tracking and debugging
 - Data shared: Error logs, stack traces (PII removed)
@@ -148,6 +165,7 @@ If we are involved in a merger, acquisition, or sale of assets, your information
 ### 4.3 Legal Requirements
 
 We may disclose your information if required by law or if we believe such action is necessary to:
+
 - Comply with legal obligations (subpoenas, court orders)
 - Protect our rights or property
 - Prevent fraud or security issues
@@ -164,16 +182,20 @@ We may share your information for other purposes with your explicit consent.
 We retain your information for as long as necessary to provide the Service and fulfill the purposes outlined in this policy.
 
 **Account Data**:
+
 - Retained while your account is active
 - Deleted within 30 days of account deletion (unless legal retention required)
 
 **Usage Logs**:
+
 - Retained for 90 days for security and debugging purposes
 
 **Backups**:
+
 - Backup data may be retained for up to 30 days after deletion
 
 **Legal Holds**:
+
 - Data may be retained longer if required by law or legal proceedings
 
 ---
@@ -213,12 +235,14 @@ Response time: Within 30 days
 We implement appropriate technical and organizational measures to protect your data:
 
 **Technical Measures**:
+
 - Encryption in transit (TLS/SSL)
 - Encryption at rest (database encryption)
 - Secure authentication (Better Auth with OAuth)
 - Regular security updates and patches
 
 **Organizational Measures**:
+
 - Access controls (least privilege principle)
 - Employee training on data protection
 - Incident response procedures
@@ -247,22 +271,26 @@ Our Service is not intended for children under 13 (or 16 in the EU). We do not k
 ### 10.1 Types of Cookies We Use
 
 **Essential Cookies** (cannot be disabled):
+
 - Session management
 - Authentication
 - Security
 
 **Preference Cookies**:
+
 - Language preferences
 - UI settings
 - Theme preferences
 
 **Analytics Cookies** (can be disabled):
+
 - Usage analytics (PostHog)
 - Performance monitoring
 
 ### 10.2 Managing Cookies
 
 You can control cookies through your browser settings:
+
 - Chrome: Settings > Privacy and Security > Cookies
 - Firefox: Settings > Privacy & Security > Cookies
 - Safari: Preferences > Privacy > Cookies
@@ -286,6 +314,7 @@ Our Service may contain links to third-party websites. We are not responsible fo
 ## 13. Changes to This Privacy Policy
 
 We may update this privacy policy from time to time. We will notify you of changes by:
+
 - Posting the new policy on this page
 - Updating the "Last Updated" date
 - Sending an email notification (for material changes)
@@ -300,9 +329,9 @@ If you have questions about this privacy policy or our data practices:
 
 **Email**: [PRIVACY EMAIL]
 **Mail**: [COMPANY NAME]
-        [STREET ADDRESS]
-        [CITY, STATE ZIP]
-        [COUNTRY]
+[STREET ADDRESS]
+[CITY, STATE ZIP]
+[COUNTRY]
 
 **Data Protection Officer** (if required): [DPO EMAIL]
 
@@ -325,22 +354,22 @@ We process your personal data under the following legal bases:
 
 ### Data We Process
 
-| Data Type | Purpose | Legal Basis | Retention |
-|-----------|---------|-------------|-----------|
-| Account info | Provide Service | Contract | Account lifetime + 30 days |
-| Usage data | Analytics | Legitimate interest | 90 days |
-| Payment info | Billing | Contract | 7 years (tax law) |
-| Support tickets | Customer support | Legitimate interest | 2 years |
-| Email communications | Service updates | Contract/Consent | Account lifetime |
+| Data Type            | Purpose          | Legal Basis         | Retention                  |
+| -------------------- | ---------------- | ------------------- | -------------------------- |
+| Account info         | Provide Service  | Contract            | Account lifetime + 30 days |
+| Usage data           | Analytics        | Legitimate interest | 90 days                    |
+| Payment info         | Billing          | Contract            | 7 years (tax law)          |
+| Support tickets      | Customer support | Legitimate interest | 2 years                    |
+| Email communications | Service updates  | Contract/Consent    | Account lifetime           |
 
 ### Sub-Processors
 
-| Provider | Service | Data Shared | Location |
-|----------|---------|-------------|----------|
-| Vercel | Hosting | All | USA |
-| Neon | Database | All | USA |
-| PostHog | Analytics | Usage data | USA/EU |
-| Resend | Email | Email, name | USA |
+| Provider | Service   | Data Shared | Location |
+| -------- | --------- | ----------- | -------- |
+| Vercel   | Hosting   | All         | USA      |
+| Neon     | Database  | All         | USA      |
+| PostHog  | Analytics | Usage data  | USA/EU   |
+| Resend   | Email     | Email, name | USA      |
 
 ---
 

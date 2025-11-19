@@ -22,20 +22,21 @@ Authentication code involves complex, dynamic data that's prone to type safety i
 
 ```typescript
 // ❌ Loses type information
-const user = session?.user as any;
-user.customField; // No autocomplete, no type checking
+const user = session?.user as any
+user.customField // No autocomplete, no type checking
 
 // ❌ Unsafe type assertion
-const org = data as Organization;
+const org = data as Organization
 
 // ❌ Missing null checks
-const name = session.user.firstName.toUpperCase(); // Crash if firstName is null
+const name = session.user.firstName.toUpperCase() // Crash if firstName is null
 
 // ❌ Destructuring plugin methods loses type safety
-export const { impersonate } = admin; // Wrong method name, TypeScript doesn't catch it
+export const { impersonate } = admin // Wrong method name, TypeScript doesn't catch it
 ```
 
 **Consequences**:
+
 - Runtime errors that could be caught at compile time
 - No autocomplete or IntelliSense
 - Difficult refactoring (breaking changes not detected)
@@ -73,6 +74,7 @@ type Session = { user: { id: string, ... } }
 ```
 
 **Why This Works**:
+
 - Types automatically update when auth config changes
 - Guaranteed type accuracy (no drift between config and types)
 - Single source of truth
@@ -80,22 +82,24 @@ type Session = { user: { id: string, ... } }
 **Framework-Specific**:
 
 **NextAuth.js**:
-```typescript
-import type { DefaultSession } from "next-auth"
 
-declare module "next-auth" {
+```typescript
+import type { DefaultSession } from 'next-auth'
+
+declare module 'next-auth' {
   interface Session extends DefaultSession {
     user: {
       id: string
       role?: string
-    } & DefaultSession["user"]
+    } & DefaultSession['user']
   }
 }
 ```
 
 **Clerk**:
+
 ```typescript
-import type { UserResource } from "@clerk/types"
+import type { UserResource } from '@clerk/types'
 // Clerk provides strong types out of the box
 ```
 
@@ -152,6 +156,7 @@ import type { UserResource } from "@clerk/types"
 ```
 
 **Key Options**:
+
 - `strict: true` → Enables all strict type checking
 - `noUncheckedIndexedAccess: true` → Array access returns `T | undefined`
 - `noImplicitAny: true` → Ban implicit `any` types
@@ -164,7 +169,7 @@ import type { UserResource } from "@clerk/types"
 
 ```typescript
 // lib/auth/guards.ts
-import type { Session } from "./types"
+import type { Session } from './types'
 
 // ✅ Type guard for authenticated sessions
 export function isAuthenticated(session: Session | null): session is Session {
@@ -173,7 +178,7 @@ export function isAuthenticated(session: Session | null): session is Session {
 
 // ✅ Type guard for active organization
 export function hasActiveOrganization(
-  session: Session,
+  session: Session
 ): session is Session & { activeOrganizationId: string } {
   return !!session.activeOrganizationId
 }
@@ -181,7 +186,7 @@ export function hasActiveOrganization(
 // ✅ Type guard for platform admin
 export function isPlatformAdmin(session: Session | null): session is Session {
   if (!session) return false
-  return session.user.role?.includes("admin") ?? false
+  return session.user.role?.includes('admin') ?? false
 }
 ```
 
@@ -209,6 +214,7 @@ function Dashboard() {
 ```
 
 **Why Type Guards Matter**:
+
 - TypeScript narrows types after guard checks
 - No need for `!` non-null assertions
 - Reusable across components
@@ -225,16 +231,16 @@ function Dashboard() {
 const fullName = `${session.user.firstName} ${session.user.lastName}`
 
 // ✅ Safe with nullish coalescing
-const fullName = `${session.user.firstName ?? ""} ${session.user.lastName ?? ""}`.trim()
+const fullName = `${session.user.firstName ?? ''} ${session.user.lastName ?? ''}`.trim()
 
 // ✅ Or optional chaining
 const firstInitial = session?.user?.firstName?.[0]?.toUpperCase()
 
 // ✅ Helper function with fallback
 export function getFullName(user: User): string {
-  const first = user.firstName ?? ""
-  const last = user.lastName ?? ""
-  return `${first} ${last}`.trim() || "Anonymous"
+  const first = user.firstName ?? ''
+  const last = user.lastName ?? ''
+  return `${first} ${last}`.trim() || 'Anonymous'
 }
 ```
 
@@ -276,6 +282,7 @@ function AuthGuard({ children }: { children: React.ReactNode }) {
 ```
 
 **Benefits**:
+
 - Exhaustive type checking (TypeScript warns if you miss a case)
 - No invalid state combinations (can't have `status: "authenticated"` without `session`)
 - Clear state transitions
@@ -298,17 +305,19 @@ export const { admin } = authClient
 
 // Destructuring loses type safety (admin likely has [key: string]: any)
 export const {
-  impersonate,      // Wrong name - should be impersonateUser
-  listSessions,     // Wrong name - should be listUserSessions
+  impersonate, // Wrong name - should be impersonateUser
+  listSessions, // Wrong name - should be listUserSessions
 } = admin
 ```
 
 **Why TypeScript Doesn't Catch This**:
+
 1. Plugin objects often have loose index signatures (`[key: string]: any`)
 2. Destructuring happens at runtime
 3. TypeScript can't validate property names that don't exist if the type allows arbitrary properties
 
 **Impact**:
+
 - No autocomplete for correct method names
 - No type errors when using wrong method names
 - Runtime 404 errors (e.g., `POST /api/auth/admin/impersonate 404`)
@@ -321,8 +330,8 @@ export const {
 
 ```typescript
 // lib/auth/auth-client.ts
-import { createAuthClient } from "better-auth/client"
-import { adminClient } from "better-auth/client/plugins"
+import { createAuthClient } from 'better-auth/client'
+import { adminClient } from 'better-auth/client/plugins'
 
 export const authClient = createAuthClient({
   plugins: [adminClient()],
@@ -334,7 +343,7 @@ export const { useSession, signIn, signOut, admin } = authClient
 
 ```typescript
 // components/admin/ImpersonateUserButton.tsx
-import { admin } from "@/lib/auth/auth-client"
+import { admin } from '@/lib/auth/auth-client'
 
 // ✅ TypeScript autocompletes method names
 // ✅ Type errors if method doesn't exist
@@ -342,6 +351,7 @@ const result = await admin.impersonateUser({ userId })
 ```
 
 **Benefits**:
+
 - Full TypeScript autocomplete support
 - Compile-time errors for wrong method names
 - IntelliSense shows method documentation
@@ -372,11 +382,13 @@ export const {
 ```
 
 **When to Use**:
+
 - You need shorter import paths in many components
 - You've verified method names against plugin documentation
 - You add JSDoc comments for each exported method
 
 **Trade-offs**:
+
 - Still loses some type safety if plugin types are loose
 - Requires manual synchronization with plugin API changes
 - More maintenance burden when auth library updates
@@ -393,11 +405,11 @@ export const {
 
    ```typescript
    // ✅ Good - maintains type safety
-   import { admin } from "@/lib/auth/auth-client"
+   import { admin } from '@/lib/auth/auth-client'
    admin.impersonateUser({ userId })
 
    // ❌ Avoid - loses type safety
-   import { impersonateUser } from "@/lib/auth/auth-client"
+   import { impersonateUser } from '@/lib/auth/auth-client'
    impersonateUser({ userId })
    ```
 
@@ -431,29 +443,29 @@ export const auth = betterAuth({
     additionalFields: {
       // ✅ input: false prevents user tampering
       role: {
-        type: "string",
+        type: 'string',
         required: false,
         input: false, // CRITICAL: Server-only field
       },
       banned: {
-        type: "boolean",
+        type: 'boolean',
         required: false,
         input: false,
       },
       banReason: {
-        type: "string",
+        type: 'string',
         required: false,
         input: false,
       },
 
       // ✅ input: true allows user updates
       bio: {
-        type: "string",
+        type: 'string',
         required: false,
         input: true, // User can update this
       },
       phoneNumber: {
-        type: "string",
+        type: 'string',
         required: false,
         input: true,
       },
@@ -463,6 +475,7 @@ export const auth = betterAuth({
 ```
 
 **Why `input: false` Matters**:
+
 - Prevents users from setting their own `role: "admin"`
 - Ensures sensitive fields only modified server-side
 - **Security vulnerability if omitted** (privilege escalation risk)
@@ -477,16 +490,17 @@ export const auth = betterAuth({
 
 ```typescript
 // lib/auth/types.ts (shared between client and server)
-import { auth } from "@/lib/auth/auth-server"
+import { auth } from '@/lib/auth/auth-server'
 
 export type Session = typeof auth.$Infer.Session
-export type User = Session["user"]
+export type User = Session['user']
 
 // Client code
-import type { Session, User } from "@/lib/auth/types"
+import type { Session, User } from '@/lib/auth/types'
 ```
 
 **Benefits**:
+
 - Single source of truth
 - Types automatically sync
 - No manual maintenance
@@ -507,10 +521,11 @@ export interface User {
 }
 
 // Frontend repo
-import type { User } from "@myorg/api-types"
+import type { User } from '@myorg/api-types'
 ```
 
 **Trade-offs**:
+
 - Requires manual synchronization
 - Types can drift between repos
 - More maintenance burden
@@ -523,33 +538,33 @@ import type { User } from "@myorg/api-types"
 
 ```typescript
 // lib/auth/helpers.ts
-import type { Session, User } from "./types"
+import type { Session, User } from './types'
 
 export function isPlatformAdmin(session: Session | null): boolean {
   if (!session) return false
 
   // Type-safe null checks with optional chaining
   return (
-    session.user.members?.some(
-      (m) => m.organization?.slug === "platform" && m.role === "admin",
-    ) ?? false
+    session.user.members?.some((m) => m.organization?.slug === 'platform' && m.role === 'admin') ??
+    false
   )
 }
 
 export function getFullName(user: User): string {
-  const first = user.firstName ?? ""
-  const last = user.lastName ?? ""
-  return `${first} ${last}`.trim() || "Anonymous"
+  const first = user.firstName ?? ''
+  const last = user.lastName ?? ''
+  return `${first} ${last}`.trim() || 'Anonymous'
 }
 
 export function getUserInitials(user: User): string {
-  const first = user.firstName?.[0]?.toUpperCase() ?? ""
-  const last = user.lastName?.[0]?.toUpperCase() ?? ""
+  const first = user.firstName?.[0]?.toUpperCase() ?? ''
+  const last = user.lastName?.[0]?.toUpperCase() ?? ''
   return first + last || user.email[0].toUpperCase()
 }
 ```
 
 **Best Practices**:
+
 - Use optional chaining (`?.`) for nullable fields
 - Provide fallback values with nullish coalescing (`??`)
 - Return non-null types when possible (e.g., `string` not `string | undefined`)
@@ -586,6 +601,7 @@ export function RequireAuth({
 ```
 
 **Type Safety Features**:
+
 - Explicit prop types
 - Default values for optional props
 - Type narrowing after null checks
@@ -596,22 +612,22 @@ export function RequireAuth({
 
 ```typescript
 // lib/hooks/usePermissions.ts
-import { useSession } from "@/lib/auth/auth-client"
-import type { Session } from "@/lib/auth/types"
+import { useSession } from '@/lib/auth/auth-client'
+import type { Session } from '@/lib/auth/types'
 
 export function usePermissions() {
   const { data: session } = useSession()
 
   // Type-safe permission checks
-  const isAdmin = session?.user.role?.includes("admin") ?? false
-  const isModerator = session?.user.role?.includes("moderator") ?? false
+  const isAdmin = session?.user.role?.includes('admin') ?? false
+  const isModerator = session?.user.role?.includes('moderator') ?? false
 
   const hasPermission = (permission: string): boolean => {
     if (!session) return false
 
     // Custom permission logic
     if (isAdmin) return true
-    if (isModerator && permission.startsWith("moderate:")) return true
+    if (isModerator && permission.startsWith('moderate:')) return true
 
     return false
   }
@@ -650,12 +666,12 @@ function AdminPanel() {
 
 ```typescript
 // lib/dao/organization.ts
-import { prisma } from "@/lib/prisma"
-import type { Organization, Member } from "@prisma/client"
+import { prisma } from '@/lib/prisma'
+import type { Organization, Member } from '@prisma/client'
 
 // ✅ Prisma infers correct return type
 export async function getOrganizationWithMembers(
-  organizationId: string,
+  organizationId: string
 ): Promise<Organization & { members: Member[] }> {
   const org = await prisma.organization.findUnique({
     where: { id: organizationId },
@@ -671,6 +687,7 @@ export async function getOrganizationWithMembers(
 ```
 
 **Type Safety Benefits**:
+
 - Prisma generates types from schema
 - `include` and `select` affect return type
 - TypeScript catches mismatched return types
@@ -681,9 +698,9 @@ export async function getOrganizationWithMembers(
 
 ```typescript
 // lib/dao/user.ts
-import { enhance } from "@zenstackhq/runtime"
-import { prisma } from "@/lib/prisma"
-import type { User } from "@/lib/generated/schema"
+import { enhance } from '@zenstackhq/runtime'
+import { prisma } from '@/lib/prisma'
+import type { User } from '@/lib/generated/schema'
 
 export async function getUserProfile(userId: string, session: Session) {
   // ZenStack enhances Prisma with access control
@@ -700,6 +717,7 @@ export async function getUserProfile(userId: string, session: Session) {
 ```
 
 **Why ZenStack**:
+
 - Access control enforced at schema level
 - Types match Prisma
 - Can't bypass type safety to violate access rules
@@ -711,31 +729,29 @@ export async function getUserProfile(userId: string, session: Session) {
 ```javascript
 // .eslintrc.js
 module.exports = {
-  extends: [
-    "next/core-web-vitals",
-    "plugin:@typescript-eslint/recommended",
-  ],
+  extends: ['next/core-web-vitals', 'plugin:@typescript-eslint/recommended'],
   rules: {
     // Ban "any" types
-    "@typescript-eslint/no-explicit-any": "error",
-    "@typescript-eslint/no-unsafe-assignment": "error",
-    "@typescript-eslint/no-unsafe-member-access": "error",
-    "@typescript-eslint/no-unsafe-call": "error",
-    "@typescript-eslint/no-unsafe-return": "error",
+    '@typescript-eslint/no-explicit-any': 'error',
+    '@typescript-eslint/no-unsafe-assignment': 'error',
+    '@typescript-eslint/no-unsafe-member-access': 'error',
+    '@typescript-eslint/no-unsafe-call': 'error',
+    '@typescript-eslint/no-unsafe-return': 'error',
 
     // Encourage explicit types
-    "@typescript-eslint/explicit-function-return-type": "warn",
-    "@typescript-eslint/explicit-module-boundary-types": "warn",
+    '@typescript-eslint/explicit-function-return-type': 'warn',
+    '@typescript-eslint/explicit-module-boundary-types': 'warn',
 
     // Prevent bugs
-    "@typescript-eslint/no-floating-promises": "error",
-    "@typescript-eslint/no-misused-promises": "error",
-    "@typescript-eslint/strict-boolean-expressions": "warn",
+    '@typescript-eslint/no-floating-promises': 'error',
+    '@typescript-eslint/no-misused-promises': 'error',
+    '@typescript-eslint/strict-boolean-expressions': 'warn',
   },
 }
 ```
 
 **Key Rules**:
+
 - `no-explicit-any: "error"` → Zero tolerance for `any`
 - `no-unsafe-*: "error"` → Prevent unsafe type operations
 - `no-floating-promises: "error"` → Catch unhandled promises
@@ -770,6 +786,7 @@ pnpm tsc --noEmit
 ```
 
 **Why Pre-commit Checks**:
+
 - Catch type errors before code review
 - Faster feedback loop than CI/CD
 - Enforce type safety discipline
@@ -782,24 +799,24 @@ pnpm tsc --noEmit
 
 ```typescript
 // __tests__/types/auth.test-d.ts
-import { expectTypeOf } from "expect-type"
-import type { Session, User } from "@/lib/auth/types"
+import { expectTypeOf } from 'expect-type'
+import type { Session, User } from '@/lib/auth/types'
 
-describe("Auth Types", () => {
-  it("Session should have user property", () => {
-    expectTypeOf<Session>().toHaveProperty("user")
+describe('Auth Types', () => {
+  it('Session should have user property', () => {
+    expectTypeOf<Session>().toHaveProperty('user')
   })
 
-  it("User should have required fields", () => {
+  it('User should have required fields', () => {
     expectTypeOf<User>().toMatchTypeOf<{
       id: string
       email: string
     }>()
   })
 
-  it("Optional fields should be nullable", () => {
-    expectTypeOf<User>().toHaveProperty("firstName")
-    expectTypeOf<User["firstName"]>().toEqualTypeOf<string | null | undefined>()
+  it('Optional fields should be nullable', () => {
+    expectTypeOf<User>().toHaveProperty('firstName')
+    expectTypeOf<User['firstName']>().toEqualTypeOf<string | null | undefined>()
   })
 })
 ```
@@ -823,7 +840,7 @@ user.firstName.toUpperCase() // Crashes if null
 
 // ✅ Safe with type guard
 if (isAuthenticated(session)) {
-  const name = session.user.firstName?.toUpperCase() ?? ""
+  const name = session.user.firstName?.toUpperCase() ?? ''
 }
 ```
 
@@ -836,7 +853,7 @@ if (isAuthenticated(session)) {
 export const { impersonate } = admin
 
 // ✅ Use admin object directly
-import { admin } from "@/lib/auth/auth-client"
+import { admin } from '@/lib/auth/auth-client'
 admin.impersonateUser({ userId })
 ```
 
@@ -852,7 +869,7 @@ type User = {
 }
 
 // ✅ Infer from auth instance
-export type User = typeof auth.$Infer.Session["user"]
+export type User = (typeof auth.$Infer.Session)['user']
 ```
 
 ---
@@ -864,7 +881,7 @@ export type User = typeof auth.$Infer.Session["user"]
 const initial = user.firstName[0]
 
 // ✅ Handle optional fields
-const initial = user.firstName?.[0] ?? "?"
+const initial = user.firstName?.[0] ?? '?'
 ```
 
 ---
@@ -916,18 +933,18 @@ If migrating from loose types to strict type safety:
 
 ```typescript
 // lib/auth/auth-server.ts
-import { betterAuth } from "better-auth"
+import { betterAuth } from 'better-auth'
 
 export const auth = betterAuth({
   user: {
     additionalFields: {
-      role: { type: "string", required: false, input: false },
+      role: { type: 'string', required: false, input: false },
     },
   },
 })
 
 export type Session = typeof auth.$Infer.Session
-export type User = Session["user"]
+export type User = Session['user']
 ```
 
 ---
@@ -936,14 +953,14 @@ export type User = Session["user"]
 
 ```typescript
 // lib/auth/auth.ts
-import type { DefaultSession } from "next-auth"
+import type { DefaultSession } from 'next-auth'
 
-declare module "next-auth" {
+declare module 'next-auth' {
   interface Session extends DefaultSession {
     user: {
       id: string
       role?: string
-    } & DefaultSession["user"]
+    } & DefaultSession['user']
   }
 }
 
@@ -964,8 +981,8 @@ export const authOptions: NextAuthOptions = {
 
 ```typescript
 // Clerk provides strong types out of the box
-import { useUser } from "@clerk/nextjs"
-import type { UserResource } from "@clerk/types"
+import { useUser } from '@clerk/nextjs'
+import type { UserResource } from '@clerk/types'
 
 function Profile() {
   const { user } = useUser() // user is strongly typed

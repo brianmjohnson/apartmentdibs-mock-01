@@ -5,6 +5,7 @@ Complete guide to bootstrapping a new project from this template.
 ## Prerequisites
 
 ### Required Software
+
 - **Node.js**: 20.x or later
 - **pnpm**: 9.x or later (`npm install -g pnpm`)
 - **Git**: Latest version
@@ -12,12 +13,14 @@ Complete guide to bootstrapping a new project from this template.
 - **Code Editor**: VS Code recommended
 
 ### Required Accounts
+
 - **GitHub**: For repository hosting
 - **Vercel**: For deployment (free tier works)
 - **Neon**: For PostgreSQL database (free tier available)
 - **Better Auth OAuth Apps**: Google, GitHub, Discord, etc.
 
 ### Recommended Tools
+
 - **Claude Code CLI**: For autonomous development
 - **GitHub CLI**: `gh` for GitHub integration
 - **Docker**: For local service containers (optional)
@@ -27,6 +30,7 @@ Complete guide to bootstrapping a new project from this template.
 If using **Claude Code on the web** (https://claude.com/code), additional environment variables are required:
 
 **Required Environment Variables**:
+
 - `GITHUB_TOKEN` - For GitHub CLI (`gh`) commands
   - Create at: https://github.com/settings/tokens
   - Required scopes: `repo`, `workflow`, `read:org`
@@ -37,6 +41,7 @@ If using **Claude Code on the web** (https://claude.com/code), additional enviro
   - Already configured in this template
 
 **Optional Environment Variables**:
+
 - `VERCEL_TOKEN` - For Vercel CLI commands
 - `NEON_API_KEY` - For Neon CLI commands
 
@@ -48,6 +53,7 @@ See "Claude Code Web Setup" section below for complete configuration.
 ## Quick Start (10 Minutes)
 
 ### 1. Clone Template
+
 ```bash
 # Create new project from template
 git clone https://github.com/yourusername/projects_template my-new-project
@@ -64,11 +70,13 @@ gh repo create my-new-project --private --source=. --remote=origin --push
 ```
 
 ### 2. Install Dependencies
+
 ```bash
 pnpm install
 ```
 
 ### 3. Configure Environment
+
 ```bash
 # Copy environment template
 cp .env.example .env.local
@@ -83,6 +91,7 @@ openssl rand -base64 32  # For BETTER_AUTH_SECRET
 ```
 
 ### 4. Set Up Database
+
 ```bash
 # Generate Prisma schema from ZenStack
 pnpm gen:check
@@ -95,6 +104,7 @@ pnpm db:seed
 ```
 
 ### 5. Start Development Server
+
 ```bash
 pnpm dev
 ```
@@ -110,6 +120,7 @@ Visit: http://localhost:3000
 #### 1.1 Database Setup (Neon)
 
 **Create Neon Project**:
+
 1. Go to https://neon.tech
 2. Create new project
 3. Copy connection strings:
@@ -117,6 +128,7 @@ Visit: http://localhost:3000
    - Direct connection (for migrations)
 
 **Update .env.local**:
+
 ```env
 DATABASE_URL="postgresql://user:pass@host/db?sslmode=require&pgbouncer=true"
 DATABASE_URL_UNPOOLED="postgresql://user:pass@host/db?sslmode=require"
@@ -125,11 +137,13 @@ DATABASE_URL_UNPOOLED="postgresql://user:pass@host/db?sslmode=require"
 #### 1.2 Better Auth Setup
 
 **Generate Secret**:
+
 ```bash
 openssl rand -base64 32
 ```
 
 **Add to .env.local**:
+
 ```env
 BETTER_AUTH_SECRET="your-generated-secret"
 BETTER_AUTH_URL="http://localhost:3000"
@@ -138,12 +152,14 @@ BETTER_AUTH_URL="http://localhost:3000"
 #### 1.3 OAuth Providers (Optional)
 
 **Google OAuth**:
+
 1. Go to Google Cloud Console
 2. Create OAuth 2.0 credentials
 3. Add redirect URI: `http://localhost:3000/api/auth/callback/google`
 4. Copy Client ID and Secret
 
 **Add to .env.local**:
+
 ```env
 AUTH_GOOGLE_ID="your-client-id"
 AUTH_GOOGLE_SECRET="your-client-secret"
@@ -154,7 +170,9 @@ Repeat for GitHub, Discord, etc.
 ### Step 2: Customize for Your Project
 
 #### 2.1 Update README.md
+
 Replace template README with your business plan:
+
 - Executive summary
 - Problem statement
 - Solution overview
@@ -164,7 +182,9 @@ Replace template README with your business plan:
 Use `README-template.md` as guide.
 
 #### 2.2 Configure Project Details
+
 Update `package.json`:
+
 ```json
 {
   "name": "my-project-name",
@@ -176,11 +196,13 @@ Update `package.json`:
 ```
 
 Update `next.config.ts`:
+
 - Update site URL
 - Add any custom domains
 - Configure redirects if needed
 
 #### 2.3 Initialize Git Hooks (Optional)
+
 ```bash
 # Install husky for git hooks
 pnpm add -D husky
@@ -194,17 +216,20 @@ chmod +x .husky/pre-commit
 ### Step 3: Verify Setup
 
 #### 3.1 Run Diagnostics
+
 ```bash
 ./scripts/diagnose-web-environment.sh
 ```
 
 This checks:
+
 - Environment variables set correctly
 - Database connectivity
 - Required tools installed
 - Port availability
 
 #### 3.2 Run Tests
+
 ```bash
 pnpm test
 ```
@@ -212,6 +237,7 @@ pnpm test
 All template tests should pass.
 
 #### 3.3 Check Type Safety
+
 ```bash
 pnpm build
 ```
@@ -221,6 +247,7 @@ Should compile without errors.
 ### Step 4: Deploy to Vercel
 
 #### 4.1 Connect to Vercel
+
 ```bash
 # Install Vercel CLI
 pnpm add -g vercel
@@ -231,18 +258,23 @@ vercel link
 ```
 
 #### 4.2 Configure Environment Variables
+
 In Vercel dashboard:
+
 1. Go to Project Settings → Environment Variables
 2. Add all variables from `.env.local`
 3. Set for Production, Preview, and Development
 
 #### 4.3 Deploy
+
 ```bash
 vercel --prod
 ```
 
 #### 4.4 Update OAuth Redirect URIs
+
 Add production URL to OAuth app configs:
+
 - `https://your-app.vercel.app/api/auth/callback/google`
 
 ---
@@ -256,6 +288,7 @@ When using Claude Code on the web (https://claude.com/code), the environment run
 ### Step 1: Set Up GitHub Token
 
 **Create Personal Access Token**:
+
 1. Go to https://github.com/settings/tokens
 2. Click "Generate new token (classic)"
 3. Name: `Claude Code Web Access`
@@ -267,12 +300,14 @@ When using Claude Code on the web (https://claude.com/code), the environment run
 6. **Copy the token** (you won't see it again!)
 
 **Configure in Claude Code**:
+
 1. Open Claude Code Settings (gear icon)
 2. Go to "Environment Variables"
 3. Add: `GITHUB_TOKEN` = `your-token-here`
 4. Save settings
 
 **Alternative**: Add to project `.env` file (NOT committed to git):
+
 ```bash
 echo 'GITHUB_TOKEN=your-token-here' >> .env
 ```
@@ -280,6 +315,7 @@ echo 'GITHUB_TOKEN=your-token-here' >> .env
 ### Step 2: Verify Configuration
 
 The `.claude/settings.json` file is already configured with:
+
 ```json
 {
   "env": {
@@ -290,6 +326,7 @@ The `.claude/settings.json` file is already configured with:
 ```
 
 **Environment Variables Explained**:
+
 - `CLAUDE_SHARE_REPO`: Repository for sharing Claude Code sessions (configure with your own)
 - `NODE_OPTIONS`: Node.js memory allocation for builds
   - **Default**: 10000 MB (10GB) for ZenStack + Prisma + Next.js builds
@@ -297,6 +334,7 @@ The `.claude/settings.json` file is already configured with:
   - **If builds succeed**: Keep current value, document in project setup
 
 **To use your own share repository**:
+
 1. Create a private GitHub repository (e.g., `your-username/claude-sessions`)
 2. Update `.claude/settings.json`:
    ```json
@@ -319,6 +357,7 @@ gh auth status
 ```
 
 If not authenticated:
+
 ```bash
 gh auth login
 # Follow prompts to authenticate
@@ -331,6 +370,7 @@ gh auth login
 ```
 
 This checks:
+
 - ✅ Dependencies installed (`node_modules`)
 - ✅ Generated code exists (`.zenstack`, `lib/hooks/generated`)
 - ✅ Git working tree clean
@@ -341,11 +381,13 @@ This checks:
 ### Step 5: Project-Specific Environment Variables
 
 Copy and configure environment template:
+
 ```bash
 cp .env.example .env.local
 ```
 
 Edit `.env.local` with your values:
+
 - `DATABASE_URL` (from Neon)
 - `BETTER_AUTH_SECRET` (generate with `openssl rand -base64 32`)
 - OAuth credentials (Google, GitHub, etc.)
@@ -356,16 +398,19 @@ Edit `.env.local` with your values:
 ### Common Issues
 
 **"gh: command not found"**:
+
 - Claude Code web auto-installs `gh` CLI on SessionStart
 - Wait for session initialization to complete
 - Check `.claude/settings.json` has SessionStart hook configured
 
 **"API rate limit exceeded"**:
+
 - Your `GITHUB_TOKEN` may be invalid or expired
 - Regenerate token with correct scopes
 - Update environment variable
 
 **"Permission denied"**:
+
 - Check token has `repo` and `workflow` scopes
 - Verify token hasn't been revoked
 
@@ -468,11 +513,13 @@ Follow the complete workflow guide: `docs/WORKFLOW_GUIDE.md`
 ### Using Claude Code
 
 **Start session**:
+
 ```bash
 claude
 ```
 
 **Give Claude the master prompt** (from MASTER_PROMPT.md):
+
 - Paste the research-first development prompt
 - Include HITL gate instructions
 - Reference CLAUDE.md for project context
@@ -485,6 +532,7 @@ Say "batch complete" or "summarize this work"
 See complete guide: `docs/HITL_GUIDE.md`
 
 **Quick version**:
+
 1. Claude creates HITL files as it works
 2. At checkpoints, batch review files generated
 3. You review batches and mark approvals
@@ -497,12 +545,14 @@ See complete guide: `docs/HITL_GUIDE.md`
 ### Adding a New Data Model
 
 1. **Create ZenStack model**:
+
    ```bash
    # Create new file in zschema/
    touch zschema/my-feature.zmodel
    ```
 
 2. **Define model**:
+
    ```zmodel
    import "base.zmodel"
 
@@ -519,11 +569,13 @@ See complete guide: `docs/HITL_GUIDE.md`
    ```
 
 3. **Import in auth.zmodel** (if has user FK):
+
    ```zmodel
    import "my-feature.zmodel"
    ```
 
 4. **Generate code**:
+
    ```bash
    pnpm gen:check
    ```
@@ -536,12 +588,14 @@ See complete guide: `docs/HITL_GUIDE.md`
 ### Adding a New Page
 
 1. **Create route file**:
+
    ```bash
    mkdir -p app/my-page
    touch app/my-page/page.tsx
    ```
 
 2. **Use generated hooks**:
+
    ```typescript
    import { useFindManyMyFeature } from '@/lib/hooks/generated/tanstack-query'
 
@@ -567,11 +621,13 @@ pnpm db:reset
 ### Adding Environment Variables
 
 1. **Add to .env.local**:
+
    ```env
    NEW_API_KEY="your-key-here"
    ```
 
 2. **Add to .env.example** (without value):
+
    ```env
    NEW_API_KEY="<add your key here>"
    ```
@@ -591,12 +647,14 @@ pnpm db:reset
 ### Common Issues
 
 #### "Module not found" errors
+
 ```bash
 # Clear caches and reinstall
 pnpm package-clean
 ```
 
 #### Database connection fails
+
 ```bash
 # Verify environment variables
 ./scripts/diagnose-web-environment.sh
@@ -606,6 +664,7 @@ pnpm package-clean
 ```
 
 #### Type errors after schema changes
+
 ```bash
 # Regenerate all code
 pnpm gen:check
@@ -615,6 +674,7 @@ pnpm gen:check
 ```
 
 #### Port already in use
+
 ```bash
 # Kill process on port 3000
 pnpm dev  # Automatically kills port in script
@@ -630,11 +690,13 @@ lsof -ti:3000 | xargs kill -9
    - `docs/adr/` for architecture decisions
 
 2. **Search codebase**:
+
    ```bash
    rg "keyword" --type ts
    ```
 
 3. **Check existing issues**:
+
    ```bash
    gh issue list
    ```
@@ -648,12 +710,14 @@ lsof -ti:3000 | xargs kill -9
 ## Next Steps
 
 ### Immediate
+
 - [ ] Complete environment setup
 - [ ] Verify all tests pass
 - [ ] Deploy to Vercel
 - [ ] Set up OAuth providers
 
 ### First Week
+
 - [ ] Update README.md with business plan
 - [ ] Create first user stories
 - [ ] Review and approve via HITL
@@ -661,6 +725,7 @@ lsof -ti:3000 | xargs kill -9
 - [ ] Start first implementation batch
 
 ### Ongoing
+
 - [ ] Review HITL batches daily
 - [ ] Generate session summaries weekly
 - [ ] Update ADRs when architecture changes
@@ -671,12 +736,14 @@ lsof -ti:3000 | xargs kill -9
 ## Additional Resources
 
 ### Documentation
+
 - **Workflow**: `docs/WORKFLOW_GUIDE.md`
 - **HITL**: `docs/HITL_GUIDE.md`
 - **Architecture**: `docs/ARCHITECTURE.md`
 - **SDLC**: `docs/SDLC.md`
 
 ### External Resources
+
 - [Next.js Docs](https://nextjs.org/docs)
 - [ZenStack Guide](https://zenstack.dev/docs)
 - [tRPC Docs](https://trpc.io/docs)
@@ -684,6 +751,7 @@ lsof -ti:3000 | xargs kill -9
 - [Tailwind CSS](https://tailwindcss.com/docs)
 
 ### Templates
+
 - `docs/adr/template.md` - Architecture Decision Record
 - `docs/user-stories/template.md` - User Story
 - `docs/hitl/template.md` - HITL Request

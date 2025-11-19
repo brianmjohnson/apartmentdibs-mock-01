@@ -2,7 +2,17 @@
 
 import { use } from 'react'
 import Link from 'next/link'
-import { ArrowLeft, FileText, Mail, Phone, Calendar, DollarSign, RefreshCw, XCircle, Download } from 'lucide-react'
+import {
+  ArrowLeft,
+  FileText,
+  Mail,
+  Phone,
+  Calendar,
+  DollarSign,
+  RefreshCw,
+  XCircle,
+  Download,
+} from 'lucide-react'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
@@ -30,7 +40,7 @@ import {
   formatCurrency,
   formatDate,
   getLeaseStatusColor,
-  getRentPaymentStatusColor
+  getRentPaymentStatusColor,
 } from '@/lib/mock-data/landlord'
 
 export default function LeaseDetailPage({ params }: { params: Promise<{ leaseId: string }> }) {
@@ -47,7 +57,7 @@ export default function LeaseDetailPage({ params }: { params: Promise<{ leaseId:
             Back to Leases
           </Button>
         </Link>
-        <Card className="border-2 border-foreground">
+        <Card className="border-foreground border-2">
           <CardContent className="py-12 text-center">
             <p className="text-muted-foreground">Lease not found</p>
           </CardContent>
@@ -67,16 +77,14 @@ export default function LeaseDetailPage({ params }: { params: Promise<{ leaseId:
       </Link>
 
       {/* Page Header */}
-      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+      <div className="flex flex-col justify-between gap-4 md:flex-row md:items-center">
         <div>
           <div className="flex items-center gap-3">
             <h1 className="text-3xl font-bold tracking-tight">Lease Details</h1>
-            <Badge
-              variant="outline"
-              className={`border ${getLeaseStatusColor(lease.status)}`}
-            >
-              {lease.status === 'expiring_soon' ? 'Expiring Soon' :
-               lease.status.charAt(0).toUpperCase() + lease.status.slice(1)}
+            <Badge variant="outline" className={`border ${getLeaseStatusColor(lease.status)}`}>
+              {lease.status === 'expiring_soon'
+                ? 'Expiring Soon'
+                : lease.status.charAt(0).toUpperCase() + lease.status.slice(1)}
             </Badge>
           </div>
           <p className="text-muted-foreground">
@@ -85,19 +93,19 @@ export default function LeaseDetailPage({ params }: { params: Promise<{ leaseId:
         </div>
         <div className="flex gap-2">
           <Link href={`/landlord/leases/${lease.id}/renew`}>
-            <Button className="border-2 border-foreground">
-              <RefreshCw className="h-4 w-4 mr-2" />
+            <Button className="border-foreground border-2">
+              <RefreshCw className="mr-2 h-4 w-4" />
               Send Renewal
             </Button>
           </Link>
           <Dialog>
             <DialogTrigger asChild>
               <Button variant="outline" className="border-2 text-red-600 hover:text-red-700">
-                <XCircle className="h-4 w-4 mr-2" />
+                <XCircle className="mr-2 h-4 w-4" />
                 Terminate Lease
               </Button>
             </DialogTrigger>
-            <DialogContent className="border-2 border-foreground">
+            <DialogContent className="border-foreground border-2">
               <DialogHeader>
                 <DialogTitle>Terminate Lease</DialogTitle>
                 <DialogDescription>
@@ -117,7 +125,9 @@ export default function LeaseDetailPage({ params }: { params: Promise<{ leaseId:
                 </p>
               </div>
               <DialogFooter>
-                <Button variant="outline" className="border-2">Cancel</Button>
+                <Button variant="outline" className="border-2">
+                  Cancel
+                </Button>
                 <Button variant="destructive" className="border-2 border-red-700">
                   Confirm Termination
                 </Button>
@@ -129,7 +139,7 @@ export default function LeaseDetailPage({ params }: { params: Promise<{ leaseId:
 
       <div className="grid gap-6 lg:grid-cols-2">
         {/* Lease Information */}
-        <Card className="border-2 border-foreground">
+        <Card className="border-foreground border-2">
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
               <Calendar className="h-5 w-5" />
@@ -139,19 +149,19 @@ export default function LeaseDetailPage({ params }: { params: Promise<{ leaseId:
           <CardContent className="space-y-4">
             <div className="grid grid-cols-2 gap-4">
               <div>
-                <p className="text-sm text-muted-foreground">Start Date</p>
+                <p className="text-muted-foreground text-sm">Start Date</p>
                 <p className="font-medium">{formatDate(lease.startDate)}</p>
               </div>
               <div>
-                <p className="text-sm text-muted-foreground">End Date</p>
+                <p className="text-muted-foreground text-sm">End Date</p>
                 <p className="font-medium">{formatDate(lease.endDate)}</p>
               </div>
               <div>
-                <p className="text-sm text-muted-foreground">Monthly Rent</p>
+                <p className="text-muted-foreground text-sm">Monthly Rent</p>
                 <p className="font-medium">{formatCurrency(lease.monthlyRent)}</p>
               </div>
               <div>
-                <p className="text-sm text-muted-foreground">Security Deposit</p>
+                <p className="text-muted-foreground text-sm">Security Deposit</p>
                 <p className="font-medium">{formatCurrency(lease.securityDeposit)}</p>
               </div>
             </div>
@@ -159,24 +169,24 @@ export default function LeaseDetailPage({ params }: { params: Promise<{ leaseId:
         </Card>
 
         {/* Tenant Information */}
-        <Card className="border-2 border-foreground">
+        <Card className="border-foreground border-2">
           <CardHeader>
             <CardTitle>Tenant Information</CardTitle>
           </CardHeader>
           <CardContent className="space-y-4">
             <div>
-              <p className="font-medium text-lg">{lease.tenantName}</p>
+              <p className="text-lg font-medium">{lease.tenantName}</p>
             </div>
             <Separator />
             <div className="space-y-3">
               <div className="flex items-center gap-2 text-sm">
-                <Mail className="h-4 w-4 text-muted-foreground" />
+                <Mail className="text-muted-foreground h-4 w-4" />
                 <a href={`mailto:${lease.tenantEmail}`} className="hover:underline">
                   {lease.tenantEmail}
                 </a>
               </div>
               <div className="flex items-center gap-2 text-sm">
-                <Phone className="h-4 w-4 text-muted-foreground" />
+                <Phone className="text-muted-foreground h-4 w-4" />
                 <a href={`tel:${lease.tenantPhone}`} className="hover:underline">
                   {lease.tenantPhone}
                 </a>
@@ -187,7 +197,7 @@ export default function LeaseDetailPage({ params }: { params: Promise<{ leaseId:
       </div>
 
       {/* Documents */}
-      <Card className="border-2 border-foreground">
+      <Card className="border-foreground border-2">
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
             <FileText className="h-5 w-5" />
@@ -200,19 +210,20 @@ export default function LeaseDetailPage({ params }: { params: Promise<{ leaseId:
             {lease.documents.map((doc) => (
               <div
                 key={doc.id}
-                className="flex items-center justify-between p-3 border-2 border-border"
+                className="border-border flex items-center justify-between border-2 p-3"
               >
                 <div className="flex items-center gap-3">
-                  <FileText className="h-5 w-5 text-muted-foreground" />
+                  <FileText className="text-muted-foreground h-5 w-5" />
                   <div>
-                    <p className="font-medium text-sm">{doc.name}</p>
-                    <p className="text-xs text-muted-foreground">
-                      {doc.type.charAt(0).toUpperCase() + doc.type.slice(1)} - Uploaded {formatDate(doc.uploadedAt)}
+                    <p className="text-sm font-medium">{doc.name}</p>
+                    <p className="text-muted-foreground text-xs">
+                      {doc.type.charAt(0).toUpperCase() + doc.type.slice(1)} - Uploaded{' '}
+                      {formatDate(doc.uploadedAt)}
                     </p>
                   </div>
                 </div>
                 <Button variant="outline" size="sm" className="border-2">
-                  <Download className="h-4 w-4 mr-1" />
+                  <Download className="mr-1 h-4 w-4" />
                   Download
                 </Button>
               </div>
@@ -222,7 +233,7 @@ export default function LeaseDetailPage({ params }: { params: Promise<{ leaseId:
       </Card>
 
       {/* Payment History */}
-      <Card className="border-2 border-foreground">
+      <Card className="border-foreground border-2">
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
             <DollarSign className="h-5 w-5" />
@@ -232,7 +243,7 @@ export default function LeaseDetailPage({ params }: { params: Promise<{ leaseId:
         </CardHeader>
         <CardContent>
           {payments.length === 0 ? (
-            <p className="text-sm text-muted-foreground text-center py-4">
+            <p className="text-muted-foreground py-4 text-center text-sm">
               No payments recorded yet
             </p>
           ) : (
@@ -250,9 +261,7 @@ export default function LeaseDetailPage({ params }: { params: Promise<{ leaseId:
                 {payments.map((payment) => (
                   <TableRow key={payment.id}>
                     <TableCell>{formatDate(payment.dueDate)}</TableCell>
-                    <TableCell>
-                      {payment.date ? formatDate(payment.date) : '-'}
-                    </TableCell>
+                    <TableCell>{payment.date ? formatDate(payment.date) : '-'}</TableCell>
                     <TableCell>{formatCurrency(payment.amount)}</TableCell>
                     <TableCell>
                       <Badge

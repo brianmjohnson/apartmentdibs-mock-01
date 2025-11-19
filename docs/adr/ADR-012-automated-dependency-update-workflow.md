@@ -15,26 +15,31 @@ Projects receive regular Dependabot security alerts and dependency update notifi
 **The Problem**:
 
 **Security Responsiveness**:
+
 - Critical vulnerabilities require fast patching
 - Multiple security alerts with varying severities
 - Mix of direct and transitive dependencies
 
 **Risk Management**:
+
 - Updates can introduce breaking changes
 - Regressions can break functionality
 - Debugging multiple simultaneous updates is difficult
 
 **Testing Rigor**:
+
 - Not all updates are thoroughly tested
 - Manual testing is inconsistent
 - Regression detection is ad-hoc
 
 **Feature Evaluation**:
+
 - New capabilities in updates often ignored
 - Missed opportunities for improvements
 - No systematic feature adoption process
 
 **Documentation**:
+
 - Update decisions not recorded
 - No audit trail for changes
 - Difficult to reproduce process
@@ -51,18 +56,21 @@ Current state:
 ```
 
 **Without a structured workflow, updates are**:
+
 - **Rushed**: Security fixes applied without proper testing
 - **Delayed**: Low-priority updates accumulate tech debt
 - **Incomplete**: Breaking changes not fully addressed
 - **Undocumented**: No record of why decisions were made
 
 **Background**:
+
 - Dependabot creates PRs for updates automatically
 - Security alerts require timely response
 - Breaking changes need research and planning
 - New features need evaluation for adoption
 
 **Requirements**:
+
 - Fast response to security alerts (< 48 hours for High/Critical)
 - Systematic testing before and after updates
 - Clear documentation of changes and decisions
@@ -80,6 +88,7 @@ This establishes a multi-phase process for handling both security and non-securi
 ### 1. Specialized Slash Commands
 
 **`.claude/commands/update-security-deps.md`**:
+
 - Handles Dependabot security alerts
 - Prioritizes by severity (Critical → High → Medium → Low)
 - Enforces testing before and after updates
@@ -87,6 +96,7 @@ This establishes a multi-phase process for handling both security and non-securi
 - Updates ONE dependency at a time (except patches)
 
 **`.claude/commands/update-deps.md`**:
+
 - Handles non-security dependency updates
 - Categorizes by type (Major, Minor, Patch)
 - Evaluates new features for adoption
@@ -206,12 +216,14 @@ vercel ls --prod
 **One Dependency at a Time** (Exception: Patches):
 
 ✅ **Why**:
+
 - Isolates risk (know exactly which dependency caused issue)
 - Simplifies debugging (single variable changed)
 - Clear audit trail (one commit per dependency)
 - Easy to revert (git revert single commit)
 
 ❌ **Exception**: Low-risk patch updates (x.x.X) MAY be batched if:
+
 - No known breaking changes
 - No code changes required
 - All tests pass
@@ -285,6 +297,7 @@ pnpm build                 # Build must succeed
 
 ```markdown
 Manual Test Checklist:
+
 - [ ] Test scenario 1 (e.g., authentication flow)
 - [ ] Test scenario 2 (e.g., checkout process)
 - [ ] Test scenario 3 (e.g., form submission)
@@ -302,8 +315,8 @@ Manual Test Checklist:
 // 3. Breaking change requires different assertions
 
 // Example: Testing current behavior before update
-describe("Current behavior (before update)", () => {
-  it("should behave as documented", () => {
+describe('Current behavior (before update)', () => {
+  it('should behave as documented', () => {
     // Test current behavior to establish baseline
   })
 })
@@ -424,10 +437,12 @@ describe("Current behavior (before update)", () => {
 ## Cost-Benefit Analysis
 
 **Benefits**:
+
 - Benefit 1
 - Benefit 2
 
 **Costs**:
+
 - Cost 1 (migration effort, learning curve, etc.)
 - Cost 2
 
@@ -509,6 +524,7 @@ Co-Authored-By: Claude <noreply@anthropic.com>
 ### 7. Exception: Batch Patch Updates
 
 Low-risk patch updates (x.x.X) MAY be batched if:
+
 - ✅ No known breaking changes
 - ✅ No code changes required
 - ✅ All tests pass
@@ -544,24 +560,28 @@ Fixes #{issue1}, #{issue2}, #{issue3}"
 ### Positive Consequences (Easier)
 
 **Security Benefits**:
+
 - ✅ Faster response to security alerts (target: < 48 hours for High/Critical)
 - ✅ Systematic vulnerability patching
 - ✅ Clear prioritization by severity
 - ✅ Reduced attack surface
 
 **Quality Benefits**:
+
 - ✅ Fewer regressions (testing before/after)
 - ✅ Clear rollback path (one dependency at a time)
 - ✅ Better test coverage (new tests for updates)
 - ✅ Documented decisions (GitHub issues)
 
 **Development Benefits**:
+
 - ✅ Structured workflow reduces cognitive load
 - ✅ Automated slash commands speed execution
 - ✅ Feature evaluation prevents missed opportunities
 - ✅ Breaking change analysis prevents surprises
 
 **Maintenance Benefits**:
+
 - ✅ Up-to-date dependencies
 - ✅ Reduced tech debt
 - ✅ Clear update history
@@ -570,16 +590,19 @@ Fixes #{issue1}, #{issue2}, #{issue3}"
 ### Negative Consequences (More Difficult)
 
 **Additional Overhead**:
+
 - ⚠️ More time per update (research, testing, documentation)
 - ⚠️ More GitHub issues created
 - ⚠️ More commits (one per dependency)
 
 **Process Complexity**:
+
 - ⚠️ Multi-phase workflow to learn
 - ⚠️ Slash command usage requires training
 - ⚠️ More decisions to make (feature adoption)
 
 **Mitigations**:
+
 - Automate common tasks via slash commands
 - Template GitHub issues for consistency
 - Batch low-risk patches to reduce overhead
@@ -594,10 +617,12 @@ Fixes #{issue1}, #{issue2}, #{issue3}"
 **Description**: Enable Dependabot auto-merge for low-risk updates
 
 **Pros**:
+
 - Minimal manual effort
 - Fast updates
 
 **Cons**:
+
 - No research or feature evaluation
 - Risk of breaking changes slipping through
 - No human decision on feature adoption
@@ -612,10 +637,12 @@ Fixes #{issue1}, #{issue2}, #{issue3}"
 **Description**: Update all dependencies at once in a single commit
 
 **Pros**:
+
 - Fewer commits
 - Faster to execute
 
 **Cons**:
+
 - High risk of breakage
 - Difficult to debug which dependency caused issue
 - Hard to revert specific updates
@@ -630,10 +657,12 @@ Fixes #{issue1}, #{issue2}, #{issue3}"
 **Description**: Continue manual process without structure
 
 **Pros**:
+
 - No process overhead
 - Maximum flexibility
 
 **Cons**:
+
 - Inconsistent approach
 - Missed security alerts
 - No documentation
@@ -648,9 +677,11 @@ Fixes #{issue1}, #{issue2}, #{issue3}"
 **Description**: Only update when forced (major security issue, broken functionality)
 
 **Pros**:
+
 - Minimal effort
 
 **Cons**:
+
 - Accumulates tech debt
 - Larger, riskier updates when forced
 - Miss out on improvements
@@ -663,15 +694,18 @@ Fixes #{issue1}, #{issue2}, #{issue3}"
 ## Related
 
 **Related ADRs**:
+
 - [ADR-009: PR Review Automation](./ADR-009-pr-review-automation-with-github-cli.md) - GitHub CLI integration
 - [ADR-010: Branch-Based AI Autonomy](./ADR-010-branch-based-ai-autonomy.md) - Workflow for branches
 
 **Related Documentation**:
+
 - `.claude/commands/update-security-deps.md` - Slash command (to be created)
 - `.claude/commands/update-deps.md` - Slash command (to be created)
 - `docs/dependency-update-workflow.md` - Workflow guide (to be created)
 
 **External References**:
+
 - [Dependabot Documentation](https://docs.github.com/en/code-security/dependabot)
 - [OWASP Dependency Check](https://owasp.org/www-project-dependency-check/)
 - [Semantic Versioning](https://semver.org/)
@@ -683,24 +717,28 @@ Fixes #{issue1}, #{issue2}, #{issue3}"
 ### Implementation Checklist
 
 **Phase 1: Documentation and Commands**:
+
 - [ ] Create `.claude/commands/update-security-deps.md`
 - [ ] Create `.claude/commands/update-deps.md`
 - [ ] Create `docs/dependency-update-workflow.md` (detailed guide)
 - [ ] Document this ADR (completed)
 
 **Phase 2: Initial Testing**:
+
 - [ ] Test workflow with current security alerts
 - [ ] Process 1-2 security updates following workflow
 - [ ] Document lessons learned
 - [ ] Refine workflow based on experience
 
 **Phase 3: Full Rollout**:
+
 - [ ] Update all remaining security alerts
 - [ ] Process non-security dependency updates
 - [ ] Train team on slash commands
 - [ ] Establish update cadence (e.g., monthly dependency reviews)
 
 **Phase 4: Metrics and Monitoring**:
+
 - [ ] Track time-to-patch for security alerts
 - [ ] Monitor regression rate
 - [ ] Measure feature adoption rate
@@ -711,16 +749,19 @@ Fixes #{issue1}, #{issue2}, #{issue3}"
 ### Metrics for Success
 
 **Security**:
+
 - Time from alert to merge: < 48 hours for High/Critical
 - Open security alerts: < 5 at any time
 - Security patch adoption: 100%
 
 **Quality**:
+
 - Regressions from dependency updates: 0
 - Test coverage for updated dependencies: 100%
 - Successful deployments after updates: 100%
 
 **Maintenance**:
+
 - Average dependency age: < 6 months
 - Features evaluated: 100% of relevant features
 - Feature adoption rate: > 30% of evaluated features
@@ -770,6 +811,7 @@ Fixes #{issue1}, #{issue2}, #{issue3}"
 ### Review Schedule
 
 This ADR should be reviewed:
+
 - After first 5 dependency updates (validate workflow)
 - Quarterly (refine based on experience)
 - When significant pain points emerge
@@ -779,6 +821,6 @@ This ADR should be reviewed:
 
 ## Revision History
 
-| Date | Author | Change |
-|------|--------|--------|
+| Date       | Author              | Change        |
+| ---------- | ------------------- | ------------- |
 | 2025-11-17 | System Architecture | Initial draft |

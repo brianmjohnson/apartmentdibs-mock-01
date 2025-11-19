@@ -42,25 +42,25 @@ function KPICard({
   subtitle?: string
 }) {
   return (
-    <Card className="border-2 border-foreground">
+    <Card className="border-foreground border-2">
       <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
         <CardTitle className="text-sm font-medium">{title}</CardTitle>
-        <Icon className="h-5 w-5 text-muted-foreground" />
+        <Icon className="text-muted-foreground h-5 w-5" />
       </CardHeader>
       <CardContent>
         <div className="text-3xl font-bold">{value}</div>
         {trendValue && (
-          <div className="flex items-center gap-1 text-sm text-muted-foreground mt-1">
+          <div className="text-muted-foreground mt-1 flex items-center gap-1 text-sm">
             {trend === 'up' && <TrendingUp className="h-4 w-4 text-green-600" />}
             {trend === 'down' && <TrendingDown className="h-4 w-4 text-red-600" />}
-            <span className={trend === 'up' ? 'text-green-600' : trend === 'down' ? 'text-red-600' : ''}>
+            <span
+              className={trend === 'up' ? 'text-green-600' : trend === 'down' ? 'text-red-600' : ''}
+            >
               {trendValue}
             </span>
           </div>
         )}
-        {subtitle && (
-          <p className="text-xs text-muted-foreground mt-1">{subtitle}</p>
-        )}
+        {subtitle && <p className="text-muted-foreground mt-1 text-xs">{subtitle}</p>}
       </CardContent>
     </Card>
   )
@@ -133,39 +133,61 @@ export default function AdminDashboard() {
       </div>
 
       {/* User Breakdown */}
-      <Card className="border-2 border-foreground">
+      <Card className="border-foreground border-2">
         <CardHeader>
           <CardTitle>User Breakdown by Persona</CardTitle>
           <CardDescription>Distribution of users across different roles</CardDescription>
         </CardHeader>
         <CardContent>
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-            <div className="text-center p-4 border-2 border-border">
-              <div className="text-2xl font-bold">{formatNumber(mockAdminStats.usersByPersona.tenants)}</div>
-              <div className="text-sm text-muted-foreground">Tenants</div>
-              <div className="text-xs text-muted-foreground mt-1">
-                {((mockAdminStats.usersByPersona.tenants / mockAdminStats.totalUsers) * 100).toFixed(1)}%
+          <div className="grid grid-cols-2 gap-4 md:grid-cols-4">
+            <div className="border-border border-2 p-4 text-center">
+              <div className="text-2xl font-bold">
+                {formatNumber(mockAdminStats.usersByPersona.tenants)}
+              </div>
+              <div className="text-muted-foreground text-sm">Tenants</div>
+              <div className="text-muted-foreground mt-1 text-xs">
+                {(
+                  (mockAdminStats.usersByPersona.tenants / mockAdminStats.totalUsers) *
+                  100
+                ).toFixed(1)}
+                %
               </div>
             </div>
-            <div className="text-center p-4 border-2 border-border">
-              <div className="text-2xl font-bold">{formatNumber(mockAdminStats.usersByPersona.agents)}</div>
-              <div className="text-sm text-muted-foreground">Agents</div>
-              <div className="text-xs text-muted-foreground mt-1">
-                {((mockAdminStats.usersByPersona.agents / mockAdminStats.totalUsers) * 100).toFixed(1)}%
+            <div className="border-border border-2 p-4 text-center">
+              <div className="text-2xl font-bold">
+                {formatNumber(mockAdminStats.usersByPersona.agents)}
+              </div>
+              <div className="text-muted-foreground text-sm">Agents</div>
+              <div className="text-muted-foreground mt-1 text-xs">
+                {((mockAdminStats.usersByPersona.agents / mockAdminStats.totalUsers) * 100).toFixed(
+                  1
+                )}
+                %
               </div>
             </div>
-            <div className="text-center p-4 border-2 border-border">
-              <div className="text-2xl font-bold">{formatNumber(mockAdminStats.usersByPersona.landlords)}</div>
-              <div className="text-sm text-muted-foreground">Landlords</div>
-              <div className="text-xs text-muted-foreground mt-1">
-                {((mockAdminStats.usersByPersona.landlords / mockAdminStats.totalUsers) * 100).toFixed(1)}%
+            <div className="border-border border-2 p-4 text-center">
+              <div className="text-2xl font-bold">
+                {formatNumber(mockAdminStats.usersByPersona.landlords)}
+              </div>
+              <div className="text-muted-foreground text-sm">Landlords</div>
+              <div className="text-muted-foreground mt-1 text-xs">
+                {(
+                  (mockAdminStats.usersByPersona.landlords / mockAdminStats.totalUsers) *
+                  100
+                ).toFixed(1)}
+                %
               </div>
             </div>
-            <div className="text-center p-4 border-2 border-border">
-              <div className="text-2xl font-bold">{formatNumber(mockAdminStats.usersByPersona.admins)}</div>
-              <div className="text-sm text-muted-foreground">Admins</div>
-              <div className="text-xs text-muted-foreground mt-1">
-                {((mockAdminStats.usersByPersona.admins / mockAdminStats.totalUsers) * 100).toFixed(1)}%
+            <div className="border-border border-2 p-4 text-center">
+              <div className="text-2xl font-bold">
+                {formatNumber(mockAdminStats.usersByPersona.admins)}
+              </div>
+              <div className="text-muted-foreground text-sm">Admins</div>
+              <div className="text-muted-foreground mt-1 text-xs">
+                {((mockAdminStats.usersByPersona.admins / mockAdminStats.totalUsers) * 100).toFixed(
+                  1
+                )}
+                %
               </div>
             </div>
           </div>
@@ -174,28 +196,28 @@ export default function AdminDashboard() {
 
       {/* Charts Placeholder */}
       <div className="grid gap-6 lg:grid-cols-2">
-        <Card className="border-2 border-foreground">
+        <Card className="border-foreground border-2">
           <CardHeader>
             <CardTitle>User Growth Over Time</CardTitle>
             <CardDescription>Monthly user registrations</CardDescription>
           </CardHeader>
           <CardContent>
-            <div className="h-48 flex items-center justify-center border-2 border-dashed border-border bg-muted/20">
-              <p className="text-sm text-muted-foreground">
+            <div className="border-border bg-muted/20 flex h-48 items-center justify-center border-2 border-dashed">
+              <p className="text-muted-foreground text-sm">
                 Chart placeholder - integrate with charting library
               </p>
             </div>
           </CardContent>
         </Card>
 
-        <Card className="border-2 border-foreground">
+        <Card className="border-foreground border-2">
           <CardHeader>
             <CardTitle>Revenue Trend</CardTitle>
             <CardDescription>Monthly revenue over time</CardDescription>
           </CardHeader>
           <CardContent>
-            <div className="h-48 flex items-center justify-center border-2 border-dashed border-border bg-muted/20">
-              <p className="text-sm text-muted-foreground">
+            <div className="border-border bg-muted/20 flex h-48 items-center justify-center border-2 border-dashed">
+              <p className="text-muted-foreground text-sm">
                 Chart placeholder - integrate with charting library
               </p>
             </div>
@@ -204,7 +226,7 @@ export default function AdminDashboard() {
       </div>
 
       {/* Applications by Status Chart */}
-      <Card className="border-2 border-foreground">
+      <Card className="border-foreground border-2">
         <CardHeader>
           <CardTitle>Applications by Status</CardTitle>
           <CardDescription>Current application pipeline</CardDescription>
@@ -218,9 +240,9 @@ export default function AdminDashboard() {
               { label: 'Approved', count: 1234 },
               { label: 'Leased', count: 892 },
             ].map((stage, index) => (
-              <div key={stage.label} className="flex flex-col items-center gap-2 flex-1">
+              <div key={stage.label} className="flex flex-1 flex-col items-center gap-2">
                 <div
-                  className="w-full h-16 bg-primary/20 border-2 border-foreground flex items-center justify-center font-bold"
+                  className="bg-primary/20 border-foreground flex h-16 w-full items-center justify-center border-2 font-bold"
                   style={{
                     opacity: 1 - index * 0.15,
                     transform: `scale(${1 - index * 0.05})`,
@@ -228,7 +250,7 @@ export default function AdminDashboard() {
                 >
                   {formatNumber(stage.count)}
                 </div>
-                <span className="text-xs font-medium text-muted-foreground">{stage.label}</span>
+                <span className="text-muted-foreground text-xs font-medium">{stage.label}</span>
               </div>
             ))}
           </div>
@@ -236,24 +258,22 @@ export default function AdminDashboard() {
       </Card>
 
       {/* Recent Activity */}
-      <Card className="border-2 border-foreground">
+      <Card className="border-foreground border-2">
         <CardHeader>
-          <CardTitle className="flex items-center gap-2">
-            Recent Activity
-          </CardTitle>
+          <CardTitle className="flex items-center gap-2">Recent Activity</CardTitle>
           <CardDescription>Latest platform events</CardDescription>
         </CardHeader>
         <CardContent>
           <div className="space-y-4">
             {mockRecentActivities.map((activity) => (
               <div key={activity.id} className="flex items-start gap-3">
-                <div className="mt-1 p-2 rounded-md bg-muted">
+                <div className="bg-muted mt-1 rounded-md p-2">
                   <ActivityIcon type={activity.type} />
                 </div>
                 <div className="flex-1 space-y-1">
                   <p className="text-sm font-medium">{activity.title}</p>
-                  <p className="text-sm text-muted-foreground">{activity.description}</p>
-                  <p className="text-xs text-muted-foreground">
+                  <p className="text-muted-foreground text-sm">{activity.description}</p>
+                  <p className="text-muted-foreground text-xs">
                     {formatDateTime(activity.timestamp)}
                   </p>
                 </div>
@@ -271,13 +291,13 @@ export default function AdminDashboard() {
       </Card>
 
       {/* Quick Actions */}
-      <Card className="border-2 border-foreground">
+      <Card className="border-foreground border-2">
         <CardHeader>
           <CardTitle>Quick Actions</CardTitle>
         </CardHeader>
         <CardContent className="flex flex-wrap gap-3">
           <Link href="/admin/users">
-            <Button className="border-2 border-foreground">
+            <Button className="border-foreground border-2">
               <Users className="mr-2 h-4 w-4" />
               Manage Users
             </Button>

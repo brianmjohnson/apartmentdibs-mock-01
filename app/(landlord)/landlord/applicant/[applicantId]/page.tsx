@@ -17,7 +17,7 @@ import {
   PawPrint,
   Sparkles,
   CheckCircle,
-  XCircle
+  XCircle,
 } from 'lucide-react'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
@@ -47,7 +47,7 @@ import {
   formatCurrency,
   formatDate,
   getApplicantStatusColor,
-  denialReasonOptions
+  denialReasonOptions,
 } from '@/lib/mock-data/landlord'
 import { CreditBand } from '@/components/tenant-profile/CreditBand'
 import { EmploymentTenure } from '@/components/tenant-profile/EmploymentTenure'
@@ -80,7 +80,7 @@ export default function ApplicantDetailPage({ params }: ApplicantDetailPageProps
       <div className="space-y-6">
         <div className="flex items-center gap-4">
           <Link href="/landlord/listings">
-            <Button variant="ghost" size="icon" className="border-2 border-foreground">
+            <Button variant="ghost" size="icon" className="border-foreground border-2">
               <ArrowLeft className="h-4 w-4" />
             </Button>
           </Link>
@@ -141,7 +141,7 @@ export default function ApplicantDetailPage({ params }: ApplicantDetailPageProps
       {/* Page Header */}
       <div className="flex items-center gap-4">
         <Link href={listing ? `/landlord/listings/${listing.id}/applicants` : '/landlord/listings'}>
-          <Button variant="ghost" size="icon" className="border-2 border-foreground">
+          <Button variant="ghost" size="icon" className="border-foreground border-2">
             <ArrowLeft className="h-4 w-4" />
           </Button>
         </Link>
@@ -157,15 +157,19 @@ export default function ApplicantDetailPage({ params }: ApplicantDetailPageProps
               {applicant.status.charAt(0).toUpperCase() + applicant.status.slice(1)}
             </Badge>
             {!isRevealed && (
-              <Badge variant="outline" className="border-2 border-muted-foreground text-muted-foreground">
-                <Lock className="h-3 w-3 mr-1" />
+              <Badge
+                variant="outline"
+                className="border-muted-foreground text-muted-foreground border-2"
+              >
+                <Lock className="mr-1 h-3 w-3" />
                 Anonymized
               </Badge>
             )}
           </div>
           {listing && (
             <p className="text-muted-foreground">
-              {listing.propertyAddress}, Unit {listing.unitNumber} - {formatCurrency(listing.price)}/mo
+              {listing.propertyAddress}, Unit {listing.unitNumber} - {formatCurrency(listing.price)}
+              /mo
             </p>
           )}
         </div>
@@ -173,18 +177,11 @@ export default function ApplicantDetailPage({ params }: ApplicantDetailPageProps
         {/* Action Buttons */}
         {applicant.status === 'shortlisted' && !isRevealed && (
           <div className="flex gap-2">
-            <Button
-              className="border-2 border-foreground"
-              onClick={handleSelect}
-            >
+            <Button className="border-foreground border-2" onClick={handleSelect}>
               <CheckCircle className="mr-2 h-4 w-4" />
               Select Applicant
             </Button>
-            <Button
-              variant="outline"
-              className="border-2"
-              onClick={handleDeny}
-            >
+            <Button variant="outline" className="border-2" onClick={handleDeny}>
               <XCircle className="mr-2 h-4 w-4" />
               Deny
             </Button>
@@ -212,13 +209,16 @@ export default function ApplicantDetailPage({ params }: ApplicantDetailPageProps
         // Show obfuscated profile
         <div className="grid gap-6 lg:grid-cols-2">
           {/* Obfuscated Profile Card */}
-          <Card className="border-2 border-foreground">
+          <Card className="border-foreground border-2">
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
                 <User className="h-5 w-5" />
                 Anonymized Profile
-                <Badge variant="outline" className="ml-auto border-2 border-muted-foreground text-muted-foreground">
-                  <Lock className="h-3 w-3 mr-1" />
+                <Badge
+                  variant="outline"
+                  className="border-muted-foreground text-muted-foreground ml-auto border-2"
+                >
+                  <Lock className="mr-1 h-3 w-3" />
                   PII Hidden
                 </Badge>
               </CardTitle>
@@ -229,44 +229,46 @@ export default function ApplicantDetailPage({ params }: ApplicantDetailPageProps
             <CardContent className="space-y-4">
               {/* Anonymous Avatar */}
               <div className="flex justify-center">
-                <div className="h-24 w-24 rounded-full bg-muted border-2 border-dashed border-muted-foreground flex items-center justify-center">
-                  <User className="h-12 w-12 text-muted-foreground" />
+                <div className="bg-muted border-muted-foreground flex h-24 w-24 items-center justify-center rounded-full border-2 border-dashed">
+                  <User className="text-muted-foreground h-12 w-12" />
                 </div>
               </div>
 
               {/* Income Ratio */}
-              <div className="flex items-center justify-between p-3 bg-muted rounded-md">
+              <div className="bg-muted flex items-center justify-between rounded-md p-3">
                 <div className="flex items-center gap-3">
-                  <DollarSign className="h-5 w-5 text-muted-foreground" />
+                  <DollarSign className="text-muted-foreground h-5 w-5" />
                   <div>
-                    <p className="text-sm text-muted-foreground">Income-to-Rent Ratio</p>
-                    <p className={`font-bold ${applicant.incomeRatio >= 4 ? 'text-green-600' : ''}`}>
+                    <p className="text-muted-foreground text-sm">Income-to-Rent Ratio</p>
+                    <p
+                      className={`font-bold ${applicant.incomeRatio >= 4 ? 'text-green-600' : ''}`}
+                    >
                       {applicant.incomeRatio}x monthly rent
                     </p>
                   </div>
                 </div>
                 {applicant.incomeRatio >= 4 && (
-                  <Badge className="bg-green-100 text-green-800 border-green-300">Strong</Badge>
+                  <Badge className="border-green-300 bg-green-100 text-green-800">Strong</Badge>
                 )}
               </div>
 
               {/* Credit Score Band */}
-              <div className="flex items-center justify-between p-3 bg-muted rounded-md">
+              <div className="bg-muted flex items-center justify-between rounded-md p-3">
                 <div className="flex items-center gap-3">
-                  <CreditCard className="h-5 w-5 text-muted-foreground" />
+                  <CreditCard className="text-muted-foreground h-5 w-5" />
                   <div>
-                    <p className="text-sm text-muted-foreground">Credit Score Band</p>
+                    <p className="text-muted-foreground text-sm">Credit Score Band</p>
                     <CreditBand creditBand={applicant.creditBand} showIcon={false} />
                   </div>
                 </div>
               </div>
 
               {/* Employment */}
-              <div className="flex items-center justify-between p-3 bg-muted rounded-md">
+              <div className="bg-muted flex items-center justify-between rounded-md p-3">
                 <div className="flex items-center gap-3">
-                  <Briefcase className="h-5 w-5 text-muted-foreground" />
+                  <Briefcase className="text-muted-foreground h-5 w-5" />
                   <div>
-                    <p className="text-sm text-muted-foreground">Employment Tenure</p>
+                    <p className="text-muted-foreground text-sm">Employment Tenure</p>
                     <EmploymentTenure
                       tenure={applicant.employmentTenure}
                       employmentType={applicant.employmentType}
@@ -277,24 +279,28 @@ export default function ApplicantDetailPage({ params }: ApplicantDetailPageProps
               </div>
 
               {/* Rental History */}
-              <div className="flex items-center justify-between p-3 bg-muted rounded-md">
+              <div className="bg-muted flex items-center justify-between rounded-md p-3">
                 <div className="flex items-center gap-3">
-                  <Home className="h-5 w-5 text-muted-foreground" />
+                  <Home className="text-muted-foreground h-5 w-5" />
                   <div>
-                    <p className="text-sm text-muted-foreground">Rental History</p>
-                    <p className="font-bold">{applicant.rentalHistory || '5+ years, no evictions'}</p>
+                    <p className="text-muted-foreground text-sm">Rental History</p>
+                    <p className="font-bold">
+                      {applicant.rentalHistory || '5+ years, no evictions'}
+                    </p>
                   </div>
                 </div>
-                <Badge className="bg-green-100 text-green-800 border-green-300">Clean</Badge>
+                <Badge className="border-green-300 bg-green-100 text-green-800">Clean</Badge>
               </div>
 
               {/* Background Check */}
-              <div className="flex items-center justify-between p-3 bg-muted rounded-md">
+              <div className="bg-muted flex items-center justify-between rounded-md p-3">
                 <div className="flex items-center gap-3">
-                  <ShieldCheck className="h-5 w-5 text-muted-foreground" />
+                  <ShieldCheck className="text-muted-foreground h-5 w-5" />
                   <div>
-                    <p className="text-sm text-muted-foreground">Background Check</p>
-                    <p className={`font-bold ${applicant.backgroundCheck === 'Pass' ? 'text-green-600' : 'text-red-600'}`}>
+                    <p className="text-muted-foreground text-sm">Background Check</p>
+                    <p
+                      className={`font-bold ${applicant.backgroundCheck === 'Pass' ? 'text-green-600' : 'text-red-600'}`}
+                    >
                       {applicant.backgroundCheck || 'Pass'}
                     </p>
                   </div>
@@ -304,7 +310,7 @@ export default function ApplicantDetailPage({ params }: ApplicantDetailPageProps
           </Card>
 
           {/* Additional Details Card */}
-          <Card className="border-2 border-foreground">
+          <Card className="border-foreground border-2">
             <CardHeader>
               <CardTitle>Application Details</CardTitle>
               <CardDescription>Move-in preferences and additional information</CardDescription>
@@ -312,24 +318,24 @@ export default function ApplicantDetailPage({ params }: ApplicantDetailPageProps
             <CardContent className="space-y-4">
               {/* Basic Info Grid */}
               <div className="grid grid-cols-2 gap-4">
-                <div className="p-3 bg-muted rounded-md">
-                  <div className="flex items-center gap-2 text-sm text-muted-foreground mb-1">
+                <div className="bg-muted rounded-md p-3">
+                  <div className="text-muted-foreground mb-1 flex items-center gap-2 text-sm">
                     <Calendar className="h-4 w-4" />
                     Desired Move-in
                   </div>
                   <p className="font-medium">{formatDate(applicant.moveInDate)}</p>
                 </div>
 
-                <div className="p-3 bg-muted rounded-md">
-                  <div className="flex items-center gap-2 text-sm text-muted-foreground mb-1">
+                <div className="bg-muted rounded-md p-3">
+                  <div className="text-muted-foreground mb-1 flex items-center gap-2 text-sm">
                     <Users className="h-4 w-4" />
                     Occupants
                   </div>
                   <p className="font-medium">{applicant.occupants}</p>
                 </div>
 
-                <div className="p-3 bg-muted rounded-md">
-                  <div className="flex items-center gap-2 text-sm text-muted-foreground mb-1">
+                <div className="bg-muted rounded-md p-3">
+                  <div className="text-muted-foreground mb-1 flex items-center gap-2 text-sm">
                     <PawPrint className="h-4 w-4" />
                     Pets
                   </div>
@@ -338,8 +344,8 @@ export default function ApplicantDetailPage({ params }: ApplicantDetailPageProps
                   </p>
                 </div>
 
-                <div className="p-3 bg-muted rounded-md">
-                  <div className="flex items-center gap-2 text-sm text-muted-foreground mb-1">
+                <div className="bg-muted rounded-md p-3">
+                  <div className="text-muted-foreground mb-1 flex items-center gap-2 text-sm">
                     <Calendar className="h-4 w-4" />
                     Applied
                   </div>
@@ -351,8 +357,8 @@ export default function ApplicantDetailPage({ params }: ApplicantDetailPageProps
 
               {/* Competitive Edge */}
               {applicant.competitiveEdge && (
-                <div className="p-4 bg-purple-50 dark:bg-purple-900/20 border-2 border-purple-300 rounded-md">
-                  <div className="flex items-center gap-2 mb-2">
+                <div className="rounded-md border-2 border-purple-300 bg-purple-50 p-4 dark:bg-purple-900/20">
+                  <div className="mb-2 flex items-center gap-2">
                     <Sparkles className="h-5 w-5 text-purple-600" />
                     <span className="font-medium text-purple-600">Competitive Edge</span>
                   </div>
@@ -361,10 +367,10 @@ export default function ApplicantDetailPage({ params }: ApplicantDetailPageProps
               )}
 
               {/* Fair Housing Reminder */}
-              <div className="p-3 bg-blue-50 dark:bg-blue-900/20 border-2 border-blue-300 rounded-md text-sm">
+              <div className="rounded-md border-2 border-blue-300 bg-blue-50 p-3 text-sm dark:bg-blue-900/20">
                 <p className="text-blue-800 dark:text-blue-200">
-                  <strong>Fair Housing Reminder:</strong> Selection must be based on objective criteria only.
-                  PII remains hidden until you make a selection decision.
+                  <strong>Fair Housing Reminder:</strong> Selection must be based on objective
+                  criteria only. PII remains hidden until you make a selection decision.
                 </p>
               </div>
             </CardContent>
@@ -374,7 +380,7 @@ export default function ApplicantDetailPage({ params }: ApplicantDetailPageProps
 
       {/* Selection Confirmation Dialog */}
       <Dialog open={showConfirmDialog} onOpenChange={setShowConfirmDialog}>
-        <DialogContent className="border-2 border-foreground">
+        <DialogContent className="border-foreground border-2">
           <DialogHeader>
             <DialogTitle>Confirm Selection</DialogTitle>
             <DialogDescription>
@@ -383,16 +389,18 @@ export default function ApplicantDetailPage({ params }: ApplicantDetailPageProps
           </DialogHeader>
           <div className="py-4">
             {listing && (
-              <div className="p-4 bg-muted border-2 border-border space-y-2">
-                <p className="font-medium">{listing.propertyAddress}, Unit {listing.unitNumber}</p>
-                <p className="text-sm text-muted-foreground">
+              <div className="bg-muted border-border space-y-2 border-2 p-4">
+                <p className="font-medium">
+                  {listing.propertyAddress}, Unit {listing.unitNumber}
+                </p>
+                <p className="text-muted-foreground text-sm">
                   {formatCurrency(listing.price)}/mo - {listing.beds} bed, {listing.baths} bath
                 </p>
               </div>
             )}
             <div className="mt-4 space-y-2">
               <p className="text-sm font-medium">What happens next:</p>
-              <ul className="text-sm text-muted-foreground list-disc list-inside space-y-1">
+              <ul className="text-muted-foreground list-inside list-disc space-y-1 text-sm">
                 <li>The applicant&apos;s full profile (name, contact, etc.) will be revealed</li>
                 <li>Email notification sent to the applicant</li>
                 <li>You can proceed with lease preparation</li>
@@ -408,10 +416,7 @@ export default function ApplicantDetailPage({ params }: ApplicantDetailPageProps
             >
               Cancel
             </Button>
-            <Button
-              onClick={confirmSelection}
-              className="border-2 border-foreground"
-            >
+            <Button onClick={confirmSelection} className="border-foreground border-2">
               <CheckCircle className="mr-2 h-4 w-4" />
               Confirm Selection
             </Button>
@@ -421,7 +426,7 @@ export default function ApplicantDetailPage({ params }: ApplicantDetailPageProps
 
       {/* Denial Dialog */}
       <Dialog open={showDenialDialog} onOpenChange={setShowDenialDialog}>
-        <DialogContent className="border-2 border-foreground">
+        <DialogContent className="border-foreground border-2">
           <DialogHeader>
             <DialogTitle>Deny Applicant</DialogTitle>
             <DialogDescription>
@@ -455,9 +460,10 @@ export default function ApplicantDetailPage({ params }: ApplicantDetailPageProps
                 rows={3}
               />
             </div>
-            <div className="p-3 bg-yellow-50 dark:bg-yellow-900/20 border-2 border-yellow-300 text-sm">
+            <div className="border-2 border-yellow-300 bg-yellow-50 p-3 text-sm dark:bg-yellow-900/20">
               <p className="text-yellow-800 dark:text-yellow-200">
-                The applicant will receive a standardized adverse action notice. Your specific notes will be kept in internal records only.
+                The applicant will receive a standardized adverse action notice. Your specific notes
+                will be kept in internal records only.
               </p>
             </div>
           </div>

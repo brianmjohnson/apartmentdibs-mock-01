@@ -56,6 +56,7 @@ After submitting an application, tenants hear nothing for days or weeks. They do
 **Given** a tenant has submitted applications
 **When** they view their dashboard
 **Then** they see status for each:
+
 - Application received
 - Documents complete/incomplete
 - Under landlord review
@@ -64,6 +65,7 @@ After submitting an application, tenants hear nothing for days or weeks. They do
 - Selected/Denied
 
 **Verification**:
+
 - [ ] All statuses tracked accurately
 - [ ] Timeline view shows progression
 - [ ] Multiple applications in single view
@@ -73,11 +75,13 @@ After submitting an application, tenants hear nothing for days or weeks. They do
 **Given** application status changes
 **When** landlord takes action
 **Then** tenant receives:
+
 - Push notification (immediate)
 - In-app update (real-time)
 - Email summary (configurable)
 
 **Verification**:
+
 - [ ] Updates delivered within seconds
 - [ ] Notifications are clear and actionable
 - [ ] Frequency configurable
@@ -87,11 +91,13 @@ After submitting an application, tenants hear nothing for days or weeks. They do
 **Given** a landlord reviews the application
 **When** they view the profile
 **Then** tenant sees (without specifics that create bias):
+
 - "Landlord viewed your profile 3 times"
 - "You're in the top 3 finalists"
 - "Decision expected by [date]"
 
 **Verification**:
+
 - [ ] Engagement signals increase hope
 - [ ] No specific ranking creates unfair expectations
 - [ ] Estimated decision date shown
@@ -101,10 +107,12 @@ After submitting an application, tenants hear nothing for days or weeks. They do
 **Given** landlord makes a decision
 **When** tenant is selected or denied
 **Then** they receive immediate notification:
+
 - **Selected**: "Congratulations! You've been selected for [Address]!"
 - **Denied**: Adverse action letter with reason
 
 **Verification**:
+
 - [ ] Notification within 1 hour of decision
 - [ ] Clear next steps provided
 - [ ] Denied applicants enter CRM for re-matching
@@ -114,6 +122,7 @@ After submitting an application, tenants hear nothing for days or weeks. They do
 **Given** a tenant views application details
 **When** they click for timeline
 **Then** they see:
+
 - "Applied Oct 15"
 - "Documents complete Oct 17"
 - "Landlord viewed Oct 18"
@@ -121,6 +130,7 @@ After submitting an application, tenants hear nothing for days or weeks. They do
 - "Decision pending - expected Oct 25"
 
 **Verification**:
+
 - [ ] Timeline shows all events
 - [ ] Dates and times accurate
 - [ ] Visual timeline design
@@ -130,11 +140,13 @@ After submitting an application, tenants hear nothing for days or weeks. They do
 **Given** a tenant receives many notifications
 **When** they adjust settings
 **Then** they can configure:
+
 - Push notifications on/off
 - Email digest frequency (immediate, daily, weekly)
 - SMS for urgent updates only
 
 **Verification**:
+
 - [ ] Settings persist correctly
 - [ ] Channels respect preferences
 - [ ] Quiet hours option
@@ -148,6 +160,7 @@ After submitting an application, tenants hear nothing for days or weeks. They do
 **Event System**: Status changes trigger notification events
 
 **Data Model**:
+
 ```sql
 CREATE TABLE application_events (
   id UUID PRIMARY KEY,
@@ -161,6 +174,7 @@ CREATE TABLE application_events (
 ### Frontend Specification
 
 **Components**:
+
 ```
 components/
   status/
@@ -174,13 +188,14 @@ components/
 
 ## Analytics Tracking
 
-| Event Name | When Triggered | Properties |
-|------------|----------------|------------|
-| `status_viewed` | Tenant checks dashboard | `{tenantId, applicationCount}` |
-| `notification_sent` | Status update delivered | `{tenantId, notificationType, channel}` |
-| `notification_opened` | Tenant opens notification | `{tenantId, notificationId}` |
+| Event Name            | When Triggered            | Properties                              |
+| --------------------- | ------------------------- | --------------------------------------- |
+| `status_viewed`       | Tenant checks dashboard   | `{tenantId, applicationCount}`          |
+| `notification_sent`   | Status update delivered   | `{tenantId, notificationType, channel}` |
+| `notification_opened` | Tenant opens notification | `{tenantId, notificationId}`            |
 
 **Success Metrics**:
+
 - 90%+ of status changes notified within 5 minutes
 - 50% reduction in "what's my status?" support tickets
 - 80%+ tenant satisfaction with transparency
@@ -190,9 +205,11 @@ components/
 ## Dependencies
 
 ### Blocked By
+
 - US-010: Reusable Profile
 
 ### Related Stories
+
 - US-008: Automated Document Reminders
 - US-002: Adverse Action Notices
 

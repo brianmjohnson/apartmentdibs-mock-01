@@ -6,13 +6,7 @@ import { Lock, Eye, EyeOff, Loader2, CheckCircle, Check, X } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from '@/components/ui/card'
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 
 export default function ResetPasswordPage() {
   const [password, setPassword] = useState('')
@@ -45,9 +39,7 @@ export default function ResetPasswordPage() {
     if (!password) {
       newErrors.password = 'Password is required'
     } else {
-      const failedRequirements = passwordRequirements.filter(
-        (req) => !req.test(password)
-      )
+      const failedRequirements = passwordRequirements.filter((req) => !req.test(password))
       if (failedRequirements.length > 0) {
         newErrors.password = 'Password does not meet all requirements'
       }
@@ -78,9 +70,9 @@ export default function ResetPasswordPage() {
 
   if (isSuccess) {
     return (
-      <Card className="border-2 border-foreground shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]">
+      <Card className="border-foreground border-2 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]">
         <CardHeader className="text-center">
-          <div className="mx-auto h-12 w-12 bg-green-100 text-green-600 flex items-center justify-center mb-4">
+          <div className="mx-auto mb-4 flex h-12 w-12 items-center justify-center bg-green-100 text-green-600">
             <CheckCircle className="h-6 w-6" />
           </div>
           <CardTitle className="text-2xl font-bold">Password Reset!</CardTitle>
@@ -89,10 +81,7 @@ export default function ResetPasswordPage() {
           </CardDescription>
         </CardHeader>
         <CardContent>
-          <Button
-            className="w-full border-2 border-foreground"
-            asChild
-          >
+          <Button className="border-foreground w-full border-2" asChild>
             <Link href="/login">Go to Sign In</Link>
           </Button>
         </CardContent>
@@ -101,7 +90,7 @@ export default function ResetPasswordPage() {
   }
 
   return (
-    <Card className="border-2 border-foreground shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]">
+    <Card className="border-foreground border-2 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]">
       <CardHeader className="text-center">
         <CardTitle className="text-2xl font-bold">Reset Password</CardTitle>
         <CardDescription>Enter your new password below</CardDescription>
@@ -112,30 +101,26 @@ export default function ResetPasswordPage() {
           <div className="space-y-2">
             <Label htmlFor="password">New Password</Label>
             <div className="relative">
-              <Lock className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+              <Lock className="text-muted-foreground absolute top-1/2 left-3 h-4 w-4 -translate-y-1/2" />
               <Input
                 id="password"
                 type={showPassword ? 'text' : 'password'}
                 placeholder="Create a strong password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                className={`pl-10 pr-10 border-2 ${errors.password ? 'border-destructive' : 'border-foreground'}`}
+                className={`border-2 pr-10 pl-10 ${errors.password ? 'border-destructive' : 'border-foreground'}`}
               />
               <button
                 type="button"
                 onClick={() => setShowPassword(!showPassword)}
-                className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground"
+                className="text-muted-foreground hover:text-foreground absolute top-1/2 right-3 -translate-y-1/2"
               >
-                {showPassword ? (
-                  <EyeOff className="h-4 w-4" />
-                ) : (
-                  <Eye className="h-4 w-4" />
-                )}
+                {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
               </button>
             </div>
             {password && (
               <div className="space-y-2">
-                <div className="h-1 bg-muted rounded-full overflow-hidden">
+                <div className="bg-muted h-1 overflow-hidden rounded-full">
                   <div
                     className={`h-full transition-all ${passwordStrength.color}`}
                     style={{ width: passwordStrength.width }}
@@ -146,15 +131,13 @@ export default function ResetPasswordPage() {
                     <div
                       key={req.label}
                       className={`flex items-center text-xs ${
-                        req.test(password)
-                          ? 'text-green-600'
-                          : 'text-muted-foreground'
+                        req.test(password) ? 'text-green-600' : 'text-muted-foreground'
                       }`}
                     >
                       {req.test(password) ? (
-                        <Check className="h-3 w-3 mr-1" />
+                        <Check className="mr-1 h-3 w-3" />
                       ) : (
-                        <X className="h-3 w-3 mr-1" />
+                        <X className="mr-1 h-3 w-3" />
                       )}
                       {req.label}
                     </div>
@@ -162,47 +145,37 @@ export default function ResetPasswordPage() {
                 </div>
               </div>
             )}
-            {errors.password && (
-              <p className="text-sm text-destructive">{errors.password}</p>
-            )}
+            {errors.password && <p className="text-destructive text-sm">{errors.password}</p>}
           </div>
 
           {/* Confirm Password */}
           <div className="space-y-2">
             <Label htmlFor="confirmPassword">Confirm Password</Label>
             <div className="relative">
-              <Lock className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+              <Lock className="text-muted-foreground absolute top-1/2 left-3 h-4 w-4 -translate-y-1/2" />
               <Input
                 id="confirmPassword"
                 type={showConfirmPassword ? 'text' : 'password'}
                 placeholder="Confirm your password"
                 value={confirmPassword}
                 onChange={(e) => setConfirmPassword(e.target.value)}
-                className={`pl-10 pr-10 border-2 ${errors.confirmPassword ? 'border-destructive' : 'border-foreground'}`}
+                className={`border-2 pr-10 pl-10 ${errors.confirmPassword ? 'border-destructive' : 'border-foreground'}`}
               />
               <button
                 type="button"
                 onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-                className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground"
+                className="text-muted-foreground hover:text-foreground absolute top-1/2 right-3 -translate-y-1/2"
               >
-                {showConfirmPassword ? (
-                  <EyeOff className="h-4 w-4" />
-                ) : (
-                  <Eye className="h-4 w-4" />
-                )}
+                {showConfirmPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
               </button>
             </div>
             {errors.confirmPassword && (
-              <p className="text-sm text-destructive">{errors.confirmPassword}</p>
+              <p className="text-destructive text-sm">{errors.confirmPassword}</p>
             )}
           </div>
 
           {/* Submit Button */}
-          <Button
-            type="submit"
-            className="w-full border-2 border-foreground"
-            disabled={isLoading}
-          >
+          <Button type="submit" className="border-foreground w-full border-2" disabled={isLoading}>
             {isLoading ? (
               <>
                 <Loader2 className="mr-2 h-4 w-4 animate-spin" />
@@ -215,12 +188,9 @@ export default function ResetPasswordPage() {
         </form>
 
         {/* Back to Sign In */}
-        <p className="mt-6 text-center text-sm text-muted-foreground">
+        <p className="text-muted-foreground mt-6 text-center text-sm">
           Remember your password?{' '}
-          <Link
-            href="/login"
-            className="font-medium text-foreground hover:underline"
-          >
+          <Link href="/login" className="text-foreground font-medium hover:underline">
             Back to Sign In
           </Link>
         </p>

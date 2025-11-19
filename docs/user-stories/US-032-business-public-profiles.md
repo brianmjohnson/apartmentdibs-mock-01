@@ -54,16 +54,19 @@ Tenants don't know if an agent is responsive, experienced, or trustworthy. No wa
 **Then** they see:
 
 **Search/Filter**:
+
 - Filter by location served, specialty
 - Sort by: listings, response time, experience
 
 **Business Cards**:
+
 - Photo, name, company
 - Location served
 - Active listings count
 - Verified badge
 
 **Verification**:
+
 - [ ] Filters work
 - [ ] Cards display properly
 - [ ] ItemList schema
@@ -75,31 +78,37 @@ Tenants don't know if an agent is responsive, experienced, or trustworthy. No wa
 **Then** they see:
 
 **Profile Header**:
+
 - Photo (headshot or logo)
 - Name, title, company
 - Location served
 - "Verified Agent" badge
 
 **Bio/Description**:
+
 - About text
 - Years of experience
 - Specialties
 
 **Performance Metrics**:
+
 - Active listings count
 - Average days-to-fill
 - Response time
 - Leases closed
 
 **Active Listings Grid**:
+
 - Current listings from this agent
 - Links to /property/[slug]
 
 **Contact Form**:
+
 - "Have questions? Contact [Name]"
 - Routes through platform messaging
 
 **Verification**:
+
 - [ ] All sections display
 - [ ] Metrics accurate
 - [ ] Contact works
@@ -109,11 +118,13 @@ Tenants don't know if an agent is responsive, experienced, or trustworthy. No wa
 **Given** agent has many listings
 **When** user wants full list
 **Then** they see paginated grid:
+
 - Active, pending, recently rented
 - Filter by status
 - Sort by date
 
 **Verification**:
+
 - [ ] Pagination works
 - [ ] Filters work
 
@@ -139,6 +150,7 @@ Tenants don't know if an agent is responsive, experienced, or trustworthy. No wa
 ```
 
 **Verification**:
+
 - [ ] Valid schema
 - [ ] Rich results eligible
 
@@ -170,13 +182,14 @@ components/
 
 ## Analytics Tracking
 
-| Event Name | When Triggered | Properties |
-|------------|----------------|------------|
-| `profile_viewed` | Page loads | `{businessId, source}` |
-| `listing_clicked` | Property selected | `{businessId, listingId}` |
-| `contact_submitted` | Message sent | `{businessId, tenantId}` |
+| Event Name          | When Triggered    | Properties                |
+| ------------------- | ----------------- | ------------------------- |
+| `profile_viewed`    | Page loads        | `{businessId, source}`    |
+| `listing_clicked`   | Property selected | `{businessId, listingId}` |
+| `contact_submitted` | Message sent      | `{businessId, tenantId}`  |
 
 **Success Metrics**:
+
 - 25% of profile views lead to listing clicks
 - 10% of profile views lead to contact
 - Higher trust scores in user surveys
@@ -194,9 +207,11 @@ components/
 ## Dependencies
 
 ### Blocked By
+
 - US-030: Property Page
 
 ### Related Stories
+
 - US-031: Building Directory
 - US-009: In-App Messaging
 

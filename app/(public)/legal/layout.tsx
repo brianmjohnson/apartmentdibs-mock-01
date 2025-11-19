@@ -25,20 +25,16 @@ const legalPages = [
   },
 ]
 
-export default function LegalLayout({
-  children,
-}: {
-  children: React.ReactNode
-}) {
+export default function LegalLayout({ children }: { children: React.ReactNode }) {
   const pathname = usePathname()
 
   return (
     <div className="container mx-auto px-4 py-8 md:py-12">
-      <div className="flex flex-col md:flex-row gap-8">
+      <div className="flex flex-col gap-8 md:flex-row">
         {/* Sidebar Navigation */}
-        <aside className="md:w-64 flex-shrink-0">
+        <aside className="flex-shrink-0 md:w-64">
           <div className="sticky top-24">
-            <h2 className="text-lg font-bold mb-4">Legal Documents</h2>
+            <h2 className="mb-4 text-lg font-bold">Legal Documents</h2>
             <nav className="space-y-1">
               {legalPages.map((page) => {
                 const isActive = pathname === page.href
@@ -47,10 +43,10 @@ export default function LegalLayout({
                     key={page.href}
                     href={page.href}
                     className={cn(
-                      'flex items-center gap-3 px-4 py-3 text-sm font-medium transition-colors border-2',
+                      'flex items-center gap-3 border-2 px-4 py-3 text-sm font-medium transition-colors',
                       isActive
                         ? 'bg-primary text-primary-foreground border-foreground'
-                        : 'border-transparent hover:bg-accent hover:border-foreground'
+                        : 'hover:bg-accent hover:border-foreground border-transparent'
                     )}
                   >
                     <page.icon className="h-4 w-4" />
@@ -60,12 +56,9 @@ export default function LegalLayout({
               })}
             </nav>
             <Separator className="my-6" />
-            <div className="text-sm text-muted-foreground">
+            <div className="text-muted-foreground text-sm">
               <p>Questions about our policies?</p>
-              <Link
-                href="/contact"
-                className="text-foreground font-medium hover:underline"
-              >
+              <Link href="/contact" className="text-foreground font-medium hover:underline">
                 Contact us
               </Link>
             </div>
@@ -73,10 +66,8 @@ export default function LegalLayout({
         </aside>
 
         {/* Main Content */}
-        <main className="flex-1 min-w-0">
-          <div className="prose prose-neutral dark:prose-invert max-w-none">
-            {children}
-          </div>
+        <main className="min-w-0 flex-1">
+          <div className="prose prose-neutral dark:prose-invert max-w-none">{children}</div>
         </main>
       </div>
     </div>

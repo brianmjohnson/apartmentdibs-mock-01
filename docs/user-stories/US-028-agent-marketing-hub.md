@@ -58,16 +58,19 @@ Jessica's perspective: "Will this actually help me close more deals? What's the 
 **Then** they see:
 
 **Hero Section**:
+
 - Headline: "Close 25% More Leases, Save 20 Hours/Week"
 - Subheadline: "CRM that converts. Syndication that syncs. Compliance that protects."
 - CTA: "Start Free Trial" -> /register?role=agent
 
 **Pain Points (3-Column)**:
+
 - "Document Chasing" - "60% of applicants need follow-ups. We automate it."
 - "Lost Leads" - "Denied applicants disappear. Our CRM recaptures them."
 - "Compliance Anxiety" - "Fair Housing violations can cost $25,000+. We prevent them."
 
 **Solution Overview**:
+
 - CRM auto-matching with denied applicants
 - One-click syndication to 6+ platforms
 - Unified applicant dashboard
@@ -76,6 +79,7 @@ Jessica's perspective: "Will this actually help me close more deals? What's the 
 **Testimonial**: Jessica Rodriguez quote with photo
 
 **Verification**:
+
 - [ ] Hero section compelling
 - [ ] CTAs functional
 - [ ] Pain points addressed
@@ -87,17 +91,20 @@ Jessica's perspective: "Will this actually help me close more deals? What's the 
 **Then** they see:
 
 **Tier Comparison Table**:
+
 - Starter ($99/mo): 10 listings, basic CRM, Zillow syndication, email support
 - Professional ($299/mo): Unlimited listings, full CRM, 6+ platform syndication, priority support
 - Enterprise (Custom): Multi-agent teams, API access, dedicated account manager
 
 **ROI Calculator**:
+
 - Inputs: Leases per year, average commission
 - Output: "Additional annual revenue: $150,000"
 
 **Commission Impact Calculator**: Time savings x hourly rate
 
 **Verification**:
+
 - [ ] Tier table clear
 - [ ] Calculators functional
 - [ ] Clear value proposition
@@ -107,10 +114,12 @@ Jessica's perspective: "Will this actually help me close more deals? What's the 
 **Given** agent has questions
 **When** viewing FAQ
 **Then** they see:
+
 - Schema.org FAQPage structured data
 - Minimum 10 questions covering CRM, syndication, teams
 
 **Questions Include**:
+
 - "How does CRM auto-matching work?"
 - "Which platforms do you syndicate to?"
 - "Can my team share a subscription?"
@@ -118,6 +127,7 @@ Jessica's perspective: "Will this actually help me close more deals? What's the 
 - "Is there a mobile app?"
 
 **Verification**:
+
 - [ ] Questions comprehensive
 - [ ] Answers helpful
 - [ ] SEO markup correct
@@ -127,6 +137,7 @@ Jessica's perspective: "Will this actually help me close more deals? What's the 
 **Given** agent wants CRM details
 **When** viewing page
 **Then** they see:
+
 - How denied applicants become warm leads
 - Match scoring algorithm explanation
 - One-tap outreach demonstration
@@ -134,6 +145,7 @@ Jessica's perspective: "Will this actually help me close more deals? What's the 
 - Network effect math
 
 **Verification**:
+
 - [ ] Feature fully explained
 - [ ] Screenshots/demos included
 - [ ] Value clearly communicated
@@ -143,12 +155,14 @@ Jessica's perspective: "Will this actually help me close more deals? What's the 
 **Given** agent wants syndication details
 **When** viewing page
 **Then** they see:
+
 - Supported platforms list
 - One-click updates demonstration
 - De-listing automation
 - QR code generation
 
 **Verification**:
+
 - [ ] All platforms listed
 - [ ] Process clearly shown
 
@@ -157,15 +171,18 @@ Jessica's perspective: "Will this actually help me close more deals? What's the 
 **Given** agent wants proof
 **When** viewing case studies
 **Then** they see:
+
 - Index page with 3-5 preview cards
 - Individual case studies with metrics
 - Schema.org Article markup
 
 **Case Studies**:
+
 - "How Jessica increased commissions by $150K"
 - "Metro Property Management's 41x ROI"
 
 **Verification**:
+
 - [ ] Case studies compelling
 - [ ] Metrics included
 
@@ -174,6 +191,7 @@ Jessica's perspective: "Will this actually help me close more deals? What's the 
 **Given** agent wants demo
 **When** filling out form
 **Then** they provide:
+
 - Name, email, phone
 - Brokerage name
 - Number of agents
@@ -182,6 +200,7 @@ Jessica's perspective: "Will this actually help me close more deals? What's the 
 **And** see Calendly embed for scheduling
 
 **Verification**:
+
 - [ ] Form captures all info
 - [ ] Lead routed correctly
 
@@ -210,13 +229,14 @@ app/(public)/for-agents/demo/page.tsx
 
 ## Analytics Tracking
 
-| Event Name | When Triggered | Properties |
-|------------|----------------|------------|
-| `agent_page_viewed` | Page loads | `{page, source}` |
-| `roi_calculated` | Calculator used | `{leases, revenue}` |
-| `demo_requested` | Form submitted | `{agentId, brokerage}` |
+| Event Name          | When Triggered  | Properties             |
+| ------------------- | --------------- | ---------------------- |
+| `agent_page_viewed` | Page loads      | `{page, source}`       |
+| `roi_calculated`    | Calculator used | `{leases, revenue}`    |
+| `demo_requested`    | Form submitted  | `{agentId, brokerage}` |
 
 **Success Metrics**:
+
 - 5% visitor-to-demo conversion
 - 25% demo-to-signup conversion
 - $100 CAC for agent segment
@@ -226,6 +246,7 @@ app/(public)/for-agents/demo/page.tsx
 ## Dependencies
 
 ### Related Stories
+
 - US-019: Agent Subscription Billing
 - US-026: Split Homepage
 

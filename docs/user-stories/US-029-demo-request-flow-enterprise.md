@@ -54,6 +54,7 @@ Enterprise buyers have complex requirements (multi-agent access, API integration
 **Then** they provide:
 
 **Required Fields**:
+
 - Name
 - Email (business email preferred)
 - Phone
@@ -61,14 +62,17 @@ Enterprise buyers have complex requirements (multi-agent access, API integration
 - Role (dropdown): Property Manager, Leasing Agent, Brokerage Owner, Institutional Landlord, Other
 
 **Qualifying Fields**:
+
 - For agents: Team size (1-4, 5-19, 20-49, 50+)
 - For landlords: Units managed (1-9, 10-49, 50-99, 100+)
 
 **Context Fields**:
+
 - Current tools used (checkboxes): RentSpree, AppFolio, Buildium, Zillow, Excel, Other
 - Primary challenge (textarea): "What's your biggest pain point?"
 
 **Verification**:
+
 - [ ] Form validation works
 - [ ] Required fields enforced
 - [ ] Data captured completely
@@ -78,12 +82,14 @@ Enterprise buyers have complex requirements (multi-agent access, API integration
 **Given** form is submitted
 **When** prospect needs to schedule
 **Then** they see:
+
 - Calendly embed with available slots
 - 30-min or 60-min demo options
 - Time zone auto-detection
 - Alternative: "Can't find a time? Call us at [phone]"
 
 **Verification**:
+
 - [ ] Calendly integration works
 - [ ] Time zones handled
 - [ ] Backup option visible
@@ -95,17 +101,20 @@ Enterprise buyers have complex requirements (multi-agent access, API integration
 **Then** prospect receives:
 
 **Confirmation Email**:
+
 - Subject: "Your ApartmentDibs Demo is Scheduled"
 - Date/time, Zoom link
 - What to prepare
 - Rep's name and photo
 
 **Additional Items**:
+
 - Calendar invite (ICS attachment)
 - SMS reminder 1 hour before
 - CRM entry created (HubSpot/Salesforce)
 
 **Verification**:
+
 - [ ] Email sends correctly
 - [ ] Calendar invite works
 - [ ] CRM lead created
@@ -115,6 +124,7 @@ Enterprise buyers have complex requirements (multi-agent access, API integration
 **Given** demo is completed
 **When** follow-up is needed
 **Then** rep sends (within 24 hours):
+
 - Demo recording (if permitted)
 - Custom proposal PDF (pricing, SLA, timeline)
 - Next steps: "Ready to start? Click here."
@@ -122,6 +132,7 @@ Enterprise buyers have complex requirements (multi-agent access, API integration
 **Retargeting**: If no conversion in 7 days, send "Still interested?" email
 
 **Verification**:
+
 - [ ] Follow-up sequence defined
 - [ ] Proposal template ready
 - [ ] Retargeting emails configured
@@ -131,6 +142,7 @@ Enterprise buyers have complex requirements (multi-agent access, API integration
 **Given** enterprise page content
 **When** displayed
 **Then** addresses concerns:
+
 - Multi-agent team management
 - API access for custom integrations
 - 99.9% uptime SLA
@@ -140,6 +152,7 @@ Enterprise buyers have complex requirements (multi-agent access, API integration
 **Trust Signals**: "Trusted by 50+ property management companies"
 
 **Verification**:
+
 - [ ] Enterprise concerns addressed
 - [ ] Social proof displayed
 - [ ] Pricing transparency (or "contact sales")
@@ -151,6 +164,7 @@ Enterprise buyers have complex requirements (multi-agent access, API integration
 **Then** route to self-service: "Based on your team size, our Professional tier may be best. Start your free trial here."
 
 **Verification**:
+
 - [ ] Qualification logic works
 - [ ] Appropriate routing happens
 
@@ -174,6 +188,7 @@ app/(public)/for-agents/demo/page.tsx
 ### Frontend Specification
 
 **Components**:
+
 ```
 components/
   demo/
@@ -186,15 +201,16 @@ components/
 
 ## Analytics Tracking
 
-| Event Name | When Triggered | Properties |
-|------------|----------------|------------|
-| `demo_form_started` | Form opened | `{source}` |
-| `demo_form_submitted` | Form completed | `{companySize, role}` |
-| `demo_scheduled` | Calendly booked | `{prospectId, demoLength}` |
-| `demo_completed` | Meeting happened | `{prospectId, outcome}` |
-| `demo_converted` | Signed up | `{prospectId, dealValue}` |
+| Event Name            | When Triggered   | Properties                 |
+| --------------------- | ---------------- | -------------------------- |
+| `demo_form_started`   | Form opened      | `{source}`                 |
+| `demo_form_submitted` | Form completed   | `{companySize, role}`      |
+| `demo_scheduled`      | Calendly booked  | `{prospectId, demoLength}` |
+| `demo_completed`      | Meeting happened | `{prospectId, outcome}`    |
+| `demo_converted`      | Signed up        | `{prospectId, dealValue}`  |
 
 **Success Metrics**:
+
 - 50% form-to-demo conversion
 - 30% demo-to-customer conversion
 - Average deal size $5,000 ARR
@@ -212,10 +228,12 @@ components/
 ## Dependencies
 
 ### Related Stories
+
 - US-027: Landlord Marketing Hub
 - US-028: Agent Marketing Hub
 
 ### External Dependencies
+
 - Calendly
 - CRM (HubSpot/Salesforce)
 

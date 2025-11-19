@@ -43,10 +43,10 @@ export function ComplianceEducationModal({
 }: ComplianceEducationModalProps) {
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="border-2 border-foreground max-w-2xl max-h-[90vh] overflow-y-auto">
+      <DialogContent className="border-foreground max-h-[90vh] max-w-2xl overflow-y-auto border-2">
         <DialogHeader>
           <div className="flex items-center gap-2">
-            <Scale className="h-5 w-5 text-primary" />
+            <Scale className="text-primary h-5 w-5" />
             <DialogTitle>{rule.lawName}</DialogTitle>
           </div>
           <DialogDescription>
@@ -65,11 +65,11 @@ export function ComplianceEducationModal({
 
           {/* Plain English Explanation */}
           <div>
-            <h4 className="font-medium mb-2 flex items-center gap-2">
-              <BookOpen className="h-4 w-4 text-primary" />
+            <h4 className="mb-2 flex items-center gap-2 font-medium">
+              <BookOpen className="text-primary h-4 w-4" />
               What This Means For You
             </h4>
-            <p className="text-sm text-muted-foreground leading-relaxed">
+            <p className="text-muted-foreground text-sm leading-relaxed">
               {rule.plainEnglishExplanation}
             </p>
           </div>
@@ -78,11 +78,11 @@ export function ComplianceEducationModal({
 
           {/* Requirements */}
           <div>
-            <h4 className="font-medium mb-2">Key Requirements</h4>
+            <h4 className="mb-2 font-medium">Key Requirements</h4>
             <ul className="space-y-2">
               {rule.requirements.map((req, index) => (
                 <li key={index} className="flex items-start gap-2 text-sm">
-                  <span className="text-primary font-bold shrink-0">&#x2713;</span>
+                  <span className="text-primary shrink-0 font-bold">&#x2713;</span>
                   <span className="text-muted-foreground">{req}</span>
                 </li>
               ))}
@@ -92,23 +92,23 @@ export function ComplianceEducationModal({
           <Separator />
 
           {/* Penalties */}
-          <div className="p-3 bg-destructive/10 rounded-md border border-destructive/20">
-            <h4 className="font-medium mb-1 flex items-center gap-2 text-destructive">
+          <div className="bg-destructive/10 border-destructive/20 rounded-md border p-3">
+            <h4 className="text-destructive mb-1 flex items-center gap-2 font-medium">
               <AlertCircle className="h-4 w-4" />
               Non-Compliance Penalties
             </h4>
-            <p className="text-sm text-muted-foreground">{rule.penalties}</p>
+            <p className="text-muted-foreground text-sm">{rule.penalties}</p>
           </div>
 
           {/* Full Law Text (Expandable) */}
           {rule.fullLawText && (
             <Accordion type="single" collapsible>
-              <AccordionItem value="full-text" className="border-2 border-foreground rounded-md">
+              <AccordionItem value="full-text" className="border-foreground rounded-md border-2">
                 <AccordionTrigger className="px-4 hover:no-underline">
                   <span className="text-sm font-medium">View Full Law Text</span>
                 </AccordionTrigger>
                 <AccordionContent className="px-4 pb-4">
-                  <div className="bg-muted p-4 rounded text-xs font-mono whitespace-pre-wrap max-h-60 overflow-y-auto">
+                  <div className="bg-muted max-h-60 overflow-y-auto rounded p-4 font-mono text-xs whitespace-pre-wrap">
                     {rule.fullLawText}
                   </div>
                 </AccordionContent>
@@ -117,20 +117,17 @@ export function ComplianceEducationModal({
           )}
         </div>
 
-        <DialogFooter className="flex flex-col sm:flex-row gap-2">
+        <DialogFooter className="flex flex-col gap-2 sm:flex-row">
           <Button
             variant="outline"
-            className="border-2 border-foreground"
+            className="border-foreground border-2"
             onClick={() => onOpenChange(false)}
           >
             Close
           </Button>
-          <Button
-            className="border-2 border-foreground"
-            asChild
-          >
+          <Button className="border-foreground border-2" asChild>
             <a href={rule.sourceUrl} target="_blank" rel="noopener noreferrer">
-              <ExternalLink className="h-4 w-4 mr-2" />
+              <ExternalLink className="mr-2 h-4 w-4" />
               View Official Source
             </a>
           </Button>

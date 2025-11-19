@@ -41,53 +41,53 @@ export function HeroSearch({ className }: HeroSearchProps) {
   }
 
   return (
-    <section className={`relative bg-background border-b-4 border-foreground ${className || ''}`}>
+    <section className={`bg-background border-foreground relative border-b-4 ${className || ''}`}>
       <div className="absolute inset-0 bg-[linear-gradient(45deg,transparent_25%,rgba(0,0,0,0.02)_25%,rgba(0,0,0,0.02)_50%,transparent_50%,transparent_75%,rgba(0,0,0,0.02)_75%)] bg-[length:4px_4px]" />
-      <div className="container mx-auto px-4 py-20 md:py-32 relative">
-        <div className="max-w-4xl mx-auto text-center">
-          <h1 className="text-4xl md:text-6xl font-bold tracking-tight mb-6">
+      <div className="relative container mx-auto px-4 py-20 md:py-32">
+        <div className="mx-auto max-w-4xl text-center">
+          <h1 className="mb-6 text-4xl font-bold tracking-tight md:text-6xl">
             Find Your Next Apartment
           </h1>
-          <p className="text-xl md:text-2xl text-muted-foreground mb-4 max-w-2xl mx-auto">
+          <p className="text-muted-foreground mx-auto mb-4 max-w-2xl text-xl md:text-2xl">
             10,000+ verified listings. Apply once, reuse everywhere.
           </p>
 
           {/* Trust Badges */}
-          <div className="flex flex-wrap justify-center gap-2 mb-8">
-            <Badge variant="outline" className="border-2 border-foreground px-3 py-1">
-              <CheckCircle className="h-3 w-3 mr-1" />
+          <div className="mb-8 flex flex-wrap justify-center gap-2">
+            <Badge variant="outline" className="border-foreground border-2 px-3 py-1">
+              <CheckCircle className="mr-1 h-3 w-3" />
               Verified listings only
             </Badge>
-            <Badge variant="outline" className="border-2 border-foreground px-3 py-1">
-              <CheckCircle className="h-3 w-3 mr-1" />
+            <Badge variant="outline" className="border-foreground border-2 px-3 py-1">
+              <CheckCircle className="mr-1 h-3 w-3" />
               No broker fees
             </Badge>
-            <Badge variant="outline" className="border-2 border-foreground px-3 py-1">
-              <CheckCircle className="h-3 w-3 mr-1" />
+            <Badge variant="outline" className="border-foreground border-2 px-3 py-1">
+              <CheckCircle className="mr-1 h-3 w-3" />
               Fair Housing compliant
             </Badge>
           </div>
 
           {/* Search Bar */}
-          <div className="flex flex-col gap-3 max-w-3xl mx-auto">
-            <div className="flex flex-col md:flex-row gap-3">
+          <div className="mx-auto flex max-w-3xl flex-col gap-3">
+            <div className="flex flex-col gap-3 md:flex-row">
               {/* Location Input */}
               <div className="flex-1">
                 <Input
                   placeholder="Enter city, neighborhood, or ZIP"
                   value={location}
                   onChange={(e) => setLocation(e.target.value)}
-                  className="h-12 border-2 border-foreground text-base"
+                  className="border-foreground h-12 border-2 text-base"
                   aria-label="Search location"
                 />
               </div>
 
               {/* Budget Filter */}
               <Select value={budget} onValueChange={setBudget}>
-                <SelectTrigger className="w-full md:w-44 h-12 border-2 border-foreground">
+                <SelectTrigger className="border-foreground h-12 w-full border-2 md:w-44">
                   <SelectValue placeholder="Budget" />
                 </SelectTrigger>
-                <SelectContent className="border-2 border-foreground">
+                <SelectContent className="border-foreground border-2">
                   <SelectItem value="0-2000">$0 - $2,000</SelectItem>
                   <SelectItem value="2000-3000">$2,000 - $3,000</SelectItem>
                   <SelectItem value="3000-4000">$3,000 - $4,000</SelectItem>
@@ -97,10 +97,10 @@ export function HeroSearch({ className }: HeroSearchProps) {
 
               {/* Bedrooms Filter */}
               <Select value={bedrooms} onValueChange={setBedrooms}>
-                <SelectTrigger className="w-full md:w-40 h-12 border-2 border-foreground">
+                <SelectTrigger className="border-foreground h-12 w-full border-2 md:w-40">
                   <SelectValue placeholder="Bedrooms" />
                 </SelectTrigger>
-                <SelectContent className="border-2 border-foreground">
+                <SelectContent className="border-foreground border-2">
                   <SelectItem value="studio">Studio</SelectItem>
                   <SelectItem value="1">1 BR</SelectItem>
                   <SelectItem value="2">2 BR</SelectItem>
@@ -112,12 +112,14 @@ export function HeroSearch({ className }: HeroSearchProps) {
             {/* Search Button */}
             <Button
               size="lg"
-              className="h-12 px-8 border-2 border-foreground w-full md:w-auto md:mx-auto"
+              className="border-foreground h-12 w-full border-2 px-8 md:mx-auto md:w-auto"
               asChild
               onClick={handleSearch}
             >
-              <Link href={`/search?location=${encodeURIComponent(location)}&beds=${bedrooms}&budget=${budget}`}>
-                <Search className="h-5 w-5 mr-2" />
+              <Link
+                href={`/search?location=${encodeURIComponent(location)}&beds=${bedrooms}&budget=${budget}`}
+              >
+                <Search className="mr-2 h-5 w-5" />
                 Search Rentals
               </Link>
             </Button>

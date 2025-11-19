@@ -68,7 +68,7 @@ export default function PrivacySettingsPage() {
       {/* Back Link */}
       <Link
         href="/tenant/settings"
-        className="inline-flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground"
+        className="text-muted-foreground hover:text-foreground inline-flex items-center gap-2 text-sm"
       >
         <ArrowLeft className="h-4 w-4" />
         Back to Settings
@@ -77,21 +77,17 @@ export default function PrivacySettingsPage() {
       {/* Header */}
       <div className="flex flex-col gap-2">
         <h1 className="text-3xl font-bold tracking-tight">Privacy Settings</h1>
-        <p className="text-muted-foreground">
-          Control your privacy and data preferences
-        </p>
+        <p className="text-muted-foreground">Control your privacy and data preferences</p>
       </div>
 
       {/* Profile Visibility */}
-      <Card className="border-2 border-foreground">
+      <Card className="border-foreground border-2">
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
             <Eye className="h-5 w-5" />
             Profile Visibility
           </CardTitle>
-          <CardDescription>
-            Control who can see your renter profile
-          </CardDescription>
+          <CardDescription>Control who can see your renter profile</CardDescription>
         </CardHeader>
         <CardContent className="space-y-4">
           <div className="space-y-2">
@@ -99,25 +95,21 @@ export default function PrivacySettingsPage() {
             <Select
               value={settings.profileVisibility}
               onValueChange={(value: PrivacySettings['profileVisibility']) =>
-                setSettings(prev => ({ ...prev, profileVisibility: value }))
+                setSettings((prev) => ({ ...prev, profileVisibility: value }))
               }
             >
-              <SelectTrigger className="border-2 border-foreground">
+              <SelectTrigger className="border-foreground border-2">
                 <SelectValue />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="public">
-                  Public - Anyone can view
-                </SelectItem>
+                <SelectItem value="public">Public - Anyone can view</SelectItem>
                 <SelectItem value="landlords_only">
                   Landlords Only - Only verified landlords
                 </SelectItem>
-                <SelectItem value="private">
-                  Private - Only when you apply
-                </SelectItem>
+                <SelectItem value="private">Private - Only when you apply</SelectItem>
               </SelectContent>
             </Select>
-            <p className="text-sm text-muted-foreground">
+            <p className="text-muted-foreground text-sm">
               {settings.profileVisibility === 'public' &&
                 'Your profile will be visible to all users on the platform.'}
               {settings.profileVisibility === 'landlords_only' &&
@@ -130,28 +122,26 @@ export default function PrivacySettingsPage() {
       </Card>
 
       {/* Data Sharing */}
-      <Card className="border-2 border-foreground">
+      <Card className="border-foreground border-2">
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
             <Share2 className="h-5 w-5" />
             Data Sharing
           </CardTitle>
-          <CardDescription>
-            Control how your data is shared and used
-          </CardDescription>
+          <CardDescription>Control how your data is shared and used</CardDescription>
         </CardHeader>
         <CardContent className="space-y-1">
           <div className="flex items-center justify-between py-3">
             <div className="space-y-0.5">
               <Label className="font-medium">Share with Partners</Label>
-              <p className="text-sm text-muted-foreground">
+              <p className="text-muted-foreground text-sm">
                 Allow us to share your data with trusted third-party partners for better service
               </p>
             </div>
             <Switch
               checked={settings.shareWithPartners}
               onCheckedChange={(checked) =>
-                setSettings(prev => ({ ...prev, shareWithPartners: checked }))
+                setSettings((prev) => ({ ...prev, shareWithPartners: checked }))
               }
             />
           </div>
@@ -159,14 +149,14 @@ export default function PrivacySettingsPage() {
           <div className="flex items-center justify-between py-3">
             <div className="space-y-0.5">
               <Label className="font-medium">Analytics & Improvements</Label>
-              <p className="text-sm text-muted-foreground">
+              <p className="text-muted-foreground text-sm">
                 Help us improve by sharing anonymous usage data
               </p>
             </div>
             <Switch
               checked={settings.shareAnalytics}
               onCheckedChange={(checked) =>
-                setSettings(prev => ({ ...prev, shareAnalytics: checked }))
+                setSettings((prev) => ({ ...prev, shareAnalytics: checked }))
               }
             />
           </div>
@@ -174,14 +164,14 @@ export default function PrivacySettingsPage() {
           <div className="flex items-center justify-between py-3">
             <div className="space-y-0.5">
               <Label className="font-medium">Personalized Advertising</Label>
-              <p className="text-sm text-muted-foreground">
+              <p className="text-muted-foreground text-sm">
                 See ads tailored to your interests based on your activity
               </p>
             </div>
             <Switch
               checked={settings.personalizedAds}
               onCheckedChange={(checked) =>
-                setSettings(prev => ({ ...prev, personalizedAds: checked }))
+                setSettings((prev) => ({ ...prev, personalizedAds: checked }))
               }
             />
           </div>
@@ -189,47 +179,54 @@ export default function PrivacySettingsPage() {
       </Card>
 
       {/* GDPR/CCPA Data Rights */}
-      <Card className="border-2 border-foreground">
+      <Card className="border-foreground border-2">
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
             <Shield className="h-5 w-5" />
             Your Data Rights
           </CardTitle>
-          <CardDescription>
-            Exercise your rights under GDPR/CCPA
-          </CardDescription>
+          <CardDescription>Exercise your rights under GDPR/CCPA</CardDescription>
         </CardHeader>
         <CardContent className="space-y-4">
           {/* Export Data */}
-          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 p-4 border-2 border-border rounded-lg">
+          <div className="border-border flex flex-col gap-4 rounded-lg border-2 p-4 sm:flex-row sm:items-center sm:justify-between">
             <div>
               <div className="flex items-center gap-2">
                 <Download className="h-4 w-4" />
                 <p className="font-medium">Export Your Data</p>
               </div>
-              <p className="text-sm text-muted-foreground mt-1">
+              <p className="text-muted-foreground mt-1 text-sm">
                 Download a copy of all data we have about you
               </p>
             </div>
             <Dialog open={showExportDialog} onOpenChange={setShowExportDialog}>
               <DialogTrigger asChild>
-                <Button variant="outline" className="border-2 border-foreground" disabled={exportRequested}>
+                <Button
+                  variant="outline"
+                  className="border-foreground border-2"
+                  disabled={exportRequested}
+                >
                   {exportRequested ? 'Export Requested' : 'Export Data'}
                 </Button>
               </DialogTrigger>
-              <DialogContent className="border-2 border-foreground">
+              <DialogContent className="border-foreground border-2">
                 <DialogHeader>
                   <DialogTitle>Export Your Data</DialogTitle>
                   <DialogDescription>
-                    We will compile all your data and send you a download link via email within 48 hours.
-                    This includes your profile information, applications, documents, and activity history.
+                    We will compile all your data and send you a download link via email within 48
+                    hours. This includes your profile information, applications, documents, and
+                    activity history.
                   </DialogDescription>
                 </DialogHeader>
                 <DialogFooter>
-                  <Button variant="outline" onClick={() => setShowExportDialog(false)} className="border-2 border-foreground">
+                  <Button
+                    variant="outline"
+                    onClick={() => setShowExportDialog(false)}
+                    className="border-foreground border-2"
+                  >
                     Cancel
                   </Button>
-                  <Button onClick={handleExportData} className="border-2 border-foreground">
+                  <Button onClick={handleExportData} className="border-foreground border-2">
                     Request Export
                   </Button>
                 </DialogFooter>
@@ -238,41 +235,53 @@ export default function PrivacySettingsPage() {
           </div>
 
           {/* Delete Data */}
-          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 p-4 border-2 border-red-200 rounded-lg bg-red-50">
+          <div className="flex flex-col gap-4 rounded-lg border-2 border-red-200 bg-red-50 p-4 sm:flex-row sm:items-center sm:justify-between">
             <div>
               <div className="flex items-center gap-2 text-red-800">
                 <Trash2 className="h-4 w-4" />
                 <p className="font-medium">Delete Your Data</p>
               </div>
-              <p className="text-sm text-red-600 mt-1">
+              <p className="mt-1 text-sm text-red-600">
                 Request deletion of all your personal data
               </p>
             </div>
             <Dialog open={showDeleteDialog} onOpenChange={setShowDeleteDialog}>
               <DialogTrigger asChild>
-                <Button variant="outline" className="border-2 border-red-500 text-red-600 hover:bg-red-100" disabled={deleteRequested}>
+                <Button
+                  variant="outline"
+                  className="border-2 border-red-500 text-red-600 hover:bg-red-100"
+                  disabled={deleteRequested}
+                >
                   {deleteRequested ? 'Request Submitted' : 'Delete Data'}
                 </Button>
               </DialogTrigger>
-              <DialogContent className="border-2 border-foreground">
+              <DialogContent className="border-foreground border-2">
                 <DialogHeader>
                   <DialogTitle className="text-red-600">Delete Your Data</DialogTitle>
                   <DialogDescription>
                     This will submit a request to delete all your personal data from our systems.
-                    This action is irreversible and will be processed within 30 days as required by law.
+                    This action is irreversible and will be processed within 30 days as required by
+                    law.
                   </DialogDescription>
                 </DialogHeader>
                 <div className="py-4">
-                  <p className="text-sm text-muted-foreground">
-                    Note: Some data may be retained for legal or compliance purposes.
-                    Your account will remain active unless you also delete your account.
+                  <p className="text-muted-foreground text-sm">
+                    Note: Some data may be retained for legal or compliance purposes. Your account
+                    will remain active unless you also delete your account.
                   </p>
                 </div>
                 <DialogFooter>
-                  <Button variant="outline" onClick={() => setShowDeleteDialog(false)} className="border-2 border-foreground">
+                  <Button
+                    variant="outline"
+                    onClick={() => setShowDeleteDialog(false)}
+                    className="border-foreground border-2"
+                  >
                     Cancel
                   </Button>
-                  <Button onClick={handleDeleteData} className="bg-red-600 hover:bg-red-700 border-2 border-red-600">
+                  <Button
+                    onClick={handleDeleteData}
+                    className="border-2 border-red-600 bg-red-600 hover:bg-red-700"
+                  >
                     Submit Request
                   </Button>
                 </DialogFooter>
@@ -284,7 +293,7 @@ export default function PrivacySettingsPage() {
 
       {/* Save Button */}
       <div className="flex justify-end">
-        <Button onClick={handleSave} className="border-2 border-foreground">
+        <Button onClick={handleSave} className="border-foreground border-2">
           Save Preferences
         </Button>
       </div>

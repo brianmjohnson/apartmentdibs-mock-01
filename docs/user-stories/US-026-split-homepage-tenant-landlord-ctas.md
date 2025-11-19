@@ -58,6 +58,7 @@ Traditional rental platforms either focus solely on tenants (Zillow, Apartments.
 **Then** they see a hero section with:
 
 **Search Bar (Primary CTA)**:
+
 - Large, prominent search input: "Find your next apartment"
 - Location autocomplete (Google Places API)
 - Budget filter dropdown: "$0-$2,000", "$2,000-$3,000", "$3,000-$4,000", "$4,000+"
@@ -67,11 +68,13 @@ Traditional rental platforms either focus solely on tenants (Zillow, Apartments.
 **Subheading**: "10,000+ verified listings. Apply once, reuse everywhere."
 
 **Trust Signals**:
+
 - "Verified listings only" badge
 - "No broker fees" badge (where applicable)
 - "Fair Housing compliant" badge
 
 **Verification**:
+
 - [ ] Search bar prominent and functional
 - [ ] Autocomplete works
 - [ ] Filters work correctly
@@ -84,18 +87,21 @@ Traditional rental platforms either focus solely on tenants (Zillow, Apartments.
 **Then** they see two-column layout:
 
 **Column 1: For Landlords**
+
 - Headline: "Protect Your Investment, Fill Faster"
 - Pain points: "Audit trails for compliance | Risk scores for tenant quality | 56% faster fills"
 - CTA button: "Get Started" -> /for-landlords
 - Trust signal: David testimonial quote
 
 **Column 2: For Agents**
+
 - Headline: "Close 25% More Leases, Save 20 Hours/Week"
 - Pain points: "CRM auto-matching | One-click syndication | Unified dashboard"
 - CTA button: "Get Started" -> /for-agents
 - Trust signal: Jessica testimonial quote
 
 **Verification**:
+
 - [ ] Two columns display properly
 - [ ] CTAs link correctly
 - [ ] Testimonials show
@@ -105,11 +111,13 @@ Traditional rental platforms either focus solely on tenants (Zillow, Apartments.
 **Given** visitor continues scrolling
 **When** featured listings appear
 **Then** they see:
+
 - Grid of 6-8 verified listings (curated)
 - Each card shows: Photo, address, neighborhood, rent, beds/baths, "Verified" badge
 - "View All Listings" link -> /search
 
 **Verification**:
+
 - [ ] Listings load from database
 - [ ] Cards display correctly
 - [ ] Link works
@@ -121,16 +129,19 @@ Traditional rental platforms either focus solely on tenants (Zillow, Apartments.
 **Then** they see:
 
 **Metrics**:
+
 - "10,000+ verified renters"
 - "500+ agents"
 - "43 days -> 21 days average fill time"
 
 **Testimonials**:
+
 - Maya (tenant): "ApartmentDibs saved me $300 and 12 hours..."
 - Jessica (agent): "I close 25% more leases..."
 - David (landlord): "The audit trail is bulletproof..."
 
 **Verification**:
+
 - [ ] Metrics display
 - [ ] Testimonials with photos
 - [ ] Quotes compelling
@@ -140,28 +151,34 @@ Traditional rental platforms either focus solely on tenants (Zillow, Apartments.
 **Given** SEO and user discovery needs
 **When** neighborhood links display
 **Then** visitor sees:
+
 - Quick links to popular neighborhoods
 - Each link -> /neighborhoods/[slug]
 
 **Verification**:
+
 - [ ] Links work correctly
 - [ ] SEO benefit realized
 
 ### AC-6: Non-Functional Requirements
 
 **Performance**:
+
 - [ ] Homepage loads in <2 seconds (Core Web Vitals)
 - [ ] Lazy-load below-fold content
 
 **Mobile Responsiveness**:
+
 - [ ] Search bar functional on mobile
 - [ ] CTAs tappable
 
 **SEO**:
+
 - [ ] Proper meta tags
 - [ ] Schema.org WebSite + SearchAction structured data
 
 **A/B Testable**:
+
 - [ ] Hero text, CTA colors, layout easily swappable
 
 ---
@@ -173,6 +190,7 @@ Traditional rental platforms either focus solely on tenants (Zillow, Apartments.
 **Route**: `app/(public)/page.tsx`
 
 **Components**:
+
 ```
 components/
   home/
@@ -189,7 +207,8 @@ components/
 ```typescript
 export const metadata: Metadata = {
   title: 'ApartmentDibs | NYC Apartment Rentals',
-  description: 'Find verified apartment listings in NYC. Apply once, reuse everywhere. Fair housing compliant.',
+  description:
+    'Find verified apartment listings in NYC. Apply once, reuse everywhere. Fair housing compliant.',
   openGraph: {
     title: 'ApartmentDibs | NYC Apartment Rentals',
     description: 'Find verified apartment listings in NYC. Apply once, reuse everywhere.',
@@ -197,7 +216,7 @@ export const metadata: Metadata = {
     siteName: 'ApartmentDibs',
     type: 'website',
   },
-};
+}
 ```
 
 ### Structured Data
@@ -208,14 +227,15 @@ WebSite schema with SearchAction for Google Sitelinks Search Box
 
 ## Analytics Tracking
 
-| Event Name | When Triggered | Properties |
-|------------|----------------|------------|
-| `homepage_viewed` | Page loads | `{source, device}` |
+| Event Name         | When Triggered   | Properties                 |
+| ------------------ | ---------------- | -------------------------- |
+| `homepage_viewed`  | Page loads       | `{source, device}`         |
 | `search_initiated` | Search performed | `{location, budget, beds}` |
-| `cta_clicked` | Button clicked | `{ctaType, destination}` |
-| `listing_clicked` | Featured listing | `{listingId}` |
+| `cta_clicked`      | Button clicked   | `{ctaType, destination}`   |
+| `listing_clicked`  | Featured listing | `{listingId}`              |
 
 **Success Metrics**:
+
 - 40%+ discovery-to-engagement rate
 - <30 seconds time-to-first-engagement
 - Bounce rate <50%
@@ -233,6 +253,7 @@ WebSite schema with SearchAction for Google Sitelinks Search Box
 ## Dependencies
 
 ### Related Stories
+
 - US-027: Landlord Marketing Hub
 - US-028: Agent Marketing Hub
 - US-030: Property Page

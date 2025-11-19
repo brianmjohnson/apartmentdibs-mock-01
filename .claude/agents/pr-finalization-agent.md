@@ -17,6 +17,7 @@ Finalize pull requests with proper description, labels, reviewers, and verificat
 ### 1. Verify PR is Ready
 
 **Checklist**:
+
 - [ ] All tests passing - `pnpm test` and/or `pnpm test:e2e`
 - [ ] Lint checks passed - `pnpm lint`
 - [ ] Build successful - `tsc -noEmit && pnpm build`
@@ -27,6 +28,7 @@ Finalize pull requests with proper description, labels, reviewers, and verificat
 When builds fail, fix and commit but don't push. Push only after the build is successful.
 
 After pushing the code:
+
 1. monitor the build via the Vercel CLI for a CI/CD build failure. In this case, reproduce the error locally using `vercel build` before pushing the fix.
 2. monitor the github comments on the PR for bugbot and code-review feedback. Make the necessary updates, and reply directly to the comment with the commit and a summary. Use github comments and replies for human-in-the-loop clarifications, decisions or guidance when necessary.
 
@@ -35,6 +37,7 @@ After pushing the code:
 **If `schema.prisma` changed**:
 
 1. **Capture Migration Name**:
+
    ```bash
    # If migration was created
    pnpm prisma migrate dev --name <description>
@@ -49,6 +52,7 @@ After pushing the code:
 3. **Document Rollback** (for PR description)
 
 **If No Schema Changes**:
+
 - Skip to step 3 (Generate PR Description)
 
 ---
@@ -56,32 +60,42 @@ After pushing the code:
 ### 3. Generate PR Description
 
 **Format**:
+
 ```markdown
 ## Summary
+
 [What this PR accomplishes]
 
 ## Related
+
 - Fixes #123
 - Implements US-001
 
 ## Changes
+
 - Added feature X
 - Updated component Y
 - Fixed bug Z
 
 ## Database Changes
+
 **Migration**: `20251116123045_add_user_preferences`
 
 **Rollback** (if deployment fails):
 \`\`\`bash
+
 # Mark migration as rolled back
+
 pnpm prisma migrate resolve --rolled-back 20251116123045_add_user_preferences
 
 # If data needs manual cleanup, run:
+
 # psql $DATABASE_URL -c "DROP TABLE user_preferences;"
+
 \`\`\`
 
 **Schema Changes**:
+
 - Added `UserPreference` model
 - Added `userId` foreign key to `preferences` table
 
@@ -90,20 +104,24 @@ pnpm prisma migrate resolve --rolled-back 20251116123045_add_user_preferences
 ---
 
 ## Testing
+
 - [ ] Unit tests added
 - [ ] Manual testing completed
 - [ ] Accessibility verified
 - [ ] Database migration tested (rollback verified)
 
 ## Screenshots
+
 [If UI changes]
 
 ## Deployment Notes
+
 - **Migration Required**: Yes/No
 - **Breaking Changes**: Yes/No
 - **Rollback Plan**: See Database Changes section above
 
 ## Checklist
+
 - [ ] Tests passing
 - [ ] Documentation updated
 - [ ] Analytics events added
@@ -112,6 +130,7 @@ pnpm prisma migrate resolve --rolled-back 20251116123045_add_user_preferences
 ```
 
 **Why Database Changes Section Matters**:
+
 - Provides immutable release marker (timestamp in migration name)
 - Clear rollback path for deployment failures
 - Deployment safety through explicit migration documentation
@@ -122,6 +141,7 @@ Remove "Database Changes" and "Deployment Notes" sections from PR description.
 ### 4. Add Labels
 
 Based on changes:
+
 - `feature` - New functionality
 - `bug` - Bug fix
 - `refactor` - Code improvement
@@ -132,6 +152,7 @@ Based on changes:
 ### 5. Request Reviews
 
 Assign appropriate reviewers based on changes:
+
 - Frontend changes → Frontend reviewer
 - Backend changes → Backend reviewer
 - Database migrations → Senior developer + DBA (if available)

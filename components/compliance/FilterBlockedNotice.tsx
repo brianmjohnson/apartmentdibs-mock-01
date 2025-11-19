@@ -40,10 +40,11 @@ export function FilterBlockedNotice({
       </AlertTitle>
       <AlertDescription className="mt-2">
         <p className="mb-2">
-          You cannot override this rule due to legal requirements in <strong>{jurisdiction}</strong>.
+          You cannot override this rule due to legal requirements in <strong>{jurisdiction}</strong>
+          .
         </p>
         <p className="text-sm opacity-90">{reason}</p>
-        <p className="text-xs mt-3 opacity-75">
+        <p className="mt-3 text-xs opacity-75">
           This override attempt has been logged for compliance records.
         </p>
       </AlertDescription>

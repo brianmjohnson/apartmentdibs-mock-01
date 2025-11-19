@@ -62,12 +62,12 @@ When reviewing architectural changes:
 // ✅ CORRECT
 const session = await auth.api.getSession({
   headers: await headers(),
-});
+})
 
 // ❌ WRONG - Will fail to detect session cookies
 const session = await auth.api.getSession({
   headers: new Headers(),
-});
+})
 ```
 
 **Organization Creation Flow**
@@ -76,12 +76,12 @@ const session = await auth.api.getSession({
 // 1. Create Organization (no createdById)
 const organization = await createOrganization.mutateAsync({
   data: { name: businessName, slug: generateSlug(businessName) },
-});
+})
 
 // 2. Create Member (user as owner)
 await createMember.mutateAsync({
-  data: { userId: user.id, organizationId: organization.id, role: "owner" },
-});
+  data: { userId: user.id, organizationId: organization.id, role: 'owner' },
+})
 
 // 3. Create Business with required JSON arrays
 const business = await createBusiness.mutateAsync({
@@ -93,7 +93,7 @@ const business = await createBusiness.mutateAsync({
     phoneNumbers: [], // Required empty array
     websites: [], // Required empty array
   },
-});
+})
 ```
 
 **Database-backed Authorization**
@@ -103,13 +103,13 @@ const business = await createBusiness.mutateAsync({
 const isPlatformAdmin = await prisma.member.findFirst({
   where: {
     userId: session.user.id,
-    organization: { slug: "platform" },
-    role: "owner",
+    organization: { slug: 'platform' },
+    role: 'owner',
   },
-});
+})
 
 // ❌ WRONG - Session doesn't have role field
-const isAdmin = session.user.role === "admin";
+const isAdmin = session.user.role === 'admin'
 ```
 
 ## Review Process

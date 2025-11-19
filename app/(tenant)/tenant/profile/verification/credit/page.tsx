@@ -2,25 +2,14 @@
 
 import { useState } from 'react'
 import Link from 'next/link'
-import {
-  ArrowLeft,
-  CreditCard,
-  CheckCircle2,
-  Clock,
-  AlertCircle,
-  Info,
-  Shield
-} from 'lucide-react'
+import { ArrowLeft, CreditCard, CheckCircle2, Clock, AlertCircle, Info, Shield } from 'lucide-react'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
 import { Checkbox } from '@/components/ui/checkbox'
 import { Label } from '@/components/ui/label'
 import { Separator } from '@/components/ui/separator'
-import {
-  mockTenantProfile,
-  getVerificationStatusColor
-} from '@/lib/mock-data/tenant'
+import { mockTenantProfile, getVerificationStatusColor } from '@/lib/mock-data/tenant'
 
 export default function CreditVerificationPage() {
   const status = mockTenantProfile.verifications.credit
@@ -72,7 +61,7 @@ export default function CreditVerificationPage() {
       </div>
 
       {/* Soft vs Hard Pull Explanation */}
-      <Card className="border-2 border-foreground">
+      <Card className="border-foreground border-2">
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
             <Info className="h-5 w-5" />
@@ -82,8 +71,8 @@ export default function CreditVerificationPage() {
         <CardContent className="space-y-6">
           <div className="grid gap-4 md:grid-cols-2">
             {/* Soft Pull */}
-            <div className="p-4 border-2 border-green-500 bg-green-50 rounded-lg">
-              <div className="flex items-center gap-2 mb-2">
+            <div className="rounded-lg border-2 border-green-500 bg-green-50 p-4">
+              <div className="mb-2 flex items-center gap-2">
                 <CheckCircle2 className="h-5 w-5 text-green-600" />
                 <h3 className="font-bold text-green-800">Soft Pull (What We Do)</h3>
               </div>
@@ -104,8 +93,8 @@ export default function CreditVerificationPage() {
             </div>
 
             {/* Hard Pull */}
-            <div className="p-4 border-2 border-red-500 bg-red-50 rounded-lg">
-              <div className="flex items-center gap-2 mb-2">
+            <div className="rounded-lg border-2 border-red-500 bg-red-50 p-4">
+              <div className="mb-2 flex items-center gap-2">
                 <AlertCircle className="h-5 w-5 text-red-600" />
                 <h3 className="font-bold text-red-800">Hard Pull (Traditional)</h3>
               </div>
@@ -131,29 +120,27 @@ export default function CreditVerificationPage() {
       {status === 'not_started' && (
         <>
           {/* What We Check */}
-          <Card className="border-2 border-foreground">
+          <Card className="border-foreground border-2">
             <CardHeader>
               <CardTitle>What We Check</CardTitle>
-              <CardDescription>
-                Information included in the credit report
-              </CardDescription>
+              <CardDescription>Information included in the credit report</CardDescription>
             </CardHeader>
             <CardContent>
               <ul className="space-y-2 text-sm">
                 <li className="flex items-center gap-3">
-                  <CheckCircle2 className="h-4 w-4 text-muted-foreground" />
+                  <CheckCircle2 className="text-muted-foreground h-4 w-4" />
                   Credit score range (not exact number)
                 </li>
                 <li className="flex items-center gap-3">
-                  <CheckCircle2 className="h-4 w-4 text-muted-foreground" />
+                  <CheckCircle2 className="text-muted-foreground h-4 w-4" />
                   Payment history
                 </li>
                 <li className="flex items-center gap-3">
-                  <CheckCircle2 className="h-4 w-4 text-muted-foreground" />
+                  <CheckCircle2 className="text-muted-foreground h-4 w-4" />
                   Outstanding debts
                 </li>
                 <li className="flex items-center gap-3">
-                  <CheckCircle2 className="h-4 w-4 text-muted-foreground" />
+                  <CheckCircle2 className="text-muted-foreground h-4 w-4" />
                   Bankruptcies or collections
                 </li>
               </ul>
@@ -161,7 +148,7 @@ export default function CreditVerificationPage() {
           </Card>
 
           {/* Authorization */}
-          <Card className="border-2 border-foreground">
+          <Card className="border-foreground border-2">
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
                 <Shield className="h-5 w-5" />
@@ -175,35 +162,32 @@ export default function CreditVerificationPage() {
                   checked={authorized}
                   onCheckedChange={(checked) => setAuthorized(checked as boolean)}
                 />
-                <Label htmlFor="authorize" className="text-sm leading-relaxed cursor-pointer">
-                  I authorize ApartmentDibs to perform a soft credit inquiry on my behalf.
-                  I understand this will not affect my credit score and the results will be
-                  shared with landlords I apply to through this platform.
+                <Label htmlFor="authorize" className="cursor-pointer text-sm leading-relaxed">
+                  I authorize ApartmentDibs to perform a soft credit inquiry on my behalf. I
+                  understand this will not affect my credit score and the results will be shared
+                  with landlords I apply to through this platform.
                 </Label>
               </div>
 
               <Separator />
 
-              <Button
-                disabled={!authorized}
-                className="w-full border-2 border-foreground"
-              >
-                <CreditCard className="h-4 w-4 mr-2" />
+              <Button disabled={!authorized} className="border-foreground w-full border-2">
+                <CreditCard className="mr-2 h-4 w-4" />
                 Authorize Credit Check
               </Button>
             </CardContent>
           </Card>
 
           {/* Privacy Note */}
-          <Card className="border-2 border-border bg-muted/50">
+          <Card className="border-border bg-muted/50 border-2">
             <CardContent className="py-4">
               <div className="flex items-start gap-3">
-                <Shield className="h-5 w-5 text-muted-foreground mt-0.5" />
-                <div className="text-sm text-muted-foreground">
-                  <p className="font-medium text-foreground">Your privacy matters</p>
+                <Shield className="text-muted-foreground mt-0.5 h-5 w-5" />
+                <div className="text-muted-foreground text-sm">
+                  <p className="text-foreground font-medium">Your privacy matters</p>
                   <p className="mt-1">
-                    Your credit information is encrypted and only shared with landlords
-                    when you submit an application. You can revoke access at any time.
+                    Your credit information is encrypted and only shared with landlords when you
+                    submit an application. You can revoke access at any time.
                   </p>
                 </div>
               </div>

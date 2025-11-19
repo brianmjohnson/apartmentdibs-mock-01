@@ -15,6 +15,7 @@ Git worktrees allow multiple working directories from a single repository, enabl
 ## Problem
 
 **Context Switching Overhead**:
+
 ```bash
 # Traditional workflow (slow and error-prone)
 git checkout feature-a    # Work on feature A
@@ -49,6 +50,7 @@ git stash pop             # Restore changes
 ```
 
 **Each worktree**:
+
 - ✅ Separate working directory
 - ✅ Separate `node_modules/` (if needed)
 - ✅ Separate dev server
@@ -182,6 +184,7 @@ pnpm dev -- --port 3001       # Port 3001
 ## Best Practices
 
 **Naming Convention**:
+
 ```bash
 # Use descriptive names for worktrees
 ~/projects/myapp/             # Main
@@ -191,6 +194,7 @@ pnpm dev -- --port 3001       # Port 3001
 ```
 
 **Port Management**:
+
 ```bash
 # Assign different ports to avoid conflicts
 # Main: 3000
@@ -202,6 +206,7 @@ echo "PORT=3001" > .env.local
 ```
 
 **Dependency Management**:
+
 ```bash
 # Option 1: Shared node_modules (symlink)
 ln -s ../myapp/node_modules node_modules
@@ -211,6 +216,7 @@ pnpm install
 ```
 
 **Clean Up Regularly**:
+
 ```bash
 # List all worktrees
 git worktree list

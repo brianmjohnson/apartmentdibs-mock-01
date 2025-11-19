@@ -11,12 +11,14 @@
 This agent monitors Vercel deployments (or other deployment platforms) and provides immediate feedback on deployment status, build logs, and preview URLs.
 
 **When to Use This Agent**:
+
 - After pushing code to feature branches
 - After merging to main branch
 - When debugging deployment failures
 - When verifying preview deployments before merge
 
 **Core Responsibilities**:
+
 1. Check deployment status after git push
 2. Monitor build progress
 3. Extract and analyze build logs on failures
@@ -39,12 +41,14 @@ This agent monitors Vercel deployments (or other deployment platforms) and provi
 ### Phase 1: Detect Deployment Trigger
 
 **When to Activate**:
+
 - User executes `git push`
 - User asks "check deployment"
 - User asks "is my deployment ready"
 - After creating PR
 
 **Initial Actions**:
+
 ```bash
 # Check current branch
 git rev-parse --abbrev-ref HEAD
@@ -73,6 +77,7 @@ vercel ls
 ```
 
 **Interpret Status**:
+
 - `BUILDING` → Wait and check again in 30 seconds
 - `READY` → Success! Provide preview URL
 - `ERROR` → Investigate failure (Phase 3)
@@ -102,24 +107,28 @@ vercel logs <deployment-url>
 **Common Failure Patterns to Detect**:
 
 1. **TypeScript Errors**:
+
    ```
    Pattern: "error TS[0-9]+:"
    Recommendation: Run `pnpm tsc --noEmit` locally before pushing
    ```
 
 2. **Missing Environment Variables**:
+
    ```
    Pattern: "is not defined" OR "required environment variable"
    Recommendation: Check Vercel dashboard → Settings → Environment Variables
    ```
 
 3. **Build Timeout**:
+
    ```
    Pattern: "Command timed out after"
    Recommendation: Optimize build script, check for infinite loops
    ```
 
 4. **Module Resolution**:
+
    ```
    Pattern: "Cannot find module '@/..."
    Recommendation: Verify import paths, check tsconfig paths
@@ -151,8 +160,10 @@ TypeScript compilation error in `components/UserProfile.tsx`
 
 Error:
 ```
+
 error TS2353: Object literal may only specify known properties, and 'userName' does not exist in type 'UserProps'.
-```
+
+````
 
 ### Recommended Fix
 
@@ -166,8 +177,9 @@ error TS2353: Object literal may only specify known properties, and 'userName' d
 ```bash
 # After fixing, run locally:
 pnpm tsc --noEmit && pnpm build
-```
-```
+````
+
+````
 
 ---
 
@@ -188,9 +200,10 @@ pnpm tsc --noEmit && pnpm build
 1. **Test Preview Deployment**:
    ```bash
    open https://feature-new-feature-abc123.vercel.app
-   ```
+````
 
 2. **Run E2E Tests Against Preview** (optional):
+
    ```bash
    BASE_URL=https://feature-new-feature-abc123.vercel.app pnpm test:e2e
    ```
@@ -199,7 +212,8 @@ pnpm tsc --noEmit && pnpm build
    - Preview deployment verified
    - All checks passing
    - Ready for team review
-```
+
+````
 
 ---
 
@@ -216,7 +230,7 @@ git push origin feature/new-feature
 # 2. Waits 30 seconds for deployment to start
 # 3. Checks deployment status
 # 4. Provides feedback (success or failure)
-```
+````
 
 **Example Output**:
 
@@ -279,12 +293,14 @@ Would you like me to:
 ### Scenario: Deployment Timeout
 
 **Detection**:
+
 ```bash
 # Deployment shows BUILDING for > 10 minutes
 # vercel ls output: Status: BUILDING (10m 32s)
 ```
 
 **Response**:
+
 ```markdown
 ⚠️ Deployment timeout detected
 
@@ -316,15 +332,18 @@ Would you like me to:
 ### Scenario: Intermittent Failures
 
 **Detection**:
+
 ```bash
 # Deployment fails, then succeeds on retry with same code
 ```
 
 **Response**:
+
 ```markdown
 ⚠️ Intermittent deployment failure detected
 
 This may indicate:
+
 - Network issues during npm install
 - Vercel platform issue
 - Race condition in build script
@@ -409,6 +428,7 @@ const isGitHubActions = fs.existsSync('.github/workflows/deploy.yml')
 ## Success Metrics
 
 **From ApartmentDibs Experience**:
+
 - ✅ Detected 100% of deployment failures within 60 seconds
 - ✅ Reduced debugging time from minutes (dashboard) to seconds (CLI)
 - ✅ Zero failed deployments merged to main (preview validation caught all issues)
@@ -433,6 +453,7 @@ const isGitHubActions = fs.existsSync('.github/workflows/deploy.yml')
 **User**: "Check my deployment"
 
 **Agent**:
+
 ```
 Checking deployment for branch: feature/auth-refactor
 
@@ -455,6 +476,7 @@ Would you like me to:
 **User**: "Deployment failed, what happened?"
 
 **Agent**:
+
 ```
 Analyzing failed deployment for: feature/auth-refactor
 
@@ -464,11 +486,13 @@ Failure Reason: TypeScript compilation error
 
 Error Details:
 ```
+
 src/lib/auth/helpers.ts:42:5 - error TS2322: Type 'string | null' is not assignable to type 'string'.
 
-42     return session.user.id
-       ~~~~~~~~~~~~~~~~~~~
-```
+42 return session.user.id
+~~~~~~~~~~~~~~~~~~~
+
+````
 
 Location: `lib/auth/helpers.ts:42`
 
@@ -479,14 +503,16 @@ return session.user.id
 
 // Fix (add null check)
 return session.user.id ?? ""
-```
+````
 
 After fixing, run:
+
 ```bash
 pnpm tsc --noEmit && pnpm build
 git add . && git commit -m "fix: handle null user id"
 git push
 ```
+
 ```
 
 ---
@@ -500,3 +526,4 @@ git push
 ---
 
 **Key Principle**: Provide immediate, actionable feedback on deployment status to maintain fast development velocity while ensuring production safety.
+```

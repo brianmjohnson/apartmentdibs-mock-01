@@ -15,7 +15,7 @@ import {
   Calendar,
   Users,
   PawPrint,
-  Sparkles
+  Sparkles,
 } from 'lucide-react'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
@@ -34,7 +34,7 @@ interface RevealedProfileProps {
 export function RevealedProfile({
   applicant,
   showAnimation = true,
-  className = ''
+  className = '',
 }: RevealedProfileProps) {
   const [isRevealed, setIsRevealed] = useState(!showAnimation)
 
@@ -48,11 +48,9 @@ export function RevealedProfile({
 
   if (!applicant.revealedData) {
     return (
-      <Card className={`border-2 border-foreground ${className}`}>
+      <Card className={`border-foreground border-2 ${className}`}>
         <CardContent className="py-8 text-center">
-          <p className="text-muted-foreground">
-            PII data not available. Please contact support.
-          </p>
+          <p className="text-muted-foreground">PII data not available. Please contact support.</p>
         </CardContent>
       </Card>
     )
@@ -61,61 +59,45 @@ export function RevealedProfile({
   const { revealedData } = applicant
   const initials = revealedData.name
     .split(' ')
-    .map(n => n[0])
+    .map((n) => n[0])
     .join('')
     .toUpperCase()
 
   return (
     <Card
-      className={`border-2 border-foreground transition-all duration-500 ${
-        isRevealed ? 'opacity-100 blur-0' : 'opacity-0 blur-sm'
+      className={`border-foreground border-2 transition-all duration-500 ${
+        isRevealed ? 'blur-0 opacity-100' : 'opacity-0 blur-sm'
       } ${className}`}
     >
       <CardHeader>
         <div className="flex items-start gap-4">
           {/* Profile Photo */}
-          <Avatar className="h-20 w-20 border-2 border-foreground">
-            <AvatarImage
-              src={revealedData.photoUrl}
-              alt={`Photo of ${revealedData.name}`}
-            />
-            <AvatarFallback className="text-lg font-bold">
-              {initials}
-            </AvatarFallback>
+          <Avatar className="border-foreground h-20 w-20 border-2">
+            <AvatarImage src={revealedData.photoUrl} alt={`Photo of ${revealedData.name}`} />
+            <AvatarFallback className="text-lg font-bold">{initials}</AvatarFallback>
           </Avatar>
 
           {/* Name and Contact */}
           <div className="flex-1">
-            <CardTitle className="text-2xl flex items-center gap-2">
+            <CardTitle className="flex items-center gap-2 text-2xl">
               {revealedData.name}
-              <Badge
-                variant="outline"
-                className="bg-green-100 text-green-800 border-green-300"
-              >
+              <Badge variant="outline" className="border-green-300 bg-green-100 text-green-800">
                 Selected
               </Badge>
             </CardTitle>
-            <CardDescription className="mt-1">
-              {applicant.displayId} - PII Revealed
-            </CardDescription>
+            <CardDescription className="mt-1">{applicant.displayId} - PII Revealed</CardDescription>
 
             {/* Contact Info */}
             <div className="mt-3 space-y-1">
               <div className="flex items-center gap-2 text-sm">
-                <Mail className="h-4 w-4 text-muted-foreground" />
-                <a
-                  href={`mailto:${revealedData.email}`}
-                  className="hover:underline"
-                >
+                <Mail className="text-muted-foreground h-4 w-4" />
+                <a href={`mailto:${revealedData.email}`} className="hover:underline">
                   {revealedData.email}
                 </a>
               </div>
               <div className="flex items-center gap-2 text-sm">
-                <Phone className="h-4 w-4 text-muted-foreground" />
-                <a
-                  href={`tel:${revealedData.phone}`}
-                  className="hover:underline"
-                >
+                <Phone className="text-muted-foreground h-4 w-4" />
+                <a href={`tel:${revealedData.phone}`} className="hover:underline">
                   {revealedData.phone}
                 </a>
               </div>
@@ -127,22 +109,20 @@ export function RevealedProfile({
       <CardContent className="space-y-6">
         {/* Address and Employer */}
         <div className="grid gap-4 md:grid-cols-2">
-          <div className="p-3 bg-muted rounded-md">
-            <div className="flex items-center gap-2 mb-1">
-              <MapPin className="h-4 w-4 text-muted-foreground" />
-              <span className="text-sm text-muted-foreground">
-                Current Address
-              </span>
+          <div className="bg-muted rounded-md p-3">
+            <div className="mb-1 flex items-center gap-2">
+              <MapPin className="text-muted-foreground h-4 w-4" />
+              <span className="text-muted-foreground text-sm">Current Address</span>
             </div>
-            <p className="font-medium text-sm">{revealedData.address}</p>
+            <p className="text-sm font-medium">{revealedData.address}</p>
           </div>
 
-          <div className="p-3 bg-muted rounded-md">
-            <div className="flex items-center gap-2 mb-1">
-              <Building2 className="h-4 w-4 text-muted-foreground" />
-              <span className="text-sm text-muted-foreground">Employer</span>
+          <div className="bg-muted rounded-md p-3">
+            <div className="mb-1 flex items-center gap-2">
+              <Building2 className="text-muted-foreground h-4 w-4" />
+              <span className="text-muted-foreground text-sm">Employer</span>
             </div>
-            <p className="font-medium text-sm">{revealedData.employer}</p>
+            <p className="text-sm font-medium">{revealedData.employer}</p>
           </div>
         </div>
 
@@ -150,17 +130,15 @@ export function RevealedProfile({
 
         {/* Financial Details */}
         <div>
-          <h4 className="font-semibold mb-3 flex items-center gap-2">
+          <h4 className="mb-3 flex items-center gap-2 font-semibold">
             <CreditCard className="h-4 w-4" />
             Financial Details
           </h4>
           <div className="grid gap-4 md:grid-cols-3">
             {/* Exact Credit Score */}
-            <div className="p-3 bg-muted rounded-md">
-              <p className="text-sm text-muted-foreground mb-1">
-                Credit Score (Exact)
-              </p>
-              <p className="font-bold text-lg">{revealedData.exactCreditScore}</p>
+            <div className="bg-muted rounded-md p-3">
+              <p className="text-muted-foreground mb-1 text-sm">Credit Score (Exact)</p>
+              <p className="text-lg font-bold">{revealedData.exactCreditScore}</p>
               <CreditBand
                 creditBand={applicant.creditBand}
                 showIcon={false}
@@ -170,19 +148,17 @@ export function RevealedProfile({
             </div>
 
             {/* Income Ratio */}
-            <div className="p-3 bg-muted rounded-md">
-              <div className="flex items-center gap-2 mb-1">
-                <DollarSign className="h-4 w-4 text-muted-foreground" />
-                <span className="text-sm text-muted-foreground">
-                  Income Ratio
-                </span>
+            <div className="bg-muted rounded-md p-3">
+              <div className="mb-1 flex items-center gap-2">
+                <DollarSign className="text-muted-foreground h-4 w-4" />
+                <span className="text-muted-foreground text-sm">Income Ratio</span>
               </div>
-              <p className="font-bold text-lg">{applicant.incomeRatio}x</p>
+              <p className="text-lg font-bold">{applicant.incomeRatio}x</p>
             </div>
 
             {/* Employment */}
-            <div className="p-3 bg-muted rounded-md">
-              <p className="text-sm text-muted-foreground mb-1">Employment</p>
+            <div className="bg-muted rounded-md p-3">
+              <p className="text-muted-foreground mb-1 text-sm">Employment</p>
               <EmploymentTenure
                 tenure={applicant.employmentTenure}
                 employmentType={applicant.employmentType}
@@ -198,28 +174,24 @@ export function RevealedProfile({
 
         {/* Rental History and Background */}
         <div className="grid gap-4 md:grid-cols-2">
-          <div className="p-3 bg-muted rounded-md">
-            <div className="flex items-center gap-2 mb-1">
-              <Home className="h-4 w-4 text-muted-foreground" />
-              <span className="text-sm text-muted-foreground">
-                Rental History
-              </span>
+          <div className="bg-muted rounded-md p-3">
+            <div className="mb-1 flex items-center gap-2">
+              <Home className="text-muted-foreground h-4 w-4" />
+              <span className="text-muted-foreground text-sm">Rental History</span>
             </div>
-            <p className="font-medium">
-              {applicant.rentalHistory || '5+ years, no evictions'}
-            </p>
+            <p className="font-medium">{applicant.rentalHistory || '5+ years, no evictions'}</p>
           </div>
 
-          <div className="p-3 bg-muted rounded-md">
-            <div className="flex items-center gap-2 mb-1">
-              <ShieldCheck className="h-4 w-4 text-muted-foreground" />
-              <span className="text-sm text-muted-foreground">
-                Background Check
-              </span>
+          <div className="bg-muted rounded-md p-3">
+            <div className="mb-1 flex items-center gap-2">
+              <ShieldCheck className="text-muted-foreground h-4 w-4" />
+              <span className="text-muted-foreground text-sm">Background Check</span>
             </div>
-            <p className={`font-medium ${
-              applicant.backgroundCheck === 'Pass' ? 'text-green-600' : 'text-red-600'
-            }`}>
+            <p
+              className={`font-medium ${
+                applicant.backgroundCheck === 'Pass' ? 'text-green-600' : 'text-red-600'
+              }`}
+            >
               {applicant.backgroundCheck || 'Pass'}
             </p>
           </div>
@@ -230,41 +202,37 @@ export function RevealedProfile({
         {/* Additional Info */}
         <div className="grid gap-4 md:grid-cols-4">
           <div>
-            <div className="flex items-center gap-2 text-sm text-muted-foreground mb-1">
+            <div className="text-muted-foreground mb-1 flex items-center gap-2 text-sm">
               <Calendar className="h-4 w-4" />
               Move-in Date
             </div>
-            <p className="font-medium text-sm">
-              {formatDate(applicant.moveInDate)}
-            </p>
+            <p className="text-sm font-medium">{formatDate(applicant.moveInDate)}</p>
           </div>
 
           <div>
-            <div className="flex items-center gap-2 text-sm text-muted-foreground mb-1">
+            <div className="text-muted-foreground mb-1 flex items-center gap-2 text-sm">
               <Users className="h-4 w-4" />
               Occupants
             </div>
-            <p className="font-medium text-sm">{applicant.occupants}</p>
+            <p className="text-sm font-medium">{applicant.occupants}</p>
           </div>
 
           <div>
-            <div className="flex items-center gap-2 text-sm text-muted-foreground mb-1">
+            <div className="text-muted-foreground mb-1 flex items-center gap-2 text-sm">
               <PawPrint className="h-4 w-4" />
               Pets
             </div>
-            <p className="font-medium text-sm">
+            <p className="text-sm font-medium">
               {applicant.pets ? applicant.petDetails || 'Yes' : 'No'}
             </p>
           </div>
 
           <div>
-            <div className="flex items-center gap-2 text-sm text-muted-foreground mb-1">
+            <div className="text-muted-foreground mb-1 flex items-center gap-2 text-sm">
               <Calendar className="h-4 w-4" />
               Applied
             </div>
-            <p className="font-medium text-sm">
-              {formatDate(applicant.appliedAt)}
-            </p>
+            <p className="text-sm font-medium">{formatDate(applicant.appliedAt)}</p>
           </div>
         </div>
 
@@ -272,12 +240,10 @@ export function RevealedProfile({
         {applicant.competitiveEdge && (
           <>
             <Separator />
-            <div className="p-3 bg-purple-50 dark:bg-purple-900/20 border-2 border-purple-300 rounded-md">
-              <div className="flex items-center gap-2 mb-1">
+            <div className="rounded-md border-2 border-purple-300 bg-purple-50 p-3 dark:bg-purple-900/20">
+              <div className="mb-1 flex items-center gap-2">
                 <Sparkles className="h-4 w-4 text-purple-600" />
-                <span className="text-sm font-medium text-purple-600">
-                  Competitive Edge
-                </span>
+                <span className="text-sm font-medium text-purple-600">Competitive Edge</span>
               </div>
               <p className="text-sm">{applicant.competitiveEdge}</p>
             </div>
@@ -286,7 +252,7 @@ export function RevealedProfile({
 
         {/* Reveal Timestamp */}
         {applicant.piiRevealedAt && (
-          <p className="text-xs text-muted-foreground text-center">
+          <p className="text-muted-foreground text-center text-xs">
             PII revealed on {formatDate(applicant.piiRevealedAt)}
           </p>
         )}

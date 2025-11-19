@@ -176,20 +176,20 @@ graph LR
 
 **Purpose**: Main brand color, used for primary actions and key UI elements
 
-| Token | HSL (Light) | HSL (Dark) | Usage |
-|-------|-------------|------------|-------|
-| `--primary` | `222.2 47.4% 11.2%` | `210 40% 98%` | Primary buttons, links, focus states |
-| `--primary-foreground` | `210 40% 98%` | `222.2 47.4% 11.2%` | Text on primary backgrounds |
+| Token                  | HSL (Light)         | HSL (Dark)          | Usage                                |
+| ---------------------- | ------------------- | ------------------- | ------------------------------------ |
+| `--primary`            | `222.2 47.4% 11.2%` | `210 40% 98%`       | Primary buttons, links, focus states |
+| `--primary-foreground` | `210 40% 98%`       | `222.2 47.4% 11.2%` | Text on primary backgrounds          |
 
 **Usage Example**:
+
 ```tsx
 // Primary Button
-<button className="bg-primary text-primary-foreground hover:bg-primary/90">
-  Submit
-</button>
+<button className="bg-primary text-primary-foreground hover:bg-primary/90">Submit</button>
 ```
 
 **Accessibility**:
+
 - Light mode contrast ratio: 17.5:1 (AAA)
 - Dark mode contrast ratio: 18.2:1 (AAA)
 
@@ -197,20 +197,20 @@ graph LR
 
 **Purpose**: Secondary actions, subtle backgrounds, alternative UI elements
 
-| Token | HSL (Light) | HSL (Dark) | Usage |
-|-------|-------------|------------|-------|
-| `--secondary` | `210 40% 96.1%` | `217.2 32.6% 17.5%` | Secondary buttons, hover states |
-| `--secondary-foreground` | `222.2 47.4% 11.2%` | `210 40% 98%` | Text on secondary backgrounds |
+| Token                    | HSL (Light)         | HSL (Dark)          | Usage                           |
+| ------------------------ | ------------------- | ------------------- | ------------------------------- |
+| `--secondary`            | `210 40% 96.1%`     | `217.2 32.6% 17.5%` | Secondary buttons, hover states |
+| `--secondary-foreground` | `222.2 47.4% 11.2%` | `210 40% 98%`       | Text on secondary backgrounds   |
 
 **Usage Example**:
+
 ```tsx
 // Secondary Button
-<button className="bg-secondary text-secondary-foreground hover:bg-secondary/80">
-  Cancel
-</button>
+<button className="bg-secondary text-secondary-foreground hover:bg-secondary/80">Cancel</button>
 ```
 
 **Accessibility**:
+
 - Light mode contrast ratio: 14.8:1 (AAA)
 - Dark mode contrast ratio: 12.6:1 (AAA)
 
@@ -218,12 +218,13 @@ graph LR
 
 **Purpose**: Error states, destructive actions, critical warnings
 
-| Token | HSL (Light) | HSL (Dark) | Usage |
-|-------|-------------|------------|-------|
-| `--destructive` | `0 84.2% 60.2%` | `0 62.8% 30.6%` | Delete buttons, error messages |
-| `--destructive-foreground` | `210 40% 98%` | `210 40% 98%` | Text on destructive backgrounds |
+| Token                      | HSL (Light)     | HSL (Dark)      | Usage                           |
+| -------------------------- | --------------- | --------------- | ------------------------------- |
+| `--destructive`            | `0 84.2% 60.2%` | `0 62.8% 30.6%` | Delete buttons, error messages  |
+| `--destructive-foreground` | `210 40% 98%`   | `210 40% 98%`   | Text on destructive backgrounds |
 
 **Usage Example**:
+
 ```tsx
 // Destructive Button
 <button className="bg-destructive text-destructive-foreground hover:bg-destructive/90">
@@ -232,6 +233,7 @@ graph LR
 ```
 
 **Accessibility**:
+
 - Light mode contrast ratio: 4.8:1 (AA)
 - Dark mode contrast ratio: 7.2:1 (AAA)
 
@@ -239,15 +241,16 @@ graph LR
 
 **Purpose**: Disabled states, placeholders, subtle backgrounds
 
-| Token | HSL (Light) | HSL (Dark) | Usage |
-|-------|-------------|------------|-------|
-| `--muted` | `210 40% 96.1%` | `217.2 32.6% 17.5%` | Disabled backgrounds, subtle sections |
-| `--muted-foreground` | `215.4 16.3% 46.9%` | `215 20.2% 65.1%` | Disabled text, placeholders |
+| Token                | HSL (Light)         | HSL (Dark)          | Usage                                 |
+| -------------------- | ------------------- | ------------------- | ------------------------------------- |
+| `--muted`            | `210 40% 96.1%`     | `217.2 32.6% 17.5%` | Disabled backgrounds, subtle sections |
+| `--muted-foreground` | `215.4 16.3% 46.9%` | `215 20.2% 65.1%`   | Disabled text, placeholders           |
 
 **Usage Example**:
+
 ```tsx
 // Muted Section
-<div className="bg-muted text-muted-foreground p-4">
+<div className="bg-muted p-4 text-muted-foreground">
   <p>This feature is coming soon...</p>
 </div>
 ```
@@ -256,36 +259,38 @@ graph LR
 
 **Purpose**: Highlights, notifications, special callouts
 
-| Token | HSL (Light) | HSL (Dark) | Usage |
-|-------|-------------|------------|-------|
-| `--accent` | `210 40% 96.1%` | `217.2 32.6% 17.5%` | Hover states, highlights |
-| `--accent-foreground` | `222.2 47.4% 11.2%` | `210 40% 98%` | Text on accent backgrounds |
+| Token                 | HSL (Light)         | HSL (Dark)          | Usage                      |
+| --------------------- | ------------------- | ------------------- | -------------------------- |
+| `--accent`            | `210 40% 96.1%`     | `217.2 32.6% 17.5%` | Hover states, highlights   |
+| `--accent-foreground` | `222.2 47.4% 11.2%` | `210 40% 98%`       | Text on accent backgrounds |
 
 **Usage Example**:
+
 ```tsx
 // Accent Callout
-<div className="bg-accent text-accent-foreground rounded-lg p-4">
+<div className="rounded-lg bg-accent p-4 text-accent-foreground">
   <p>New feature available!</p>
 </div>
 ```
 
 ### 2.7 Utility Colors
 
-| Token | HSL (Light) | HSL (Dark) | Usage |
-|-------|-------------|------------|-------|
-| `--background` | `0 0% 100%` | `222.2 84% 4.9%` | Page background |
-| `--foreground` | `222.2 84% 4.9%` | `210 40% 98%` | Primary text color |
-| `--border` | `214.3 31.8% 91.4%` | `217.2 32.6% 17.5%` | Border color |
-| `--input` | `214.3 31.8% 91.4%` | `217.2 32.6% 17.5%` | Input border color |
-| `--ring` | `222.2 84% 4.9%` | `212.7 26.8% 83.9%` | Focus ring color |
-| `--card` | `0 0% 100%` | `222.2 84% 4.9%` | Card background |
-| `--card-foreground` | `222.2 84% 4.9%` | `210 40% 98%` | Card text color |
-| `--popover` | `0 0% 100%` | `222.2 84% 4.9%` | Popover background |
-| `--popover-foreground` | `222.2 84% 4.9%` | `210 40% 98%` | Popover text color |
+| Token                  | HSL (Light)         | HSL (Dark)          | Usage              |
+| ---------------------- | ------------------- | ------------------- | ------------------ |
+| `--background`         | `0 0% 100%`         | `222.2 84% 4.9%`    | Page background    |
+| `--foreground`         | `222.2 84% 4.9%`    | `210 40% 98%`       | Primary text color |
+| `--border`             | `214.3 31.8% 91.4%` | `217.2 32.6% 17.5%` | Border color       |
+| `--input`              | `214.3 31.8% 91.4%` | `217.2 32.6% 17.5%` | Input border color |
+| `--ring`               | `222.2 84% 4.9%`    | `212.7 26.8% 83.9%` | Focus ring color   |
+| `--card`               | `0 0% 100%`         | `222.2 84% 4.9%`    | Card background    |
+| `--card-foreground`    | `222.2 84% 4.9%`    | `210 40% 98%`       | Card text color    |
+| `--popover`            | `0 0% 100%`         | `222.2 84% 4.9%`    | Popover background |
+| `--popover-foreground` | `222.2 84% 4.9%`    | `210 40% 98%`       | Popover text color |
 
 ### 2.8 Color Usage Guidelines
 
 #### Do's
+
 - Use semantic color tokens (e.g., `bg-primary`) instead of hardcoded values
 - Maintain consistent contrast ratios across light and dark modes
 - Use `primary` for main CTAs and important actions
@@ -293,6 +298,7 @@ graph LR
 - Use `muted` for disabled states and secondary information
 
 #### Don'ts
+
 - Don't use arbitrary color values like `bg-[#ff0000]`
 - Don't mix semantic colors inappropriately (e.g., destructive background with primary foreground)
 - Don't rely on color alone to convey meaning (use icons, text, or patterns)
@@ -306,14 +312,17 @@ graph LR
 
 ```css
 :root {
-  --font-sans: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont,
-               "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
-  --font-mono: ui-monospace, SFMono-Regular, "SF Mono", Monaco, Consolas,
-               "Liberation Mono", "Courier New", monospace;
+  --font-sans:
+    ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto,
+    'Helvetica Neue', Arial, sans-serif;
+  --font-mono:
+    ui-monospace, SFMono-Regular, 'SF Mono', Monaco, Consolas, 'Liberation Mono', 'Courier New',
+    monospace;
 }
 ```
 
 **Usage**:
+
 ```tsx
 // Sans-serif (default)
 <p className="font-sans">Body text</p>
@@ -324,27 +333,27 @@ graph LR
 
 ### 3.2 Font Size Scale
 
-| Token | Size | Line Height | Usage |
-|-------|------|-------------|-------|
-| `text-xs` | 0.75rem (12px) | 1rem (16px) | Small labels, captions |
-| `text-sm` | 0.875rem (14px) | 1.25rem (20px) | Secondary text, form labels |
-| `text-base` | 1rem (16px) | 1.5rem (24px) | Body text, paragraphs |
-| `text-lg` | 1.125rem (18px) | 1.75rem (28px) | Large body text |
-| `text-xl` | 1.25rem (20px) | 1.75rem (28px) | H4 headings |
-| `text-2xl` | 1.5rem (24px) | 2rem (32px) | H3 headings |
-| `text-3xl` | 1.875rem (30px) | 2.25rem (36px) | H2 headings |
-| `text-4xl` | 2.25rem (36px) | 2.5rem (40px) | H1 headings |
-| `text-5xl` | 3rem (48px) | 1 | Display headings |
-| `text-6xl` | 3.75rem (60px) | 1 | Hero headings |
+| Token       | Size            | Line Height    | Usage                       |
+| ----------- | --------------- | -------------- | --------------------------- |
+| `text-xs`   | 0.75rem (12px)  | 1rem (16px)    | Small labels, captions      |
+| `text-sm`   | 0.875rem (14px) | 1.25rem (20px) | Secondary text, form labels |
+| `text-base` | 1rem (16px)     | 1.5rem (24px)  | Body text, paragraphs       |
+| `text-lg`   | 1.125rem (18px) | 1.75rem (28px) | Large body text             |
+| `text-xl`   | 1.25rem (20px)  | 1.75rem (28px) | H4 headings                 |
+| `text-2xl`  | 1.5rem (24px)   | 2rem (32px)    | H3 headings                 |
+| `text-3xl`  | 1.875rem (30px) | 2.25rem (36px) | H2 headings                 |
+| `text-4xl`  | 2.25rem (36px)  | 2.5rem (40px)  | H1 headings                 |
+| `text-5xl`  | 3rem (48px)     | 1              | Display headings            |
+| `text-6xl`  | 3.75rem (60px)  | 1              | Hero headings               |
 
 ### 3.3 Font Weight Scale
 
-| Token | Weight | Usage |
-|-------|--------|-------|
-| `font-normal` | 400 | Body text, paragraphs |
-| `font-medium` | 500 | Labels, emphasized text |
-| `font-semibold` | 600 | Subheadings, buttons |
-| `font-bold` | 700 | Headings, strong emphasis |
+| Token           | Weight | Usage                     |
+| --------------- | ------ | ------------------------- |
+| `font-normal`   | 400    | Body text, paragraphs     |
+| `font-medium`   | 500    | Labels, emphasized text   |
+| `font-semibold` | 600    | Subheadings, buttons      |
+| `font-bold`     | 700    | Headings, strong emphasis |
 
 ### 3.4 Typography Usage Examples
 
@@ -408,22 +417,25 @@ graph LR
 ### 3.5 Typography Best Practices
 
 #### Line Length
+
 - Optimal: 50-75 characters per line
 - Maximum: 90 characters per line
 - Use `max-w-prose` (65ch) for long-form content
 
 ```tsx
-<article className="max-w-prose mx-auto">
+<article className="mx-auto max-w-prose">
   <p>Long-form content with optimal reading width...</p>
 </article>
 ```
 
 #### Hierarchy
+
 - Maintain clear visual hierarchy with size and weight
 - Use consistent heading levels (don't skip levels)
 - Limit to 2-3 font weights per page
 
 #### Accessibility
+
 - Minimum body text size: 16px (1rem)
 - Line height for body text: 1.5-1.75
 - Adequate contrast between text and background (see Section 6)
@@ -449,28 +461,28 @@ graph TD
 
 ### 4.2 Spacing Scale Reference
 
-| Token | Value | Pixels | Usage |
-|-------|-------|--------|-------|
-| `0` | 0 | 0px | Reset spacing |
-| `px` | 1px | 1px | Hairline borders |
-| `0.5` | 0.125rem | 2px | Tight spacing |
-| `1` | 0.25rem | 4px | Minimal spacing |
-| `1.5` | 0.375rem | 6px | Compact spacing |
-| `2` | 0.5rem | 8px | Small spacing |
-| `2.5` | 0.625rem | 10px | - |
-| `3` | 0.75rem | 12px | Medium spacing |
-| `3.5` | 0.875rem | 14px | - |
-| `4` | 1rem | 16px | Default spacing |
-| `5` | 1.25rem | 20px | - |
-| `6` | 1.5rem | 24px | Large spacing |
-| `7` | 1.75rem | 28px | - |
-| `8` | 2rem | 32px | Section spacing |
-| `10` | 2.5rem | 40px | - |
-| `12` | 3rem | 48px | Large section spacing |
-| `16` | 4rem | 64px | Extra large spacing |
-| `20` | 5rem | 80px | - |
-| `24` | 6rem | 96px | Hero spacing |
-| `32` | 8rem | 128px | Maximum spacing |
+| Token | Value    | Pixels | Usage                 |
+| ----- | -------- | ------ | --------------------- |
+| `0`   | 0        | 0px    | Reset spacing         |
+| `px`  | 1px      | 1px    | Hairline borders      |
+| `0.5` | 0.125rem | 2px    | Tight spacing         |
+| `1`   | 0.25rem  | 4px    | Minimal spacing       |
+| `1.5` | 0.375rem | 6px    | Compact spacing       |
+| `2`   | 0.5rem   | 8px    | Small spacing         |
+| `2.5` | 0.625rem | 10px   | -                     |
+| `3`   | 0.75rem  | 12px   | Medium spacing        |
+| `3.5` | 0.875rem | 14px   | -                     |
+| `4`   | 1rem     | 16px   | Default spacing       |
+| `5`   | 1.25rem  | 20px   | -                     |
+| `6`   | 1.5rem   | 24px   | Large spacing         |
+| `7`   | 1.75rem  | 28px   | -                     |
+| `8`   | 2rem     | 32px   | Section spacing       |
+| `10`  | 2.5rem   | 40px   | -                     |
+| `12`  | 3rem     | 48px   | Large section spacing |
+| `16`  | 4rem     | 64px   | Extra large spacing   |
+| `20`  | 5rem     | 80px   | -                     |
+| `24`  | 6rem     | 96px   | Hero spacing          |
+| `32`  | 8rem     | 128px  | Maximum spacing       |
 
 ### 4.3 Spacing Guidelines
 
@@ -515,16 +527,16 @@ graph TD
 
 #### Consistent Spacing Patterns
 
-| Context | Spacing | Usage |
-|---------|---------|-------|
-| Button padding | `px-4 py-2` | Standard buttons |
-| Card padding | `p-6` | Cards, panels |
-| Form fields | `space-y-2` | Label to input |
-| Form groups | `space-y-4` | Between form fields |
-| Section padding | `py-12` | Page sections |
-| Container padding | `px-4 md:px-6 lg:px-8` | Responsive containers |
-| Grid gaps | `gap-4` or `gap-6` | Grid layouts |
-| Stack spacing | `space-y-4` or `space-y-6` | Vertical stacks |
+| Context           | Spacing                    | Usage                 |
+| ----------------- | -------------------------- | --------------------- |
+| Button padding    | `px-4 py-2`                | Standard buttons      |
+| Card padding      | `p-6`                      | Cards, panels         |
+| Form fields       | `space-y-2`                | Label to input        |
+| Form groups       | `space-y-4`                | Between form fields   |
+| Section padding   | `py-12`                    | Page sections         |
+| Container padding | `px-4 md:px-6 lg:px-8`     | Responsive containers |
+| Grid gaps         | `gap-4` or `gap-6`         | Grid layouts          |
+| Stack spacing     | `space-y-4` or `space-y-6` | Vertical stacks       |
 
 ### 4.4 Responsive Spacing
 
@@ -575,6 +587,7 @@ import { Button } from "@/components/ui/button"
 ```
 
 **Button Variants**:
+
 - `default` - Primary actions (bg-primary)
 - `secondary` - Secondary actions (bg-secondary)
 - `destructive` - Dangerous actions (bg-destructive)
@@ -583,6 +596,7 @@ import { Button } from "@/components/ui/button"
 - `link` - Link-styled buttons (no bg, underline on hover)
 
 **Button Sizes**:
+
 ```tsx
 <Button size="sm">Small</Button>       {/* py-1 px-3 text-sm */}
 <Button size="default">Default</Button> {/* py-2 px-4 */}
@@ -614,6 +628,7 @@ import Link from "next/link"
 ```
 
 **Decision Tree**:
+
 ```
 Does it navigate to a different page?
 ├─ Yes → Use <Link>
@@ -650,6 +665,7 @@ import { Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter }
 ```
 
 **Card Usage Guidelines**:
+
 - Use cards to group related content
 - Maintain consistent padding (default: `p-6`)
 - Use `CardHeader` for titles and descriptions
@@ -693,6 +709,7 @@ import { Button } from "@/components/ui/button"
 ```
 
 **Form Guidelines**:
+
 - Always use `<Label>` with `htmlFor` attribute
 - Group label + input in `space-y-2` container
 - Separate form fields with `space-y-4`
@@ -705,22 +722,23 @@ import { Button } from "@/components/ui/button"
 
 **Available Components** (commonly used):
 
-| Component | Usage | Import |
-|-----------|-------|--------|
-| `Button` | Actions, CTAs | `@/components/ui/button` |
-| `Card` | Content grouping | `@/components/ui/card` |
-| `Input` | Text input | `@/components/ui/input` |
-| `Label` | Form labels | `@/components/ui/label` |
-| `Select` | Dropdown selection | `@/components/ui/select` |
-| `Dialog` | Modal dialogs | `@/components/ui/dialog` |
-| `Popover` | Floating content | `@/components/ui/popover` |
-| `Sheet` | Side panels | `@/components/ui/sheet` |
-| `Tabs` | Tabbed content | `@/components/ui/tabs` |
-| `Table` | Data tables | `@/components/ui/table` |
-| `Badge` | Status indicators | `@/components/ui/badge` |
-| `Avatar` | User avatars | `@/components/ui/avatar` |
+| Component | Usage              | Import                    |
+| --------- | ------------------ | ------------------------- |
+| `Button`  | Actions, CTAs      | `@/components/ui/button`  |
+| `Card`    | Content grouping   | `@/components/ui/card`    |
+| `Input`   | Text input         | `@/components/ui/input`   |
+| `Label`   | Form labels        | `@/components/ui/label`   |
+| `Select`  | Dropdown selection | `@/components/ui/select`  |
+| `Dialog`  | Modal dialogs      | `@/components/ui/dialog`  |
+| `Popover` | Floating content   | `@/components/ui/popover` |
+| `Sheet`   | Side panels        | `@/components/ui/sheet`   |
+| `Tabs`    | Tabbed content     | `@/components/ui/tabs`    |
+| `Table`   | Data tables        | `@/components/ui/table`   |
+| `Badge`   | Status indicators  | `@/components/ui/badge`   |
+| `Avatar`  | User avatars       | `@/components/ui/avatar`  |
 
 **Component Installation**:
+
 ```bash
 # Add a new shadcn/ui component
 npx shadcn@latest add button
@@ -729,6 +747,7 @@ npx shadcn@latest add input
 ```
 
 **Customization**:
+
 - All shadcn/ui components use design tokens automatically
 - Override styles using Tailwind classes
 - Extend variants in component files when needed
@@ -741,23 +760,25 @@ npx shadcn@latest add input
 ### 6.1 Color Contrast Requirements (WCAG 2.1)
 
 #### AA Standards (Minimum)
+
 - **Normal text** (< 18px or < 14px bold): 4.5:1 contrast ratio
 - **Large text** (≥ 18px or ≥ 14px bold): 3:1 contrast ratio
 - **UI components** (borders, icons): 3:1 contrast ratio
 
 #### AAA Standards (Enhanced)
+
 - **Normal text**: 7:1 contrast ratio
 - **Large text**: 4.5:1 contrast ratio
 
 #### Current Palette Compliance
 
-| Color Combination | Light Mode | Dark Mode | WCAG Level |
-|-------------------|------------|-----------|------------|
-| Primary/Primary-FG | 17.5:1 | 18.2:1 | AAA |
-| Secondary/Secondary-FG | 14.8:1 | 12.6:1 | AAA |
-| Destructive/Destructive-FG | 4.8:1 | 7.2:1 | AA/AAA |
-| Muted/Muted-FG | 6.2:1 | 5.8:1 | AA |
-| Foreground/Background | 18.5:1 | 19.1:1 | AAA |
+| Color Combination          | Light Mode | Dark Mode | WCAG Level |
+| -------------------------- | ---------- | --------- | ---------- |
+| Primary/Primary-FG         | 17.5:1     | 18.2:1    | AAA        |
+| Secondary/Secondary-FG     | 14.8:1     | 12.6:1    | AAA        |
+| Destructive/Destructive-FG | 4.8:1      | 7.2:1     | AA/AAA     |
+| Muted/Muted-FG             | 6.2:1      | 5.8:1     | AA         |
+| Foreground/Background      | 18.5:1     | 19.1:1    | AAA        |
 
 ### 6.2 Focus Indicators
 
@@ -776,6 +797,7 @@ All interactive elements must have visible focus indicators:
 ```
 
 **Focus Guidelines**:
+
 - Use `focus-visible:` instead of `focus:` (better keyboard UX)
 - Minimum focus ring width: 2px
 - Ensure focus ring contrasts with background (3:1 ratio)
@@ -784,6 +806,7 @@ All interactive elements must have visible focus indicators:
 ### 6.3 ARIA Guidelines
 
 #### Semantic HTML First
+
 ```tsx
 // Good: Semantic HTML
 <nav>
@@ -827,6 +850,7 @@ All interactive elements must have visible focus indicators:
 ```
 
 #### ARIA Best Practices
+
 - Use semantic HTML before ARIA
 - Provide text alternatives for images: `alt="descriptive text"`
 - Label form inputs: `<label htmlFor="id">` or `aria-label`
@@ -841,7 +865,7 @@ All interactive elements must be keyboard accessible:
 // Keyboard-accessible dropdown
 <Dialog>
   <DialogTrigger asChild>
-    <Button>Open Dialog</Button>  {/* Focusable via Tab */}
+    <Button>Open Dialog</Button> {/* Focusable via Tab */}
   </DialogTrigger>
   <DialogContent>
     <DialogTitle>Dialog Title</DialogTitle>
@@ -855,6 +879,7 @@ All interactive elements must be keyboard accessible:
 ```
 
 **Keyboard Patterns**:
+
 - `Tab` / `Shift+Tab` - Navigate between focusable elements
 - `Enter` / `Space` - Activate buttons and links
 - `Escape` - Close dialogs, menus, popovers
@@ -862,6 +887,7 @@ All interactive elements must be keyboard accessible:
 - `Home` / `End` - Jump to first/last item in lists
 
 **Tab Order**:
+
 - Follow logical reading order (left-to-right, top-to-bottom)
 - Avoid positive `tabindex` values
 - Use `tabindex="-1"` to programmatically focus elements
@@ -894,7 +920,7 @@ Tailwind CSS 4 introduces the `@theme` directive for defining design tokens dire
 
 ```css
 /* app/globals.css - Tailwind CSS 4 approach */
-@import "tailwindcss";
+@import 'tailwindcss';
 
 @theme {
   /* Color tokens */
@@ -978,7 +1004,7 @@ When migrating to Tailwind CSS 4:
 ```css
 /* Before (Tailwind CSS 3) - tailwind.config.ts */
 colors: {
-  primary: 'hsl(var(--primary))',
+  primary: 'hsl(var(--primary))';
 }
 
 /* After (Tailwind CSS 4) - globals.css */
@@ -1017,6 +1043,7 @@ graph LR
 **Plugin**: [Figma Tokens](https://www.figma.com/community/plugin/843461159747178978/Figma-Tokens)
 
 **Setup**:
+
 1. Install Figma Tokens plugin in Figma
 2. Create token sets matching our design system:
    - `colors/semantic` - Primary, secondary, destructive, etc.
@@ -1026,6 +1053,7 @@ graph LR
    - `radius` - Border radius values
 
 **Token Structure**:
+
 ```json
 {
   "colors": {
@@ -1074,11 +1102,13 @@ graph LR
 ### 8.3 Style Dictionary Setup
 
 **Installation**:
+
 ```bash
 pnpm add -D style-dictionary
 ```
 
 **Configuration** (`style-dictionary.config.json`):
+
 ```json
 {
   "source": ["tokens/**/*.json"],
@@ -1108,6 +1138,7 @@ pnpm add -D style-dictionary
 ```
 
 **Build Script** (`package.json`):
+
 ```json
 {
   "scripts": {
@@ -1120,12 +1151,14 @@ pnpm add -D style-dictionary
 ### 8.4 Workflow
 
 #### Designer Workflow
+
 1. Update design tokens in Figma using Figma Tokens plugin
 2. Export tokens to `tokens.json` (use GitHub sync or manual export)
 3. Commit `tokens.json` to repository
 4. Run `pnpm tokens:build` to regenerate CSS and Tailwind config
 
 #### Developer Workflow
+
 1. Pull latest `tokens.json` from repository
 2. Run `pnpm tokens:build` to update local tokens
 3. Verify changes in Storybook or local development
@@ -1135,16 +1168,17 @@ pnpm add -D style-dictionary
 
 **Figma** → **CSS Variable** → **Tailwind Class**
 
-| Figma Token | CSS Variable | Tailwind Class |
-|-------------|--------------|----------------|
-| `colors.semantic.primary` | `--color-primary` | `bg-primary` |
-| `spacing.4` | `--spacing-4` | `p-4`, `m-4`, `gap-4` |
-| `typography.size.lg` | `--font-size-lg` | `text-lg` |
-| `radius.md` | `--radius-md` | `rounded-md` |
+| Figma Token               | CSS Variable      | Tailwind Class        |
+| ------------------------- | ----------------- | --------------------- |
+| `colors.semantic.primary` | `--color-primary` | `bg-primary`          |
+| `spacing.4`               | `--spacing-4`     | `p-4`, `m-4`, `gap-4` |
+| `typography.size.lg`      | `--font-size-lg`  | `text-lg`             |
+| `radius.md`               | `--radius-md`     | `rounded-md`          |
 
 ### 8.6 Keeping Tokens in Sync
 
 **Automated Sync**:
+
 ```yaml
 # .github/workflows/sync-tokens.yml
 name: Sync Design Tokens
@@ -1168,6 +1202,7 @@ jobs:
 ```
 
 **Manual Validation**:
+
 - Review token changes in pull requests
 - Test dark mode compatibility
 - Verify WCAG contrast ratios
@@ -1193,9 +1228,9 @@ jobs:
 
 ### 9.2 Changelog
 
-| Version | Date | Changes |
-|---------|------|---------|
-| 1.0.0 | 2025-11-16 | Initial style guide creation |
+| Version | Date       | Changes                      |
+| ------- | ---------- | ---------------------------- |
+| 1.0.0   | 2025-11-16 | Initial style guide creation |
 
 ### 9.3 Contributors
 

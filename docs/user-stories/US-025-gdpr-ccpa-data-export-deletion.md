@@ -56,6 +56,7 @@ Privacy regulations (GDPR in EU, CCPA in California) require platforms to provid
 **Given** user wants their data
 **When** they request export
 **Then** system generates:
+
 - JSON file with all personal data
 - PDF summary for readability
 - All uploaded documents
@@ -64,6 +65,7 @@ Privacy regulations (GDPR in EU, CCPA in California) require platforms to provid
 **And** delivers within 30 days (GDPR requirement)
 
 **Verification**:
+
 - [ ] All data included
 - [ ] Machine-readable format (JSON)
 - [ ] Delivered within deadline
@@ -73,12 +75,14 @@ Privacy regulations (GDPR in EU, CCPA in California) require platforms to provid
 **Given** user wants to see what's stored
 **When** they view privacy settings
 **Then** they see:
+
 - Categories of data held
 - How long it's retained
 - Who it's shared with
 - Purpose of collection
 
 **Verification**:
+
 - [ ] Comprehensive inventory
 - [ ] Plain language explanations
 - [ ] Up-to-date
@@ -88,12 +92,14 @@ Privacy regulations (GDPR in EU, CCPA in California) require platforms to provid
 **Given** user wants data deleted
 **When** they submit request
 **Then** system:
+
 - Validates request
 - Deletes from all systems within 30 days
 - Confirms deletion via email
 - Retains only legally required records
 
 **Verification**:
+
 - [ ] Complete deletion executed
 - [ ] Backups purged
 - [ ] Confirmation sent
@@ -104,6 +110,7 @@ Privacy regulations (GDPR in EU, CCPA in California) require platforms to provid
 **Given** user wants specific data removed
 **When** they select items
 **Then** they can delete:
+
 - Individual documents
 - Profile sections
 - Application history (from specific listings)
@@ -111,6 +118,7 @@ Privacy regulations (GDPR in EU, CCPA in California) require platforms to provid
 **And** keep account active
 
 **Verification**:
+
 - [ ] Granular deletion works
 - [ ] Account remains functional
 - [ ] Changes logged
@@ -120,11 +128,13 @@ Privacy regulations (GDPR in EU, CCPA in California) require platforms to provid
 **Given** FCRA requires 3-year retention
 **When** user requests deletion
 **Then** system:
+
 - Anonymizes PII in audit logs
 - Retains anonymous compliance records
 - Explains exception to user
 
 **Verification**:
+
 - [ ] Audit logs anonymized, not deleted
 - [ ] Compliance maintained
 - [ ] User informed
@@ -134,11 +144,13 @@ Privacy regulations (GDPR in EU, CCPA in California) require platforms to provid
 **Given** data was shared with landlords
 **When** deletion requested
 **Then** system:
+
 - Notifies landlords to delete
 - Tracks compliance
 - Reports to user
 
 **Verification**:
+
 - [ ] Notifications sent
 - [ ] Compliance tracked
 - [ ] User informed of status
@@ -158,6 +170,7 @@ Privacy regulations (GDPR in EU, CCPA in California) require platforms to provid
 ### Frontend Specification
 
 **Components**:
+
 ```
 components/
   privacy/
@@ -168,20 +181,22 @@ components/
 ```
 
 **Routing**:
+
 - `/settings/privacy` - Privacy controls
 
 ---
 
 ## Analytics Tracking
 
-| Event Name | When Triggered | Properties |
-|------------|----------------|------------|
-| `export_requested` | User requests data | `{userId}` |
-| `export_delivered` | Export sent | `{userId, fileSize}` |
-| `deletion_requested` | User requests delete | `{userId, scope}` |
-| `deletion_completed` | Delete finished | `{userId, itemsDeleted}` |
+| Event Name           | When Triggered       | Properties               |
+| -------------------- | -------------------- | ------------------------ |
+| `export_requested`   | User requests data   | `{userId}`               |
+| `export_delivered`   | Export sent          | `{userId, fileSize}`     |
+| `deletion_requested` | User requests delete | `{userId, scope}`        |
+| `deletion_completed` | Delete finished      | `{userId, itemsDeleted}` |
 
 **Success Metrics**:
+
 - 100% of requests fulfilled within 30 days
 - <1% of users request full deletion
 - 0 compliance violations
@@ -191,6 +206,7 @@ components/
 ## Dependencies
 
 ### Related Stories
+
 - US-001: PII Anonymization
 - US-004: Audit Trail
 

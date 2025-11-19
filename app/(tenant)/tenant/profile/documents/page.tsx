@@ -13,17 +13,12 @@ import {
   Users,
   Trash2,
   Eye,
-  Download
+  Download,
 } from 'lucide-react'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
-import {
-  mockDocuments,
-  getDocumentStatusColor,
-  formatDate,
-  Document
-} from '@/lib/mock-data/tenant'
+import { mockDocuments, getDocumentStatusColor, formatDate, Document } from '@/lib/mock-data/tenant'
 
 interface DocumentCategory {
   id: Document['category']
@@ -37,52 +32,52 @@ const documentCategories: DocumentCategory[] = [
   {
     id: 'government_id',
     label: 'Government ID',
-    description: 'Passport, driver\'s license, or state ID',
+    description: "Passport, driver's license, or state ID",
     icon: CreditCard,
-    required: true
+    required: true,
   },
   {
     id: 'pay_stubs',
     label: 'Pay Stubs',
     description: 'Last 3 months of pay stubs',
     icon: FileText,
-    required: true
+    required: true,
   },
   {
     id: 'employment_letter',
     label: 'Employment Letter',
     description: 'Letter from employer verifying employment',
     icon: Briefcase,
-    required: true
+    required: true,
   },
   {
     id: 'tax_returns',
     label: 'Tax Returns',
     description: 'For self-employed applicants',
     icon: FileSpreadsheet,
-    required: false
+    required: false,
   },
   {
     id: 'bank_statements',
     label: 'Bank Statements',
     description: 'Recent bank account statements',
     icon: Building,
-    required: false
+    required: false,
   },
   {
     id: 'references',
     label: 'References',
     description: 'Previous landlord or personal references',
     icon: Users,
-    required: false
-  }
+    required: false,
+  },
 ]
 
 export default function DocumentsPage() {
   const [dragActive, setDragActive] = useState<string | null>(null)
 
   const getDocumentsByCategory = (category: Document['category']) => {
-    return mockDocuments.filter(doc => doc.category === category)
+    return mockDocuments.filter((doc) => doc.category === category)
   }
 
   const handleDrag = (e: React.DragEvent, category: string | null) => {
@@ -119,9 +114,7 @@ export default function DocumentsPage() {
         </Button>
         <div>
           <h1 className="text-3xl font-bold tracking-tight">Documents</h1>
-          <p className="text-muted-foreground">
-            Upload and manage your verification documents
-          </p>
+          <p className="text-muted-foreground">Upload and manage your verification documents</p>
         </div>
       </div>
 
@@ -140,11 +133,11 @@ export default function DocumentsPage() {
               <CardHeader>
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-3">
-                    <div className="p-2 bg-muted rounded-lg">
+                    <div className="bg-muted rounded-lg p-2">
                       <Icon className="h-5 w-5" />
                     </div>
                     <div>
-                      <CardTitle className="text-lg flex items-center gap-2">
+                      <CardTitle className="flex items-center gap-2 text-lg">
                         {category.label}
                         {category.required && (
                           <span className="text-xs text-red-500">*Required</span>
@@ -158,11 +151,7 @@ export default function DocumentsPage() {
               <CardContent className="space-y-4">
                 {/* Upload Dropzone */}
                 <div
-                  className={`
-                    border-2 border-dashed rounded-lg p-4 text-center cursor-pointer
-                    transition-colors hover:border-primary hover:bg-primary/5
-                    ${isActive ? 'border-primary bg-primary/5' : 'border-border'}
-                  `}
+                  className={`hover:border-primary hover:bg-primary/5 cursor-pointer rounded-lg border-2 border-dashed p-4 text-center transition-colors ${isActive ? 'border-primary bg-primary/5' : 'border-border'} `}
                   onDragEnter={(e) => handleDrag(e, category.id)}
                   onDragLeave={(e) => handleDrag(e, null)}
                   onDragOver={(e) => handleDrag(e, category.id)}
@@ -177,13 +166,9 @@ export default function DocumentsPage() {
                     onChange={(e) => handleFileInput(e, category.id)}
                     accept=".pdf,.jpg,.jpeg,.png"
                   />
-                  <Upload className="h-6 w-6 mx-auto text-muted-foreground mb-2" />
-                  <p className="text-sm text-muted-foreground">
-                    Drag & drop or click to upload
-                  </p>
-                  <p className="text-xs text-muted-foreground mt-1">
-                    PDF, JPG, or PNG up to 10MB
-                  </p>
+                  <Upload className="text-muted-foreground mx-auto mb-2 h-6 w-6" />
+                  <p className="text-muted-foreground text-sm">Drag & drop or click to upload</p>
+                  <p className="text-muted-foreground mt-1 text-xs">PDF, JPG, or PNG up to 10MB</p>
                 </div>
 
                 {/* Uploaded Documents */}
@@ -192,20 +177,24 @@ export default function DocumentsPage() {
                     {documents.map((doc) => (
                       <div
                         key={doc.id}
-                        className="flex items-center justify-between p-3 border border-border rounded-lg"
+                        className="border-border flex items-center justify-between rounded-lg border p-3"
                       >
-                        <div className="flex items-center gap-3 flex-1 min-w-0">
-                          <FileText className="h-4 w-4 text-muted-foreground flex-shrink-0" />
-                          <div className="flex-1 min-w-0">
-                            <p className="text-sm font-medium truncate">{doc.name}</p>
-                            <p className="text-xs text-muted-foreground">
+                        <div className="flex min-w-0 flex-1 items-center gap-3">
+                          <FileText className="text-muted-foreground h-4 w-4 flex-shrink-0" />
+                          <div className="min-w-0 flex-1">
+                            <p className="truncate text-sm font-medium">{doc.name}</p>
+                            <p className="text-muted-foreground text-xs">
                               {doc.fileSize} - {formatDate(doc.uploadedAt)}
                             </p>
                           </div>
                         </div>
-                        <div className="flex items-center gap-2 flex-shrink-0">
+                        <div className="flex flex-shrink-0 items-center gap-2">
                           <Badge className={`${getDocumentStatusColor(doc.status)} border text-xs`}>
-                            {doc.status === 'pending_review' ? 'Pending' : doc.status === 'verified' ? 'Verified' : 'Rejected'}
+                            {doc.status === 'pending_review'
+                              ? 'Pending'
+                              : doc.status === 'verified'
+                                ? 'Verified'
+                                : 'Rejected'}
                           </Badge>
                           <div className="flex gap-1">
                             <Button variant="ghost" size="icon" className="h-8 w-8">
@@ -214,7 +203,11 @@ export default function DocumentsPage() {
                             <Button variant="ghost" size="icon" className="h-8 w-8">
                               <Download className="h-3 w-3" />
                             </Button>
-                            <Button variant="ghost" size="icon" className="h-8 w-8 text-destructive hover:text-destructive">
+                            <Button
+                              variant="ghost"
+                              size="icon"
+                              className="text-destructive hover:text-destructive h-8 w-8"
+                            >
                               <Trash2 className="h-3 w-3" />
                             </Button>
                           </div>
@@ -225,7 +218,7 @@ export default function DocumentsPage() {
                 )}
 
                 {documents.length === 0 && (
-                  <p className="text-sm text-muted-foreground text-center py-2">
+                  <p className="text-muted-foreground py-2 text-center text-sm">
                     No documents uploaded yet
                   </p>
                 )}
@@ -236,26 +229,26 @@ export default function DocumentsPage() {
       </div>
 
       {/* Upload Guidelines */}
-      <Card className="border-2 border-border bg-muted/50">
+      <Card className="border-border bg-muted/50 border-2">
         <CardHeader>
           <CardTitle className="text-lg">Upload Guidelines</CardTitle>
         </CardHeader>
         <CardContent>
-          <ul className="space-y-2 text-sm text-muted-foreground">
+          <ul className="text-muted-foreground space-y-2 text-sm">
             <li className="flex items-start gap-2">
-              <span className="font-medium text-foreground">File formats:</span>
+              <span className="text-foreground font-medium">File formats:</span>
               PDF, JPG, or PNG
             </li>
             <li className="flex items-start gap-2">
-              <span className="font-medium text-foreground">Max file size:</span>
+              <span className="text-foreground font-medium">Max file size:</span>
               10MB per file
             </li>
             <li className="flex items-start gap-2">
-              <span className="font-medium text-foreground">Image quality:</span>
+              <span className="text-foreground font-medium">Image quality:</span>
               Ensure all text is readable and images are not blurry
             </li>
             <li className="flex items-start gap-2">
-              <span className="font-medium text-foreground">Privacy:</span>
+              <span className="text-foreground font-medium">Privacy:</span>
               Your documents are encrypted and stored securely
             </li>
           </ul>

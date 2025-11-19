@@ -58,12 +58,14 @@ Tenants need to pay for screening to verify their qualifications. The platform n
 **Given** a tenant needs a profile
 **When** they view pricing
 **Then** they see:
+
 - Tier comparison (Basic vs Premium vs Group)
 - Features included in each
 - Validity period
 - "Best Value" indicator
 
 **Verification**:
+
 - [ ] Clear comparison table
 - [ ] Benefits clearly stated
 - [ ] Money-back guarantee mentioned
@@ -73,11 +75,13 @@ Tenants need to pay for screening to verify their qualifications. The platform n
 **Given** tenant selects tier
 **When** they checkout via Stripe
 **Then**:
+
 - Payment processed
 - Profile tier assigned
 - Verification services triggered (credit, background)
 
 **Verification**:
+
 - [ ] Payment works
 - [ ] Tier activated immediately
 - [ ] Third-party services called
@@ -87,11 +91,13 @@ Tenants need to pay for screening to verify their qualifications. The platform n
 **Given** profile is purchased
 **When** validity approaches expiration
 **Then** tenant receives:
+
 - 14-day warning
 - 3-day warning
 - Option to renew at discount
 
 **Verification**:
+
 - [ ] Expiration tracked correctly
 - [ ] Warnings sent
 - [ ] Renewal discount applied
@@ -101,11 +107,13 @@ Tenants need to pay for screening to verify their qualifications. The platform n
 **Given** guarantee terms (denied by all landlords in 30 days)
 **When** tenant requests refund
 **Then**:
+
 - Eligibility verified
 - Refund processed via Stripe
 - Profile remains valid
 
 **Verification**:
+
 - [ ] Eligibility logic correct
 - [ ] Refund processed
 - [ ] Not abused (limit 1 per user)
@@ -115,11 +123,13 @@ Tenants need to pay for screening to verify their qualifications. The platform n
 **Given** tenant considers purchase
 **When** viewing pricing
 **Then** they see:
+
 - Traditional cost: "$50/app x 5 = $250"
 - ApartmentDibs: "$54.99 unlimited"
 - "Save $195+"
 
 **Verification**:
+
 - [ ] Comparison clearly shown
 - [ ] Savings emphasized
 - [ ] Builds confidence
@@ -137,6 +147,7 @@ Tenants need to pay for screening to verify their qualifications. The platform n
 ### Frontend Specification
 
 **Components**:
+
 ```
 components/
   tenant/
@@ -149,13 +160,14 @@ components/
 
 ## Analytics Tracking
 
-| Event Name | When Triggered | Properties |
-|------------|----------------|------------|
-| `profile_purchased` | Payment complete | `{tenantId, tier, price}` |
-| `profile_renewed` | Renewal purchased | `{tenantId, tier}` |
-| `refund_requested` | Guarantee claim | `{tenantId, eligible}` |
+| Event Name          | When Triggered    | Properties                |
+| ------------------- | ----------------- | ------------------------- |
+| `profile_purchased` | Payment complete  | `{tenantId, tier, price}` |
+| `profile_renewed`   | Renewal purchased | `{tenantId, tier}`        |
+| `refund_requested`  | Guarantee claim   | `{tenantId, eligible}`    |
 
 **Success Metrics**:
+
 - 60% Premium tier selection
 - 2%> refund rate
 - $10,000 revenue/month by Month 3
@@ -165,11 +177,13 @@ components/
 ## Dependencies
 
 ### External Dependencies
+
 - Stripe API
 - TransUnion API
 - Checkr API
 
 ### Related Stories
+
 - US-010: Reusable Profile
 - US-012: Adaptive Onboarding
 

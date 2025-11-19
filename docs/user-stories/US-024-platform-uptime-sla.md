@@ -58,11 +58,13 @@ Enterprise customers require reliability guarantees. Platform downtime during bu
 **Given** platform is running
 **When** issues occur
 **Then** system:
+
 - Monitors all endpoints (health checks)
 - Alerts on-call team within 1 minute
 - Logs all incidents
 
 **Verification**:
+
 - [ ] Uptime monitoring active (Datadog, etc.)
 - [ ] PagerDuty integration
 - [ ] Alerts reach on-call
@@ -72,11 +74,13 @@ Enterprise customers require reliability guarantees. Platform downtime during bu
 **Given** infrastructure failure
 **When** primary goes down
 **Then** system:
+
 - Fails over to secondary
 - Maintains data consistency
 - Recovers within RTO (15 minutes)
 
 **Verification**:
+
 - [ ] Multi-region deployment
 - [ ] Automatic failover works
 - [ ] Data not lost
@@ -86,6 +90,7 @@ Enterprise customers require reliability guarantees. Platform downtime during bu
 **Given** users need visibility
 **When** they check status
 **Then** they see:
+
 - Current status (operational, degraded, down)
 - Historical uptime (90-day chart)
 - Incident history
@@ -94,6 +99,7 @@ Enterprise customers require reliability guarantees. Platform downtime during bu
 **URL**: status.apartmentdibs.com
 
 **Verification**:
+
 - [ ] Status page live
 - [ ] Auto-updates on incidents
 - [ ] Historical data accurate
@@ -103,12 +109,14 @@ Enterprise customers require reliability guarantees. Platform downtime during bu
 **Given** outage occurs
 **When** detected
 **Then** platform:
+
 - Updates status page immediately
 - Notifies affected customers via email
 - Provides ETA for resolution
 - Sends resolution notice
 
 **Verification**:
+
 - [ ] Communication within 5 minutes
 - [ ] Updates every 30 minutes
 - [ ] Post-mortem within 48 hours
@@ -118,11 +126,13 @@ Enterprise customers require reliability guarantees. Platform downtime during bu
 **Given** SLA is breached
 **When** uptime <99.9%
 **Then** affected customers receive:
+
 - 10% credit for <99.9%
 - 25% credit for <99.0%
 - 50% credit for <95.0%
 
 **Verification**:
+
 - [ ] Automatic tracking
 - [ ] Credits calculated correctly
 - [ ] Applied to next invoice
@@ -146,6 +156,7 @@ Enterprise customers require reliability guarantees. Platform downtime during bu
 **Service**: Better Stack or custom implementation
 
 **Components**:
+
 ```
 components/
   status/
@@ -157,13 +168,14 @@ components/
 
 ## Analytics Tracking
 
-| Event Name | When Triggered | Properties |
-|------------|----------------|------------|
-| `incident_detected` | Monitoring alert | `{severity, component}` |
+| Event Name          | When Triggered     | Properties               |
+| ------------------- | ------------------ | ------------------------ |
+| `incident_detected` | Monitoring alert   | `{severity, component}`  |
 | `incident_resolved` | Recovery confirmed | `{incidentId, duration}` |
-| `sla_credit_issued` | Credit applied | `{customerId, amount}` |
+| `sla_credit_issued` | Credit applied     | `{customerId, amount}`   |
 
 **Success Metrics**:
+
 - 99.9%+ monthly uptime
 - <5 minute mean time to detect
 - <15 minute mean time to recovery
@@ -173,6 +185,7 @@ components/
 ## Dependencies
 
 ### External Dependencies
+
 - Monitoring service
 - Status page provider
 - PagerDuty

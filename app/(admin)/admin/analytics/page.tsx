@@ -36,23 +36,25 @@ function MetricCard({
   const change = getPercentageChange(value, previousValue)
 
   return (
-    <Card className="border-2 border-foreground">
+    <Card className="border-foreground border-2">
       <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
         <CardTitle className="text-sm font-medium">{name}</CardTitle>
-        {Icon && <Icon className="h-5 w-5 text-muted-foreground" />}
+        {Icon && <Icon className="text-muted-foreground h-5 w-5" />}
       </CardHeader>
       <CardContent>
         <div className="text-3xl font-bold">
-          {formatNumber(value)}{unit}
+          {formatNumber(value)}
+          {unit}
         </div>
-        <div className="flex items-center gap-1 text-sm text-muted-foreground mt-1">
+        <div className="text-muted-foreground mt-1 flex items-center gap-1 text-sm">
           {change.isPositive ? (
             <TrendingUp className="h-4 w-4 text-green-600" />
           ) : (
             <TrendingDown className="h-4 w-4 text-red-600" />
           )}
           <span className={change.isPositive ? 'text-green-600' : 'text-red-600'}>
-            {change.isPositive ? '+' : '-'}{change.value.toFixed(1)}%
+            {change.isPositive ? '+' : '-'}
+            {change.value.toFixed(1)}%
           </span>
           <span>vs last month</span>
         </div>
@@ -67,9 +69,7 @@ export default function AnalyticsPage() {
       {/* Page Header */}
       <div>
         <h1 className="text-3xl font-bold tracking-tight">Platform Analytics</h1>
-        <p className="text-muted-foreground">
-          Track key metrics and platform performance
-        </p>
+        <p className="text-muted-foreground">Track key metrics and platform performance</p>
       </div>
 
       {/* Key Metrics */}
@@ -119,7 +119,7 @@ export default function AnalyticsPage() {
       {/* Charts Row */}
       <div className="grid gap-6 lg:grid-cols-2">
         {/* User Acquisition Sources */}
-        <Card className="border-2 border-foreground">
+        <Card className="border-foreground border-2">
           <CardHeader>
             <CardTitle>User Acquisition Sources</CardTitle>
             <CardDescription>Where users are coming from</CardDescription>
@@ -146,7 +146,7 @@ export default function AnalyticsPage() {
         </Card>
 
         {/* Geographic Distribution */}
-        <Card className="border-2 border-foreground">
+        <Card className="border-foreground border-2">
           <CardHeader>
             <CardTitle>Geographic Distribution</CardTitle>
             <CardDescription>User distribution by region</CardDescription>
@@ -174,7 +174,7 @@ export default function AnalyticsPage() {
       </div>
 
       {/* Revenue Breakdown */}
-      <Card className="border-2 border-foreground">
+      <Card className="border-foreground border-2">
         <CardHeader>
           <CardTitle>Revenue Breakdown</CardTitle>
           <CardDescription>Revenue by source this month</CardDescription>
@@ -182,10 +182,10 @@ export default function AnalyticsPage() {
         <CardContent>
           <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
             {mockRevenueBreakdown.map((item) => (
-              <div key={item.source} className="text-center p-4 border-2 border-border">
+              <div key={item.source} className="border-border border-2 p-4 text-center">
                 <div className="text-2xl font-bold">{formatCurrency(item.amount)}</div>
-                <div className="text-sm font-medium mt-1">{item.source}</div>
-                <div className="text-xs text-muted-foreground mt-1">
+                <div className="mt-1 text-sm font-medium">{item.source}</div>
+                <div className="text-muted-foreground mt-1 text-xs">
                   {item.percentage}% of total
                 </div>
               </div>
@@ -197,7 +197,7 @@ export default function AnalyticsPage() {
       {/* Funnel and Churn */}
       <div className="grid gap-6 lg:grid-cols-2">
         {/* Conversion Funnel */}
-        <Card className="border-2 border-foreground">
+        <Card className="border-foreground border-2">
           <CardHeader>
             <CardTitle>Conversion Funnel</CardTitle>
             <CardDescription>User journey through the platform</CardDescription>
@@ -211,9 +211,9 @@ export default function AnalyticsPage() {
                 { label: 'Apply', count: 4688, percentage: 50 },
                 { label: 'Leased', count: 1172, percentage: 25 },
               ].map((stage, index) => (
-                <div key={stage.label} className="flex flex-col items-center gap-2 flex-1">
+                <div key={stage.label} className="flex flex-1 flex-col items-center gap-2">
                   <div
-                    className="w-full h-16 bg-primary/20 border-2 border-foreground flex items-center justify-center font-bold"
+                    className="bg-primary/20 border-foreground flex h-16 w-full items-center justify-center border-2 font-bold"
                     style={{
                       opacity: 1 - index * 0.15,
                       transform: `scale(${1 - index * 0.05})`,
@@ -221,9 +221,9 @@ export default function AnalyticsPage() {
                   >
                     {formatNumber(stage.count)}
                   </div>
-                  <span className="text-xs font-medium text-muted-foreground">{stage.label}</span>
+                  <span className="text-muted-foreground text-xs font-medium">{stage.label}</span>
                   {index > 0 && (
-                    <span className="text-xs text-muted-foreground">{stage.percentage}%</span>
+                    <span className="text-muted-foreground text-xs">{stage.percentage}%</span>
                   )}
                 </div>
               ))}
@@ -232,7 +232,7 @@ export default function AnalyticsPage() {
         </Card>
 
         {/* Churn Rate */}
-        <Card className="border-2 border-foreground">
+        <Card className="border-foreground border-2">
           <CardHeader>
             <CardTitle>Churn Rate</CardTitle>
             <CardDescription>Monthly user churn by persona</CardDescription>
@@ -244,12 +244,18 @@ export default function AnalyticsPage() {
                 { persona: 'Agents', rate: 3.1, change: -0.3 },
                 { persona: 'Landlords', rate: 2.8, change: +0.2 },
               ].map((item) => (
-                <div key={item.persona} className="flex items-center justify-between p-3 border-2 border-border">
+                <div
+                  key={item.persona}
+                  className="border-border flex items-center justify-between border-2 p-3"
+                >
                   <span className="font-medium">{item.persona}</span>
                   <div className="flex items-center gap-2">
                     <span className="text-lg font-bold">{item.rate}%</span>
-                    <span className={`text-sm ${item.change < 0 ? 'text-green-600' : 'text-red-600'}`}>
-                      {item.change > 0 ? '+' : ''}{item.change}%
+                    <span
+                      className={`text-sm ${item.change < 0 ? 'text-green-600' : 'text-red-600'}`}
+                    >
+                      {item.change > 0 ? '+' : ''}
+                      {item.change}%
                     </span>
                   </div>
                 </div>
@@ -260,7 +266,7 @@ export default function AnalyticsPage() {
       </div>
 
       {/* Feature Usage */}
-      <Card className="border-2 border-foreground">
+      <Card className="border-foreground border-2">
         <CardHeader>
           <CardTitle>Feature Usage</CardTitle>
           <CardDescription>Engagement with platform features</CardDescription>
@@ -276,7 +282,7 @@ export default function AnalyticsPage() {
               <div key={item.feature} className="space-y-2">
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-2">
-                    <item.icon className="h-4 w-4 text-muted-foreground" />
+                    <item.icon className="text-muted-foreground h-4 w-4" />
                     <span className="font-medium">{item.feature}</span>
                   </div>
                   <span className="text-sm font-bold">{item.usage}%</span>
@@ -290,28 +296,28 @@ export default function AnalyticsPage() {
 
       {/* Chart Placeholders */}
       <div className="grid gap-6 lg:grid-cols-2">
-        <Card className="border-2 border-foreground">
+        <Card className="border-foreground border-2">
           <CardHeader>
             <CardTitle>DAU/MAU Trend</CardTitle>
             <CardDescription>Daily vs Monthly active users over time</CardDescription>
           </CardHeader>
           <CardContent>
-            <div className="h-48 flex items-center justify-center border-2 border-dashed border-border bg-muted/20">
-              <p className="text-sm text-muted-foreground">
+            <div className="border-border bg-muted/20 flex h-48 items-center justify-center border-2 border-dashed">
+              <p className="text-muted-foreground text-sm">
                 Chart placeholder - integrate with charting library
               </p>
             </div>
           </CardContent>
         </Card>
 
-        <Card className="border-2 border-foreground">
+        <Card className="border-foreground border-2">
           <CardHeader>
             <CardTitle>Revenue Over Time</CardTitle>
             <CardDescription>Monthly recurring revenue trend</CardDescription>
           </CardHeader>
           <CardContent>
-            <div className="h-48 flex items-center justify-center border-2 border-dashed border-border bg-muted/20">
-              <p className="text-sm text-muted-foreground">
+            <div className="border-border bg-muted/20 flex h-48 items-center justify-center border-2 border-dashed">
+              <p className="text-muted-foreground text-sm">
                 Chart placeholder - integrate with charting library
               </p>
             </div>

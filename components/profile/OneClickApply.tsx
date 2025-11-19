@@ -82,24 +82,16 @@ export function OneClickApply({
   if (!canApply) {
     return (
       <div className={className}>
-        <Button
-          disabled
-          className="w-full border-2 border-foreground opacity-50"
-          size="lg"
-        >
-          <AlertCircle className="h-4 w-4 mr-2" />
+        <Button disabled className="border-foreground w-full border-2 opacity-50" size="lg">
+          <AlertCircle className="mr-2 h-4 w-4" />
           {profile.isExpired
             ? 'Profile Expired'
             : !profile.isVerified
-            ? 'Profile Not Verified'
-            : 'Complete Your Profile'}
+              ? 'Profile Not Verified'
+              : 'Complete Your Profile'}
         </Button>
         {onUpdateProfile && (
-          <Button
-            variant="link"
-            className="w-full mt-2 text-sm"
-            onClick={onUpdateProfile}
-          >
+          <Button variant="link" className="mt-2 w-full text-sm" onClick={onUpdateProfile}>
             Update your profile to apply
           </Button>
         )}
@@ -111,21 +103,21 @@ export function OneClickApply({
     <>
       <div className={className}>
         <Button
-          className="w-full border-2 border-foreground bg-primary hover:bg-primary/90"
+          className="border-foreground bg-primary hover:bg-primary/90 w-full border-2"
           size="lg"
           onClick={() => setShowConfirmDialog(true)}
         >
-          <Zap className="h-4 w-4 mr-2" />
+          <Zap className="mr-2 h-4 w-4" />
           One-Tap Apply
         </Button>
-        <p className="text-xs text-center text-muted-foreground mt-2">
+        <p className="text-muted-foreground mt-2 text-center text-xs">
           Your verified profile will be sent automatically
         </p>
       </div>
 
       {/* Confirmation Dialog */}
       <Dialog open={showConfirmDialog} onOpenChange={setShowConfirmDialog}>
-        <DialogContent className="border-2 border-foreground">
+        <DialogContent className="border-foreground border-2">
           <DialogHeader>
             <DialogTitle>Apply to {listing.address}</DialogTitle>
             <DialogDescription>
@@ -135,50 +127,68 @@ export function OneClickApply({
 
           {applicationComplete ? (
             <div className="py-8 text-center">
-              <CheckCircle className="h-12 w-12 text-green-600 mx-auto mb-4" />
+              <CheckCircle className="mx-auto mb-4 h-12 w-12 text-green-600" />
               <p className="text-lg font-medium">Application Submitted!</p>
-              <p className="text-sm text-muted-foreground mt-2">
+              <p className="text-muted-foreground mt-2 text-sm">
                 The landlord will receive your verified profile
               </p>
             </div>
           ) : (
             <>
-              <div className="py-4 space-y-4">
-                <p className="text-sm text-muted-foreground">
-                  Your application will include:
-                </p>
+              <div className="space-y-4 py-4">
+                <p className="text-muted-foreground text-sm">Your application will include:</p>
 
                 <div className="space-y-2">
                   <div className="flex items-center gap-2">
-                    <Badge variant={profile.creditScore ? 'default' : 'outline'} className="text-xs">
-                      {profile.creditScore ? <CheckCircle className="h-3 w-3 mr-1" /> : null}
+                    <Badge
+                      variant={profile.creditScore ? 'default' : 'outline'}
+                      className="text-xs"
+                    >
+                      {profile.creditScore ? <CheckCircle className="mr-1 h-3 w-3" /> : null}
                       Credit Report
                     </Badge>
-                    <Badge variant={profile.backgroundCheckComplete ? 'default' : 'outline'} className="text-xs">
-                      {profile.backgroundCheckComplete ? <CheckCircle className="h-3 w-3 mr-1" /> : null}
+                    <Badge
+                      variant={profile.backgroundCheckComplete ? 'default' : 'outline'}
+                      className="text-xs"
+                    >
+                      {profile.backgroundCheckComplete ? (
+                        <CheckCircle className="mr-1 h-3 w-3" />
+                      ) : null}
                       Background Check
                     </Badge>
                   </div>
                   <div className="flex items-center gap-2">
-                    <Badge variant={profile.incomeVerified ? 'default' : 'outline'} className="text-xs">
-                      {profile.incomeVerified ? <CheckCircle className="h-3 w-3 mr-1" /> : null}
+                    <Badge
+                      variant={profile.incomeVerified ? 'default' : 'outline'}
+                      className="text-xs"
+                    >
+                      {profile.incomeVerified ? <CheckCircle className="mr-1 h-3 w-3" /> : null}
                       Income Verification
                     </Badge>
-                    <Badge variant={profile.referencesComplete ? 'default' : 'outline'} className="text-xs">
-                      {profile.referencesComplete ? <CheckCircle className="h-3 w-3 mr-1" /> : null}
+                    <Badge
+                      variant={profile.referencesComplete ? 'default' : 'outline'}
+                      className="text-xs"
+                    >
+                      {profile.referencesComplete ? <CheckCircle className="mr-1 h-3 w-3" /> : null}
                       References
                     </Badge>
                   </div>
                   <div className="flex items-center gap-2">
-                    <Badge variant={profile.rentalHistoryComplete ? 'default' : 'outline'} className="text-xs">
-                      {profile.rentalHistoryComplete ? <CheckCircle className="h-3 w-3 mr-1" /> : null}
+                    <Badge
+                      variant={profile.rentalHistoryComplete ? 'default' : 'outline'}
+                      className="text-xs"
+                    >
+                      {profile.rentalHistoryComplete ? (
+                        <CheckCircle className="mr-1 h-3 w-3" />
+                      ) : null}
                       Rental History
                     </Badge>
                   </div>
                 </div>
 
-                <p className="text-xs text-muted-foreground">
-                  No additional uploads or authorizations required. Your application will be submitted in under 10 seconds.
+                <p className="text-muted-foreground text-xs">
+                  No additional uploads or authorizations required. Your application will be
+                  submitted in under 10 seconds.
                 </p>
               </div>
 
@@ -186,24 +196,24 @@ export function OneClickApply({
                 <Button
                   variant="outline"
                   onClick={() => setShowConfirmDialog(false)}
-                  className="border-2 border-foreground"
+                  className="border-foreground border-2"
                   disabled={isLoading}
                 >
                   Cancel
                 </Button>
                 <Button
                   onClick={handleApply}
-                  className="border-2 border-foreground"
+                  className="border-foreground border-2"
                   disabled={isLoading}
                 >
                   {isLoading ? (
                     <>
-                      <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                      <Loader2 className="mr-2 h-4 w-4 animate-spin" />
                       Applying...
                     </>
                   ) : (
                     <>
-                      <Zap className="h-4 w-4 mr-2" />
+                      <Zap className="mr-2 h-4 w-4" />
                       Confirm Application
                     </>
                   )}

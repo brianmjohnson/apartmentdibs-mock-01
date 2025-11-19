@@ -27,7 +27,7 @@ import {
   mockProperties,
   formatCurrency,
   formatDate,
-  getRentPaymentStatusColor
+  getRentPaymentStatusColor,
 } from '@/lib/mock-data/landlord'
 
 type PaymentStatus = 'all' | 'paid' | 'pending' | 'late' | 'failed'
@@ -36,7 +36,7 @@ function KPICard({
   title,
   value,
   subtext,
-  icon: Icon
+  icon: Icon,
 }: {
   title: string
   value: string | number
@@ -44,16 +44,14 @@ function KPICard({
   icon: React.ElementType
 }) {
   return (
-    <Card className="border-2 border-foreground">
+    <Card className="border-foreground border-2">
       <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
         <CardTitle className="text-sm font-medium">{title}</CardTitle>
-        <Icon className="h-5 w-5 text-muted-foreground" />
+        <Icon className="text-muted-foreground h-5 w-5" />
       </CardHeader>
       <CardContent>
         <div className="text-3xl font-bold">{value}</div>
-        {subtext && (
-          <p className="text-sm text-muted-foreground mt-1">{subtext}</p>
-        )}
+        {subtext && <p className="text-muted-foreground mt-1 text-sm">{subtext}</p>}
       </CardContent>
     </Card>
   )
@@ -66,7 +64,7 @@ export default function PaymentsPage() {
   const [dateTo, setDateTo] = useState('')
 
   // Filter payments
-  const filteredPayments = mockRentPayments.filter(payment => {
+  const filteredPayments = mockRentPayments.filter((payment) => {
     if (statusFilter !== 'all' && payment.status !== statusFilter) return false
     if (propertyFilter !== 'all' && payment.propertyId !== propertyFilter) return false
     if (dateFrom && payment.dueDate < dateFrom) return false
@@ -75,19 +73,21 @@ export default function PaymentsPage() {
   })
 
   // Calculate summary stats
-  const paidPayments = mockRentPayments.filter(p => p.status === 'paid')
+  const paidPayments = mockRentPayments.filter((p) => p.status === 'paid')
   const totalRevenue = paidPayments.reduce((sum, p) => sum + p.amount, 0)
 
   // This month's revenue (November 2025)
-  const thisMonthPayments = paidPayments.filter(p => p.dueDate.startsWith('2025-11'))
+  const thisMonthPayments = paidPayments.filter((p) => p.dueDate.startsWith('2025-11'))
   const thisMonthRevenue = thisMonthPayments.reduce((sum, p) => sum + p.amount, 0)
 
   // Outstanding balance
-  const outstandingPayments = mockRentPayments.filter(p => p.status === 'pending' || p.status === 'late' || p.status === 'failed')
+  const outstandingPayments = mockRentPayments.filter(
+    (p) => p.status === 'pending' || p.status === 'late' || p.status === 'failed'
+  )
   const outstandingBalance = outstandingPayments.reduce((sum, p) => sum + p.amount, 0)
 
   // Next expected (December payments)
-  const pendingPayments = mockRentPayments.filter(p => p.status === 'pending')
+  const pendingPayments = mockRentPayments.filter((p) => p.status === 'pending')
   const nextExpected = pendingPayments.reduce((sum, p) => sum + p.amount, 0)
 
   return (
@@ -129,7 +129,7 @@ export default function PaymentsPage() {
       </div>
 
       {/* Filters */}
-      <Card className="border-2 border-foreground">
+      <Card className="border-foreground border-2">
         <CardHeader>
           <CardTitle>Filters</CardTitle>
         </CardHeader>
@@ -137,7 +137,10 @@ export default function PaymentsPage() {
           <div className="grid gap-4 md:grid-cols-4">
             <div className="space-y-2">
               <Label>Status</Label>
-              <Select value={statusFilter} onValueChange={(v) => setStatusFilter(v as PaymentStatus)}>
+              <Select
+                value={statusFilter}
+                onValueChange={(v) => setStatusFilter(v as PaymentStatus)}
+              >
                 <SelectTrigger className="border-2">
                   <SelectValue />
                 </SelectTrigger>
@@ -158,7 +161,7 @@ export default function PaymentsPage() {
                 </SelectTrigger>
                 <SelectContent>
                   <SelectItem value="all">All Properties</SelectItem>
-                  {mockProperties.map(property => (
+                  {mockProperties.map((property) => (
                     <SelectItem key={property.id} value={property.id}>
                       {property.address.split(',')[0]}
                     </SelectItem>
@@ -189,7 +192,7 @@ export default function PaymentsPage() {
       </Card>
 
       {/* Payment History Table */}
-      <Card className="border-2 border-foreground">
+      <Card className="border-foreground border-2">
         <CardHeader>
           <div className="flex items-center justify-between">
             <div>
@@ -199,15 +202,15 @@ export default function PaymentsPage() {
               </CardDescription>
             </div>
             <Button variant="outline" className="border-2">
-              <Download className="h-4 w-4 mr-2" />
+              <Download className="mr-2 h-4 w-4" />
               Export
             </Button>
           </div>
         </CardHeader>
         <CardContent>
           {filteredPayments.length === 0 ? (
-            <div className="text-center py-8">
-              <DollarSign className="h-12 w-12 mx-auto text-muted-foreground mb-4" />
+            <div className="py-8 text-center">
+              <DollarSign className="text-muted-foreground mx-auto mb-4 h-12 w-12" />
               <p className="text-muted-foreground">No payments found</p>
             </div>
           ) : (
@@ -229,7 +232,7 @@ export default function PaymentsPage() {
                       <div>
                         <p className="font-medium">{formatDate(payment.dueDate)}</p>
                         {payment.date && payment.date !== payment.dueDate && (
-                          <p className="text-xs text-muted-foreground">
+                          <p className="text-muted-foreground text-xs">
                             Paid: {formatDate(payment.date)}
                           </p>
                         )}
@@ -239,9 +242,7 @@ export default function PaymentsPage() {
                       {payment.propertyAddress}, {payment.unitNumber}
                     </TableCell>
                     <TableCell>{payment.tenantName}</TableCell>
-                    <TableCell className="font-medium">
-                      {formatCurrency(payment.amount)}
-                    </TableCell>
+                    <TableCell className="font-medium">{formatCurrency(payment.amount)}</TableCell>
                     <TableCell>
                       <Badge
                         variant="outline"

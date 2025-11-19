@@ -2,14 +2,7 @@
 
 import { useState } from 'react'
 import Link from 'next/link'
-import {
-  ArrowLeft,
-  UserPlus,
-  Mail,
-  Shield,
-  Trash2,
-  MoreHorizontal,
-} from 'lucide-react'
+import { ArrowLeft, UserPlus, Mail, Shield, Trash2, MoreHorizontal } from 'lucide-react'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
@@ -46,10 +39,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
-import {
-  mockAdminTeam,
-  formatDate,
-} from '@/lib/mock-data/admin'
+import { mockAdminTeam, formatDate } from '@/lib/mock-data/admin'
 
 export default function TeamSettingsPage() {
   const [inviteDialogOpen, setInviteDialogOpen] = useState(false)
@@ -96,26 +86,22 @@ export default function TeamSettingsPage() {
       </Link>
 
       {/* Page Header */}
-      <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+      <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
         <div>
           <h1 className="text-3xl font-bold tracking-tight">Admin Team</h1>
-          <p className="text-muted-foreground">
-            Manage admin team members and roles
-          </p>
+          <p className="text-muted-foreground">Manage admin team members and roles</p>
         </div>
         <Dialog open={inviteDialogOpen} onOpenChange={setInviteDialogOpen}>
           <DialogTrigger asChild>
-            <Button className="border-2 border-foreground">
+            <Button className="border-foreground border-2">
               <UserPlus className="mr-2 h-4 w-4" />
               Invite Admin
             </Button>
           </DialogTrigger>
-          <DialogContent className="border-2 border-foreground">
+          <DialogContent className="border-foreground border-2">
             <DialogHeader>
               <DialogTitle>Invite New Admin</DialogTitle>
-              <DialogDescription>
-                Send an invitation to a new team member
-              </DialogDescription>
+              <DialogDescription>Send an invitation to a new team member</DialogDescription>
             </DialogHeader>
             <div className="space-y-4 py-4">
               <div>
@@ -130,7 +116,7 @@ export default function TeamSettingsPage() {
               <div>
                 <Label htmlFor="role">Role</Label>
                 <Select>
-                  <SelectTrigger className="border-2 mt-1">
+                  <SelectTrigger className="mt-1 border-2">
                     <SelectValue placeholder="Select role" />
                   </SelectTrigger>
                   <SelectContent>
@@ -139,12 +125,18 @@ export default function TeamSettingsPage() {
                   </SelectContent>
                 </Select>
               </div>
-              <div className="text-sm text-muted-foreground">
-                <p className="font-medium mb-1">Role permissions:</p>
-                <ul className="list-disc list-inside space-y-1">
-                  <li><strong>Super Admin:</strong> Full access to all features</li>
-                  <li><strong>Admin:</strong> All features except team management</li>
-                  <li><strong>Support:</strong> Support tickets and user management only</li>
+              <div className="text-muted-foreground text-sm">
+                <p className="mb-1 font-medium">Role permissions:</p>
+                <ul className="list-inside list-disc space-y-1">
+                  <li>
+                    <strong>Super Admin:</strong> Full access to all features
+                  </li>
+                  <li>
+                    <strong>Admin:</strong> All features except team management
+                  </li>
+                  <li>
+                    <strong>Support:</strong> Support tickets and user management only
+                  </li>
                 </ul>
               </div>
             </div>
@@ -161,7 +153,7 @@ export default function TeamSettingsPage() {
                   // Handle invite
                   setInviteDialogOpen(false)
                 }}
-                className="border-2 border-foreground"
+                className="border-foreground border-2"
               >
                 <Mail className="mr-2 h-4 w-4" />
                 Send Invitation
@@ -172,15 +164,13 @@ export default function TeamSettingsPage() {
       </div>
 
       {/* Team Table */}
-      <Card className="border-2 border-foreground">
+      <Card className="border-foreground border-2">
         <CardHeader>
           <CardTitle>Team Members ({mockAdminTeam.length})</CardTitle>
-          <CardDescription>
-            All admin users with platform access
-          </CardDescription>
+          <CardDescription>All admin users with platform access</CardDescription>
         </CardHeader>
         <CardContent>
-          <div className="rounded-md border-2 border-border">
+          <div className="border-border rounded-md border-2">
             <Table>
               <TableHeader>
                 <TableRow>
@@ -199,10 +189,7 @@ export default function TeamSettingsPage() {
                     <TableCell className="font-medium">{member.name}</TableCell>
                     <TableCell>{member.email}</TableCell>
                     <TableCell>
-                      <Badge
-                        variant="outline"
-                        className={`border ${getRoleColor(member.role)}`}
-                      >
+                      <Badge variant="outline" className={`border ${getRoleColor(member.role)}`}>
                         {member.role.replace('_', ' ')}
                       </Badge>
                     </TableCell>
@@ -258,7 +245,7 @@ export default function TeamSettingsPage() {
 
       {/* Remove Dialog */}
       <Dialog open={removeDialogOpen} onOpenChange={setRemoveDialogOpen}>
-        <DialogContent className="border-2 border-foreground">
+        <DialogContent className="border-foreground border-2">
           <DialogHeader>
             <DialogTitle>Remove Team Member</DialogTitle>
             <DialogDescription>

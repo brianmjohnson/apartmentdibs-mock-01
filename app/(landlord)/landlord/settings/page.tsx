@@ -22,41 +22,37 @@ export default function SettingsPage() {
       {/* Page Header */}
       <div>
         <h1 className="text-3xl font-bold tracking-tight">Settings</h1>
-        <p className="text-muted-foreground">
-          Manage your account and preferences
-        </p>
+        <p className="text-muted-foreground">Manage your account and preferences</p>
       </div>
 
       {/* Settings Navigation */}
-      <div className="flex gap-2 flex-wrap">
-        <Button variant="default" className="border-2 border-foreground">
-          <User className="h-4 w-4 mr-2" />
+      <div className="flex flex-wrap gap-2">
+        <Button variant="default" className="border-foreground border-2">
+          <User className="mr-2 h-4 w-4" />
           Account
         </Button>
         <Link href="/landlord/settings/billing">
           <Button variant="outline" className="border-2">
-            <CreditCard className="h-4 w-4 mr-2" />
+            <CreditCard className="mr-2 h-4 w-4" />
             Billing
           </Button>
         </Link>
         <Link href="/landlord/settings/notifications">
           <Button variant="outline" className="border-2">
-            <Bell className="h-4 w-4 mr-2" />
+            <Bell className="mr-2 h-4 w-4" />
             Notifications
           </Button>
         </Link>
       </div>
 
       {/* Account Settings */}
-      <Card className="border-2 border-foreground">
+      <Card className="border-foreground border-2">
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
             <User className="h-5 w-5" />
             Account Information
           </CardTitle>
-          <CardDescription>
-            Update your personal account details
-          </CardDescription>
+          <CardDescription>Update your personal account details</CardDescription>
         </CardHeader>
         <CardContent className="space-y-4">
           <div className="grid gap-4 md:grid-cols-2">
@@ -126,15 +122,13 @@ export default function SettingsPage() {
       </Card>
 
       {/* Company Information */}
-      <Card className="border-2 border-foreground">
+      <Card className="border-foreground border-2">
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
             <Building className="h-5 w-5" />
             Company Information
           </CardTitle>
-          <CardDescription>
-            Business details for your property management
-          </CardDescription>
+          <CardDescription>Business details for your property management</CardDescription>
         </CardHeader>
         <CardContent className="space-y-4">
           <div className="grid gap-4 md:grid-cols-2">
@@ -160,19 +154,11 @@ export default function SettingsPage() {
           <div className="grid gap-4 md:grid-cols-2">
             <div className="space-y-2">
               <Label htmlFor="taxId">Tax ID / EIN</Label>
-              <Input
-                id="taxId"
-                placeholder="XX-XXXXXXX"
-                className="border-2"
-              />
+              <Input id="taxId" placeholder="XX-XXXXXXX" className="border-2" />
             </div>
             <div className="space-y-2">
               <Label htmlFor="businessLicense">Business License #</Label>
-              <Input
-                id="businessLicense"
-                placeholder="Enter license number"
-                className="border-2"
-              />
+              <Input id="businessLicense" placeholder="Enter license number" className="border-2" />
             </div>
           </div>
         </CardContent>
@@ -180,8 +166,8 @@ export default function SettingsPage() {
 
       {/* Save Button */}
       <div className="flex justify-end">
-        <Button className="border-2 border-foreground">
-          <Save className="h-4 w-4 mr-2" />
+        <Button className="border-foreground border-2">
+          <Save className="mr-2 h-4 w-4" />
           Save Changes
         </Button>
       </div>

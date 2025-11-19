@@ -21,7 +21,7 @@ import {
   formatCurrency,
   formatDate,
   getUnitStatusColor,
-  getPaymentStatusColor
+  getPaymentStatusColor,
 } from '@/lib/mock-data/landlord'
 
 interface UnitDetailPageProps {
@@ -42,15 +42,13 @@ export default function UnitDetailPage({ params }: UnitDetailPageProps) {
       <div className="space-y-6">
         <div className="flex items-center gap-4">
           <Link href={`/landlord/properties/${propertyId}`}>
-            <Button variant="ghost" size="icon" className="border-2 border-foreground">
+            <Button variant="ghost" size="icon" className="border-foreground border-2">
               <ArrowLeft className="h-4 w-4" />
             </Button>
           </Link>
           <div>
             <h1 className="text-3xl font-bold tracking-tight">Unit Not Found</h1>
-            <p className="text-muted-foreground">
-              The requested unit could not be found
-            </p>
+            <p className="text-muted-foreground">The requested unit could not be found</p>
           </div>
         </div>
       </div>
@@ -63,17 +61,13 @@ export default function UnitDetailPage({ params }: UnitDetailPageProps) {
       <div className="flex items-start justify-between gap-4">
         <div className="flex items-center gap-4">
           <Link href={`/landlord/properties/${propertyId}`}>
-            <Button variant="ghost" size="icon" className="border-2 border-foreground">
+            <Button variant="ghost" size="icon" className="border-foreground border-2">
               <ArrowLeft className="h-4 w-4" />
             </Button>
           </Link>
           <div>
-            <h1 className="text-3xl font-bold tracking-tight">
-              Unit {unit.unitNumber}
-            </h1>
-            <p className="text-muted-foreground">
-              {property.address}
-            </p>
+            <h1 className="text-3xl font-bold tracking-tight">Unit {unit.unitNumber}</h1>
+            <p className="text-muted-foreground">{property.address}</p>
           </div>
         </div>
         <Button variant="outline" className="border-2">
@@ -84,17 +78,14 @@ export default function UnitDetailPage({ params }: UnitDetailPageProps) {
 
       <div className="grid gap-6 md:grid-cols-2">
         {/* Unit Info */}
-        <Card className="border-2 border-foreground">
+        <Card className="border-foreground border-2">
           <CardHeader>
             <div className="flex items-center justify-between">
               <CardTitle className="flex items-center gap-2">
                 <Home className="h-5 w-5" />
                 Unit Information
               </CardTitle>
-              <Badge
-                variant="outline"
-                className={`${getUnitStatusColor(unit.status)} border-2`}
-              >
+              <Badge variant="outline" className={`${getUnitStatusColor(unit.status)} border-2`}>
                 {unit.status}
               </Badge>
             </div>
@@ -103,23 +94,23 @@ export default function UnitDetailPage({ params }: UnitDetailPageProps) {
             <div className="grid grid-cols-3 gap-4">
               <div>
                 <p className="text-muted-foreground text-sm">Bedrooms</p>
-                <p className="font-bold text-lg">{unit.beds}</p>
+                <p className="text-lg font-bold">{unit.beds}</p>
               </div>
               <div>
                 <p className="text-muted-foreground text-sm">Bathrooms</p>
-                <p className="font-bold text-lg">{unit.baths}</p>
+                <p className="text-lg font-bold">{unit.baths}</p>
               </div>
               <div>
                 <p className="text-muted-foreground text-sm">Square Feet</p>
-                <p className="font-bold text-lg">{unit.sqft}</p>
+                <p className="text-lg font-bold">{unit.sqft}</p>
               </div>
             </div>
-            <div className="pt-4 border-t-2 border-border">
+            <div className="border-border border-t-2 pt-4">
               <p className="text-muted-foreground text-sm">Monthly Rent</p>
-              <p className="font-bold text-2xl">{formatCurrency(unit.rent)}</p>
+              <p className="text-2xl font-bold">{formatCurrency(unit.rent)}</p>
             </div>
             {unit.listingId && (
-              <div className="pt-4 border-t-2 border-border">
+              <div className="border-border border-t-2 pt-4">
                 <Link href={`/landlord/listings/${unit.listingId}`}>
                   <Button variant="outline" className="w-full border-2">
                     View Active Listing
@@ -132,7 +123,7 @@ export default function UnitDetailPage({ params }: UnitDetailPageProps) {
 
         {/* Current Tenant */}
         {unit.tenant ? (
-          <Card className="border-2 border-foreground">
+          <Card className="border-foreground border-2">
             <CardHeader>
               <div className="flex items-center justify-between">
                 <CardTitle>Current Tenant</CardTitle>
@@ -146,23 +137,23 @@ export default function UnitDetailPage({ params }: UnitDetailPageProps) {
             </CardHeader>
             <CardContent className="space-y-4">
               <div>
-                <p className="font-bold text-lg">{unit.tenant.name}</p>
+                <p className="text-lg font-bold">{unit.tenant.name}</p>
               </div>
               <div className="space-y-2">
                 <div className="flex items-center gap-2 text-sm">
-                  <Mail className="h-4 w-4 text-muted-foreground" />
+                  <Mail className="text-muted-foreground h-4 w-4" />
                   <a href={`mailto:${unit.tenant.email}`} className="hover:underline">
                     {unit.tenant.email}
                   </a>
                 </div>
                 <div className="flex items-center gap-2 text-sm">
-                  <Phone className="h-4 w-4 text-muted-foreground" />
+                  <Phone className="text-muted-foreground h-4 w-4" />
                   <a href={`tel:${unit.tenant.phone}`} className="hover:underline">
                     {unit.tenant.phone}
                   </a>
                 </div>
               </div>
-              <div className="pt-4 border-t-2 border-border space-y-2">
+              <div className="border-border space-y-2 border-t-2 pt-4">
                 <div className="flex justify-between">
                   <span className="text-muted-foreground text-sm">Lease Start</span>
                   <span className="font-medium">{formatDate(unit.tenant.leaseStart)}</span>
@@ -189,7 +180,7 @@ export default function UnitDetailPage({ params }: UnitDetailPageProps) {
             </CardContent>
           </Card>
         ) : (
-          <Card className="border-2 border-foreground">
+          <Card className="border-foreground border-2">
             <CardHeader>
               <CardTitle>No Current Tenant</CardTitle>
             </CardHeader>
@@ -200,9 +191,7 @@ export default function UnitDetailPage({ params }: UnitDetailPageProps) {
                   : 'This unit is vacant and not listed.'}
               </p>
               {unit.status !== 'listed' && (
-                <Button className="w-full border-2 border-foreground">
-                  Create Listing
-                </Button>
+                <Button className="border-foreground w-full border-2">Create Listing</Button>
               )}
             </CardContent>
           </Card>
@@ -211,18 +200,16 @@ export default function UnitDetailPage({ params }: UnitDetailPageProps) {
 
       {/* Lease History */}
       {leaseHistory.length > 0 && (
-        <Card className="border-2 border-foreground">
+        <Card className="border-foreground border-2">
           <CardHeader>
             <CardTitle>Lease History</CardTitle>
-            <CardDescription>
-              Previous tenants and lease terms
-            </CardDescription>
+            <CardDescription>Previous tenants and lease terms</CardDescription>
           </CardHeader>
           <CardContent>
-            <div className="border-2 border-foreground overflow-hidden">
+            <div className="border-foreground overflow-hidden border-2">
               <Table>
                 <TableHeader>
-                  <TableRow className="border-b-2 border-foreground bg-muted/50">
+                  <TableRow className="border-foreground bg-muted/50 border-b-2">
                     <TableHead className="font-bold">Tenant</TableHead>
                     <TableHead className="font-bold">Lease Period</TableHead>
                     <TableHead className="font-bold">Monthly Rent</TableHead>
@@ -231,16 +218,12 @@ export default function UnitDetailPage({ params }: UnitDetailPageProps) {
                 </TableHeader>
                 <TableBody>
                   {leaseHistory.map((history) => (
-                    <TableRow key={history.id} className="border-b border-border">
-                      <TableCell className="font-medium">
-                        {history.tenantName}
-                      </TableCell>
+                    <TableRow key={history.id} className="border-border border-b">
+                      <TableCell className="font-medium">{history.tenantName}</TableCell>
                       <TableCell>
                         {formatDate(history.leaseStart)} - {formatDate(history.leaseEnd)}
                       </TableCell>
-                      <TableCell>
-                        {formatCurrency(history.monthlyRent)}
-                      </TableCell>
+                      <TableCell>{formatCurrency(history.monthlyRent)}</TableCell>
                       <TableCell>
                         <Badge variant="outline" className="border-2 capitalize">
                           {history.endReason}

@@ -15,13 +15,13 @@ import {
   Facebook,
   Linkedin,
   Link as LinkIcon,
-  MessageCircle
+  MessageCircle,
 } from 'lucide-react'
 import {
   getBlogPostBySlug,
   getRelatedPosts,
   formatBlogDate,
-  mockBlogPosts
+  mockBlogPosts,
 } from '@/lib/mock-data/blog-posts'
 
 interface BlogPostPageProps {
@@ -74,7 +74,10 @@ function MarkdownContent({ content }: { content: string }) {
     if (line.startsWith('```')) {
       if (inCodeBlock) {
         elements.push(
-          <pre key={`code-${index}`} className="bg-muted p-4 overflow-x-auto text-sm border-2 border-foreground">
+          <pre
+            key={`code-${index}`}
+            className="bg-muted border-foreground overflow-x-auto border-2 p-4 text-sm"
+          >
             <code>{codeContent.join('\n')}</code>
           </pre>
         )
@@ -98,19 +101,19 @@ function MarkdownContent({ content }: { content: string }) {
         tableRows = []
       }
       if (!line.includes('---')) {
-        const cells = line.split('|').filter(cell => cell.trim())
-        tableRows.push(cells.map(cell => cell.trim()))
+        const cells = line.split('|').filter((cell) => cell.trim())
+        tableRows.push(cells.map((cell) => cell.trim()))
       }
       return
     } else if (inTable) {
       // End table
       elements.push(
-        <div key={`table-${index}`} className="overflow-x-auto my-4">
-          <table className="w-full border-2 border-foreground">
+        <div key={`table-${index}`} className="my-4 overflow-x-auto">
+          <table className="border-foreground w-full border-2">
             <thead className="bg-muted">
               <tr>
                 {tableRows[0]?.map((cell, i) => (
-                  <th key={i} className="p-2 text-left font-bold border-b-2 border-foreground">
+                  <th key={i} className="border-foreground border-b-2 p-2 text-left font-bold">
                     {cell}
                   </th>
                 ))}
@@ -118,7 +121,7 @@ function MarkdownContent({ content }: { content: string }) {
             </thead>
             <tbody>
               {tableRows.slice(1).map((row, rowIndex) => (
-                <tr key={rowIndex} className="border-b border-border">
+                <tr key={rowIndex} className="border-border border-b">
                   {row.map((cell, cellIndex) => (
                     <td key={cellIndex} className="p-2">
                       {cell}
@@ -138,7 +141,10 @@ function MarkdownContent({ content }: { content: string }) {
     if (!line.startsWith('- ') && !line.match(/^\d+\. /) && currentList.length > 0) {
       const ListTag = listType === 'ol' ? 'ol' : 'ul'
       elements.push(
-        <ListTag key={`list-${index}`} className={`pl-6 space-y-2 my-4 ${listType === 'ol' ? 'list-decimal' : 'list-disc'}`}>
+        <ListTag
+          key={`list-${index}`}
+          className={`my-4 space-y-2 pl-6 ${listType === 'ol' ? 'list-decimal' : 'list-disc'}`}
+        >
           {currentList.map((item, i) => (
             <li key={i} dangerouslySetInnerHTML={{ __html: processInlineMarkdown(item) }} />
           ))}
@@ -151,13 +157,13 @@ function MarkdownContent({ content }: { content: string }) {
     // Headings
     if (line.startsWith('## ')) {
       elements.push(
-        <h2 key={index} className="text-2xl font-bold mt-8 mb-4">
+        <h2 key={index} className="mt-8 mb-4 text-2xl font-bold">
           {line.replace('## ', '')}
         </h2>
       )
     } else if (line.startsWith('### ')) {
       elements.push(
-        <h3 key={index} className="text-xl font-semibold mt-6 mb-3">
+        <h3 key={index} className="mt-6 mb-3 text-xl font-semibold">
           {line.replace('### ', '')}
         </h3>
       )
@@ -165,7 +171,10 @@ function MarkdownContent({ content }: { content: string }) {
     // Blockquotes
     else if (line.startsWith('> ')) {
       elements.push(
-        <blockquote key={index} className="border-l-4 border-primary pl-4 italic text-muted-foreground my-4">
+        <blockquote
+          key={index}
+          className="border-primary text-muted-foreground my-4 border-l-4 pl-4 italic"
+        >
           {line.replace('> ', '')}
         </blockquote>
       )
@@ -193,13 +202,18 @@ function MarkdownContent({ content }: { content: string }) {
   }
 
   const processInlineMarkdown = (text: string): string => {
-    return text
-      // Bold
-      .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
-      // Inline code
-      .replace(/`([^`]+)`/g, '<code class="bg-muted px-1 py-0.5 text-sm">$1</code>')
-      // Links
-      .replace(/\[([^\]]+)\]\(([^)]+)\)/g, '<a href="$2" class="text-primary hover:underline">$1</a>')
+    return (
+      text
+        // Bold
+        .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
+        // Inline code
+        .replace(/`([^`]+)`/g, '<code class="bg-muted px-1 py-0.5 text-sm">$1</code>')
+        // Links
+        .replace(
+          /\[([^\]]+)\]\(([^)]+)\)/g,
+          '<a href="$2" class="text-primary hover:underline">$1</a>'
+        )
+    )
   }
 
   lines.forEach((line, index) => processLine(line, index))
@@ -208,7 +222,10 @@ function MarkdownContent({ content }: { content: string }) {
   if (currentList.length > 0) {
     const ListTag = listType === 'ol' ? 'ol' : 'ul'
     elements.push(
-      <ListTag key="final-list" className={`pl-6 space-y-2 my-4 ${listType === 'ol' ? 'list-decimal' : 'list-disc'}`}>
+      <ListTag
+        key="final-list"
+        className={`my-4 space-y-2 pl-6 ${listType === 'ol' ? 'list-decimal' : 'list-disc'}`}
+      >
         {currentList.map((item, i) => (
           <li key={i} dangerouslySetInnerHTML={{ __html: processInlineMarkdown(item) }} />
         ))}
@@ -234,45 +251,43 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
       {/* Back to Blog */}
       <Link
         href="/blog"
-        className="inline-flex items-center gap-2 text-sm font-medium hover:underline mb-8"
+        className="mb-8 inline-flex items-center gap-2 text-sm font-medium hover:underline"
       >
         <ArrowLeft className="h-4 w-4" />
         Back to Blog
       </Link>
 
       {/* Featured Image */}
-      <div className="relative aspect-[21/9] mb-8 border-2 border-foreground overflow-hidden">
-        <Image
-          src={post.featuredImage}
-          alt={post.title}
-          fill
-          className="object-cover"
-          priority
-        />
+      <div className="border-foreground relative mb-8 aspect-[21/9] overflow-hidden border-2">
+        <Image src={post.featuredImage} alt={post.title} fill className="object-cover" priority />
       </div>
 
       {/* Article Header */}
-      <header className="max-w-3xl mx-auto mb-8">
-        <Badge className="mb-4 border-2 border-foreground">{post.category}</Badge>
-        <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold tracking-tight mb-6">
+      <header className="mx-auto mb-8 max-w-3xl">
+        <Badge className="border-foreground mb-4 border-2">{post.category}</Badge>
+        <h1 className="mb-6 text-3xl font-bold tracking-tight md:text-4xl lg:text-5xl">
           {post.title}
         </h1>
 
         {/* Author Info */}
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+        <div className="flex flex-col justify-between gap-4 sm:flex-row sm:items-center">
           <div className="flex items-center gap-3">
-            <Avatar className="h-12 w-12 border-2 border-foreground">
+            <Avatar className="border-foreground h-12 w-12 border-2">
               <AvatarImage src={post.author.avatar} alt={post.author.name} />
               <AvatarFallback>
-                {post.author.name.split(' ').map(n => n[0]).join('').toUpperCase()}
+                {post.author.name
+                  .split(' ')
+                  .map((n) => n[0])
+                  .join('')
+                  .toUpperCase()}
               </AvatarFallback>
             </Avatar>
             <div>
               <p className="font-semibold">{post.author.name}</p>
-              <p className="text-sm text-muted-foreground">{post.author.role}</p>
+              <p className="text-muted-foreground text-sm">{post.author.role}</p>
             </div>
           </div>
-          <div className="flex items-center gap-4 text-sm text-muted-foreground">
+          <div className="text-muted-foreground flex items-center gap-4 text-sm">
             <span className="flex items-center gap-1">
               <Calendar className="h-4 w-4" />
               {formatBlogDate(post.publishedAt)}
@@ -285,32 +300,32 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
         </div>
       </header>
 
-      <Separator className="max-w-3xl mx-auto mb-8" />
+      <Separator className="mx-auto mb-8 max-w-3xl" />
 
       {/* Article Content */}
-      <div className="max-w-3xl mx-auto">
+      <div className="mx-auto max-w-3xl">
         <MarkdownContent content={post.content} />
       </div>
 
-      <Separator className="max-w-3xl mx-auto my-12" />
+      <Separator className="mx-auto my-12 max-w-3xl" />
 
       {/* Social Share */}
-      <section className="max-w-3xl mx-auto mb-12">
-        <h2 className="text-sm font-bold uppercase tracking-wider mb-4">Share this article</h2>
+      <section className="mx-auto mb-12 max-w-3xl">
+        <h2 className="mb-4 text-sm font-bold tracking-wider uppercase">Share this article</h2>
         <div className="flex items-center gap-2">
-          <Button variant="outline" size="icon" className="border-2 border-foreground">
+          <Button variant="outline" size="icon" className="border-foreground border-2">
             <Twitter className="h-4 w-4" />
             <span className="sr-only">Share on Twitter</span>
           </Button>
-          <Button variant="outline" size="icon" className="border-2 border-foreground">
+          <Button variant="outline" size="icon" className="border-foreground border-2">
             <Facebook className="h-4 w-4" />
             <span className="sr-only">Share on Facebook</span>
           </Button>
-          <Button variant="outline" size="icon" className="border-2 border-foreground">
+          <Button variant="outline" size="icon" className="border-foreground border-2">
             <Linkedin className="h-4 w-4" />
             <span className="sr-only">Share on LinkedIn</span>
           </Button>
-          <Button variant="outline" size="icon" className="border-2 border-foreground">
+          <Button variant="outline" size="icon" className="border-foreground border-2">
             <LinkIcon className="h-4 w-4" />
             <span className="sr-only">Copy link</span>
           </Button>
@@ -318,23 +333,27 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
       </section>
 
       {/* Author Bio */}
-      <section className="max-w-3xl mx-auto mb-12">
-        <Card className="border-2 border-foreground">
+      <section className="mx-auto mb-12 max-w-3xl">
+        <Card className="border-foreground border-2">
           <CardContent className="p-6">
-            <div className="flex flex-col sm:flex-row gap-4">
-              <Avatar className="h-16 w-16 border-2 border-foreground">
+            <div className="flex flex-col gap-4 sm:flex-row">
+              <Avatar className="border-foreground h-16 w-16 border-2">
                 <AvatarImage src={post.author.avatar} alt={post.author.name} />
                 <AvatarFallback>
-                  {post.author.name.split(' ').map(n => n[0]).join('').toUpperCase()}
+                  {post.author.name
+                    .split(' ')
+                    .map((n) => n[0])
+                    .join('')
+                    .toUpperCase()}
                 </AvatarFallback>
               </Avatar>
               <div>
-                <h3 className="font-bold text-lg">{post.author.name}</h3>
-                <p className="text-sm text-muted-foreground mb-2">{post.author.role}</p>
+                <h3 className="text-lg font-bold">{post.author.name}</h3>
+                <p className="text-muted-foreground mb-2 text-sm">{post.author.role}</p>
                 <p className="text-sm">
-                  {post.author.name} is a {post.author.role.toLowerCase()} at ApartmentDibs,
-                  helping tenants and landlords navigate the rental market with expert insights
-                  and practical advice.
+                  {post.author.name} is a {post.author.role.toLowerCase()} at ApartmentDibs, helping
+                  tenants and landlords navigate the rental market with expert insights and
+                  practical advice.
                 </p>
               </div>
             </div>
@@ -343,8 +362,8 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
       </section>
 
       {/* Comments Placeholder */}
-      <section className="max-w-3xl mx-auto mb-12">
-        <Card className="border-2 border-foreground">
+      <section className="mx-auto mb-12 max-w-3xl">
+        <Card className="border-foreground border-2">
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
               <MessageCircle className="h-5 w-5" />
@@ -352,7 +371,7 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
             </CardTitle>
           </CardHeader>
           <CardContent>
-            <p className="text-muted-foreground text-center py-8">
+            <p className="text-muted-foreground py-8 text-center">
               Comments are coming soon! In the meantime, share your thoughts on social media.
             </p>
           </CardContent>
@@ -361,12 +380,12 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
 
       {/* Related Posts */}
       {relatedPosts.length > 0 && (
-        <section className="max-w-5xl mx-auto">
-          <h2 className="text-2xl font-bold mb-6">Related Articles</h2>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <section className="mx-auto max-w-5xl">
+          <h2 className="mb-6 text-2xl font-bold">Related Articles</h2>
+          <div className="grid grid-cols-1 gap-6 md:grid-cols-3">
             {relatedPosts.map((relatedPost) => (
               <Link key={relatedPost.slug} href={`/blog/${relatedPost.slug}`} className="group">
-                <Card className="border-2 border-foreground overflow-hidden transition-all hover:shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]">
+                <Card className="border-foreground overflow-hidden border-2 transition-all hover:shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]">
                   <div className="relative aspect-[16/9]">
                     <Image
                       src={relatedPost.featuredImage}
@@ -374,15 +393,13 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
                       fill
                       className="object-cover"
                     />
-                    <Badge className="absolute top-2 left-2 text-xs">
-                      {relatedPost.category}
-                    </Badge>
+                    <Badge className="absolute top-2 left-2 text-xs">{relatedPost.category}</Badge>
                   </div>
                   <CardContent className="p-4">
-                    <h3 className="font-semibold group-hover:underline line-clamp-2">
+                    <h3 className="line-clamp-2 font-semibold group-hover:underline">
                       {relatedPost.title}
                     </h3>
-                    <p className="text-sm text-muted-foreground mt-2">
+                    <p className="text-muted-foreground mt-2 text-sm">
                       {formatBlogDate(relatedPost.publishedAt)} &bull; {relatedPost.readTime} min
                     </p>
                   </CardContent>

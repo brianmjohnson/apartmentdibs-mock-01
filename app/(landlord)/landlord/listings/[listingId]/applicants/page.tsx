@@ -34,7 +34,7 @@ import {
   getCreditBandColor,
   getCreditBandLabel,
   denialReasonOptions,
-  LandlordApplicant
+  LandlordApplicant,
 } from '@/lib/mock-data/landlord'
 
 interface ApplicantsPageProps {
@@ -61,7 +61,7 @@ export default function ApplicantsPage({ params }: ApplicantsPageProps) {
   const denyId = searchParams.get('deny')
 
   if (selectId && !selectedApplicant) {
-    const applicant = applicants.find(a => a.id === selectId)
+    const applicant = applicants.find((a) => a.id === selectId)
     if (applicant) {
       setSelectedApplicant(applicant)
       setShowConfirmDialog(true)
@@ -69,7 +69,7 @@ export default function ApplicantsPage({ params }: ApplicantsPageProps) {
   }
 
   if (denyId && !denialApplicant) {
-    const applicant = applicants.find(a => a.id === denyId)
+    const applicant = applicants.find((a) => a.id === denyId)
     if (applicant) {
       setDenialApplicant(applicant)
       setShowDenialDialog(true)
@@ -81,7 +81,7 @@ export default function ApplicantsPage({ params }: ApplicantsPageProps) {
       <div className="space-y-6">
         <div className="flex items-center gap-4">
           <Link href="/landlord/listings">
-            <Button variant="ghost" size="icon" className="border-2 border-foreground">
+            <Button variant="ghost" size="icon" className="border-foreground border-2">
               <ArrowLeft className="h-4 w-4" />
             </Button>
           </Link>
@@ -119,14 +119,14 @@ export default function ApplicantsPage({ params }: ApplicantsPageProps) {
     setDenialNotes('')
   }
 
-  const shortlistedApplicants = applicants.filter(a => a.status === 'shortlisted')
+  const shortlistedApplicants = applicants.filter((a) => a.status === 'shortlisted')
 
   return (
     <div className="space-y-6">
       {/* Page Header */}
       <div className="flex items-center gap-4">
         <Link href={`/landlord/listings/${listingId}`}>
-          <Button variant="ghost" size="icon" className="border-2 border-foreground">
+          <Button variant="ghost" size="icon" className="border-foreground border-2">
             <ArrowLeft className="h-4 w-4" />
           </Button>
         </Link>
@@ -142,11 +142,13 @@ export default function ApplicantsPage({ params }: ApplicantsPageProps) {
       <Card className="border-2 border-blue-300 bg-blue-50 dark:bg-blue-900/20">
         <CardContent className="py-4">
           <div className="flex items-start gap-3">
-            <AlertTriangle className="h-5 w-5 text-blue-600 dark:text-blue-400 shrink-0 mt-0.5" />
+            <AlertTriangle className="mt-0.5 h-5 w-5 shrink-0 text-blue-600 dark:text-blue-400" />
             <div>
               <p className="font-medium text-blue-800 dark:text-blue-200">Fair Housing Reminder</p>
               <p className="text-sm text-blue-700 dark:text-blue-300">
-                Selection decisions must be based on objective criteria only: income, credit, rental history, and background check results. All applicants meeting criteria should be evaluated equally.
+                Selection decisions must be based on objective criteria only: income, credit, rental
+                history, and background check results. All applicants meeting criteria should be
+                evaluated equally.
               </p>
             </div>
           </div>
@@ -154,53 +156,48 @@ export default function ApplicantsPage({ params }: ApplicantsPageProps) {
       </Card>
 
       {/* Applicants List */}
-      <Card className="border-2 border-foreground">
+      <Card className="border-foreground border-2">
         <CardHeader>
           <CardTitle>Shortlisted Applicants ({shortlistedApplicants.length})</CardTitle>
-          <CardDescription>
-            Select an applicant to approve for the lease
-          </CardDescription>
+          <CardDescription>Select an applicant to approve for the lease</CardDescription>
         </CardHeader>
         <CardContent>
           {shortlistedApplicants.length === 0 ? (
-            <div className="text-center py-8">
-              <div className="mx-auto h-16 w-16 rounded-full bg-muted flex items-center justify-center mb-4">
-                <User className="h-8 w-8 text-muted-foreground" />
+            <div className="py-8 text-center">
+              <div className="bg-muted mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full">
+                <User className="text-muted-foreground h-8 w-8" />
               </div>
-              <h3 className="font-semibold text-lg mb-2">No Shortlisted Applicants</h3>
+              <h3 className="mb-2 text-lg font-semibold">No Shortlisted Applicants</h3>
               <p className="text-muted-foreground text-sm">
-                Your agent will shortlist qualified applicants for your review.
-                All applicants are shown anonymously to ensure fair evaluation.
+                Your agent will shortlist qualified applicants for your review. All applicants are
+                shown anonymously to ensure fair evaluation.
               </p>
             </div>
           ) : (
             <div className="space-y-4">
               {shortlistedApplicants.map((applicant) => (
-                <div
-                  key={applicant.id}
-                  className="p-4 border-2 border-border"
-                >
+                <div key={applicant.id} className="border-border border-2 p-4">
                   <div className="space-y-4">
                     <div className="flex items-start gap-4">
                       {/* Anonymous Avatar */}
-                      <div className="h-14 w-14 rounded-full bg-muted border-2 border-dashed border-muted-foreground flex items-center justify-center shrink-0">
-                        <User className="h-7 w-7 text-muted-foreground" />
+                      <div className="bg-muted border-muted-foreground flex h-14 w-14 shrink-0 items-center justify-center rounded-full border-2 border-dashed">
+                        <User className="text-muted-foreground h-7 w-7" />
                       </div>
 
-                      <div className="flex-1 min-w-0">
+                      <div className="min-w-0 flex-1">
                         <div className="flex items-center justify-between">
                           <div>
                             <div className="flex items-center gap-2">
-                              <p className="font-bold text-lg">{applicant.displayId}</p>
+                              <p className="text-lg font-bold">{applicant.displayId}</p>
                               <Badge
                                 variant="outline"
-                                className="border-2 border-muted-foreground text-muted-foreground text-xs"
+                                className="border-muted-foreground text-muted-foreground border-2 text-xs"
                               >
-                                <Lock className="h-3 w-3 mr-1" />
+                                <Lock className="mr-1 h-3 w-3" />
                                 Anonymized
                               </Badge>
                             </div>
-                            <p className="text-sm text-muted-foreground">
+                            <p className="text-muted-foreground text-sm">
                               Applied {formatDate(applicant.appliedAt)}
                             </p>
                           </div>
@@ -215,10 +212,12 @@ export default function ApplicantsPage({ params }: ApplicantsPageProps) {
                     </div>
 
                     {/* Applicant Details */}
-                    <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-sm">
+                    <div className="grid grid-cols-2 gap-4 text-sm md:grid-cols-4">
                       <div>
                         <p className="text-muted-foreground">Income Ratio</p>
-                        <p className={`font-bold ${applicant.incomeRatio >= 4 ? 'text-green-600' : ''}`}>
+                        <p
+                          className={`font-bold ${applicant.incomeRatio >= 4 ? 'text-green-600' : ''}`}
+                        >
                           {applicant.incomeRatio}x
                         </p>
                       </div>
@@ -263,24 +262,21 @@ export default function ApplicantsPage({ params }: ApplicantsPageProps) {
                     </div>
 
                     {/* Competitive Edge */}
-                    <div className="p-3 bg-muted/50 border-2 border-border">
-                      <p className="text-xs text-muted-foreground mb-1">Competitive Edge</p>
+                    <div className="bg-muted/50 border-border border-2 p-3">
+                      <p className="text-muted-foreground mb-1 text-xs">Competitive Edge</p>
                       <p className="text-sm">{applicant.competitiveEdge}</p>
                     </div>
 
                     {/* Actions */}
                     <div className="flex gap-2 pt-2">
                       <Link href={`/landlord/applicant/${applicant.id}`} className="flex-1">
-                        <Button
-                          variant="outline"
-                          className="w-full border-2"
-                        >
+                        <Button variant="outline" className="w-full border-2">
                           <Eye className="mr-2 h-4 w-4" />
                           View Details
                         </Button>
                       </Link>
                       <Button
-                        className="flex-1 border-2 border-foreground"
+                        className="border-foreground flex-1 border-2"
                         onClick={() => handleSelectApplicant(applicant)}
                       >
                         <CheckCircle className="mr-2 h-4 w-4" />
@@ -304,7 +300,7 @@ export default function ApplicantsPage({ params }: ApplicantsPageProps) {
 
       {/* Selection Confirmation Dialog */}
       <Dialog open={showConfirmDialog} onOpenChange={setShowConfirmDialog}>
-        <DialogContent className="border-2 border-foreground">
+        <DialogContent className="border-foreground border-2">
           <DialogHeader>
             <DialogTitle>Confirm Selection</DialogTitle>
             <DialogDescription>
@@ -312,14 +308,17 @@ export default function ApplicantsPage({ params }: ApplicantsPageProps) {
             </DialogDescription>
           </DialogHeader>
           <div className="py-4">
-            <div className="p-4 bg-muted border-2 border-border space-y-2">
-              <p className="font-medium">{listing.propertyAddress}, Unit {listing.unitNumber}</p>
-              <p className="text-sm text-muted-foreground">
+            <div className="bg-muted border-border space-y-2 border-2 p-4">
+              <p className="font-medium">
+                {listing.propertyAddress}, Unit {listing.unitNumber}
+              </p>
+              <p className="text-muted-foreground text-sm">
                 {formatCurrency(listing.price)}/mo - {listing.beds} bed, {listing.baths} bath
               </p>
             </div>
-            <p className="text-sm text-muted-foreground mt-4">
-              This will notify the applicant and your agent to proceed with lease preparation. Other applicants will be notified that the unit is no longer available.
+            <p className="text-muted-foreground mt-4 text-sm">
+              This will notify the applicant and your agent to proceed with lease preparation. Other
+              applicants will be notified that the unit is no longer available.
             </p>
           </div>
           <DialogFooter>
@@ -330,10 +329,7 @@ export default function ApplicantsPage({ params }: ApplicantsPageProps) {
             >
               Cancel
             </Button>
-            <Button
-              onClick={confirmSelection}
-              className="border-2 border-foreground"
-            >
+            <Button onClick={confirmSelection} className="border-foreground border-2">
               <CheckCircle className="mr-2 h-4 w-4" />
               Confirm Selection
             </Button>
@@ -343,7 +339,7 @@ export default function ApplicantsPage({ params }: ApplicantsPageProps) {
 
       {/* Denial Dialog */}
       <Dialog open={showDenialDialog} onOpenChange={setShowDenialDialog}>
-        <DialogContent className="border-2 border-foreground">
+        <DialogContent className="border-foreground border-2">
           <DialogHeader>
             <DialogTitle>Deny Applicant</DialogTitle>
             <DialogDescription>
@@ -377,9 +373,10 @@ export default function ApplicantsPage({ params }: ApplicantsPageProps) {
                 rows={3}
               />
             </div>
-            <div className="p-3 bg-yellow-50 dark:bg-yellow-900/20 border-2 border-yellow-300 text-sm">
+            <div className="border-2 border-yellow-300 bg-yellow-50 p-3 text-sm dark:bg-yellow-900/20">
               <p className="text-yellow-800 dark:text-yellow-200">
-                The applicant will receive a standardized adverse action notice. Your specific notes will be kept in internal records only.
+                The applicant will receive a standardized adverse action notice. Your specific notes
+                will be kept in internal records only.
               </p>
             </div>
           </div>

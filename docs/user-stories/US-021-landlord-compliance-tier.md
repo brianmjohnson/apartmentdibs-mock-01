@@ -58,12 +58,14 @@ Landlords need compliance protection but don't want ongoing agent subscriptions.
 **Given** a landlord views pricing
 **When** comparing tiers
 **Then** they see:
+
 - Free vs Compliance vs Concierge
 - Features per tier
 - ROI calculator showing savings
 - "Protect Your Investment" messaging
 
 **Verification**:
+
 - [ ] Clear tier comparison
 - [ ] ROI calculator works
 - [ ] Appropriate messaging
@@ -73,10 +75,12 @@ Landlords need compliance protection but don't want ongoing agent subscriptions.
 **Given** landlord on Free tier
 **When** they try to access compliance features
 **Then** they see upgrade prompt:
+
 - "Audit trail available with Compliance tier"
 - "Upgrade to access risk scores"
 
 **Verification**:
+
 - [ ] Features properly gated
 - [ ] Upgrade path clear
 - [ ] Trial option if applicable
@@ -86,14 +90,17 @@ Landlords need compliance protection but don't want ongoing agent subscriptions.
 **Given** landlord evaluating pricing
 **When** they use calculator
 **Then** they input:
+
 - Number of units
 - Average rent
 - Current vacancy rate
 
 **And** receive:
+
 - "Annual savings: $53,500 (attorney fees + reduced vacancy)"
 
 **Verification**:
+
 - [ ] Calculator accurate
 - [ ] Assumptions explained
 - [ ] Compelling output
@@ -103,11 +110,13 @@ Landlords need compliance protection but don't want ongoing agent subscriptions.
 **Given** landlord subscribes to Compliance
 **When** billed annually
 **Then**:
+
 - $249 charged
 - All compliance features unlocked
 - Renewal reminder at 11 months
 
 **Verification**:
+
 - [ ] Annual billing works
 - [ ] Features active for full year
 - [ ] Renewal flow works
@@ -117,11 +126,13 @@ Landlords need compliance protection but don't want ongoing agent subscriptions.
 **Given** landlord wants Concierge
 **When** they subscribe
 **Then**:
+
 - $499/year + $99 per active listing
 - Account manager assigned
 - Phone support activated
 
 **Verification**:
+
 - [ ] Per-listing charge works
 - [ ] Account manager assigned
 - [ ] Support routing updated
@@ -141,6 +152,7 @@ Landlords need compliance protection but don't want ongoing agent subscriptions.
 ### Frontend Specification
 
 **Components**:
+
 ```
 components/
   landlord/
@@ -153,13 +165,14 @@ components/
 
 ## Analytics Tracking
 
-| Event Name | When Triggered | Properties |
-|------------|----------------|------------|
-| `landlord_subscribed` | Subscription started | `{landlordId, tier, price}` |
-| `compliance_feature_gated` | Free user blocked | `{landlordId, feature}` |
-| `roi_calculated` | Calculator used | `{landlordId, estimatedSavings}` |
+| Event Name                 | When Triggered       | Properties                       |
+| -------------------------- | -------------------- | -------------------------------- |
+| `landlord_subscribed`      | Subscription started | `{landlordId, tier, price}`      |
+| `compliance_feature_gated` | Free user blocked    | `{landlordId, feature}`          |
+| `roi_calculated`           | Calculator used      | `{landlordId, estimatedSavings}` |
 
 **Success Metrics**:
+
 - 30% of landlords on paid tier
 - 70% annual retention
 - $5,000 MRR from landlords by Month 6
@@ -169,10 +182,12 @@ components/
 ## Dependencies
 
 ### Blocked By
+
 - US-002: Adverse Action (compliance feature)
 - US-004: Audit Trail (compliance feature)
 
 ### External Dependencies
+
 - Stripe API
 
 ---

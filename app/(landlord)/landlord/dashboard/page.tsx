@@ -9,7 +9,7 @@ import {
   FileText,
   Wrench,
   CreditCard,
-  Calendar
+  Calendar,
 } from 'lucide-react'
 import Link from 'next/link'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
@@ -23,14 +23,14 @@ import {
   mockPendingDecisions,
   mockLeaseExpirations,
   formatCurrency,
-  formatRelativeTime
+  formatRelativeTime,
 } from '@/lib/mock-data/landlord'
 
 function KPICard({
   title,
   value,
   subtext,
-  icon: Icon
+  icon: Icon,
 }: {
   title: string
   value: string | number
@@ -38,16 +38,14 @@ function KPICard({
   icon: React.ElementType
 }) {
   return (
-    <Card className="border-2 border-foreground">
+    <Card className="border-foreground border-2">
       <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
         <CardTitle className="text-sm font-medium">{title}</CardTitle>
-        <Icon className="h-5 w-5 text-muted-foreground" />
+        <Icon className="text-muted-foreground h-5 w-5" />
       </CardHeader>
       <CardContent>
         <div className="text-3xl font-bold">{value}</div>
-        {subtext && (
-          <p className="text-sm text-muted-foreground mt-1">{subtext}</p>
-        )}
+        {subtext && <p className="text-muted-foreground mt-1 text-sm">{subtext}</p>}
       </CardContent>
     </Card>
   )
@@ -71,7 +69,7 @@ function ActivityIcon({ type }: { type: string }) {
 }
 
 export default function LandlordDashboard() {
-  const vacantUnits = mockUnits.filter(unit => unit.status !== 'occupied').length
+  const vacantUnits = mockUnits.filter((unit) => unit.status !== 'occupied').length
 
   return (
     <div className="space-y-6">
@@ -79,7 +77,8 @@ export default function LandlordDashboard() {
       <div>
         <h1 className="text-3xl font-bold tracking-tight">Dashboard</h1>
         <p className="text-muted-foreground">
-          Welcome back, {mockLandlordProfile.name.split(' ')[0]}. Here&apos;s your portfolio overview.
+          Welcome back, {mockLandlordProfile.name.split(' ')[0]}. Here&apos;s your portfolio
+          overview.
         </p>
       </div>
 
@@ -113,37 +112,36 @@ export default function LandlordDashboard() {
 
       {/* Pending Decisions Section */}
       {mockPendingDecisions.length > 0 && (
-        <Card className="border-2 border-foreground">
+        <Card className="border-foreground border-2">
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
               <AlertCircle className="h-5 w-5 text-yellow-500" />
               Pending Decisions
             </CardTitle>
-            <CardDescription>
-              Listings awaiting your applicant selection
-            </CardDescription>
+            <CardDescription>Listings awaiting your applicant selection</CardDescription>
           </CardHeader>
           <CardContent>
             <div className="space-y-4">
               {mockPendingDecisions.map((decision) => (
                 <div
                   key={decision.id}
-                  className="p-4 border-2 border-yellow-300 bg-yellow-50 dark:bg-yellow-900/20"
+                  className="border-2 border-yellow-300 bg-yellow-50 p-4 dark:bg-yellow-900/20"
                 >
                   <div className="flex items-center justify-between gap-4">
                     <div>
                       <p className="font-medium">
                         {decision.propertyAddress}, Unit {decision.unitNumber}
                       </p>
-                      <p className="text-sm text-muted-foreground mt-1">
-                        {decision.shortlistedCount} shortlisted applicants - {formatCurrency(decision.price)}/mo
+                      <p className="text-muted-foreground mt-1 text-sm">
+                        {decision.shortlistedCount} shortlisted applicants -{' '}
+                        {formatCurrency(decision.price)}/mo
                       </p>
-                      <p className="text-xs text-muted-foreground mt-1">
+                      <p className="text-muted-foreground mt-1 text-xs">
                         Pending for {decision.daysPending} days
                       </p>
                     </div>
                     <Link href={`/landlord/listings/${decision.listingId}`}>
-                      <Button size="sm" className="border-2 border-foreground">
+                      <Button size="sm" className="border-foreground border-2">
                         Review Applicants
                       </Button>
                     </Link>
@@ -157,45 +155,45 @@ export default function LandlordDashboard() {
 
       <div className="grid gap-6 lg:grid-cols-2">
         {/* Upcoming Lease Expirations */}
-        <Card className="border-2 border-foreground">
+        <Card className="border-foreground border-2">
           <CardHeader>
             <CardTitle>Upcoming Lease Expirations</CardTitle>
-            <CardDescription>
-              Units with leases expiring soon
-            </CardDescription>
+            <CardDescription>Units with leases expiring soon</CardDescription>
           </CardHeader>
           <CardContent>
             <div className="space-y-4">
               {mockLeaseExpirations.slice(0, 4).map((expiration) => (
-                <div key={expiration.id} className="flex items-center justify-between gap-4 p-3 border-2 border-border">
+                <div
+                  key={expiration.id}
+                  className="border-border flex items-center justify-between gap-4 border-2 p-3"
+                >
                   <div>
-                    <p className="font-medium text-sm">
+                    <p className="text-sm font-medium">
                       {expiration.propertyAddress}, Unit {expiration.unitNumber}
                     </p>
-                    <p className="text-xs text-muted-foreground">
-                      {expiration.tenantName}
-                    </p>
+                    <p className="text-muted-foreground text-xs">{expiration.tenantName}</p>
                   </div>
                   <div className="text-right">
                     <Badge
                       variant="outline"
-                      className={expiration.daysUntilExpiration <= 30
-                        ? 'border-red-400 text-red-700 dark:text-red-300'
-                        : expiration.daysUntilExpiration <= 60
-                        ? 'border-yellow-400 text-yellow-700 dark:text-yellow-300'
-                        : 'border-blue-400 text-blue-700 dark:text-blue-300'
+                      className={
+                        expiration.daysUntilExpiration <= 30
+                          ? 'border-red-400 text-red-700 dark:text-red-300'
+                          : expiration.daysUntilExpiration <= 60
+                            ? 'border-yellow-400 text-yellow-700 dark:text-yellow-300'
+                            : 'border-blue-400 text-blue-700 dark:text-blue-300'
                       }
                     >
                       {expiration.daysUntilExpiration} days
                     </Badge>
-                    <p className="text-xs text-muted-foreground mt-1">
+                    <p className="text-muted-foreground mt-1 text-xs">
                       {formatCurrency(expiration.rent)}/mo
                     </p>
                   </div>
                 </div>
               ))}
             </div>
-            <div className="flex gap-2 mt-4">
+            <div className="mt-4 flex gap-2">
               <Button variant="outline" size="sm" className="border-2">
                 Send Renewals
               </Button>
@@ -207,30 +205,28 @@ export default function LandlordDashboard() {
         </Card>
 
         {/* Recent Activity */}
-        <Card className="border-2 border-foreground">
+        <Card className="border-foreground border-2">
           <CardHeader>
             <CardTitle>Recent Activity</CardTitle>
-            <CardDescription>
-              Latest updates across your properties
-            </CardDescription>
+            <CardDescription>Latest updates across your properties</CardDescription>
           </CardHeader>
           <CardContent>
             <div className="space-y-4">
               {mockLandlordActivities.slice(0, 5).map((activity) => (
                 <div key={activity.id} className="flex items-start gap-3">
-                  <div className="mt-1 p-2 rounded-md bg-muted">
+                  <div className="bg-muted mt-1 rounded-md p-2">
                     <ActivityIcon type={activity.type} />
                   </div>
                   <div className="flex-1 space-y-1">
                     <p className="text-sm">{activity.description}</p>
-                    <p className="text-xs text-muted-foreground">
+                    <p className="text-muted-foreground text-xs">
                       {formatRelativeTime(activity.timestamp)}
                     </p>
                   </div>
                 </div>
               ))}
             </div>
-            <Button variant="outline" className="w-full mt-4 border-2">
+            <Button variant="outline" className="mt-4 w-full border-2">
               View All Activity
             </Button>
           </CardContent>
@@ -238,13 +234,13 @@ export default function LandlordDashboard() {
       </div>
 
       {/* Quick Actions */}
-      <Card className="border-2 border-foreground">
+      <Card className="border-foreground border-2">
         <CardHeader>
           <CardTitle>Quick Actions</CardTitle>
         </CardHeader>
         <CardContent className="flex flex-wrap gap-3">
           <Link href="/landlord/properties/create">
-            <Button className="border-2 border-foreground">
+            <Button className="border-foreground border-2">
               <Building className="mr-2 h-4 w-4" />
               Add Property
             </Button>

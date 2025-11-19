@@ -24,23 +24,23 @@ export function FeaturedListings({ limit = 6, className }: FeaturedListingsProps
   }
 
   return (
-    <section className={`py-16 md:py-24 bg-muted/30 border-y-4 border-foreground ${className || ''}`}>
+    <section
+      className={`bg-muted/30 border-foreground border-y-4 py-16 md:py-24 ${className || ''}`}
+    >
       <div className="container mx-auto px-4">
-        <div className="flex flex-col md:flex-row justify-between items-center mb-8 gap-4">
+        <div className="mb-8 flex flex-col items-center justify-between gap-4 md:flex-row">
           <div>
-            <h2 className="text-3xl md:text-4xl font-bold">Featured Listings</h2>
-            <p className="text-muted-foreground mt-2">
-              Explore our latest verified apartments
-            </p>
+            <h2 className="text-3xl font-bold md:text-4xl">Featured Listings</h2>
+            <p className="text-muted-foreground mt-2">Explore our latest verified apartments</p>
           </div>
-          <Button variant="outline" className="border-2 border-foreground" asChild>
+          <Button variant="outline" className="border-foreground border-2" asChild>
             <Link href="/search">
               View All Listings
               <ArrowRight className="ml-2 h-4 w-4" />
             </Link>
           </Button>
         </div>
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
           {featuredListings.map((listing) => (
             <div
               key={listing.id}
