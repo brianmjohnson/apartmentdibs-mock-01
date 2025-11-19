@@ -30,6 +30,7 @@ npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 pnpm-debug.log*
+.logs/
 
 # IDE
 .vscode/
@@ -63,3 +64,4 @@ Thumbs.db
 
 # Session Reports
 docs/hitl/resume-report-*.txt
+.env*.local
