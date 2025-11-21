@@ -2,6 +2,7 @@
 
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { useState } from 'react'
+import { PostHogInitCheck, PostHogProvider } from '@/components/providers/posthog-provider'
 
 export function Providers({ children }: { children: React.ReactNode }) {
   const [queryClient] = useState(
@@ -17,7 +18,10 @@ export function Providers({ children }: { children: React.ReactNode }) {
   )
 
   return (
-    <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>
+    <QueryClientProvider client={queryClient}>
+      <PostHogInitCheck>
+        <PostHogProvider>{children}</PostHogProvider>
+      </PostHogInitCheck>
+    </QueryClientProvider>
   )
 }
-
