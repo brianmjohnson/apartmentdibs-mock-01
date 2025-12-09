@@ -9,10 +9,7 @@ The workflow follows a phased approach with built-in HITL (Human-in-the-Loop) ch
 ## Phase Flow Diagram
 
 ```
-Business Plan → User Stories → Architecture (ADRs) → Technical Specs → Implementation → QA → Session Summary
-      ↓              ↓               ↓                   ↓                                ↓
-   README.md    HITL Gate #1     HITL Gate #2       HITL Gate #3                     HITL Gate #4
-                                                                                    (if issues found)
+Business Plan → User Stories → Architecture (ADRs) → Technical Specs → Implementation → QA → Session Summary and retrospective document
 ```
 
 ## Phase 1: Business Plan & Vision
@@ -21,7 +18,7 @@ Business Plan → User Stories → Architecture (ADRs) → Technical Specs → I
 Establish the foundation: what are we building and why?
 
 ### Process
-1. **Create/Update README.md** with business plan structure:
+1. **Create/Update** business plan:
    - Executive summary
    - Problem statement
    - Solution overview
@@ -34,9 +31,6 @@ Establish the foundation: what are we building and why?
 
 2. **Update ARCHITECTURE.md** with high-level system design
 
-### Template
-See: `README-template.md` in project root
-
 ### Completion Criteria
 - Clear business vision documented
 - Target users identified
@@ -45,7 +39,7 @@ See: `README-template.md` in project root
 
 ---
 
-## Phase 2: User Story Generation
+## Phase 2: High-Level User Story Generation
 
 ### Purpose
 Break down business vision into actionable user stories.
@@ -55,18 +49,20 @@ Break down business vision into actionable user stories.
 #### 2.1 Generate Master User Story List
 **Agent**: Product Manager (`product-manager.md`)
 
-**Input**: README.md business plan
+**Input**: links to relevant business plan documentation
 
-**Output**: `docs/user-stories.md` - Master index with:
+**Output**: `user-stories.md` - Master index with:
 - Brief description of each story
 - Priority (P0-P3)
 - Status (Draft, Ready, In Progress, Complete)
 - Links to detailed story files
 
+This file should have a companion CLAUDE.md following the indexing pattern since this file can overflow context.
+
 #### 2.2 Generate Detailed User Stories
 **Agent**: Product Manager + UX Researcher
 
-For each story, create `docs/user-stories/US-XXX.md`:
+For each story, create `STORY-XXX-user-stories-summary.md`:
 - User story format (As a... I want... So that...)
 - RICE scoring (Reach, Impact, Confidence, Effort)
 - Detailed acceptance criteria
@@ -75,17 +71,17 @@ For each story, create `docs/user-stories/US-XXX.md`:
 - Dependencies and related stories
 - Mockups/wireframes (by UI Designer agent)
 
-#### 2.3 HITL Checkpoint #1: User Story Review
+#### 2.3 RECOMMENDED Checkpoint #1: User Story Review
 **Trigger**: After all stories generated for current batch
 
 **Process**:
-1. Claude creates `docs/hitl/REVIEW_BATCH_<date>_user-stories.md`
-2. Human reviews batch file
+1. Request review
+2. Human reviews live with the agent, or updates the status and the results are pulled as an updated commit.
 3. For each story, mark status in corresponding `hitl-*` file:
    - `APPROVED` - Ready to proceed
    - `NEEDS_REVISION` - Needs changes (add comments)
    - `REJECTED` - Won't implement
-4. Run: `pnpm hitl:resume`
+4. Resume processing
 
 **Approval Required Before**: Moving to architecture phase
 
@@ -103,7 +99,7 @@ Document significant technical decisions before implementation.
 
 **Reviews**:
 - Approved user stories
-- Existing ADRs in `docs/adr/`
+- Existing ADRs
 - Current tech stack
 
 **Identifies**:
@@ -114,12 +110,12 @@ Document significant technical decisions before implementation.
 #### 3.2 Create/Update ADRs
 **Agent**: Architecture Agent
 
-For each ADR, create `docs/adr/NNN-title.md`:
+For each ADR, create `ADR-NNN-title.md`:
 - Context: What problem are we solving?
 - Decision: What approach are we taking?
 - Consequences: What becomes easier/harder?
 - Alternatives considered: What else did we evaluate?
-- Status: DRAFT → APPROVED → DEPRECATED → SUPERSEDED
+- Status: DRAFT → APPROVED → DEPRECATED → SUPERSEDED BY (link in old doc) amd PRECEDED BY (link to old doc)
 
 **Example ADR Topics**:
 - State management approach
@@ -134,11 +130,11 @@ For each ADR, create `docs/adr/NNN-title.md`:
 **Trigger**: After all ADRs created/updated
 
 **Process**:
-1. Claude creates `docs/hitl/REVIEW_BATCH_<date>_adrs.md`
-2. Human reviews each DRAFT ADR
-3. Mark status: `APPROVED`, `NEEDS_REVISION`, `REJECTED`
+1. Claude creates ADR document
+2. Human reviews 
+3. Mark status: `APPROVED`, `NEEDS_REVISION`, `REJECTED` during chat or via GitHub, and you pull the updates
 4. Update ADR status field to APPROVED
-5. Run: `pnpm hitl:resume`
+5. Resume
 
 **Approval Required Before**: Creating technical specifications
 
@@ -161,7 +157,7 @@ Design detailed implementation contracts (APIs, schemas, interfaces).
 - tRPC route specifications (use generated routes)
 - API contracts (input/output types)
 
-**Output**: Technical spec section in each `US-XXX.md`
+**Output**: Technical spec section in each `TECH-SPEC-XXX.md`
 
 #### 4.2 Frontend Specification
 **Agent**: Frontend Developer + UI Designer
@@ -174,17 +170,10 @@ Design detailed implementation contracts (APIs, schemas, interfaces).
 - Routing structure
 - Form validation schemas
 
-**Output**: Technical spec section in each `US-XXX.md`
-
-#### 4.3 HITL Checkpoint #3: Technical Spec Review
-**Trigger**: After all specs created for batch
+**Output**: Technical spec section in each `TECH-SPEC-XXX.md `
 
 **Process**:
-1. Claude creates `docs/hitl/REVIEW_BATCH_<date>_tech-specs.md`
-2. Human reviews API contracts, schema design
 3. Verify frontend/backend contracts align
-4. Mark status: `APPROVED`, `NEEDS_REVISION`
-5. Run: `pnpm hitl:resume`
 
 **Approval Required Before**: Implementation begins
 
@@ -202,15 +191,18 @@ Build the features according to approved specifications.
 
 **Tasks**:
 1. Create/update ZenStack models in `zschema/`
-2. Run `pnpm gen:check` to generate Prisma + tRPC
-3. Use generated tRPC routers (no custom routes unless necessary)
+2. Run code generate Prisma + tRPC + tanstack query
+3. Use generated enhanced prisma client for backend code, use tanstack query for client facing code, zod for API and front-end validation. NEVER call prisma from the frontend code! Use 'use-server' and 'use-client' to protect where code goes
 4. Implement business logic in separate service files
-5. Add database migrations if schema changed
-6. Write unit tests for business logic
+5. Implement custom routes, if in the technical specification
+6. Implement better-auth backend configuration, components, etc.
+6. Implement rate limiting, bot detection, 
+7. Add database migrations if schema changed
+8. Write unit tests for business logic
 
 **Anti-Hallucination Checklist**:
 - ✅ Searched for existing models/functions before creating new ones
-- ✅ Used ZenStack-generated tRPC routes
+- ✅ Used ZenStack-generated enhanced prisma client, tRPC routes and tanstack query
 - ✅ Verified all libraries exist and are correct versions
 - ✅ Checked for examples in official documentation
 
@@ -221,7 +213,7 @@ Build the features according to approved specifications.
 1. Create components in `components/` (ui/ or feature-specific)
 2. Use shadcn/ui base components where possible
 3. Implement with generated TanStack Query hooks
-4. Add form validation with Zod schemas
+4. Add form validation using generated Zod schemas
 5. Implement loading/error states
 6. Add analytics tracking (PostHog, etc.)
 7. Write component tests
@@ -239,11 +231,6 @@ Build the features according to approved specifications.
 3. Web search: "[library name] github examples"
 4. If docs require login → Create HITL file, continue with other tasks
 
-**HITL for Login-Gated Docs**:
-- Create: `docs/hitl/hitl-<date>-<seq>-library-docs.md`
-- Document: Library name, what you're trying to achieve, URLs found
-- Human will: Provide relevant documentation or alternative approach
-- Resume: After human updates HITL file status to APPROVED
 
 ---
 
@@ -257,7 +244,6 @@ Validate implementation meets requirements and quality standards.
 #### 6.1 Automated Quality Checks
 **Run automatically**:
 ```bash
-pnpm gen:check  # ZenStack + Prisma generation
 pnpm lint       # Formatting + linting
 pnpm test       # Unit tests
 ```
@@ -277,20 +263,8 @@ pnpm test       # Unit tests
 
 **Outputs**:
 - Pass: Story complete, ready to merge
-- Issues found: Create HITL for decision
+- Issues found: provide feedback
 
-#### 6.3 HITL Checkpoint #4: QA Issues (If Found)
-**Trigger**: Quality reviewer identifies problems
-
-**Process**:
-1. Claude creates `docs/hitl/REVIEW_BATCH_<date>_qa-issues.md`
-2. For each issue, human decides:
-   - **Fix**: Send back to implementation
-   - **Refine Story**: Update US-XXX.md and re-implement
-   - **Defer**: Create new story for future sprint
-   - **Accept**: Issue is acceptable, proceed
-3. Mark decisions in HITL file
-4. Run: `pnpm hitl:resume`
 
 ---
 
@@ -319,7 +293,7 @@ OR run manually: `pnpm session:summary`
 - Files changed
 - Key features implemented
 
-**Output**: `docs/sessions/session-<YYYY-MM-DD>.md`
+**Output**: `project-summary-<YYYY-MM-DD-HH-mm>.md`
 
 **Format**:
 - Release goals
@@ -370,40 +344,7 @@ OR run manually: `pnpm session:summary`
    - Reuse existing utilities
    - Follow established patterns
 
-### When to Create HITL
 
-Create HITL file when encountering:
-- Login-gated documentation
-- Ambiguous requirements
-- Multiple equally valid approaches
-- Security/privacy considerations
-- Breaking changes needed
-- Unclear business logic
-
-**Template**: `docs/hitl/template.md`
-
----
-
-## Batch HITL Efficiency
-
-### Batching Strategy
-
-Claude creates individual HITL files throughout development, then consolidates into batch review files at natural checkpoints.
-
-### Benefits
-- Review multiple decisions at once
-- Bulk approve similar items
-- Faster iteration cycles
-- Clear audit trail
-- Less context switching
-
-### Process
-1. **Development**: Claude creates `hitl-<date>-<seq>.md` files as needed
-2. **Checkpoint**: Claude creates `REVIEW_BATCH_<date>_<category>.md`
-3. **Review**: Human reviews batch, marks approvals
-4. **Resume**: `pnpm hitl:resume` continues workflow
-
-See `docs/HITL_GUIDE.md` for complete batching details.
 
 ---
 
@@ -413,29 +354,26 @@ See `docs/HITL_GUIDE.md` for complete batching details.
 
 **Sequential Dependencies**:
 - Product Manager → Architecture Agent
-- Architecture Agent → Backend + Frontend Developers
+- Architecture Agent → Backend -> Frontend Developers
 - Developers → Quality Reviewer
 - Quality Reviewer → Session Summary Agent
 
 **Parallel Work**:
-- Frontend + Backend developers (after specs approved)
+
 - UI Designer + UX Researcher
 - Multiple user stories (if independent)
 
 **Communication**:
 - Agents read each other's outputs
-- Shared context in US-XXX.md files
+- Shared context in markdown documentation files
 - ADRs provide architectural guidance
-- CLAUDE.md provides process guidance
 
-See `.claude/agents/README.md` for detailed coordination patterns.
 
 ---
 
 ## Success Metrics
 
 ### Workflow Quality Indicators
-- ✅ All HITL checkpoints completed before proceeding
 - ✅ Research conducted before implementation
 - ✅ No hallucinated APIs or duplicated code
 - ✅ All tests passing
@@ -443,7 +381,6 @@ See `.claude/agents/README.md` for detailed coordination patterns.
 - ✅ Session summary generated
 
 ### Anti-Patterns to Avoid
-- ❌ Skipping HITL checkpoints
 - ❌ Implementing without research
 - ❌ Creating custom tRPC routes when generated ones work
 - ❌ Duplicating existing functionality
@@ -456,33 +393,11 @@ See `.claude/agents/README.md` for detailed coordination patterns.
 
 ### Phase Checklist
 
-- [ ] **Phase 1**: Business plan in README.md
-- [ ] **Phase 2**: User stories → HITL Review #1 → Approved
-- [ ] **Phase 3**: ADRs → HITL Review #2 → Approved
-- [ ] **Phase 4**: Technical specs → HITL Review #3 → Approved
+- [ ] **Phase 1**: Read Business plan
+- [ ] **Phase 2**: User stories → Approved
+- [ ] **Phase 3**: ADRs → Approved
+- [ ] **Phase 4**: Technical specs → Approved
 - [ ] **Phase 5**: Implementation (research-first)
-- [ ] **Phase 6**: QA review → HITL Review #4 (if needed)
+- [ ] **Phase 6**: QA review → HITL Review (if needed)
 - [ ] **Phase 7**: Session summary generated
 
-### Key Commands
-
-```bash
-pnpm dev              # Start dev server
-pnpm gen:check        # ZenStack + Prisma generation
-pnpm lint             # Auto-fix linting
-pnpm test             # Run tests
-pnpm hitl:resume      # Process HITL approvals
-pnpm session:summary  # Generate session summary
-```
-
-### File Locations
-
-- User Stories: `docs/user-stories/US-XXX.md`
-- ADRs: `docs/adr/NNN-title.md`
-- HITL Files: `docs/hitl/hitl-<date>-<seq>.md`
-- Batch Reviews: `docs/hitl/REVIEW_BATCH_<date>_<category>.md`
-- Sessions: `docs/sessions/session-<YYYY-MM-DD>.md`
-
----
-
-**Next Steps**: See `docs/HITL_GUIDE.md` for detailed batch HITL process.
