@@ -15,15 +15,17 @@ build/
 dist/
 
 # Production
+production
+preview
 .vercel
 .turbo
 
 # Environment Variables
 .env
-.env.local
-.env.development.local
-.env.test.local
-.env.production.local
+.env.local*
+.env.development.local*
+.env.test.local*
+.env.production.local*
 
 # Debug
 npm-debug.log*
@@ -65,3 +67,6 @@ Thumbs.db
 # Session Reports
 docs/hitl/resume-report-*.txt
 .env*.local
+
+# ZenStack REPL history
+.zenstack_repl_history
