@@ -14,6 +14,7 @@ We need architectural approval for choosing PostHog as ApartmentDibs' analytics 
 ### What We're Building
 
 A comprehensive analytics and experimentation platform that provides:
+
 - Product analytics (event tracking, funnels, cohorts, retention)
 - Feature flags (boolean and multivariate)
 - A/B testing with statistical significance
@@ -25,6 +26,7 @@ This is foundational infrastructure that will enable data-driven product decisio
 ### Why Human Input is Needed
 
 This is a significant architectural decision that:
+
 1. Establishes our analytics foundation for the entire product lifecycle
 2. Has cost implications as we scale ($0 now, potentially $100-500/month at scale)
 3. Creates vendor dependency (though open source provides escape hatch)
@@ -40,6 +42,7 @@ This ADR documents our evaluation of 6 alternatives and provides comprehensive r
 ### What I Know
 
 **Current State**:
+
 - User Story US-002 approved at HITL Gate #1
 - PostHog already mentioned in README.md as competitive advantage ("Data-Driven Operations")
 - ADR-005 exists covering PostHog feature flags specifically
@@ -48,6 +51,7 @@ This ADR documents our evaluation of 6 alternatives and provides comprehensive r
 - Better Auth 1.3+ provides user identification for analytics
 
 **Requirements from US-002**:
+
 - Track 9 custom events (application_created, listing_viewed, etc.)
 - User identification on authentication
 - Organization-level analytics (multi-tenancy)
@@ -60,11 +64,13 @@ This ADR documents our evaluation of 6 alternatives and provides comprehensive r
 #### Web Research
 
 **PostHog Next.js 15 Compatibility**:
+
 - Searched: "PostHog Next.js 15 App Router integration 2025"
 - Found: Official PostHog documentation confirms Next.js 15.3+ support with instrumentation-client.ts pattern
 - Verified: App Router compatibility, React Server Components support, modern pageview tracking
 
 **PostHog Pricing**:
+
 - Searched: "PostHog pricing free tier limits 2025"
 - Found: Free tier includes:
   - 1M events/month (sufficient for 10k DAU)
@@ -76,16 +82,19 @@ This ADR documents our evaluation of 6 alternatives and provides comprehensive r
 #### Documentation Review
 
 **ADRs Checked**:
+
 - ADR-005 (PostHog Feature Flags) - Focuses specifically on feature flagging, approved
 - ADR-007 (Observability) - Separates observability (logs/traces) from product analytics
 - ADR-006 (Data Warehouse) - Snowflake for BI, separate from product analytics
 - ADR-004 (Email) - Email events could be tracked in PostHog
 
 **User Stories**:
+
 - US-002 (PostHog Integration) - Approved at Gate #1, comprehensive requirements
 - Future dependencies: US-010 (GDPR Compliance), US-011 (Analytics Dashboard), US-015 (A/B Testing Framework)
 
 **Template Review**:
+
 - Reviewed docs/adr/template.md for structure
 - Reviewed docs/adr/README.md for ADR numbering and process
 - Determined ADR-013 is next sequential number
@@ -93,16 +102,19 @@ This ADR documents our evaluation of 6 alternatives and provides comprehensive r
 ### Relevant Code Reviewed
 
 **Existing ADRs**:
+
 - ADR-005 provides PostHog code examples (useFeatureFlagEnabled, server-side flags)
 - No conflicts with existing decisions
 - Complements observability stack (ADR-007) without overlap
 
 **Environment Setup**:
+
 - .env.example already includes PostHog variables (mentioned in US-002)
 
 ### Constraints & Requirements
 
 **Technical**:
+
 - Must work with Next.js 15.3+ App Router
 - Must support React Server Components
 - Must integrate with Better Auth for user identification
@@ -111,17 +123,20 @@ This ADR documents our evaluation of 6 alternatives and provides comprehensive r
 - Bundle size: Acceptable addition to client bundle
 
 **Business**:
+
 - Budget: $0-100/month for first 12 months (bootstrapped)
 - Timeline: 2 weeks for implementation (US-002)
 - Competitive advantage: "Data-Driven Operations" in README.md
 
 **Privacy/Compliance**:
+
 - GDPR/CCPA compliant
 - IP anonymization required
 - Session recording must mask sensitive fields
 - Support for user data deletion requests
 
 **Team**:
+
 - Small team needs minimal maintenance burden
 - No dedicated analytics or DevOps engineer
 - Prefer unified platform over multiple tools
@@ -136,6 +151,7 @@ This ADR documents our evaluation of 6 alternatives and provides comprehensive r
 Use PostHog for product analytics, event tracking, feature flags, A/B testing, and session recording. Single platform consolidating capabilities of 3-4 tools.
 
 **Implementation**:
+
 ```typescript
 // instrumentation-client.ts (Next.js 15.3+)
 import posthog from 'posthog-js'
@@ -144,7 +160,7 @@ posthog.init(process.env.NEXT_PUBLIC_POSTHOG_KEY!, {
   api_host: process.env.NEXT_PUBLIC_POSTHOG_HOST,
   person_profiles: 'identified_only',
   capture_pageview: false,
-  session_recording: { maskInputOptions: { password: true } }
+  session_recording: { maskInputOptions: { password: true } },
 })
 
 // Server-side
@@ -153,6 +169,7 @@ export const posthog = new PostHog(process.env.POSTHOG_PERSONAL_API_KEY!)
 ```
 
 **Pros**:
+
 - ✅ All-in-one: Replaces GA4 + LaunchDarkly + FullStory (one integration vs three)
 - ✅ Generous free tier: 1M events, 1M flag requests, 5k recordings, unlimited team members
 - ✅ Open source: MIT licensed, can self-host if needed (no vendor lock-in)
@@ -163,6 +180,7 @@ export const posthog = new PostHog(process.env.POSTHOG_PERSONAL_API_KEY!)
 - ✅ Privacy-first: person_profiles: 'identified_only', IP anonymization, GDPR DPA available
 
 **Cons**:
+
 - ❌ Younger platform: Less mature than GA4 or Mixpanel (founded 2020)
 - ❌ Client-side flash: Feature flags evaluated client-side may cause brief content flash
 - ❌ Event schema: No strict schema enforcement, requires discipline
@@ -174,6 +192,7 @@ export const posthog = new PostHog(process.env.POSTHOG_PERSONAL_API_KEY!)
 **Effort**: Small - 2 weeks per US-002 (13 story points)
 
 **Aligns with**:
+
 - ADR-005: PostHog feature flags (already approved)
 - ADR-007: Separates analytics from observability (no overlap)
 - README.md: "Data-Driven Operations" competitive advantage
@@ -186,12 +205,14 @@ export const posthog = new PostHog(process.env.POSTHOG_PERSONAL_API_KEY!)
 Industry-standard tools for each capability. GA4 for analytics, LaunchDarkly for feature flags, FullStory for session recording.
 
 **Pros**:
+
 - ✅ Industry standard: Most widely adopted tools in each category
 - ✅ Enterprise-grade: Trusted by Fortune 500 companies
 - ✅ Mature products: Years of development, extensive features
 - ✅ Advanced features: More sophisticated than PostHog individually
 
 **Cons**:
+
 - ❌ High cost: LaunchDarkly $9-15/seat/month + FullStory $249/month = $300-400/month
 - ❌ Complex integration: Three separate SDKs, dashboards, support contacts
 - ❌ No correlation: Can't easily link flag changes to analytics events
@@ -204,6 +225,7 @@ Industry-standard tools for each capability. GA4 for analytics, LaunchDarkly for
 **Effort**: Large - 3-4 weeks to integrate three platforms
 
 **Aligns with**:
+
 - Industry best practices ✅
 - Budget constraints ❌ ($300-400/month exceeds $0-100/month limit)
 
@@ -215,12 +237,14 @@ Industry-standard tools for each capability. GA4 for analytics, LaunchDarkly for
 Startup-friendly alternatives. Mixpanel for analytics, Split.io for flags, LogRocket for session replay.
 
 **Pros**:
+
 - ✅ Startup-friendly pricing: Mixpanel free tier (1k MTU), Split.io free tier (50k seats)
 - ✅ Excellent analytics UX: Mixpanel best-in-class interface
 - ✅ Strong feature flags: Split.io purpose-built for flagging
 - ✅ Better than GA4: Mixpanel's event-based model superior
 
 **Cons**:
+
 - ❌ Still multiple tools: Three separate integrations, dashboards, vendors
 - ❌ Cost at scale: Mixpanel $28/month per 1k MTU (can reach $1000s/month)
 - ❌ LogRocket cost: $99/month minimum for session replay
@@ -232,6 +256,7 @@ Startup-friendly alternatives. Mixpanel for analytics, Split.io for flags, LogRo
 **Effort**: Medium - 2-3 weeks to integrate three tools
 
 **Aligns with**:
+
 - Startup stage ✅
 - Unified platform preference ❌
 
@@ -243,11 +268,13 @@ Startup-friendly alternatives. Mixpanel for analytics, Split.io for flags, LogRo
 Enterprise-grade tools. Amplitude for analytics, Optimizely for experimentation, Hotjar for UX.
 
 **Pros**:
+
 - ✅ Best-in-class: Amplitude best analytics, Optimizely pioneered A/B testing
 - ✅ Enterprise support: Dedicated support, SLAs
 - ✅ Advanced features: Unmatched cohort analysis, sophisticated testing
 
 **Cons**:
+
 - ❌ Very expensive: $3,000+/month (Amplitude $995, Optimizely $2,000, Hotjar $99)
 - ❌ Extreme overkill: Built for enterprise with $10M+ ARR
 - ❌ Long sales cycles: Enterprise contracts, negotiations
@@ -258,6 +285,7 @@ Enterprise-grade tools. Amplitude for analytics, Optimizely for experimentation,
 **Effort**: Very Large - months to implement properly
 
 **Aligns with**:
+
 - Current stage ❌ (MVP, not enterprise)
 - Budget ❌ (60x over budget)
 
@@ -269,12 +297,14 @@ Enterprise-grade tools. Amplitude for analytics, Optimizely for experimentation,
 Deploy PostHog's open-source version on own infrastructure instead of using cloud.
 
 **Pros**:
+
 - ✅ Zero usage cost: Only infrastructure costs, no usage-based pricing
 - ✅ Data sovereignty: Complete control over data storage
 - ✅ No limits: Unlimited events, users, recordings
 - ✅ Customization: Can modify source code if needed
 
 **Cons**:
+
 - ❌ Infrastructure complexity: Manage Kubernetes, PostgreSQL, ClickHouse, Redis, Kafka
 - ❌ Ongoing maintenance: Security patches, upgrades, scaling, backups
 - ❌ Upfront cost: $100-500/month in infrastructure
@@ -286,6 +316,7 @@ Deploy PostHog's open-source version on own infrastructure instead of using clou
 **Effort**: Large - weeks to set up, ongoing maintenance
 
 **Aligns with**:
+
 - Small team capacity ❌
 - Budget (cloud free tier is cheaper than self-hosting) ❌
 
@@ -299,11 +330,13 @@ Deploy PostHog's open-source version on own infrastructure instead of using clou
 Build custom event tracking storing events in PostgreSQL, with Snowflake warehouse for analytics.
 
 **Pros**:
+
 - ✅ Full control: Complete control over data model
 - ✅ No external dependency: No vendor risk
 - ✅ Custom analytics: Build exactly what's needed
 
 **Cons**:
+
 - ❌ Massive development time: 4-8 weeks for basic system
 - ❌ No feature flags: Still need separate platform
 - ❌ No session recording: Building replay is months of work
@@ -316,6 +349,7 @@ Build custom event tracking storing events in PostgreSQL, with Snowflake warehou
 **Effort**: Very Large - months of development + ongoing maintenance
 
 **Aligns with**:
+
 - Core competency ❌ (rental marketplace, not analytics platform)
 - Timeline ❌ (2 weeks for US-002, not 2 months)
 
@@ -323,21 +357,21 @@ Build custom event tracking storing events in PostgreSQL, with Snowflake warehou
 
 ## Comparison Matrix
 
-| Criteria | PostHog | GA4+LD+FS | Mixpanel+Split+LR | Amplitude+Opt+HJ | Self-Hosted PH | Custom Build |
-|----------|---------|-----------|-------------------|------------------|----------------|--------------|
-| **Monthly Cost** | $0-50 | $300-400 | $150-250 | $3,000+ | $100-500 | $0 (time) |
-| **Integration Complexity** | Low | High | Med-High | Very High | Very High | Extreme |
-| **Maintenance Burden** | Low | Medium | Medium | High | Very High | Extreme |
-| **Time to Implement** | 2 weeks | 3-4 weeks | 2-3 weeks | 2-3 months | 3-4 weeks | 2-3 months |
-| **Feature Completeness** | High | Highest | High | Highest | High | Low (MVP only) |
-| **Privacy/Compliance** | Excellent | Good | Good | Excellent | Excellent | Custom |
-| **Vendor Lock-In** | Low (OSS) | High | High | Very High | None | None |
-| **Multi-Tenancy Support** | Native | Manual | Manual | Manual | Native | Custom |
-| **Next.js 15+ Support** | Excellent | Good | Good | Manual | Excellent | N/A |
-| **Free Tier Limits** | 1M events | None | 1k MTU | None | N/A | N/A |
-| **Fits Budget** | ✅ | ❌ | ⚠️ | ❌ | ❌ | ✅ |
-| **Fits Timeline** | ✅ | ⚠️ | ⚠️ | ❌ | ⚠️ | ❌ |
-| **Fits Team Size** | ✅ | ⚠️ | ⚠️ | ❌ | ❌ | ❌ |
+| Criteria                   | PostHog   | GA4+LD+FS | Mixpanel+Split+LR | Amplitude+Opt+HJ | Self-Hosted PH | Custom Build   |
+| -------------------------- | --------- | --------- | ----------------- | ---------------- | -------------- | -------------- |
+| **Monthly Cost**           | $0-50     | $300-400  | $150-250          | $3,000+          | $100-500       | $0 (time)      |
+| **Integration Complexity** | Low       | High      | Med-High          | Very High        | Very High      | Extreme        |
+| **Maintenance Burden**     | Low       | Medium    | Medium            | High             | Very High      | Extreme        |
+| **Time to Implement**      | 2 weeks   | 3-4 weeks | 2-3 weeks         | 2-3 months       | 3-4 weeks      | 2-3 months     |
+| **Feature Completeness**   | High      | Highest   | High              | Highest          | High           | Low (MVP only) |
+| **Privacy/Compliance**     | Excellent | Good      | Good              | Excellent        | Excellent      | Custom         |
+| **Vendor Lock-In**         | Low (OSS) | High      | High              | Very High        | None           | None           |
+| **Multi-Tenancy Support**  | Native    | Manual    | Manual            | Manual           | Native         | Custom         |
+| **Next.js 15+ Support**    | Excellent | Good      | Good              | Manual           | Excellent      | N/A            |
+| **Free Tier Limits**       | 1M events | None      | 1k MTU            | None             | N/A            | N/A            |
+| **Fits Budget**            | ✅        | ❌        | ⚠️                | ❌               | ❌             | ✅             |
+| **Fits Timeline**          | ✅        | ⚠️        | ⚠️                | ❌               | ⚠️             | ❌             |
+| **Fits Team Size**         | ✅        | ⚠️        | ⚠️                | ❌               | ❌             | ❌             |
 
 **Legend**: ✅ Good fit | ⚠️ Acceptable | ❌ Poor fit
 
@@ -362,6 +396,7 @@ Build custom event tracking storing events in PostgreSQL, with Snowflake warehou
 6. **Data-driven from day one**: Aligns with README.md competitive advantage ("Data-Driven Operations"). Installing comprehensive analytics on day one enables product velocity through fast iteration and experimentation.
 
 **Why not others**:
+
 - **Option 2 (GA4+LD+FS)**: Cost ($300-400/month) is 6-8x our budget, complexity too high for small team
 - **Option 3 (Mixpanel+Split+LR)**: Better than Option 2 but still juggling three platforms, cost scaling concerns
 - **Option 4 (Amplitude+Opt+HJ)**: Extreme overkill for MVP stage, $3k/month is 60x budget
@@ -373,6 +408,7 @@ Build custom event tracking storing events in PostgreSQL, with Snowflake warehou
 PostHog is purpose-built for our exact use case: early-stage product with modern Next.js stack needing all-in-one analytics. The combination of free tier, open source, and Next.js 15+ support makes this a clear winner.
 
 **Risk Mitigation**:
+
 - Wrap PostHog SDK in abstraction layer for easier swapping if needed
 - Set billing alerts at $50/month to monitor scaling costs
 - Document event schema to prevent inconsistent naming
@@ -399,12 +435,14 @@ PostHog is purpose-built for our exact use case: early-stage product with modern
 ### If Approved
 
 **Immediate**:
+
 - Update ADR-013 status from DRAFT → APPROVED
 - Begin US-002 implementation (2-week sprint)
 - Install posthog-js and posthog-node packages
 - Configure environment variables
 
 **Short-term** (2 weeks):
+
 - Complete PostHog integration per US-002 acceptance criteria
 - Implement 9 custom events for key user actions
 - Enable feature flags and session recording
@@ -412,6 +450,7 @@ PostHog is purpose-built for our exact use case: early-stage product with modern
 - Organization-level analytics working
 
 **Long-term** (months):
+
 - Product team has data to answer "how many users did X?" in seconds
 - Engineering can use feature flags for gradual rollouts
 - A/B testing framework for conversion optimization
@@ -421,18 +460,21 @@ PostHog is purpose-built for our exact use case: early-stage product with modern
 ### If Rejected
 
 **Alternative path**:
+
 - Return to alternatives evaluation
 - Likely choose Option 3 (Mixpanel + Split.io + LogRocket) as next best option
 - Would require 2-3 weeks implementation instead of 2 weeks
 - Higher monthly cost ($150-250 vs $0-50)
 
 **Blockers**:
+
 - US-002 (PostHog Integration) blocked until alternative chosen
 - All features depending on analytics/feature flags delayed
 - US-010 (GDPR Compliance - cookie consent) depends on analytics choice
 - US-015 (A/B Testing Framework) depends on experimentation platform
 
 **Workarounds**:
+
 - Could implement basic database event logging (temporary)
 - Environment variable feature flags (no user targeting)
 - Manual analytics via SQL queries (slow, painful)
@@ -445,9 +487,9 @@ PostHog is purpose-built for our exact use case: early-stage product with modern
 Please choose one:
 
 - [ ] **Approve recommended approach** (Option 1: PostHog)
-- [ ] **Choose different option** (specify: Option ___)
+- [ ] **Choose different option** (specify: Option \_\_\_)
 - [ ] **Request more research** (specify what to investigate)
-- [ ] **Defer decision** (reason: ___)
+- [ ] **Defer decision** (reason: \_\_\_)
 - [ ] **Reject all options** (provide alternative direction)
 
 ---
@@ -491,6 +533,7 @@ The complete ADR document is available at:
 `/Users/brianjohnson/dev/github_personal/apartmentdibs-mock-01/docs/adr/ADR-013-posthog-analytics-and-experimentation-platform.md`
 
 **Key sections**:
+
 - Context: Problem statement, requirements, constraints
 - Decision: PostHog implementation approach with code examples
 - Consequences: Positive, negative, neutral impacts with mitigation strategies

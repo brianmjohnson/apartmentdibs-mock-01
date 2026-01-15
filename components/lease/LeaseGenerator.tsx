@@ -14,13 +14,7 @@ import {
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from '@/components/ui/card'
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import {
   Select,
   SelectContent,
@@ -129,18 +123,17 @@ export function LeaseGenerator({
           Generate Lease
         </CardTitle>
         <CardDescription>
-          Auto-generate a state-compliant lease with pre-filled tenant and property
-          information
+          Auto-generate a state-compliant lease with pre-filled tenant and property information
         </CardDescription>
       </CardHeader>
       <CardContent className="space-y-6">
         {/* Pre-filled Information Summary */}
-        <div className="rounded-lg bg-muted p-4 space-y-3">
-          <h3 className="font-medium text-sm">Pre-Filled Information</h3>
+        <div className="bg-muted space-y-3 rounded-lg p-4">
+          <h3 className="text-sm font-medium">Pre-Filled Information</h3>
           <div className="grid grid-cols-2 gap-4 text-sm">
             <div>
               <p className="text-muted-foreground">Tenants</p>
-              <div className="space-y-1 mt-1">
+              <div className="mt-1 space-y-1">
                 {tenants.map((tenant) => (
                   <p key={tenant.id} className="font-medium">
                     {tenant.name}
@@ -150,7 +143,7 @@ export function LeaseGenerator({
             </div>
             <div>
               <p className="text-muted-foreground">Property</p>
-              <p className="font-medium mt-1">
+              <p className="mt-1 font-medium">
                 {property.address}
                 {property.unit && `, Unit ${property.unit}`}
               </p>
@@ -181,14 +174,14 @@ export function LeaseGenerator({
               ))}
             </SelectContent>
           </Select>
-          <p className="text-xs text-muted-foreground">
+          <p className="text-muted-foreground text-xs">
             Templates include required state disclosures and addendums
           </p>
         </div>
 
         {/* Lease Terms */}
         <div className="space-y-4">
-          <h3 className="font-medium text-sm flex items-center gap-2">
+          <h3 className="flex items-center gap-2 text-sm font-medium">
             <Calendar className="h-4 w-4" />
             Lease Terms
           </h3>
@@ -312,11 +305,7 @@ export function LeaseGenerator({
                   className="flex items-center justify-between rounded-lg border p-2"
                 >
                   <span className="text-sm">{clause}</span>
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    onClick={() => handleRemoveClause(index)}
-                  >
+                  <Button variant="ghost" size="sm" onClick={() => handleRemoveClause(index)}>
                     Remove
                   </Button>
                 </div>
@@ -326,11 +315,7 @@ export function LeaseGenerator({
         </div>
 
         {/* Generate Button */}
-        <Button
-          className="w-full"
-          onClick={handleGenerate}
-          disabled={!isValid || isGenerating}
-        >
+        <Button className="w-full" onClick={handleGenerate} disabled={!isValid || isGenerating}>
           {isGenerating ? (
             <>
               <Loader2 className="mr-2 h-4 w-4 animate-spin" />
@@ -344,7 +329,7 @@ export function LeaseGenerator({
           )}
         </Button>
 
-        <p className="text-xs text-muted-foreground text-center">
+        <p className="text-muted-foreground text-center text-xs">
           Lease will be generated within 30 seconds and sent for e-signature
         </p>
       </CardContent>

@@ -39,14 +39,20 @@ export function BillingHistory({
     switch (status) {
       case 'paid':
         return (
-          <Badge variant="secondary" className="bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-300">
+          <Badge
+            variant="secondary"
+            className="bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-300"
+          >
             <CheckCircle className="mr-1 h-3 w-3" />
             Paid
           </Badge>
         )
       case 'pending':
         return (
-          <Badge variant="secondary" className="bg-yellow-100 text-yellow-800 dark:bg-yellow-900/30 dark:text-yellow-300">
+          <Badge
+            variant="secondary"
+            className="bg-yellow-100 text-yellow-800 dark:bg-yellow-900/30 dark:text-yellow-300"
+          >
             <Clock className="mr-1 h-3 w-3" />
             Pending
           </Badge>
@@ -83,15 +89,11 @@ export function BillingHistory({
           <FileText className="h-5 w-5" />
           Billing History
         </CardTitle>
-        <CardDescription>
-          View and download your past invoices
-        </CardDescription>
+        <CardDescription>View and download your past invoices</CardDescription>
       </CardHeader>
       <CardContent>
         {invoices.length === 0 ? (
-          <div className="py-8 text-center text-muted-foreground">
-            No invoices yet
-          </div>
+          <div className="text-muted-foreground py-8 text-center">No invoices yet</div>
         ) : (
           <Table>
             <TableHeader>
@@ -106,20 +108,14 @@ export function BillingHistory({
             <TableBody>
               {invoices.map((invoice) => (
                 <TableRow key={invoice.id}>
-                  <TableCell className="font-medium">
-                    {formatDate(invoice.date)}
-                  </TableCell>
+                  <TableCell className="font-medium">{formatDate(invoice.date)}</TableCell>
                   <TableCell>{invoice.description}</TableCell>
                   <TableCell>{formatAmount(invoice.amount)}</TableCell>
                   <TableCell>{getStatusBadge(invoice.status)}</TableCell>
                   <TableCell className="text-right">
                     <div className="flex justify-end gap-2">
                       {invoice.pdfUrl && onDownload && (
-                        <Button
-                          variant="ghost"
-                          size="sm"
-                          onClick={() => onDownload(invoice.id)}
-                        >
+                        <Button variant="ghost" size="sm" onClick={() => onDownload(invoice.id)}>
                           <Download className="h-4 w-4" />
                         </Button>
                       )}

@@ -63,14 +63,14 @@ model MyModel extends BaseModel {
 
 ### What to Document
 
-| Artifact | Location | Example |
-|----------|----------|---------|
-| Models | Above model definition | `@story US-011 - Portable Tenant Profile` |
-| Enums | Above enum definition | `@story US-007 - Quick Apply` |
-| Types (JSON) | Above type definition | `@story US-023 - Document Upload` |
-| Custom tRPC routes | Above procedure | `@story US-019 - Subscription Tiers` |
-| Service functions | Above function | `@story US-016 - Background Check Integration` |
-| Utility functions | Above function | `@story US-031 - SEO Optimization` |
+| Artifact           | Location               | Example                                        |
+| ------------------ | ---------------------- | ---------------------------------------------- |
+| Models             | Above model definition | `@story US-011 - Portable Tenant Profile`      |
+| Enums              | Above enum definition  | `@story US-007 - Quick Apply`                  |
+| Types (JSON)       | Above type definition  | `@story US-023 - Document Upload`              |
+| Custom tRPC routes | Above procedure        | `@story US-019 - Subscription Tiers`           |
+| Service functions  | Above function         | `@story US-016 - Background Check Integration` |
+| Utility functions  | Above function         | `@story US-031 - SEO Optimization`             |
 
 ### Examples
 
@@ -133,11 +133,9 @@ type DocumentMetadata {
  * @story US-020 - Usage-Based Pricing
  */
 export const subscriptionRouter = router({
-  upgrade: protectedProcedure
-    .input(upgradeSchema)
-    .mutation(async ({ ctx, input }) => {
-      // Complex billing logic
-    }),
+  upgrade: protectedProcedure.input(upgradeSchema).mutation(async ({ ctx, input }) => {
+    // Complex billing logic
+  }),
 })
 ```
 

@@ -33,12 +33,12 @@ export function ROICalculator({
   const disputeRiskSavings =
     (avgDisputesWithoutCompliance - avgDisputesWithCompliance) * avgLegalFeePerDispute * units
 
-  const vacancySavings =
-    (vacancyReduction / 100) * avgRent * 12 * units
+  const vacancySavings = (vacancyReduction / 100) * avgRent * 12 * units
 
   const attorneySavings = attorneyRetainer // Don't need retainer with compliance tools
 
-  const totalAnnualSavings = disputeRiskSavings + vacancySavings + attorneySavings - complianceTierPrice
+  const totalAnnualSavings =
+    disputeRiskSavings + vacancySavings + attorneySavings - complianceTierPrice
   const roi = ((totalAnnualSavings / complianceTierPrice) * 100).toFixed(0)
 
   // Track analytics when values change
@@ -62,9 +62,7 @@ export function ROICalculator({
           <Calculator className="h-5 w-5" />
           ROI Calculator
         </CardTitle>
-        <CardDescription>
-          See how much you can save with compliance protection
-        </CardDescription>
+        <CardDescription>See how much you can save with compliance protection</CardDescription>
       </CardHeader>
       <CardContent className="space-y-6">
         <div className="space-y-4">
@@ -138,49 +136,40 @@ export function ROICalculator({
           <div className="space-y-2 text-sm">
             <div className="flex justify-between">
               <span className="text-muted-foreground">Reduced legal risk</span>
-              <span className="font-medium text-green-600">
-                +${disputeRiskSavings.toFixed(0)}
-              </span>
+              <span className="font-medium text-green-600">+${disputeRiskSavings.toFixed(0)}</span>
             </div>
             <div className="flex justify-between">
               <span className="text-muted-foreground">Lower vacancy losses</span>
-              <span className="font-medium text-green-600">
-                +${vacancySavings.toFixed(0)}
-              </span>
+              <span className="font-medium text-green-600">+${vacancySavings.toFixed(0)}</span>
             </div>
             <div className="flex justify-between">
               <span className="text-muted-foreground">Attorney retainer saved</span>
-              <span className="font-medium text-green-600">
-                +${attorneySavings.toFixed(0)}
-              </span>
+              <span className="font-medium text-green-600">+${attorneySavings.toFixed(0)}</span>
             </div>
             <div className="flex justify-between">
               <span className="text-muted-foreground">Compliance tier cost</span>
-              <span className="font-medium text-red-600">
-                -${complianceTierPrice}
-              </span>
+              <span className="font-medium text-red-600">-${complianceTierPrice}</span>
             </div>
           </div>
         </div>
 
         <Separator />
 
-        <div className="rounded-lg bg-primary/5 p-4 text-center">
-          <div className="flex items-center justify-center gap-2 text-primary">
+        <div className="bg-primary/5 rounded-lg p-4 text-center">
+          <div className="text-primary flex items-center justify-center gap-2">
             <DollarSign className="h-5 w-5" />
             <span className="text-lg font-semibold">Estimated Annual Savings</span>
           </div>
-          <p className="mt-2 text-3xl font-bold text-primary">
-            ${totalAnnualSavings.toFixed(0)}
-          </p>
-          <div className="mt-2 flex items-center justify-center gap-1 text-sm text-muted-foreground">
+          <p className="text-primary mt-2 text-3xl font-bold">${totalAnnualSavings.toFixed(0)}</p>
+          <div className="text-muted-foreground mt-2 flex items-center justify-center gap-1 text-sm">
             <TrendingUp className="h-4 w-4 text-green-600" />
             <span>{roi}% ROI on your investment</span>
           </div>
         </div>
 
-        <p className="text-xs text-muted-foreground">
-          * Estimates based on industry averages. Actual savings may vary based on location and circumstances.
+        <p className="text-muted-foreground text-xs">
+          * Estimates based on industry averages. Actual savings may vary based on location and
+          circumstances.
         </p>
       </CardContent>
     </Card>

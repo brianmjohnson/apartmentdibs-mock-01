@@ -1,22 +1,8 @@
 'use client'
 
-import {
-  FileText,
-  Send,
-  Clock,
-  CheckCircle,
-  Download,
-  RefreshCw,
-  Mail,
-} from 'lucide-react'
+import { FileText, Send, Clock, CheckCircle, Download, RefreshCw, Mail } from 'lucide-react'
 import { Button } from '@/components/ui/button'
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from '@/components/ui/card'
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { Progress } from '@/components/ui/progress'
 import { cn } from '@/lib/utils'
@@ -127,31 +113,25 @@ export function SignatureStatus({
 
         {/* Status Badge */}
         {isComplete ? (
-          <div className="rounded-lg bg-green-50 border border-green-200 p-4">
+          <div className="rounded-lg border border-green-200 bg-green-50 p-4">
             <div className="flex items-center gap-2">
               <CheckCircle className="h-5 w-5 text-green-500" />
               <div>
                 <p className="font-medium text-green-700">Fully Executed</p>
-                <p className="text-sm text-green-600">
-                  All parties have signed the lease
-                </p>
+                <p className="text-sm text-green-600">All parties have signed the lease</p>
               </div>
             </div>
             {completedAt && (
-              <p className="text-xs text-green-600 mt-2">
-                Completed: {formatDate(completedAt)}
-              </p>
+              <p className="mt-2 text-xs text-green-600">Completed: {formatDate(completedAt)}</p>
             )}
           </div>
         ) : sentAt ? (
-          <div className="rounded-lg bg-blue-50 border border-blue-200 p-4">
+          <div className="rounded-lg border border-blue-200 bg-blue-50 p-4">
             <div className="flex items-center gap-2">
               <Mail className="h-5 w-5 text-blue-500" />
               <div>
                 <p className="font-medium text-blue-700">Awaiting Signatures</p>
-                <p className="text-sm text-blue-600">
-                  Sent for signing on {formatDate(sentAt)}
-                </p>
+                <p className="text-sm text-blue-600">Sent for signing on {formatDate(sentAt)}</p>
               </div>
             </div>
           </div>
@@ -159,7 +139,7 @@ export function SignatureStatus({
 
         {/* Signer List */}
         <div className="space-y-3">
-          <h3 className="font-medium text-sm">Signers</h3>
+          <h3 className="text-sm font-medium">Signers</h3>
           <div className="space-y-2">
             {signers.map((signer) => {
               const config = statusConfig[signer.status]
@@ -173,34 +153,25 @@ export function SignatureStatus({
                   <div className="flex items-center gap-3">
                     <div
                       className={cn(
-                        'h-8 w-8 rounded-full flex items-center justify-center',
+                        'flex h-8 w-8 items-center justify-center rounded-full',
                         config.bgColor
                       )}
                     >
                       <Icon className={cn('h-4 w-4', config.color)} />
                     </div>
                     <div>
-                      <p className="font-medium text-sm">{signer.name}</p>
-                      <p className="text-xs text-muted-foreground">
-                        {signer.email}
-                      </p>
+                      <p className="text-sm font-medium">{signer.name}</p>
+                      <p className="text-muted-foreground text-xs">{signer.email}</p>
                     </div>
                   </div>
                   <div className="flex items-center gap-2">
-                    <Badge className={cn(config.bgColor, config.color)}>
-                      {config.label}
-                    </Badge>
-                    {(signer.status === 'sent' || signer.status === 'viewed') &&
-                      onResend && (
-                        <Button
-                          variant="ghost"
-                          size="sm"
-                          onClick={() => onResend(signer.id)}
-                        >
-                          <RefreshCw className="h-3 w-3 mr-1" />
-                          Resend
-                        </Button>
-                      )}
+                    <Badge className={cn(config.bgColor, config.color)}>{config.label}</Badge>
+                    {(signer.status === 'sent' || signer.status === 'viewed') && onResend && (
+                      <Button variant="ghost" size="sm" onClick={() => onResend(signer.id)}>
+                        <RefreshCw className="mr-1 h-3 w-3" />
+                        Resend
+                      </Button>
+                    )}
                   </div>
                 </div>
               )
@@ -217,7 +188,7 @@ export function SignatureStatus({
         )}
 
         {/* Timeline Footnote */}
-        <p className="text-xs text-muted-foreground text-center">
+        <p className="text-muted-foreground text-center text-xs">
           {isComplete
             ? 'Signed lease PDF is stored securely for the duration of the lease.'
             : 'Signers will receive email notifications with a link to sign.'}

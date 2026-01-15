@@ -1,12 +1,7 @@
 'use client'
 
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipProvider,
-  TooltipTrigger,
-} from '@/components/ui/tooltip'
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip'
 
 interface DayStatus {
   date: Date
@@ -21,15 +16,10 @@ interface UptimeChartProps {
   className?: string
 }
 
-export function UptimeChart({
-  data,
-  days = 90,
-  className,
-}: UptimeChartProps) {
+export function UptimeChart({ data, days = 90, className }: UptimeChartProps) {
   const displayData = data.slice(-days)
 
-  const averageUptime =
-    displayData.reduce((sum, day) => sum + day.uptime, 0) / displayData.length
+  const averageUptime = displayData.reduce((sum, day) => sum + day.uptime, 0) / displayData.length
 
   const getStatusColor = (status: DayStatus['status']) => {
     switch (status) {
@@ -55,15 +45,11 @@ export function UptimeChart({
         <div className="flex items-center justify-between">
           <div>
             <CardTitle>Uptime</CardTitle>
-            <CardDescription>
-              Last {days} days
-            </CardDescription>
+            <CardDescription>Last {days} days</CardDescription>
           </div>
           <div className="text-right">
-            <p className="text-2xl font-bold text-green-600">
-              {averageUptime.toFixed(2)}%
-            </p>
-            <p className="text-sm text-muted-foreground">average</p>
+            <p className="text-2xl font-bold text-green-600">{averageUptime.toFixed(2)}%</p>
+            <p className="text-muted-foreground text-sm">average</p>
           </div>
         </div>
       </CardHeader>
@@ -93,7 +79,7 @@ export function UptimeChart({
           </div>
         </TooltipProvider>
 
-        <div className="mt-4 flex items-center justify-between text-sm text-muted-foreground">
+        <div className="text-muted-foreground mt-4 flex items-center justify-between text-sm">
           <span>{days} days ago</span>
           <span>Today</span>
         </div>

@@ -1,20 +1,9 @@
 'use client'
 
 import { Shield, Info, TrendingDown, TrendingUp, Minus } from 'lucide-react'
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from '@/components/ui/card'
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipProvider,
-  TooltipTrigger,
-} from '@/components/ui/tooltip'
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip'
 import { cn } from '@/lib/utils'
 
 type RiskLevel = 'very_low' | 'low' | 'moderate' | 'high' | 'very_high'
@@ -105,20 +94,17 @@ export function RiskScore({
               <Shield className="h-5 w-5" />
               Risk Assessment
             </CardTitle>
-            <CardDescription>
-              Predicted default probability
-            </CardDescription>
+            <CardDescription>Predicted default probability</CardDescription>
           </div>
           <TooltipProvider>
             <Tooltip>
               <TooltipTrigger>
-                <Info className="h-4 w-4 text-muted-foreground" />
+                <Info className="text-muted-foreground h-4 w-4" />
               </TooltipTrigger>
               <TooltipContent className="max-w-xs">
                 <p>
-                  Risk score is calculated using credit history, income stability,
-                  rental history, and other factors. Based on analysis of 50,000+
-                  historical tenant outcomes.
+                  Risk score is calculated using credit history, income stability, rental history,
+                  and other factors. Based on analysis of 50,000+ historical tenant outcomes.
                 </p>
               </TooltipContent>
             </Tooltip>
@@ -134,15 +120,13 @@ export function RiskScore({
             </Badge>
           </div>
           <p className={cn('text-4xl font-bold', config.color)}>{score}%</p>
-          <p className="text-sm text-muted-foreground mt-1">
-            Predicted default rate
-          </p>
+          <p className="text-muted-foreground mt-1 text-sm">Predicted default rate</p>
         </div>
 
         {showDetails && (
           <>
             {/* Description */}
-            <p className="text-sm text-muted-foreground">{config.description}</p>
+            <p className="text-muted-foreground text-sm">{config.description}</p>
 
             {/* Comparison to Average */}
             {comparisonToAverage && (
@@ -183,9 +167,7 @@ export function RiskScoreBadge({
     <TooltipProvider>
       <Tooltip>
         <TooltipTrigger asChild>
-          <Badge
-            className={cn(config.bgColor, config.color, 'cursor-help', className)}
-          >
+          <Badge className={cn(config.bgColor, config.color, 'cursor-help', className)}>
             {score}%
           </Badge>
         </TooltipTrigger>

@@ -11,13 +11,7 @@ import {
   TrendingDown,
   Minus,
 } from 'lucide-react'
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from '@/components/ui/card'
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Progress } from '@/components/ui/progress'
 import { Separator } from '@/components/ui/separator'
 import { cn } from '@/lib/utils'
@@ -92,8 +86,8 @@ export function RiskBreakdown({ factors, className }: RiskBreakdownProps) {
       <div key={factor.type} className="space-y-2">
         <div className="flex items-start justify-between">
           <div className="flex items-center gap-2">
-            <Icon className="h-4 w-4 text-muted-foreground" />
-            <span className="font-medium text-sm">{factor.label}</span>
+            <Icon className="text-muted-foreground h-4 w-4" />
+            <span className="text-sm font-medium">{factor.label}</span>
           </div>
           <div className="flex items-center gap-2">
             {getImpactIcon(factor.impact)}
@@ -103,15 +97,11 @@ export function RiskBreakdown({ factors, className }: RiskBreakdownProps) {
           </div>
         </div>
         <div className="ml-6">
-          <div className="flex items-center gap-2 mb-1">
+          <div className="mb-1 flex items-center gap-2">
             <Progress value={factor.weight} className="h-1.5 flex-1" />
-            <span className="text-xs text-muted-foreground w-8">
-              {factor.weight}%
-            </span>
+            <span className="text-muted-foreground w-8 text-xs">{factor.weight}%</span>
           </div>
-          {factor.details && (
-            <p className="text-xs text-muted-foreground">{factor.details}</p>
-          )}
+          {factor.details && <p className="text-muted-foreground text-xs">{factor.details}</p>}
         </div>
       </div>
     )
@@ -121,21 +111,17 @@ export function RiskBreakdown({ factors, className }: RiskBreakdownProps) {
     <Card className={className}>
       <CardHeader>
         <CardTitle>Risk Factor Breakdown</CardTitle>
-        <CardDescription>
-          How each factor contributes to the risk score
-        </CardDescription>
+        <CardDescription>How each factor contributes to the risk score</CardDescription>
       </CardHeader>
       <CardContent className="space-y-6">
         {/* Positive Factors */}
         {positiveFactors.length > 0 && (
           <div className="space-y-3">
-            <h3 className="text-sm font-medium text-green-600 flex items-center gap-2">
+            <h3 className="flex items-center gap-2 text-sm font-medium text-green-600">
               <TrendingDown className="h-4 w-4" />
               Positive Factors
             </h3>
-            <div className="space-y-4">
-              {positiveFactors.map(renderFactor)}
-            </div>
+            <div className="space-y-4">{positiveFactors.map(renderFactor)}</div>
           </div>
         )}
 
@@ -144,13 +130,11 @@ export function RiskBreakdown({ factors, className }: RiskBreakdownProps) {
         {/* Negative Factors */}
         {negativeFactors.length > 0 && (
           <div className="space-y-3">
-            <h3 className="text-sm font-medium text-red-600 flex items-center gap-2">
+            <h3 className="flex items-center gap-2 text-sm font-medium text-red-600">
               <TrendingUp className="h-4 w-4" />
               Risk Factors
             </h3>
-            <div className="space-y-4">
-              {negativeFactors.map(renderFactor)}
-            </div>
+            <div className="space-y-4">{negativeFactors.map(renderFactor)}</div>
           </div>
         )}
 
@@ -160,20 +144,18 @@ export function RiskBreakdown({ factors, className }: RiskBreakdownProps) {
         {/* Neutral Factors */}
         {neutralFactors.length > 0 && (
           <div className="space-y-3">
-            <h3 className="text-sm font-medium text-muted-foreground flex items-center gap-2">
+            <h3 className="text-muted-foreground flex items-center gap-2 text-sm font-medium">
               <Minus className="h-4 w-4" />
               Neutral Factors
             </h3>
-            <div className="space-y-4">
-              {neutralFactors.map(renderFactor)}
-            </div>
+            <div className="space-y-4">{neutralFactors.map(renderFactor)}</div>
           </div>
         )}
 
-        <div className="rounded-lg bg-muted p-3">
-          <p className="text-xs text-muted-foreground">
-            Weights indicate how much each factor affects the overall risk score.
-            Higher weights mean greater influence on the prediction.
+        <div className="bg-muted rounded-lg p-3">
+          <p className="text-muted-foreground text-xs">
+            Weights indicate how much each factor affects the overall risk score. Higher weights
+            mean greater influence on the prediction.
           </p>
         </div>
       </CardContent>

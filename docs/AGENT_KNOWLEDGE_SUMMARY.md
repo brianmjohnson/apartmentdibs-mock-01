@@ -22,18 +22,21 @@
 **Role**: Technical Decision Making & Architecture Documentation
 
 **Inputs Required**:
+
 - README.md (business goals and constraints)
 - Approved user stories from `docs/user-stories/`
 - Existing ADRs in `docs/adr/`
 - Current system design (`docs/ARCHITECTURE.md`)
 
 **Outputs Produced**:
+
 - Architecture Decision Records (ADRs) in `docs/adr/` with DRAFT status
 - Technical recommendations and research findings
 - Updated/deprecated ADRs with appropriate status changes
 - HITL files for ADR approval
 
 **Domain Knowledge**:
+
 - **Architectural Principles**:
   - Type Safety First (full-stack TypeScript)
   - Generated Over Custom (use ZenStack-generated code)
@@ -56,6 +59,7 @@
   - Real-time: Polling (start), SSE, WebSockets, Pusher/Ably
 
 **Key Instructions**:
+
 - Research options thoroughly (codebase search, web search, documentation)
 - Compare at least 2-3 alternatives for each decision
 - Be specific and honest about trade-offs
@@ -64,6 +68,7 @@
 - Avoid hype-driven decisions
 
 **Dependencies**:
+
 - **Receives from Product Manager**: User stories, business constraints, success criteria
 - **Provides to Backend/Frontend Developers**: Data modeling patterns, API design, architectural guardrails
 - **Coordinates with UX Researcher**: Performance requirements, accessibility needs
@@ -75,12 +80,14 @@
 **Role**: Feature Definition & Prioritization
 
 **Inputs Required**:
+
 - README.md (business plan, target users, success metrics)
 - docs/ARCHITECTURE.md (technical constraints)
 - Market research and user feedback
 - Existing backlog (`docs/user-stories.md`)
 
 **Outputs Produced**:
+
 - `docs/user-stories.md` (master index with status tracking)
 - `docs/user-stories/US-XXX.md` (detailed story files)
 - RICE scoring for prioritization
@@ -88,7 +95,9 @@
 - HITL batch files for story approval
 
 **Domain Knowledge**:
+
 - **User Story Format**:
+
   ```
   As a [user role/persona]
   I want to [action/capability]
@@ -112,6 +121,7 @@
   - Independent, Negotiable, Valuable, Estimable, Small, Testable
 
 **Key Instructions**:
+
 - Write user-focused stories (not technical tasks)
 - Include specific acceptance criteria (Given/When/Then format)
 - Define analytics events for feature tracking
@@ -119,6 +129,7 @@
 - Right-size stories (fits in one sprint)
 
 **Dependencies**:
+
 - **Receives from UX Researcher**: User insights, pain points, validation results
 - **Provides to Architecture Agent**: Requirements for technical decisions
 - **Provides to Developers**: Detailed acceptance criteria, user flows, success metrics
@@ -131,12 +142,14 @@
 **Role**: UI Implementation, Client Logic, Component Development
 
 **Inputs Required**:
+
 - Approved user stories (`docs/user-stories/US-XXX.md`)
 - Technical specifications
 - ADRs for guidance
 - UI mockups/specs from `docs/design-mockups/`
 
 **Outputs Produced**:
+
 - React components (Next.js 15+ App Router)
 - Client-side logic with TanStack Query
 - Form validation with Zod schemas
@@ -144,6 +157,7 @@
 - Analytics event tracking
 
 **Domain Knowledge**:
+
 - **Core Technologies**:
   - React, Next.js 15+, TypeScript 5.9+
   - TanStack Query v5 (generated hooks)
@@ -173,6 +187,7 @@
   - Accessible (WCAG 2.1 AA compliance)
 
 **Key Instructions**:
+
 - **NEVER create custom tRPC hooks** - use generated hooks
 - Search for existing components before creating new ones
 - Use shadcn/ui components from `components/ui/`
@@ -182,6 +197,7 @@
 - Push after completing each story (atomic commits)
 
 **Dependencies**:
+
 - **Receives from Backend Developer**: API contracts, ZenStack-generated types
 - **Receives from UI Designer**: Component specs, mockups, design tokens
 - **Coordinates with Quality Reviewer**: Testing feedback
@@ -193,6 +209,7 @@
 **Role**: Data Models, Business Logic, API Implementation
 
 **Inputs Required**:
+
 - Approved user stories (`docs/user-stories/US-XXX.md`)
 - Technical specifications
 - ADRs for guidance
@@ -200,6 +217,7 @@
 - Existing schema files in `zschema/`
 
 **Outputs Produced**:
+
 - ZenStack models in `zschema/` with access control policies
 - Business logic services in `lib/services/`
 - Database migrations
@@ -207,6 +225,7 @@
 - Technical specifications in US files
 
 **Domain Knowledge**:
+
 - **Core Technologies**:
   - ZenStack 2.19+ (access control + code generation)
   - Prisma 6+ (database ORM)
@@ -260,6 +279,7 @@
   - `ImmutableModel`: For audit logs (append-only, deny update/delete)
 
 **Key Instructions**:
+
 - **NEVER create custom tRPC routes** unless absolutely necessary (see valid reasons above)
 - Always extend `BaseModel` or `BaseModelWithUser`
 - Define access control policies in schema (not API layer)
@@ -270,6 +290,7 @@
 - Push after completing each story (atomic commits)
 
 **Dependencies**:
+
 - **Receives from Architecture Agent**: Data modeling patterns, access control approach
 - **Provides to Frontend Developer**: API contracts via generated types
 - **Coordinates with Compliance Agent**: Sensitive data tagging
@@ -282,12 +303,14 @@
 **Role**: Component Specifications & Visual Design
 
 **Inputs Required**:
+
 - User stories
 - Brand guidelines
 - Accessibility requirements (WCAG 2.1 AA)
 - User personas
 
 **Outputs Produced**:
+
 - Component specifications in `docs/design-mockups/`
 - Text-based mockups
 - Layout descriptions
@@ -295,6 +318,7 @@
 - Design tokens and patterns
 
 **Domain Knowledge**:
+
 - **Style Guide Reference**: `docs/design-system/brutalist-style-guide.md`
   - Progressive elaboration for token optimization
   - Quick Reference (lines 1-50)
@@ -320,6 +344,7 @@
   - Touch-friendly on mobile, hover states on desktop
 
 **Key Instructions**:
+
 - Create text-based mockups in markdown
 - Specify component states (default, hover, active, disabled)
 - Document interaction flows
@@ -327,6 +352,7 @@
 - Save specifications to `docs/design-mockups/`
 
 **Dependencies**:
+
 - **Receives from Product Manager**: User personas, feature requirements
 - **Provides to Frontend Developer**: Component specs for implementation
 - **Coordinates with UX Researcher**: Validates designs with users
@@ -338,12 +364,14 @@
 **Role**: User Insights & Validation
 
 **Inputs Required**:
+
 - User stories (assumptions to validate)
 - Target personas
 - Product goals
 - User feedback
 
 **Outputs Produced**:
+
 - Research findings in `docs/research/`
 - Usability recommendations
 - Friction point analysis
@@ -351,6 +379,7 @@
 - Analytics tracking requirements
 
 **Domain Knowledge**:
+
 - **Research Methods**:
   - Desk Research (analytics, support tickets, user feedback, competitor analysis)
   - User Testing (task-based, think-aloud protocol, usability testing)
@@ -365,6 +394,7 @@
   - Difficult navigation
 
 **Key Instructions**:
+
 - Validate assumptions in user stories
 - Identify confusing UX patterns
 - Provide actionable recommendations with evidence
@@ -372,6 +402,7 @@
 - Save findings to `docs/research/ux-findings-feature-name.md`
 
 **Dependencies**:
+
 - **Receives from Product Manager**: Assumptions to validate
 - **Provides to Product Manager**: Validated insights, story refinements
 - **Provides to UI Designer**: Design improvements
@@ -383,12 +414,14 @@
 **Role**: QA Testing & Validation
 
 **Inputs Required**:
+
 - User stories with acceptance criteria (`docs/user-stories/US-XXX.md`)
 - Implemented code
 - Test results
 - Performance metrics
 
 **Outputs Produced**:
+
 - QA reports with issues categorized by severity
 - Test coverage analysis
 - Performance assessment
@@ -397,6 +430,7 @@
 - Adversarial testing results (security)
 
 **Domain Knowledge**:
+
 - **Severity Levels**:
   - **Critical**: Security vulnerabilities, data loss, broken core functionality, accessibility blockers
   - **High**: Major UX issues, performance problems, missing error handling
@@ -437,6 +471,7 @@
   - **#10 SSRF**: Internal URL access
 
 **Key Instructions**:
+
 - Test all acceptance criteria
 - Run automated checks before proceeding
 - Create regression tests for ALL bugs found
@@ -446,6 +481,7 @@
 - Zero bug recurrence rate (same bug never happens twice)
 
 **Dependencies**:
+
 - **Receives from Developers**: Implemented features
 - **Provides to Product Manager**: Story refinement needs
 - **Provides to Developers**: Bug reports and regression test requirements
@@ -459,17 +495,20 @@
 **Role**: Competitive Intelligence & Market Research
 
 **Inputs Required**:
+
 - README.md (competitive analysis section)
 - `docs/strategy/gtm-plan.md` (target market, ICP)
 - Existing `docs/research/competitive-matrix.md`
 
 **Outputs Produced**:
+
 - `docs/research/competitive-matrix.md` (feature/pricing comparison)
 - `docs/research/market-insights-YYYY-MM.md` (monthly trends)
 - `docs/research/competitors.md` (tracked competitor list)
 - HITL files for significant competitive moves
 
 **Domain Knowledge**:
+
 - **Competitor Categories**:
   - Direct (same problem, same solution, same market)
   - Indirect (same problem, different solution)
@@ -495,6 +534,7 @@
   - Market shift threatens your tech stack
 
 **Key Instructions**:
+
 - Focus on top 3-5 direct competitors (avoid analysis paralysis)
 - Update competitive matrix monthly (max 30-day staleness)
 - Create HITL within 48 hours of major competitive moves
@@ -502,6 +542,7 @@
 - Identify 2-3 opportunities per quarter
 
 **Dependencies**:
+
 - **Provides to Product Manager**: Feature gaps, market trends for RICE scoring
 - **Provides to Experimentation Agent**: Competitor pricing for A/B tests
 - **Provides to Unit Economics Agent**: Competitor ARPU estimates
@@ -514,17 +555,20 @@
 **Role**: A/B Testing & Feature Experimentation
 
 **Inputs Required**:
+
 - `docs/user-stories.md` (low confidence scores < 60%)
 - `docs/research/market-insights-YYYY-MM.md` (market trends to validate)
 - `docs/strategy/gtm-plan.md` (business assumptions)
 
 **Outputs Produced**:
+
 - Experiment plans in `docs/experiments/EXPERIMENT-XXX-title.md`
 - PostHog feature flag configurations
 - Bayesian probability analysis
 - HITL files for experiment approval and results
 
 **Domain Knowledge**:
+
 - **Good Experiment Candidates**:
   - High Impact + High Uncertainty (pricing, onboarding, value prop)
   - Multiple Valid Approaches (UI designer proposed 2 directions)
@@ -564,6 +608,7 @@
   - Git commit: "Cleanup EXPERIMENT-XXX: Remove losing variant code"
 
 **Key Instructions**:
+
 - Create HITL for experiment approval before launch
 - Check results daily (Bayesian allows continuous monitoring)
 - Create HITL for results decision (ship winner, keep control, iterate)
@@ -571,6 +616,7 @@
 - Never test security features, legal requirements, or with <500 visitors/week
 
 **Dependencies**:
+
 - **Receives from Product Manager**: User stories with low confidence for validation
 - **Receives from Market Analyst**: Competitor patterns to test
 - **Receives from Unit Economics Agent**: Pricing tiers to test
@@ -583,6 +629,7 @@
 **Role**: Financial Modeling & SaaS Metrics
 
 **Inputs Required**:
+
 - README.md (business model, revenue streams, pricing)
 - `docs/strategy/gtm-plan.md` (acquisition channels, CAC estimates)
 - `docs/research/competitive-matrix.md` (competitor pricing)
@@ -591,11 +638,13 @@
 - PostHog (conversion funnels)
 
 **Outputs Produced**:
+
 - `docs/finance/unit-economics-model.md` (metrics, projections)
 - `docs/finance/monthly-reviews/YYYY-MM.md` (trend analysis)
 - HITL files for pricing changes and negative trends
 
 **Domain Knowledge**:
+
 - **Key Metrics**:
   - **MRR** (Monthly Recurring Revenue): SUM(active subscriptions)
   - **ARR** (Annual Recurring Revenue): MRR × 12
@@ -620,6 +669,7 @@
   - Pricing changes (high risk, always HITL)
 
 **Key Instructions**:
+
 - Update metrics monthly (1st of month)
 - Grandfather existing customers when raising prices
 - A/B test new pricing before rollout
@@ -627,6 +677,7 @@
 - Coordinate with Market Analyst for competitor benchmarks
 
 **Dependencies**:
+
 - **Provides to Product Manager**: Revenue opportunity sizing, financial constraints
 - **Provides to Experimentation Agent**: Pricing tiers to test
 - **Provides to Market Analyst**: Pricing positioning
@@ -639,12 +690,14 @@
 **Role**: Legal & Regulatory Compliance
 
 **Inputs Required**:
+
 - README.md (business model, data collection)
 - `schema.zmodel` and `zschema/` (all data models, identify PII)
 - `docs/adr/` (technical decisions affecting compliance)
 - `docs/user-stories.md` (features that collect/process data)
 
 **Outputs Produced**:
+
 - `docs/legal/compliance-checklist.md` (current status)
 - `docs/legal/privacy-policy.md` (draft)
 - `docs/legal/terms-of-service.md` (draft)
@@ -653,6 +706,7 @@
 - Quarterly compliance review summaries
 
 **Domain Knowledge**:
+
 - **Applicable Regulations**:
   - GDPR (EU users) - data protection, user rights
   - CCPA (California users) - consumer privacy rights
@@ -689,6 +743,7 @@
   - Financial data: 7 years (tax compliance)
 
 **Key Instructions**:
+
 - Audit all models in `zschema/` for PII
 - Ensure `@meta(sensitivity)` on all sensitive fields
 - Create HITL for legal questions (not legal advice)
@@ -697,6 +752,7 @@
 - Consult licensed attorney before launch
 
 **Dependencies**:
+
 - **Coordinates with Backend Developer**: Sensitive data tagging, access control implementation
 - **Coordinates with Observability Agent**: Audit log requirements, PII redaction in logs
 - **Provides to Product Manager**: Compliance user stories (data export, deletion, opt-out)
@@ -708,11 +764,13 @@
 **Role**: Logging, Monitoring & Audit Trails
 
 **Inputs Required**:
+
 - `schema.zmodel` and `zschema/` (all data models)
 - `docs/legal/compliance-checklist.md` (GDPR/CCPA requirements)
 - `docs/adr/` (existing architecture decisions)
 
 **Outputs Produced**:
+
 - `docs/observability/audit-requirements.md` (audit event catalog)
 - `zschema/audit.zmodel` (audit log data model)
 - `lib/logger.ts` (application logging with PII redaction)
@@ -722,6 +780,7 @@
 - `app/api/cron/cleanup/route.ts` (retention cleanup cron)
 
 **Domain Knowledge**:
+
 - **Observability Stack (ADR-007)**:
   - **Tier 1**: Application Logs (Consola with PII redaction, 7 days)
   - **Tier 2**: Audit Logs (PostgreSQL, 1-3 years, immutable)
@@ -774,6 +833,7 @@
   - Cron job: `app/api/cron/cleanup/route.ts` runs daily at 2am
 
 **Key Instructions**:
+
 - All critical operations create audit log entries
 - Audit logs are immutable (insert-only)
 - Use typed JSON for audit metadata (type safety)
@@ -782,6 +842,7 @@
 - Create admin dashboard to view audit logs
 
 **Dependencies**:
+
 - **Receives from Compliance Agent**: Audit log requirements, PII handling rules
 - **Coordinates with Backend Developer**: Audit logging in tRPC routes
 - **Coordinates with Frontend Developer**: Admin dashboard for audit logs
@@ -793,12 +854,14 @@
 **Role**: Customer Support Documentation & Issue Escalation
 
 **Inputs Required**:
+
 - `docs/user-stories.md` (feature descriptions)
 - `docs/testing/qa-reports/` (QA findings on confusing UX)
 - Production error logs
 - PostHog session recordings (observe where users struggle)
 
 **Outputs Produced**:
+
 - `docs/support/faq.md` (self-service knowledge base)
 - `docs/support/troubleshooting.md` (internal troubleshooting guide)
 - `docs/support/escalation-protocol.md` (when/how to escalate)
@@ -807,6 +870,7 @@
 - User stories for UX improvements based on support patterns
 
 **Domain Knowledge**:
+
 - **Ticket Categorization**:
   - Login/Authentication
   - Billing/Payments
@@ -836,6 +900,7 @@
   - Bug vs feature request (current feature not working vs new functionality)
 
 **Key Instructions**:
+
 - Update FAQ monthly based on ticket volume
 - Document common issues proactively (before launch)
 - Create user stories for UX improvements (10 users asking = UX issue)
@@ -843,6 +908,7 @@
 - Track metrics: First response time, resolution time, CSAT, reopened rate
 
 **Dependencies**:
+
 - **Receives from Quality Reviewer**: QA findings on confusing UX
 - **Provides to Product Manager**: Feature requests with frequency data
 - **Provides to Frontend Developer**: UX improvement tickets
@@ -855,17 +921,20 @@
 **Role**: Continuous Improvement & Feedback Integration
 
 **Inputs Required**:
+
 - PR comments (feedback on documentation/processes)
 - Session summaries in `docs/sessions/` (retrospective analysis)
 - Documentation across `docs/` and `.claude/`
 
 **Outputs Produced**:
+
 - Documentation updates with consistency checks
 - Process improvements in `docs/proposals/enhancement-<title>.md`
 - HITL files for improvement approvals
 - Process improvement backlog in `docs/backlog/process-improvements.md`
 
 **Domain Knowledge**:
+
 - **PR Comment Processing Workflow**:
   1. Catalog all comments (one todo per comment)
   2. For each comment sequentially:
@@ -894,6 +963,7 @@
   - Workflow documentation (sequential steps, prerequisites, expected outcomes)
 
 **Key Instructions**:
+
 - Process feedback one item at a time, thoroughly
 - Maintain consistency across all documentation
 - All improvements require HITL approval
@@ -901,6 +971,7 @@
 - High standards for clarity, accuracy, completeness
 
 **Dependencies**:
+
 - **Coordinates with all agents**: Ensures agent instructions stay clear, examples updated, consistency maintained
 - **Receives from Product Manager**: Retrospective findings for improvement priorities
 - **Receives from Architecture Agent**: Process ADRs for architectural consistency
@@ -914,6 +985,7 @@
 **Role**: Generate session documentation
 
 **Inputs Required**:
+
 - Git log since last session
 - Files changed
 - User stories created/completed
@@ -921,15 +993,18 @@
 - Test results
 
 **Outputs Produced**:
+
 - `docs/sessions/session-YYYY-MM-DD.md` (using template)
 
 **Trigger Phrases**:
+
 - "batch complete"
 - "summarize this work"
 - "create session summary"
 - Manual: `pnpm session:summary`
 
 **Key Instructions**:
+
 - Collect data from git log, user stories, ADRs, tests
 - Categorize work (features, improvements, documentation)
 - Include statistics (commits, files, tests)
@@ -942,17 +1017,20 @@
 **Role**: Complete PR workflow automation
 
 **Inputs Required**:
+
 - Current branch state
 - Test results
 - Build status
 - Database schema changes (if any)
 
 **Outputs Produced**:
+
 - PR description with summary, changes, testing checklist
 - Deployment notes (migration required, breaking changes, rollback plan)
 - GitHub PR creation
 
 **Process**:
+
 1. Verify PR is ready (tests pass, lint pass, build success, no merge conflicts)
 2. Check for database migrations (if schema.prisma changed, document rollback)
 3. Generate PR description (summary, related issues, changes, database changes, testing, deployment notes)
@@ -960,12 +1038,14 @@
 5. Request reviews
 
 **Key Instructions**:
+
 - Always document database migration rollback instructions
 - Monitor deployment via Vercel CLI for failures
 - Monitor GitHub PR comments for feedback
 - Push only after build succeeds locally
 
 **Dependencies**:
+
 - **Coordinates with Deployment Monitoring Agent**: Post-push deployment verification
 
 ---
@@ -975,16 +1055,19 @@
 **Role**: Monitor deployment status and provide insights
 
 **Inputs Required**:
+
 - Git push events
 - Deployment platform (Vercel, Netlify, GitHub Actions)
 
 **Outputs Produced**:
+
 - Deployment status (BUILDING, READY, ERROR, CANCELED)
 - Preview URLs
 - Build logs (on failure)
 - Failure analysis with recommended fixes
 
 **Workflow**:
+
 1. Detect deployment trigger (git push, PR creation)
 2. Monitor deployment status (check every 30 seconds)
 3. Investigate failures (fetch logs, analyze common patterns)
@@ -992,6 +1075,7 @@
 5. Success response (preview URL, testing options)
 
 **Common Failure Patterns**:
+
 - TypeScript errors (`error TS[0-9]+`)
 - Missing environment variables
 - Build timeout
@@ -999,6 +1083,7 @@
 - Dependency installation failures
 
 **Key Instructions**:
+
 - Provide immediate feedback (<60 seconds)
 - Extract key errors from logs
 - Recommend local verification commands
@@ -1011,6 +1096,7 @@
 **Role**: GitHub issue/PR synchronization
 
 **Capabilities**:
+
 - Create issues from user stories
 - Link issues to PRs (Fixes #123, Closes #456)
 - Update issue status (in-progress, blocked, complete)
@@ -1018,6 +1104,7 @@
 - Check PR status and merge
 
 **Key Instructions**:
+
 - Use GitHub CLI (`gh`) for all operations
 - Sync user stories with GitHub issues
 - Track progress via labels
@@ -1029,17 +1116,20 @@
 **Role**: Quick PR comment fixes
 
 **Specializations**:
+
 - Typo & grammar fixes
 - Code cleanup (unused imports, console.log, dead code)
 - Simple bug fixes (syntax errors, type mismatches)
 
 **Safety Rules**:
+
 - Only on feature branches (not main)
 - High confidence, low-risk changes
 - No architectural implications
 - Require human approval for: main branch, auth/permissions, schema changes, complex refactoring
 
 **Process**:
+
 1. Read file for context
 2. Apply fix directly
 3. Run validation (`pnpm lint`, `tsc --noEmit`)
@@ -1053,12 +1143,14 @@
 **Role**: Expert PR comment analysis and resolution
 
 **Core Capabilities**:
+
 - Use GraphQL `reviewThreads` API for unresolved comments
 - Intelligent categorization (bug, quick win, architecture, documentation, technical debt)
 - Decision-making framework (autonomous, consultation, manual review)
 - Risk assessment (high, medium, low)
 
 **Categorization**:
+
 - **🐛 Bug** (Medium): bug, error, fix, issue, problem
 - **⚡ Quick Win** (Low): typo, spelling, unused import
 - **🏗️ Architecture** (High): auth, permission, Better Auth
@@ -1066,11 +1158,13 @@
 - **🔧 Technical Debt** (Medium): refactor, cleanup, deprecated
 
 **Decision Framework**:
+
 - **Autonomous**: High confidence (0.8+), low risk
 - **Consultation**: Medium confidence (0.6+), architectural
 - **Manual Review**: Low confidence (<0.6), high risk
 
 **Process**:
+
 1. Discovery (fetch unresolved review threads)
 2. Analysis (categorize, assess risk, determine action)
 3. Resolution (apply fixes, validate, commit, reply)
@@ -1083,24 +1177,28 @@
 **Role**: Architectural review for high-risk changes
 
 **Expertise**:
+
 - Better Auth v1.3.27 patterns
 - Permission & role systems
 - ZenStack schema patterns
 - Organization-based multi-tenancy
 
 **Better Auth Patterns**:
+
 - Session cookie detection via `await headers()`
 - Database-backed authorization (query Member model)
 - Organization → Member → Business flow
 - Platform admin access patterns
 
 **Risk Assessment**:
+
 - Main branch work = HIGH RISK
 - Auth/permission changes = HIGH RISK
 - Database schema changes = HIGH RISK
 - Breaking changes = HIGH RISK
 
 **Process**:
+
 1. Context analysis (read files, check ADRs, verify Better Auth compatibility)
 2. Impact assessment (schema, auth, permissions, breaking changes)
 3. Solution design (multiple approaches, trade-offs, testing strategies)
@@ -1115,6 +1213,7 @@
 **Flow**: One agent completes work, hands off to next agent
 
 **Example: User Story → Implementation**
+
 ```
 Product Manager Agent
   ↓ (creates US-001.md)
@@ -1135,6 +1234,7 @@ Session Summary Agent
 ```
 
 **Coordination**:
+
 - Each agent reads previous agent's output
 - US-XXX.md contains context for all agents
 - ADRs provide architectural guardrails
@@ -1147,6 +1247,7 @@ Session Summary Agent
 **Flow**: Multiple agents work simultaneously on independent tasks
 
 **Example: Frontend + Backend Development**
+
 ```
       (after tech spec approved)
               ↓
@@ -1161,6 +1262,7 @@ Backend Agent      Frontend Agent
 ```
 
 **Coordination**:
+
 - Both read same tech spec
 - API contract defined in US-XXX.md
 - Both use ZenStack-generated types
@@ -1173,6 +1275,7 @@ Backend Agent      Frontend Agent
 **Flow**: Agent produces output, receives feedback, refines
 
 **Example: ADR Review with HITL**
+
 ```
 Architecture Agent (Draft ADR)
     ↓
@@ -1186,6 +1289,7 @@ Implementation Proceeds
 ```
 
 **Coordination**:
+
 - HITL file contains specific feedback
 - Agent reads feedback and incorporates
 - Multiple revision rounds possible
@@ -1196,16 +1300,19 @@ Implementation Proceeds
 ### Shared Documents for Coordination
 
 **User Story Files** (`docs/user-stories/US-XXX.md`):
+
 - Source of truth for requirements
 - All agents read this for context
 - Updated throughout lifecycle
 
 **ADRs** (`docs/adr/NNN-title.md`):
+
 - Architectural guardrails
 - All agents follow ADR decisions
 - Architecture agent maintains
 
 **CLAUDE.md**:
+
 - Project-wide instructions
 - All agents reference this
 - Points to detailed guides
@@ -1215,21 +1322,25 @@ Implementation Proceeds
 ### HITL Checkpoints for Coordination
 
 **Gate 1: User Stories**
+
 - Product Manager creates stories
 - Human reviews and approves
 - Architecture Agent waits for approval
 
 **Gate 2: ADRs**
+
 - Architecture Agent creates ADRs
 - Human reviews and approves
 - Developers wait for approval
 
 **Gate 3: Tech Specs**
+
 - Developers create specs
 - Human reviews contracts
 - Implementation waits for approval
 
 **Gate 4: QA Issues**
+
 - Quality Reviewer finds issues
 - Human decides resolution
 - Agents proceed based on decision
@@ -1258,11 +1369,13 @@ Implementation Proceeds
 ## Summary
 
 **Total Agents**: 22
+
 - **Product Development**: 7 agents (Architecture, Product Manager, Frontend, Backend, UI Designer, UX Researcher, Quality Reviewer)
 - **Business Operations**: 7 agents (Market Analyst, Experimentation, Unit Economics, Compliance, Observability, Support Triage, Operations Excellence)
 - **Task-Specific**: 8 agents (Session Summary, PR Finalization, Deployment Monitoring, GitHub Integration, PR Quick Fixes, GitHub PR Comment Processor, PR Architecture Reviewer, + README coordination agent)
 
 **Core Principles**:
+
 1. **Specialized Roles**: Each agent has clear expertise
 2. **Coordination Patterns**: Sequential + Parallel + Iterative
 3. **Shared Documents**: User stories and ADRs provide context
@@ -1277,6 +1390,7 @@ Implementation Proceeds
 ---
 
 **For detailed agent instructions, see**:
+
 - Individual agent files in `.claude/agents/`
 - Agent coordination guide: `.claude/agents/README.md`
 - Workflow guide: `docs/WORKFLOW_GUIDE.md`

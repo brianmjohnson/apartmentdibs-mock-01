@@ -5,13 +5,7 @@ import { UserPlus, Mail, Phone, Loader2, CheckCircle, Clock, X } from 'lucide-re
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from '@/components/ui/card'
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import {
   Select,
   SelectContent,
@@ -93,14 +87,14 @@ export function GroupInvite({
     switch (status) {
       case 'pending':
         return (
-          <Badge variant="outline" className="text-yellow-600 border-yellow-600">
+          <Badge variant="outline" className="border-yellow-600 text-yellow-600">
             <Clock className="mr-1 h-3 w-3" />
             Pending
           </Badge>
         )
       case 'sent':
         return (
-          <Badge variant="outline" className="text-blue-600 border-blue-600">
+          <Badge variant="outline" className="border-blue-600 text-blue-600">
             <Mail className="mr-1 h-3 w-3" />
             Sent
           </Badge>
@@ -130,8 +124,8 @@ export function GroupInvite({
           Invite Roommates
         </CardTitle>
         <CardDescription>
-          Add up to {maxMembers - 1} co-applicants to your group application.
-          They&apos;ll receive an invitation to join and complete their profile.
+          Add up to {maxMembers - 1} co-applicants to your group application. They&apos;ll receive
+          an invitation to join and complete their profile.
         </CardDescription>
       </CardHeader>
       <CardContent className="space-y-6">
@@ -147,32 +141,22 @@ export function GroupInvite({
                 >
                   <div className="flex items-center gap-3">
                     {invitation.email ? (
-                      <Mail className="h-4 w-4 text-muted-foreground" />
+                      <Mail className="text-muted-foreground h-4 w-4" />
                     ) : (
-                      <Phone className="h-4 w-4 text-muted-foreground" />
+                      <Phone className="text-muted-foreground h-4 w-4" />
                     )}
-                    <span className="text-sm">
-                      {invitation.email || invitation.phone}
-                    </span>
+                    <span className="text-sm">{invitation.email || invitation.phone}</span>
                   </div>
                   <div className="flex items-center gap-2">
                     {getStatusBadge(invitation.status)}
                     {invitation.status === 'sent' && onResend && (
-                      <Button
-                        variant="ghost"
-                        size="sm"
-                        onClick={() => onResend(invitation.id)}
-                      >
+                      <Button variant="ghost" size="sm" onClick={() => onResend(invitation.id)}>
                         Resend
                       </Button>
                     )}
                     {(invitation.status === 'pending' || invitation.status === 'sent') &&
                       onCancel && (
-                        <Button
-                          variant="ghost"
-                          size="sm"
-                          onClick={() => onCancel(invitation.id)}
-                        >
+                        <Button variant="ghost" size="sm" onClick={() => onCancel(invitation.id)}>
                           <X className="h-4 w-4" />
                         </Button>
                       )}
@@ -220,11 +204,7 @@ export function GroupInvite({
                 <Input
                   id="invite-value"
                   type={inviteMethod === 'email' ? 'email' : 'tel'}
-                  placeholder={
-                    inviteMethod === 'email'
-                      ? 'roommate@email.com'
-                      : '(555) 123-4567'
-                  }
+                  placeholder={inviteMethod === 'email' ? 'roommate@email.com' : '(555) 123-4567'}
                   value={inviteValue}
                   onChange={(e) => setInviteValue(e.target.value)}
                   onKeyDown={(e) => {
@@ -241,23 +221,23 @@ export function GroupInvite({
                   )}
                 </Button>
               </div>
-              {error && <p className="text-sm text-destructive">{error}</p>}
+              {error && <p className="text-destructive text-sm">{error}</p>}
             </div>
           </div>
         ) : (
-          <div className="rounded-lg bg-muted p-4 text-center">
-            <p className="text-sm text-muted-foreground">
+          <div className="bg-muted rounded-lg p-4 text-center">
+            <p className="text-muted-foreground text-sm">
               Maximum number of co-applicants reached ({maxMembers - 1})
             </p>
           </div>
         )}
 
         {/* Pricing Info */}
-        <div className="rounded-lg bg-primary/10 p-4">
+        <div className="bg-primary/10 rounded-lg p-4">
           <p className="text-sm font-medium">Group Pricing: $99.99</p>
-          <p className="text-xs text-muted-foreground mt-1">
-            Includes screening for all {maxMembers} applicants.
-            Save over 50% compared to individual applications.
+          <p className="text-muted-foreground mt-1 text-xs">
+            Includes screening for all {maxMembers} applicants. Save over 50% compared to individual
+            applications.
           </p>
         </div>
       </CardContent>

@@ -2,12 +2,7 @@
 
 import { CheckCircle, AlertTriangle, XCircle, HelpCircle } from 'lucide-react'
 import { Badge } from '@/components/ui/badge'
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipProvider,
-  TooltipTrigger,
-} from '@/components/ui/tooltip'
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip'
 import { cn } from '@/lib/utils'
 
 type QualificationStatus = 'qualified' | 'partial' | 'unqualified' | 'unknown'
@@ -107,9 +102,7 @@ export function QualificationBadge({
 
     if (details?.backgroundCheck !== undefined) {
       items.push(
-        details.backgroundCheck
-          ? 'Background check: Passed'
-          : 'Background check: Review required'
+        details.backgroundCheck ? 'Background check: Passed' : 'Background check: Review required'
       )
     }
 

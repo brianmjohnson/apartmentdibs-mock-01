@@ -11,7 +11,12 @@
 'use client'
 
 import posthog from 'posthog-js'
-import type { AnalyticsEvent, UserProperties, OrganizationProperties, FeatureFlagKey } from './types'
+import type {
+  AnalyticsEvent,
+  UserProperties,
+  OrganizationProperties,
+  FeatureFlagKey,
+} from './types'
 
 /**
  * Analytics client

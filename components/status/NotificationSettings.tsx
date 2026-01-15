@@ -3,13 +3,7 @@
 import { useState } from 'react'
 import { Bell, Mail, MessageSquare, Moon, Loader2 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from '@/components/ui/card'
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Label } from '@/components/ui/label'
 import { Switch } from '@/components/ui/switch'
 import {
@@ -83,24 +77,20 @@ export function NotificationSettings({
           <Bell className="h-5 w-5" />
           Notification Preferences
         </CardTitle>
-        <CardDescription>
-          Choose how and when you want to receive updates
-        </CardDescription>
+        <CardDescription>Choose how and when you want to receive updates</CardDescription>
       </CardHeader>
       <CardContent className="space-y-6">
         {/* Notification Channels */}
         <div className="space-y-4">
-          <h3 className="font-medium text-sm">Notification Channels</h3>
+          <h3 className="text-sm font-medium">Notification Channels</h3>
 
           {/* Push Notifications */}
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-3">
-              <Bell className="h-4 w-4 text-muted-foreground" />
+              <Bell className="text-muted-foreground h-4 w-4" />
               <div>
                 <Label htmlFor="push">Push Notifications</Label>
-                <p className="text-xs text-muted-foreground">
-                  Instant updates on your device
-                </p>
+                <p className="text-muted-foreground text-xs">Instant updates on your device</p>
               </div>
             </div>
             <Switch
@@ -113,12 +103,10 @@ export function NotificationSettings({
           {/* Email Notifications */}
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-3">
-              <Mail className="h-4 w-4 text-muted-foreground" />
+              <Mail className="text-muted-foreground h-4 w-4" />
               <div>
                 <Label htmlFor="email">Email Notifications</Label>
-                <p className="text-xs text-muted-foreground">
-                  Updates sent to your email
-                </p>
+                <p className="text-muted-foreground text-xs">Updates sent to your email</p>
               </div>
             </div>
             <Switch
@@ -136,9 +124,7 @@ export function NotificationSettings({
               </Label>
               <Select
                 value={settings.emailFrequency}
-                onValueChange={(value) =>
-                  updateSetting('emailFrequency', value as EmailFrequency)
-                }
+                onValueChange={(value) => updateSetting('emailFrequency', value as EmailFrequency)}
               >
                 <SelectTrigger id="frequency" className="w-48">
                   <SelectValue />
@@ -155,10 +141,10 @@ export function NotificationSettings({
           {/* SMS Notifications */}
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-3">
-              <MessageSquare className="h-4 w-4 text-muted-foreground" />
+              <MessageSquare className="text-muted-foreground h-4 w-4" />
               <div>
                 <Label htmlFor="sms">SMS Notifications</Label>
-                <p className="text-xs text-muted-foreground">
+                <p className="text-muted-foreground text-xs">
                   Urgent updates only (decisions, selections)
                 </p>
               </div>
@@ -177,10 +163,10 @@ export function NotificationSettings({
         <div className="space-y-4">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-3">
-              <Moon className="h-4 w-4 text-muted-foreground" />
+              <Moon className="text-muted-foreground h-4 w-4" />
               <div>
                 <Label htmlFor="quiet">Quiet Hours</Label>
-                <p className="text-xs text-muted-foreground">
+                <p className="text-muted-foreground text-xs">
                   Pause push notifications during set hours
                 </p>
               </div>
@@ -188,9 +174,7 @@ export function NotificationSettings({
             <Switch
               id="quiet"
               checked={settings.quietHoursEnabled}
-              onCheckedChange={(checked) =>
-                updateSetting('quietHoursEnabled', checked)
-              }
+              onCheckedChange={(checked) => updateSetting('quietHoursEnabled', checked)}
             />
           </div>
 
@@ -220,7 +204,7 @@ export function NotificationSettings({
                   })}
                 </SelectContent>
               </Select>
-              <span className="text-sm text-muted-foreground">to</span>
+              <span className="text-muted-foreground text-sm">to</span>
               <Select
                 value={settings.quietHoursEnd}
                 onValueChange={(value) => updateSetting('quietHoursEnd', value)}
@@ -250,11 +234,7 @@ export function NotificationSettings({
         </div>
 
         {/* Save Button */}
-        <Button
-          onClick={handleSave}
-          disabled={!hasChanges || isSaving}
-          className="w-full"
-        >
+        <Button onClick={handleSave} disabled={!hasChanges || isSaving} className="w-full">
           {isSaving ? (
             <>
               <Loader2 className="mr-2 h-4 w-4 animate-spin" />

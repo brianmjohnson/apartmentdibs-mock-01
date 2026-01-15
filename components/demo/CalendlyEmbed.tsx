@@ -12,7 +12,10 @@ interface CalendlyEmbedProps {
   }
 }
 
-export function CalendlyEmbed({ url = 'https://calendly.com/apartmentdibs/demo', prefill }: CalendlyEmbedProps) {
+export function CalendlyEmbed({
+  url = 'https://calendly.com/apartmentdibs/demo',
+  prefill,
+}: CalendlyEmbedProps) {
   useEffect(() => {
     // Load Calendly widget script
     const script = document.createElement('script')
@@ -44,7 +47,7 @@ export function CalendlyEmbed({ url = 'https://calendly.com/apartmentdibs/demo',
           style={{ minWidth: '320px', height: '630px' }}
         />
 
-        <div className="mt-6 rounded-lg border bg-muted/50 p-4 text-center">
+        <div className="bg-muted/50 mt-6 rounded-lg border p-4 text-center">
           <div className="flex items-center justify-center gap-2 text-sm">
             <Phone className="h-4 w-4" />
             <span>Can&apos;t find a time? Call us at</span>

@@ -1,13 +1,7 @@
 'use client'
 
 import { Users, ArrowRight } from 'lucide-react'
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from '@/components/ui/card'
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { Progress } from '@/components/ui/progress'
 import { Button } from '@/components/ui/button'
@@ -67,13 +61,10 @@ export function RiskComparison({
       <CardContent className="space-y-4">
         {/* Recommendation */}
         {lowestRisk && (
-          <div className="rounded-lg bg-primary/10 p-4">
-            <p className="text-sm font-medium text-primary">
-              Lowest Risk Applicant
-            </p>
-            <p className="text-sm text-muted-foreground mt-1">
-              {lowestRisk.name} has the lowest predicted default rate at{' '}
-              {lowestRisk.score}%
+          <div className="bg-primary/10 rounded-lg p-4">
+            <p className="text-primary text-sm font-medium">Lowest Risk Applicant</p>
+            <p className="text-muted-foreground mt-1 text-sm">
+              {lowestRisk.name} has the lowest predicted default rate at {lowestRisk.score}%
             </p>
           </div>
         )}
@@ -94,7 +85,7 @@ export function RiskComparison({
                   isLowest && !isSelected && 'border-green-200 bg-green-50/50'
                 )}
               >
-                <div className="flex items-start justify-between mb-3">
+                <div className="mb-3 flex items-start justify-between">
                   <div>
                     <div className="flex items-center gap-2">
                       <span className="font-medium">{applicant.name}</span>
@@ -110,11 +101,7 @@ export function RiskComparison({
                   </div>
                   <div className="flex gap-2">
                     {onViewDetails && (
-                      <Button
-                        variant="ghost"
-                        size="sm"
-                        onClick={() => onViewDetails(applicant.id)}
-                      >
+                      <Button variant="ghost" size="sm" onClick={() => onViewDetails(applicant.id)}>
                         Details
                         <ArrowRight className="ml-1 h-3 w-3" />
                       </Button>
@@ -124,7 +111,7 @@ export function RiskComparison({
 
                 {/* Visual comparison bar */}
                 <div className="space-y-1">
-                  <div className="flex justify-between text-xs text-muted-foreground">
+                  <div className="text-muted-foreground flex justify-between text-xs">
                     <span>Risk Level</span>
                     <span>{applicant.score}%</span>
                   </div>
@@ -145,7 +132,7 @@ export function RiskComparison({
                 <div className="mt-3 grid grid-cols-2 gap-2 text-xs">
                   {applicant.keyStrengths && applicant.keyStrengths.length > 0 && (
                     <div>
-                      <p className="font-medium text-green-600 mb-1">Strengths</p>
+                      <p className="mb-1 font-medium text-green-600">Strengths</p>
                       <ul className="space-y-0.5">
                         {applicant.keyStrengths.slice(0, 2).map((s, i) => (
                           <li key={i} className="text-muted-foreground">
@@ -157,7 +144,7 @@ export function RiskComparison({
                   )}
                   {applicant.keyRisks && applicant.keyRisks.length > 0 && (
                     <div>
-                      <p className="font-medium text-red-600 mb-1">Risks</p>
+                      <p className="mb-1 font-medium text-red-600">Risks</p>
                       <ul className="space-y-0.5">
                         {applicant.keyRisks.slice(0, 2).map((r, i) => (
                           <li key={i} className="text-muted-foreground">
@@ -171,7 +158,7 @@ export function RiskComparison({
 
                 {onSelect && (
                   <Button
-                    className="w-full mt-3"
+                    className="mt-3 w-full"
                     variant={isSelected ? 'default' : 'outline'}
                     size="sm"
                     onClick={() => onSelect(applicant.id)}
@@ -184,9 +171,8 @@ export function RiskComparison({
           })}
         </div>
 
-        <p className="text-xs text-muted-foreground text-center">
-          Risk scores are predictions, not guarantees. Final selection should
-          consider all factors.
+        <p className="text-muted-foreground text-center text-xs">
+          Risk scores are predictions, not guarantees. Final selection should consider all factors.
         </p>
       </CardContent>
     </Card>

@@ -111,13 +111,13 @@ Use JSDoc comments with `@story` tags to link code to requirements:
 
 ### What to Document
 
-| Artifact | Location | Example |
-|----------|----------|---------|
-| Components | Above component function | `@story US-012 - Tenant Profile Management` |
-| Pages | Above default export | `@story US-005 - Instant Showing Scheduling` |
-| Custom hooks | Above hook function | `@story US-023 - Document Upload` |
-| Types/Interfaces | Above type definition | `@story US-015 - Income Verification` |
-| Utility functions | Above function | `@story US-031 - SEO Optimization` |
+| Artifact          | Location                 | Example                                      |
+| ----------------- | ------------------------ | -------------------------------------------- |
+| Components        | Above component function | `@story US-012 - Tenant Profile Management`  |
+| Pages             | Above default export     | `@story US-005 - Instant Showing Scheduling` |
+| Custom hooks      | Above hook function      | `@story US-023 - Document Upload`            |
+| Types/Interfaces  | Above type definition    | `@story US-015 - Income Verification`        |
+| Utility functions | Above function           | `@story US-031 - SEO Optimization`           |
 
 ### Examples
 
@@ -576,7 +576,13 @@ import {
 import { Input } from '@/components/ui/input'
 import { Button } from '@/components/ui/button'
 import { Checkbox } from '@/components/ui/checkbox'
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select'
 import { Textarea } from '@/components/ui/textarea'
 ```
 

@@ -150,11 +150,7 @@ export function PricingTable({ type }: PricingTableProps) {
                 </li>
               ))}
             </ul>
-            <Button
-              asChild
-              variant={tier.highlighted ? 'default' : 'outline'}
-              className="w-full"
-            >
+            <Button asChild variant={tier.highlighted ? 'default' : 'outline'} className="w-full">
               <Link href={tier.ctaLink}>{tier.cta}</Link>
             </Button>
           </CardContent>
@@ -166,7 +162,7 @@ export function PricingTable({ type }: PricingTableProps) {
 
 export function MoneyBackGuarantee() {
   return (
-    <div className="mt-8 rounded-lg border bg-muted/50 p-6 text-center">
+    <div className="bg-muted/50 mt-8 rounded-lg border p-6 text-center">
       <p className="text-lg font-semibold">30-Day Money-Back Guarantee</p>
       <p className="text-muted-foreground mt-1 text-sm">
         Not satisfied? Get a full refund within 30 days, no questions asked.

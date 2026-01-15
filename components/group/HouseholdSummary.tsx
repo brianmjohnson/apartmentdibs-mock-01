@@ -1,13 +1,7 @@
 'use client'
 
 import { DollarSign, Users, Shield, Star, AlertTriangle } from 'lucide-react'
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from '@/components/ui/card'
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Progress } from '@/components/ui/progress'
 import { Badge } from '@/components/ui/badge'
 import { Separator } from '@/components/ui/separator'
@@ -74,9 +68,12 @@ export function HouseholdSummary({
   ].filter(Boolean).length
 
   const getQualificationStatus = () => {
-    if (qualificationScore === 4) return { label: 'Excellent Match', color: 'text-green-600', bg: 'bg-green-50' }
-    if (qualificationScore >= 3) return { label: 'Good Match', color: 'text-blue-600', bg: 'bg-blue-50' }
-    if (qualificationScore >= 2) return { label: 'Fair Match', color: 'text-yellow-600', bg: 'bg-yellow-50' }
+    if (qualificationScore === 4)
+      return { label: 'Excellent Match', color: 'text-green-600', bg: 'bg-green-50' }
+    if (qualificationScore >= 3)
+      return { label: 'Good Match', color: 'text-blue-600', bg: 'bg-blue-50' }
+    if (qualificationScore >= 2)
+      return { label: 'Fair Match', color: 'text-yellow-600', bg: 'bg-yellow-50' }
     return { label: 'Needs Review', color: 'text-red-600', bg: 'bg-red-50' }
   }
 
@@ -99,14 +96,14 @@ export function HouseholdSummary({
           <div className="flex items-center justify-between">
             <div>
               <p className={cn('font-semibold', status.color)}>{status.label}</p>
-              <p className="text-sm text-muted-foreground mt-1">
+              <p className="text-muted-foreground mt-1 text-sm">
                 {qualificationScore}/4 requirements met
               </p>
             </div>
             <div className="text-right">
               <Badge
                 variant={qualificationScore >= 3 ? 'default' : 'secondary'}
-                className="text-lg px-3 py-1"
+                className="px-3 py-1 text-lg"
               >
                 {Math.round((qualificationScore / 4) * 100)}%
               </Badge>
@@ -119,27 +116,30 @@ export function HouseholdSummary({
         {/* Income Analysis */}
         <div className="space-y-3">
           <div className="flex items-center gap-2">
-            <DollarSign className="h-4 w-4 text-muted-foreground" />
+            <DollarSign className="text-muted-foreground h-4 w-4" />
             <span className="font-medium">Combined Income</span>
           </div>
           <div className="space-y-2">
             <div className="flex justify-between">
-              <span className="text-sm text-muted-foreground">Total Annual</span>
+              <span className="text-muted-foreground text-sm">Total Annual</span>
               <span className="font-medium">${totalAnnualIncome.toLocaleString()}</span>
             </div>
             <div className="flex justify-between">
-              <span className="text-sm text-muted-foreground">Monthly Income</span>
-              <span className="font-medium">${Math.round(totalMonthlyIncome).toLocaleString()}</span>
+              <span className="text-muted-foreground text-sm">Monthly Income</span>
+              <span className="font-medium">
+                ${Math.round(totalMonthlyIncome).toLocaleString()}
+              </span>
             </div>
             <div className="flex justify-between">
-              <span className="text-sm text-muted-foreground">Income-to-Rent Ratio</span>
+              <span className="text-muted-foreground text-sm">Income-to-Rent Ratio</span>
               <span
                 className={cn(
                   'font-medium',
                   meetsIncomeRequirement ? 'text-green-600' : 'text-red-600'
                 )}
               >
-                {incomeToRentRatio.toFixed(1)}x {!meetsIncomeRequirement && `(${requiredIncomeRatio}x required)`}
+                {incomeToRentRatio.toFixed(1)}x{' '}
+                {!meetsIncomeRequirement && `(${requiredIncomeRatio}x required)`}
               </span>
             </div>
             <Progress
@@ -154,19 +154,19 @@ export function HouseholdSummary({
         {/* Credit Summary */}
         <div className="space-y-3">
           <div className="flex items-center gap-2">
-            <Star className="h-4 w-4 text-muted-foreground" />
+            <Star className="text-muted-foreground h-4 w-4" />
             <span className="font-medium">Credit Summary</span>
           </div>
           <div className="space-y-2">
             {avgCreditScore && (
               <div className="flex justify-between">
-                <span className="text-sm text-muted-foreground">Average Score</span>
+                <span className="text-muted-foreground text-sm">Average Score</span>
                 <span className="font-medium">{avgCreditScore}</span>
               </div>
             )}
             {lowestCreditScore && (
               <div className="flex justify-between">
-                <span className="text-sm text-muted-foreground">Lowest Score</span>
+                <span className="text-muted-foreground text-sm">Lowest Score</span>
                 <span
                   className={cn(
                     'font-medium',
@@ -192,12 +192,12 @@ export function HouseholdSummary({
         {/* Background Check Summary */}
         <div className="space-y-3">
           <div className="flex items-center gap-2">
-            <Shield className="h-4 w-4 text-muted-foreground" />
+            <Shield className="text-muted-foreground h-4 w-4" />
             <span className="font-medium">Background Checks</span>
           </div>
           <div className="space-y-2">
-            <div className="flex justify-between items-center">
-              <span className="text-sm text-muted-foreground">Status</span>
+            <div className="flex items-center justify-between">
+              <span className="text-muted-foreground text-sm">Status</span>
               {anyBackgroundFailed ? (
                 <Badge variant="destructive">Review Required</Badge>
               ) : allBackgroundsPassed ? (
@@ -207,7 +207,7 @@ export function HouseholdSummary({
               )}
             </div>
             {hasEvictionHistory && (
-              <div className="flex items-center gap-2 text-yellow-600 text-sm">
+              <div className="flex items-center gap-2 text-sm text-yellow-600">
                 <AlertTriangle className="h-4 w-4" />
                 <span>Eviction history found</span>
               </div>
@@ -219,7 +219,7 @@ export function HouseholdSummary({
 
         {/* Individual Breakdown */}
         <div className="space-y-3">
-          <span className="font-medium text-sm">Individual Contributions</span>
+          <span className="text-sm font-medium">Individual Contributions</span>
           <div className="space-y-2">
             {members.map((member) => (
               <div key={member.id} className="flex justify-between text-sm">

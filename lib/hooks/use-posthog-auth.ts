@@ -44,7 +44,6 @@ export function usePostHogAuth() {
   useEffect(() => {
     // Placeholder - no-op until Better Auth is integrated
     // Once Better Auth is ready, uncomment the implementation below:
-
     /*
     // Skip if not ready
     if (status === 'loading') return

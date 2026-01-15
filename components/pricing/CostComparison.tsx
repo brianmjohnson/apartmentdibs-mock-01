@@ -8,10 +8,7 @@ interface CostComparisonProps {
   dibsCost?: number
 }
 
-export function CostComparison({
-  traditionalCost = 375,
-  dibsCost = 54.99,
-}: CostComparisonProps) {
+export function CostComparison({ traditionalCost = 375, dibsCost = 54.99 }: CostComparisonProps) {
   const savings = traditionalCost - dibsCost
 
   return (
@@ -68,16 +65,14 @@ export function CostComparison({
               </div>
               <div className="mt-2 flex justify-between border-t pt-2">
                 <span className="font-medium">Total</span>
-                <span className="font-bold text-green-600 dark:text-green-400">
-                  ${dibsCost}
-                </span>
+                <span className="font-bold text-green-600 dark:text-green-400">${dibsCost}</span>
               </div>
             </div>
           </div>
         </div>
 
         {/* Savings callout */}
-        <div className="mt-4 rounded-lg bg-primary/10 p-4 text-center">
+        <div className="bg-primary/10 mt-4 rounded-lg p-4 text-center">
           <div className="flex items-center justify-center gap-2">
             <Sparkles className="text-primary h-5 w-5" />
             <span className="text-xl font-bold">Save ${Math.round(savings)}+</span>

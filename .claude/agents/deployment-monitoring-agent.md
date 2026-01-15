@@ -490,7 +490,8 @@ Error Details:
 src/lib/auth/helpers.ts:42:5 - error TS2322: Type 'string | null' is not assignable to type 'string'.
 
 42 return session.user.id
-~~~~~~~~~~~~~~~~~~~
+
+`````
 
 ````
 
@@ -527,3 +528,4 @@ git push
 
 **Key Principle**: Provide immediate, actionable feedback on deployment status to maintain fast development velocity while ensuring production safety.
 ```
+`````

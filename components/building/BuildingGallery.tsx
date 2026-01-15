@@ -37,7 +37,7 @@ export function BuildingGallery({ images, buildingName }: BuildingGalleryProps) 
         <div className="col-span-4 md:col-span-2 md:row-span-2">
           <button
             onClick={() => setSelectedIndex(0)}
-            className="w-full overflow-hidden rounded-lg focus:outline-none focus:ring-2 focus:ring-primary"
+            className="focus:ring-primary w-full overflow-hidden rounded-lg focus:ring-2 focus:outline-none"
           >
             <AspectRatio ratio={4 / 3}>
               <Image
@@ -57,7 +57,7 @@ export function BuildingGallery({ images, buildingName }: BuildingGalleryProps) 
           <div key={index} className="hidden md:block">
             <button
               onClick={() => setSelectedIndex(index + 1)}
-              className="relative w-full overflow-hidden rounded-lg focus:outline-none focus:ring-2 focus:ring-primary"
+              className="focus:ring-primary relative w-full overflow-hidden rounded-lg focus:ring-2 focus:outline-none"
             >
               <AspectRatio ratio={4 / 3}>
                 <Image
@@ -117,7 +117,7 @@ export function BuildingGallery({ images, buildingName }: BuildingGalleryProps) 
                 <Button
                   variant="ghost"
                   size="icon"
-                  className="absolute left-2 top-1/2 -translate-y-1/2"
+                  className="absolute top-1/2 left-2 -translate-y-1/2"
                   onClick={handlePrevious}
                 >
                   <ChevronLeft className="h-6 w-6" />
@@ -125,7 +125,7 @@ export function BuildingGallery({ images, buildingName }: BuildingGalleryProps) 
                 <Button
                   variant="ghost"
                   size="icon"
-                  className="absolute right-2 top-1/2 -translate-y-1/2"
+                  className="absolute top-1/2 right-2 -translate-y-1/2"
                   onClick={handleNext}
                 >
                   <ChevronRight className="h-6 w-6" />

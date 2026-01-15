@@ -1,31 +1,14 @@
 'use client'
 
 import { useState } from 'react'
-import {
-  Plus,
-  Trash2,
-  GripVertical,
-  AlertTriangle,
-  Save,
-  Loader2,
-} from 'lucide-react'
+import { Plus, Trash2, GripVertical, AlertTriangle, Save, Loader2 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Textarea } from '@/components/ui/textarea'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from '@/components/ui/card'
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
-import {
-  Alert,
-  AlertDescription,
-  AlertTitle,
-} from '@/components/ui/alert'
+import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
 import { cn } from '@/lib/utils'
 
 interface Clause {
@@ -131,8 +114,8 @@ export function ClauseEditor({
             <AlertTriangle className="h-4 w-4" />
             <AlertTitle>Compliance Issues Detected</AlertTitle>
             <AlertDescription>
-              Some clauses may not comply with local regulations. Review the
-              flagged items before saving.
+              Some clauses may not comply with local regulations. Review the flagged items before
+              saving.
             </AlertDescription>
           </Alert>
         )}
@@ -143,13 +126,13 @@ export function ClauseEditor({
             <div
               key={clause.id}
               className={cn(
-                'rounded-lg border p-4 space-y-3',
+                'space-y-3 rounded-lg border p-4',
                 clause.hasComplianceIssue && 'border-red-300 bg-red-50'
               )}
             >
               <div className="flex items-start justify-between">
                 <div className="flex items-center gap-2">
-                  <GripVertical className="h-4 w-4 text-muted-foreground cursor-grab" />
+                  <GripVertical className="text-muted-foreground h-4 w-4 cursor-grab" />
                   <div className="flex items-center gap-2">
                     {clause.isRequired && (
                       <Badge variant="secondary" className="text-xs">
@@ -164,11 +147,7 @@ export function ClauseEditor({
                   </div>
                 </div>
                 {!clause.isRequired && (
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    onClick={() => handleRemoveClause(clause.id)}
-                  >
+                  <Button variant="ghost" size="sm" onClick={() => handleRemoveClause(clause.id)}>
                     <Trash2 className="h-4 w-4" />
                   </Button>
                 )}
@@ -179,9 +158,7 @@ export function ClauseEditor({
                 <Input
                   id={`title-${clause.id}`}
                   value={clause.title}
-                  onChange={(e) =>
-                    handleUpdateClause(clause.id, { title: e.target.value })
-                  }
+                  onChange={(e) => handleUpdateClause(clause.id, { title: e.target.value })}
                   placeholder="e.g., Snow Removal Responsibility"
                   disabled={clause.isRequired && !clause.isCustom}
                 />
@@ -192,9 +169,7 @@ export function ClauseEditor({
                 <Textarea
                   id={`content-${clause.id}`}
                   value={clause.content}
-                  onChange={(e) =>
-                    handleUpdateClause(clause.id, { content: e.target.value })
-                  }
+                  onChange={(e) => handleUpdateClause(clause.id, { content: e.target.value })}
                   placeholder="Enter the full clause text..."
                   rows={3}
                   disabled={clause.isRequired && !clause.isCustom}
@@ -203,7 +178,7 @@ export function ClauseEditor({
 
               {clause.complianceWarning && (
                 <div className="flex items-start gap-2 text-sm text-red-600">
-                  <AlertTriangle className="h-4 w-4 mt-0.5 flex-shrink-0" />
+                  <AlertTriangle className="mt-0.5 h-4 w-4 flex-shrink-0" />
                   <span>{clause.complianceWarning}</span>
                 </div>
               )}
@@ -234,18 +209,14 @@ export function ClauseEditor({
                 </Button>
               ))}
             </div>
-            <p className="text-xs text-muted-foreground">
+            <p className="text-muted-foreground text-xs">
               Click to add a previously saved clause to this lease
             </p>
           </div>
         )}
 
         {/* Save Button */}
-        <Button
-          className="w-full"
-          onClick={handleSave}
-          disabled={isSaving || hasComplianceIssues}
-        >
+        <Button className="w-full" onClick={handleSave} disabled={isSaving || hasComplianceIssues}>
           {isSaving ? (
             <>
               <Loader2 className="mr-2 h-4 w-4 animate-spin" />

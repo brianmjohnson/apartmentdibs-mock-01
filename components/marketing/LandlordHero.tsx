@@ -30,7 +30,7 @@ const painPoints: PainPoint[] = [
 
 export function LandlordHero() {
   return (
-    <section className="bg-gradient-to-b from-primary/5 to-background py-16 md:py-24">
+    <section className="from-primary/5 to-background bg-gradient-to-b py-16 md:py-24">
       <div className="container mx-auto px-4">
         {/* Hero Section */}
         <div className="mx-auto mb-16 max-w-3xl text-center">
@@ -48,7 +48,7 @@ export function LandlordHero() {
         {/* Pain Points */}
         <div className="mx-auto grid max-w-5xl grid-cols-1 gap-8 md:grid-cols-3">
           {painPoints.map((point, index) => (
-            <div key={index} className="rounded-lg border bg-card p-6 text-center shadow-sm">
+            <div key={index} className="bg-card rounded-lg border p-6 text-center shadow-sm">
               <div className="mb-4 flex justify-center">{point.icon}</div>
               <h3 className="mb-2 text-lg font-semibold">{point.title}</h3>
               <p className="text-muted-foreground text-sm">{point.description}</p>

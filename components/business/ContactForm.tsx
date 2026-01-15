@@ -45,7 +45,7 @@ export function ContactForm({ agentName, businessId, onSubmit }: ContactFormProp
     return (
       <Card>
         <CardContent className="py-8 text-center">
-          <div className="text-primary mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-primary/10">
+          <div className="text-primary bg-primary/10 mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-full">
             <MessageSquare className="h-6 w-6" />
           </div>
           <h3 className="mb-2 font-semibold">Message Sent!</h3>

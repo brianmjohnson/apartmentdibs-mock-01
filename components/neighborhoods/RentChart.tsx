@@ -33,19 +33,23 @@ export function RentChart({ data, averageRent, cityAverage }: RentChartProps) {
       <CardContent className="space-y-6">
         {/* Current average */}
         <div className="grid gap-4 sm:grid-cols-2">
-          <div className="rounded-lg bg-muted p-4 text-center">
+          <div className="bg-muted rounded-lg p-4 text-center">
             <p className="text-muted-foreground text-sm">Average 1BR Rent</p>
             <p className="text-3xl font-bold">${averageRent.toLocaleString()}</p>
             <div className="mt-1 flex items-center justify-center gap-1 text-sm">
               {trendUp && <TrendingUp className="h-4 w-4 text-red-500" />}
               {trendDown && <TrendingDown className="h-4 w-4 text-green-500" />}
               {!trendUp && !trendDown && <Minus className="text-muted-foreground h-4 w-4" />}
-              <span className={trendUp ? 'text-red-500' : trendDown ? 'text-green-500' : 'text-muted-foreground'}>
+              <span
+                className={
+                  trendUp ? 'text-red-500' : trendDown ? 'text-green-500' : 'text-muted-foreground'
+                }
+              >
                 {Math.abs(percentChange).toFixed(1)}% YoY
               </span>
             </div>
           </div>
-          <div className="rounded-lg bg-muted p-4 text-center">
+          <div className="bg-muted rounded-lg p-4 text-center">
             <p className="text-muted-foreground text-sm">vs City Average</p>
             <p className="text-3xl font-bold">
               {averageRent > cityAverage ? '+' : ''}
@@ -73,7 +77,7 @@ export function RentChart({ data, averageRent, cityAverage }: RentChartProps) {
                     className="bg-primary/70 hover:bg-primary w-full rounded-t transition-colors"
                     style={{ height: `${Math.max(height, 5)}%` }}
                   />
-                  <div className="absolute -bottom-5 left-1/2 hidden -translate-x-1/2 whitespace-nowrap text-xs group-hover:block">
+                  <div className="absolute -bottom-5 left-1/2 hidden -translate-x-1/2 text-xs whitespace-nowrap group-hover:block">
                     ${item.rent.toLocaleString()}
                   </div>
                 </div>

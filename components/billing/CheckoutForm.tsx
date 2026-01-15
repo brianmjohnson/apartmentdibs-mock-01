@@ -3,7 +3,14 @@
 import { useState } from 'react'
 import { CreditCard, Lock, Loader2 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card'
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Separator } from '@/components/ui/separator'
@@ -92,7 +99,7 @@ export function CheckoutForm({
       </CardHeader>
       <form onSubmit={handleSubmit}>
         <CardContent className="space-y-4">
-          <div className="rounded-lg bg-muted p-4">
+          <div className="bg-muted rounded-lg p-4">
             <div className="flex justify-between">
               <span className="font-medium">{planName} Plan</span>
               <span className="font-bold">${planPrice}/mo</span>
@@ -134,7 +141,7 @@ export function CheckoutForm({
                 maxLength={19}
                 required
               />
-              <CreditCard className="absolute right-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+              <CreditCard className="text-muted-foreground absolute top-1/2 right-3 h-4 w-4 -translate-y-1/2" />
             </div>
           </div>
 
@@ -170,7 +177,7 @@ export function CheckoutForm({
             </div>
           </div>
 
-          <div className="flex items-center gap-2 text-sm text-muted-foreground">
+          <div className="text-muted-foreground flex items-center gap-2 text-sm">
             <Lock className="h-4 w-4" />
             Your payment is secured with 256-bit SSL encryption
           </div>

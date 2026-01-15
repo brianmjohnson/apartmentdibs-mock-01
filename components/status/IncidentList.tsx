@@ -61,25 +61,37 @@ export function IncidentList({
     switch (status) {
       case 'investigating':
         return (
-          <Badge variant="secondary" className="bg-yellow-100 text-yellow-800 dark:bg-yellow-900/30 dark:text-yellow-300">
+          <Badge
+            variant="secondary"
+            className="bg-yellow-100 text-yellow-800 dark:bg-yellow-900/30 dark:text-yellow-300"
+          >
             Investigating
           </Badge>
         )
       case 'identified':
         return (
-          <Badge variant="secondary" className="bg-orange-100 text-orange-800 dark:bg-orange-900/30 dark:text-orange-300">
+          <Badge
+            variant="secondary"
+            className="bg-orange-100 text-orange-800 dark:bg-orange-900/30 dark:text-orange-300"
+          >
             Identified
           </Badge>
         )
       case 'monitoring':
         return (
-          <Badge variant="secondary" className="bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-300">
+          <Badge
+            variant="secondary"
+            className="bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-300"
+          >
             Monitoring
           </Badge>
         )
       case 'resolved':
         return (
-          <Badge variant="secondary" className="bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-300">
+          <Badge
+            variant="secondary"
+            className="bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-300"
+          >
             Resolved
           </Badge>
         )
@@ -91,7 +103,11 @@ export function IncidentList({
       case 'minor':
         return <Badge variant="secondary">Minor</Badge>
       case 'major':
-        return <Badge variant="secondary" className="bg-yellow-100 text-yellow-800">Major</Badge>
+        return (
+          <Badge variant="secondary" className="bg-yellow-100 text-yellow-800">
+            Major
+          </Badge>
+        )
       case 'critical':
         return <Badge variant="destructive">Critical</Badge>
     }
@@ -129,18 +145,14 @@ export function IncidentList({
     <Card className={className}>
       <CardHeader>
         <CardTitle>Incident History</CardTitle>
-        <CardDescription>
-          Past and ongoing incidents affecting our services
-        </CardDescription>
+        <CardDescription>Past and ongoing incidents affecting our services</CardDescription>
       </CardHeader>
       <CardContent>
         {displayIncidents.length === 0 ? (
           <div className="py-8 text-center">
             <CheckCircle className="mx-auto mb-3 h-8 w-8 text-green-600" />
             <p className="font-medium">No incidents to report</p>
-            <p className="mt-1 text-sm text-muted-foreground">
-              All systems are operating normally
-            </p>
+            <p className="text-muted-foreground mt-1 text-sm">All systems are operating normally</p>
           </div>
         ) : (
           <div className="space-y-6">
@@ -159,24 +171,22 @@ export function IncidentList({
                         {getSeverityBadge(incident.severity)}
                       </div>
                     </div>
-                    <div className="text-right text-sm text-muted-foreground">
+                    <div className="text-muted-foreground text-right text-sm">
                       <p>{formatDate(incident.createdAt)}</p>
-                      <p>
-                        Duration: {formatDuration(incident.createdAt, incident.resolvedAt)}
-                      </p>
+                      <p>Duration: {formatDuration(incident.createdAt, incident.resolvedAt)}</p>
                     </div>
                   </div>
 
                   {incident.affectedComponents.length > 0 && (
-                    <div className="text-sm text-muted-foreground">
+                    <div className="text-muted-foreground text-sm">
                       Affected: {incident.affectedComponents.join(', ')}
                     </div>
                   )}
 
-                  <div className="border-l-2 border-muted pl-4 space-y-3">
+                  <div className="border-muted space-y-3 border-l-2 pl-4">
                     {incident.updates.map((update, updateIndex) => (
                       <div key={updateIndex} className="text-sm">
-                        <div className="flex items-center gap-2 text-muted-foreground">
+                        <div className="text-muted-foreground flex items-center gap-2">
                           <span className="font-medium capitalize">{update.status}</span>
                           <span>-</span>
                           <span>{formatTime(update.timestamp)}</span>

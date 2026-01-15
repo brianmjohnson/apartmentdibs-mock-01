@@ -48,7 +48,7 @@ export function PerformanceMetrics({
         <div className="grid grid-cols-2 gap-4">
           {metrics.map((metric) => (
             <div key={metric.label} className="text-center">
-              <div className="text-primary mx-auto mb-2 flex h-10 w-10 items-center justify-center rounded-full bg-primary/10">
+              <div className="text-primary bg-primary/10 mx-auto mb-2 flex h-10 w-10 items-center justify-center rounded-full">
                 {metric.icon}
               </div>
               <p className="text-2xl font-bold">{metric.value}</p>

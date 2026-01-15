@@ -2,7 +2,14 @@
 
 import { Check, Shield, Phone, Star } from 'lucide-react'
 import { Button } from '@/components/ui/button'
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card'
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 
 interface LandlordTier {
@@ -92,7 +99,7 @@ export function LandlordPricing({ onSelectTier, currentTierId, className }: Land
     <div className={className}>
       <div className="mb-8 text-center">
         <h3 className="text-lg font-semibold">Protect Your Investment</h3>
-        <p className="mt-1 text-sm text-muted-foreground">
+        <p className="text-muted-foreground mt-1 text-sm">
           Compliance tiers save you thousands in potential legal fees
         </p>
       </div>
@@ -102,18 +109,16 @@ export function LandlordPricing({ onSelectTier, currentTierId, className }: Land
           <Card
             key={tier.id}
             className={`relative flex flex-col ${
-              tier.isRecommended
-                ? 'border-2 border-primary shadow-lg'
-                : 'border'
-            } ${currentTierId === tier.id ? 'ring-2 ring-primary' : ''}`}
+              tier.isRecommended ? 'border-primary border-2 shadow-lg' : 'border'
+            } ${currentTierId === tier.id ? 'ring-primary ring-2' : ''}`}
           >
             {tier.isRecommended && (
-              <Badge className="absolute -top-3 left-1/2 -translate-x-1/2 bg-primary">
+              <Badge className="bg-primary absolute -top-3 left-1/2 -translate-x-1/2">
                 Recommended
               </Badge>
             )}
             <CardHeader>
-              <div className="mb-2 flex h-12 w-12 items-center justify-center rounded-lg bg-primary/10 text-primary">
+              <div className="bg-primary/10 text-primary mb-2 flex h-12 w-12 items-center justify-center rounded-lg">
                 {tier.icon}
               </div>
               <CardTitle>{tier.name}</CardTitle>
@@ -122,11 +127,9 @@ export function LandlordPricing({ onSelectTier, currentTierId, className }: Land
             <CardContent className="flex-1">
               <div className="mb-6">
                 <span className="text-4xl font-bold">{formatPrice(tier)}</span>
-                {tier.annualPrice !== 0 && (
-                  <span className="text-muted-foreground">/year</span>
-                )}
+                {tier.annualPrice !== 0 && <span className="text-muted-foreground">/year</span>}
                 {tier.perListingPrice && (
-                  <p className="mt-1 text-sm text-muted-foreground">
+                  <p className="text-muted-foreground mt-1 text-sm">
                     + ${tier.perListingPrice}/listing
                   </p>
                 )}

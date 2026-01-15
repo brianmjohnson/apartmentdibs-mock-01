@@ -25,11 +25,7 @@ interface DeletionRequestProps {
   className?: string
 }
 
-export function DeletionRequest({
-  userEmail,
-  onSubmit,
-  className,
-}: DeletionRequestProps) {
+export function DeletionRequest({ userEmail, onSubmit, className }: DeletionRequestProps) {
   const [requestState, setRequestState] = useState<RequestState>('idle')
   const [confirmEmail, setConfirmEmail] = useState('')
   const [acknowledged, setAcknowledged] = useState(false)
@@ -69,9 +65,7 @@ export function DeletionRequest({
             <Trash2 className="h-5 w-5" />
             Delete Your Account
           </CardTitle>
-          <CardDescription>
-            Permanently delete your account and all associated data
-          </CardDescription>
+          <CardDescription>Permanently delete your account and all associated data</CardDescription>
         </CardHeader>
         <CardContent>
           {requestState === 'submitted' ? (
@@ -105,11 +99,11 @@ export function DeletionRequest({
                 </AlertDescription>
               </Alert>
 
-              <div className="rounded-lg bg-muted/50 p-4">
+              <div className="bg-muted/50 rounded-lg p-4">
                 <p className="text-sm font-medium">What we retain:</p>
-                <p className="mt-1 text-sm text-muted-foreground">
-                  Anonymized audit logs are retained for 3 years as required by FCRA for
-                  compliance purposes. These logs do not contain personally identifiable information.
+                <p className="text-muted-foreground mt-1 text-sm">
+                  Anonymized audit logs are retained for 3 years as required by FCRA for compliance
+                  purposes. These logs do not contain personally identifiable information.
                 </p>
               </div>
 
@@ -118,16 +112,12 @@ export function DeletionRequest({
                   Need to delete specific data instead?
                 </p>
                 <p className="mt-1 text-sm text-blue-700 dark:text-blue-300">
-                  You can selectively delete individual documents or application history
-                  while keeping your account active.
+                  You can selectively delete individual documents or application history while
+                  keeping your account active.
                 </p>
               </div>
 
-              <Button
-                variant="destructive"
-                className="w-full"
-                onClick={handleRequestDeletion}
-              >
+              <Button variant="destructive" className="w-full" onClick={handleRequestDeletion}>
                 <Trash2 className="mr-2 h-4 w-4" />
                 Request Account Deletion
               </Button>
@@ -149,9 +139,7 @@ export function DeletionRequest({
         <DialogContent>
           <DialogHeader>
             <DialogTitle className="text-red-600">Confirm Account Deletion</DialogTitle>
-            <DialogDescription>
-              This action is permanent and cannot be undone.
-            </DialogDescription>
+            <DialogDescription>This action is permanent and cannot be undone.</DialogDescription>
           </DialogHeader>
           <div className="space-y-4 py-4">
             <div className="space-y-2">

@@ -9,6 +9,7 @@
 ## Overview
 
 Feature flags allow us to:
+
 - **Gradual Rollouts**: Release features to 1%, 10%, 50%, 100% of users
 - **A/B Testing**: Test variants to optimize conversion
 - **Kill Switches**: Instantly disable problematic features
@@ -16,6 +17,7 @@ Feature flags allow us to:
 - **Environment Control**: Different behavior in dev/staging/prod
 
 **Related Documents**:
+
 - [PostHog Setup Guide](./posthog-setup-guide.md) - One-time account configuration (HITL task)
 - [ADR-013: PostHog Analytics Platform](../adr/ADR-013-posthog-analytics-and-experimentation-platform.md)
 - [User Story: PostHog Integration](../user-stories/posthog-integration.md)
@@ -40,6 +42,7 @@ See [ADR-013 Reverse Proxy Configuration](../adr/ADR-013-posthog-analytics-and-e
 Simple on/off switches.
 
 **Example**:
+
 ```typescript
 'use client'
 
@@ -61,6 +64,7 @@ export function Dashboard() {
 Multiple variants for A/B/C testing.
 
 **Example**:
+
 ```typescript
 'use client'
 
@@ -87,6 +91,7 @@ export function PricingPage() {
 Gradually increase exposure.
 
 **PostHog Configuration**:
+
 - Day 1: 5% of users
 - Day 3: 25% of users
 - Day 7: 50% of users
@@ -195,10 +200,7 @@ import { analyticsServer } from '@/lib/analytics/posthog.server'
 export async function GET(request: NextRequest) {
   const userId = request.headers.get('x-user-id')
 
-  const useNewAlgorithm = await analyticsServer.isFeatureEnabled(
-    'new-ranking-algorithm',
-    userId
-  )
+  const useNewAlgorithm = await analyticsServer.isFeatureEnabled('new-ranking-algorithm', userId)
 
   const listings = useNewAlgorithm
     ? await getListingsNewAlgorithm()
@@ -251,10 +253,12 @@ export function PricingPage() {
   useEffect(() => {
     // Track which variant was shown
     if (variant) {
-      track(Events.Experiment.viewed({
-        experiment_name: 'pricing-test',
-        variant_name: variant
-      }))
+      track(
+        Events.Experiment.viewed({
+          experiment_name: 'pricing-test',
+          variant_name: variant,
+        })
+      )
     }
   }, [variant, track])
 
@@ -339,14 +343,15 @@ export function PaymentFlow() {
 
 ## Current Feature Flags
 
-| Flag Key | Type | Purpose | Status |
-|----------|------|---------|--------|
-| `new-dashboard` | Boolean | New dashboard UI rollout | 🟡 Testing (10%) |
-| `beta-features` | Boolean | Early access features for beta users | 🟢 Active |
-| `maintenance-mode` | Boolean | Kill switch for maintenance | 🔴 Off |
-| `session-recording` | Boolean | Enable session recording | 🟢 Active (opt-out) |
+| Flag Key            | Type    | Purpose                              | Status              |
+| ------------------- | ------- | ------------------------------------ | ------------------- |
+| `new-dashboard`     | Boolean | New dashboard UI rollout             | 🟡 Testing (10%)    |
+| `beta-features`     | Boolean | Early access features for beta users | 🟢 Active           |
+| `maintenance-mode`  | Boolean | Kill switch for maintenance          | 🔴 Off              |
+| `session-recording` | Boolean | Enable session recording             | 🟢 Active (opt-out) |
 
 **Legend**:
+
 - 🟢 Active (100%)
 - 🟡 Testing (< 100%)
 - 🔴 Off (0%)
@@ -358,11 +363,13 @@ export function PaymentFlow() {
 ### 1. Flag Naming
 
 **Good**:
+
 - `new-dashboard` (descriptive)
 - `checkout-flow-v2` (version number)
 - `enable-session-recording` (action-oriented)
 
 **Bad**:
+
 - `test` (too vague)
 - `flag1` (not descriptive)
 - `johns-experiment` (personal names)
@@ -441,6 +448,7 @@ test('renders new feature when flag is enabled', () => {
 **Scenario**: New search algorithm
 
 **Strategy**:
+
 1. Week 1: Internal team only (0.1%)
 2. Week 2: Early adopters (5%)
 3. Week 3: General rollout (50%)
@@ -455,6 +463,7 @@ test('renders new feature when flag is enabled', () => {
 **Scenario**: Test two pricing page designs
 
 **Strategy**:
+
 - 50% see original (control)
 - 50% see new design (variant)
 - Track conversion rate for each
@@ -469,6 +478,7 @@ test('renders new feature when flag is enabled', () => {
 **Scenario**: New landlord dashboard for beta testers
 
 **Strategy**:
+
 - Target users with `beta_tester` property
 - OR target specific user IDs
 - Collect feedback before public launch
@@ -482,6 +492,7 @@ test('renders new feature when flag is enabled', () => {
 **Scenario**: Disable payments during database migration
 
 **Strategy**:
+
 - Create `maintenance-mode` flag
 - Default to `false` in code
 - Flip to `true` during migration

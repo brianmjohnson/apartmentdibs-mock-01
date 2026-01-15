@@ -2,12 +2,7 @@
 
 import { Shield, AlertTriangle, XCircle, HelpCircle } from 'lucide-react'
 import { Badge } from '@/components/ui/badge'
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipProvider,
-  TooltipTrigger,
-} from '@/components/ui/tooltip'
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip'
 
 type RiskLevel = 'low' | 'medium' | 'high' | 'unknown'
 
@@ -81,15 +76,10 @@ export function FraudRiskBadge({
   }
 
   const badge = (
-    <Badge
-      variant="secondary"
-      className={`${getBadgeVariant()} ${className}`}
-    >
+    <Badge variant="secondary" className={`${getBadgeVariant()} ${className}`}>
       <span className="mr-1">{getIcon()}</span>
       {getLabel()}
-      {score !== undefined && (
-        <span className="ml-1 opacity-75">({score}%)</span>
-      )}
+      {score !== undefined && <span className="ml-1 opacity-75">({score}%)</span>}
     </Badge>
   )
 
@@ -100,9 +90,7 @@ export function FraudRiskBadge({
   return (
     <TooltipProvider>
       <Tooltip>
-        <TooltipTrigger asChild>
-          {badge}
-        </TooltipTrigger>
+        <TooltipTrigger asChild>{badge}</TooltipTrigger>
         <TooltipContent>
           <p className="max-w-xs text-sm">{getTooltipContent()}</p>
         </TooltipContent>

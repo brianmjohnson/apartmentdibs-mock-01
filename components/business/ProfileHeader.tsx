@@ -38,7 +38,7 @@ export function ProfileHeader({
       .toUpperCase()
 
   return (
-    <div className="rounded-lg border bg-card p-6 shadow-sm">
+    <div className="bg-card rounded-lg border p-6 shadow-sm">
       <div className="flex flex-col items-center gap-6 md:flex-row md:items-start">
         {/* Photo */}
         <div className="relative flex-shrink-0">
@@ -52,7 +52,7 @@ export function ProfileHeader({
             </div>
           )}
           {verified && (
-            <CheckCircle2 className="absolute right-0 bottom-0 h-8 w-8 fill-primary text-background" />
+            <CheckCircle2 className="fill-primary text-background absolute right-0 bottom-0 h-8 w-8" />
           )}
         </div>
 

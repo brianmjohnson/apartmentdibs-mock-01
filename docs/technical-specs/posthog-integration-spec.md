@@ -4,6 +4,7 @@
 **Date**: 2025-11-20
 **Author**: Frontend Developer Agent
 **Related Documents**:
+
 - [ADR-013: PostHog Analytics Platform](../adr/ADR-013-posthog-analytics-and-experimentation-platform.md)
 - [US-002: PostHog Integration User Story](../user-stories/posthog-integration.md)
 
@@ -43,6 +44,7 @@ This specification defines the complete implementation of PostHog analytics, fea
 **Total**: 2 weeks (13 story points, ~32 hours)
 
 **Breakdown**:
+
 - Week 1, Days 1-2: Installation, configuration, initialization (8 hours)
 - Week 1, Days 3-4: User identification and auth integration (8 hours)
 - Week 2, Days 1-3: Custom event tracking across app (12 hours)
@@ -59,17 +61,20 @@ pnpm add posthog-js posthog-node
 ```
 
 **Version Requirements**:
+
 - `posthog-js`: ^1.100.0 (client-side SDK)
 - `posthog-node`: ^4.0.0 (server-side SDK)
 - Compatible with Next.js 15.3+, React 19.2+
 
 **Bundle Size Impact**:
+
 - posthog-js: ~50KB gzipped
 - posthog-node: Server-only, no client bundle impact
 
 ### 2. Verify Dependencies
 
 Existing dependencies already compatible:
+
 - `@tanstack/react-query`: ^5.90.10 ✅
 - `next`: ^16.0.3 ✅
 - `react`: ^19.2.0 ✅
@@ -78,6 +83,7 @@ Existing dependencies already compatible:
 ### 3. PostHog Account Setup
 
 **Before Implementation**:
+
 1. Create PostHog account at https://posthog.com/signup
 2. Create new project: "ApartmentDibs Production"
 3. Retrieve API keys:
@@ -116,6 +122,7 @@ Lines 67-76 already contain PostHog configuration with comments.
 
 **2. `.env.local` - Developer Creates**
 Copy `.env.example` and fill in actual PostHog keys:
+
 ```bash
 cp .env.example .env.local
 # Edit .env.local with real keys
@@ -123,11 +130,13 @@ cp .env.example .env.local
 
 **3. Vercel Environment Variables**
 Add to Vercel dashboard for each environment:
+
 - Production: Add all three variables
 - Preview: Add all three variables (can use same keys or separate preview project)
 - Development: Use `.env.local`
 
 **Security Notes**:
+
 - ✅ `NEXT_PUBLIC_POSTHOG_KEY`: Public, exposed to client (read-only for events)
 - ⚠️ `POSTHOG_PERSONAL_API_KEY`: Private, server-only (can delete data, manage flags)
 - Never commit `.env.local` to git
@@ -207,6 +216,7 @@ apartmentdibs-mock-01/
 ```
 
 **Key Points**:
+
 - **Proxy Path**: `/0579f8f99ca21e72e24243d7b9f81954` is the MD5 hash of "posthog" - unique enough to avoid ad blockers, yet reproducible
 - **Two Routes Required**: One for static assets (`/static/:path*`), one for API calls (`/:path*`)
 - **Ad Blocker Resistance**: Avoids commonly blocked paths like `/ingest`, `/tracking`, `/analytics`
@@ -279,6 +289,7 @@ export function PostHogProvider({ children }: { children: React.ReactNode }) {
 ```
 
 **Key Configuration Points**:
+
 - **api_host**: Uses reverse proxy path `/0579f8f99ca21e72e24243d7b9f81954` instead of direct PostHog domain
 - **ui_host**: Required for PostHog toolbar authentication and dashboard links
 - **defaults**: '2025-05-24' enables latest PostHog features and optimizations
@@ -287,6 +298,7 @@ export function PostHogProvider({ children }: { children: React.ReactNode }) {
 - **session_recording**: Masks all inputs and elements with `[data-private]` attribute
 
 **PostHogInitCheck Helper** (optional, for components that need PostHog to be fully loaded):
+
 ```typescript
 export function PostHogInitCheck({ children }: { children: React.ReactNode }) {
   const [isReady, setIsReady] = useState(false)
@@ -355,6 +367,7 @@ export function PostHogPageView(): null {
 ```
 
 **Usage in app/layout.tsx**:
+
 ```typescript
 import { Suspense } from 'react'
 import { PostHogPageView } from './_components/posthog-pageview'
@@ -396,6 +409,7 @@ POSTHOG_PERSONAL_API_KEY="phx_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
 ```
 
 **Note on NEXT_PUBLIC_POSTHOG_HOST**:
+
 - This variable is no longer used in the client initialization (we use the reverse proxy path instead)
 - Kept for backward compatibility and documentation
 - Server-side code may still reference it for direct PostHog API calls
@@ -463,26 +477,28 @@ export const analyticsServer = {
 ```
 
 **Why server-side tracking uses direct PostHog domain**:
+
 - Server-side requests don't go through ad blockers
 - Vercel rewrites only apply to client-side requests
 - Direct connection is simpler and more reliable for server-to-server communication
 
 ---
 
-  // Error tracking
-  if (typeof window !== 'undefined') {
-    window.addEventListener('error', (event) => {
-      posthog.capture('$exception', {
-        $exception_message: event.message,
-        $exception_type: event.error?.name || 'Error',
-        $exception_source: event.filename,
-        $exception_lineno: event.lineno,
-        $exception_colno: event.colno,
-      })
-    })
-  }
+// Error tracking
+if (typeof window !== 'undefined') {
+window.addEventListener('error', (event) => {
+posthog.capture('$exception', {
+$exception_message: event.message,
+$exception_type: event.error?.name || 'Error',
+$exception_source: event.filename,
+$exception_lineno: event.lineno,
+$exception_colno: event.colno,
+})
+})
 }
-```
+}
+
+````
 
 **Key Configuration Decisions** (from ADR-013):
 - `person_profiles: 'identified_only'`: Reduces PII exposure, GDPR-friendly
@@ -519,16 +535,17 @@ import { type ReactNode } from 'react'
 export function PostHogProvider({ children }: { children: ReactNode }) {
   return <PHProvider client={posthog}>{children}</PHProvider>
 }
-```
+````
 
 **Why So Simple?**
+
 - Initialization happens in `instrumentation-client.ts` (early, before provider)
 - Provider only wraps React Context
 - Keeps component logic minimal
 
 ---
 
-### 3. Pageview Tracking (app/_components/posthog-pageview.tsx)
+### 3. Pageview Tracking (app/\_components/posthog-pageview.tsx)
 
 **Purpose**: Track pageviews on route changes in Next.js App Router. Handles query parameters and hash changes.
 
@@ -580,6 +597,7 @@ export function PostHogPageview() {
 ```
 
 **Why Manual Pageviews?**
+
 - Next.js App Router has complex navigation (soft navigation, partial hydration)
 - Manual tracking ensures we catch all route changes accurately
 - Allows adding custom properties to pageview events
@@ -700,6 +718,7 @@ export function usePostHogAuth() {
 ```
 
 **Integration Points**:
+
 - Replace `useSession()` mock with actual Better Auth session hook
 - Adjust `User` and `Organization` types to match your schema
 - Called once in root layout (runs on every session change)
@@ -801,19 +820,16 @@ export function trackEvent<T extends AnalyticsEvent>(
 import { PostHog } from 'posthog-node'
 
 // Initialize PostHog client (singleton)
-const posthogClient = new PostHog(
-  process.env.POSTHOG_PERSONAL_API_KEY!,
-  {
-    host: process.env.NEXT_PUBLIC_POSTHOG_HOST || 'https://us.i.posthog.com',
+const posthogClient = new PostHog(process.env.POSTHOG_PERSONAL_API_KEY!, {
+  host: process.env.NEXT_PUBLIC_POSTHOG_HOST || 'https://us.i.posthog.com',
 
-    // Batch configuration (optimize for serverless)
-    flushAt: 20,         // Send batch when 20 events accumulated
-    flushInterval: 10000, // Or send every 10 seconds
+  // Batch configuration (optimize for serverless)
+  flushAt: 20, // Send batch when 20 events accumulated
+  flushInterval: 10000, // Or send every 10 seconds
 
-    // Enable debug logging in development
-    enable_recording_console_log: process.env.NODE_ENV === 'development',
-  }
-)
+  // Enable debug logging in development
+  enable_recording_console_log: process.env.NODE_ENV === 'development',
+})
 
 /**
  * Track server-side event
@@ -909,10 +925,7 @@ export async function getAllFeatureFlags(
  * @param userId - User ID
  * @param properties - User properties
  */
-export async function identifyUser(
-  userId: string,
-  properties: Record<string, any>
-) {
+export async function identifyUser(userId: string, properties: Record<string, any>) {
   try {
     posthogClient.identify({
       distinctId: userId,
@@ -954,6 +967,7 @@ export { posthogClient }
 ```
 
 **Critical Notes**:
+
 - ⚠️ Always call `posthog.shutdown()` in serverless functions
 - Serverless functions terminate quickly; unflushed events are lost
 - `shutdown()` flushes pending events and waits for completion
@@ -1095,6 +1109,7 @@ export function usePaymentEvents() {
 ```
 
 **Usage Example**:
+
 ```typescript
 // In a component
 const { trackListingViewed } = useListingEvents()
@@ -1266,7 +1281,7 @@ export type FeatureFlagKey =
   | 'maintenance-mode'
   | 'advanced-search'
   | 'ai-recommendations'
-  // Add new flags here
+// Add new flags here
 
 /**
  * Feature Flag Value Types
@@ -1333,10 +1348,7 @@ export function identifyUser(userId: string, properties: UserProperties): void {
  * Set organization as a group
  * Called after login/organization selection
  */
-export function setOrganization(
-  organizationId: string,
-  properties: OrganizationProperties
-): void {
+export function setOrganization(organizationId: string, properties: OrganizationProperties): void {
   if (!isPostHogReady()) return
 
   posthog.group('organization', organizationId, properties)
@@ -1379,9 +1391,7 @@ export function isFeatureEnabled(flagKey: FeatureFlagKey): boolean {
  * Get feature flag variant
  * Useful for A/B tests with multiple variants
  */
-export function getFeatureFlagVariant(
-  flagKey: FeatureFlagKey
-): string | boolean | undefined {
+export function getFeatureFlagVariant(flagKey: FeatureFlagKey): string | boolean | undefined {
   if (!isPostHogReady()) return undefined
 
   return posthog.getFeatureFlagPayload(flagKey)
@@ -1553,6 +1563,7 @@ export function Providers({ children }: { children: React.ReactNode }) {
 ```
 
 **Key Points**:
+
 - PostHog provider wraps everything (outermost)
 - `AnalyticsIntegration` component handles pageviews and auth
 - Existing QueryClientProvider unchanged
@@ -1565,6 +1576,7 @@ export function Providers({ children }: { children: React.ReactNode }) {
 All types are defined in `/Users/brianjohnson/dev/github_personal/apartmentdibs-mock-01/lib/analytics/types.ts` (see Implementation Details section 8).
 
 **Key Types**:
+
 - `AnalyticsEvent`: Union of all custom events
 - `UserProperties`: User identification properties
 - `OrganizationProperties`: Organization group properties
@@ -1774,15 +1786,13 @@ test.describe('PostHog Analytics E2E', () => {
 
     // Verify listing_viewed event (check network or console)
     const logs = await page.evaluate(() => (window as any).__analyticsEvents || [])
-    expect(logs).toContainEqual(
-      expect.objectContaining({ event: 'listing_viewed' })
-    )
+    expect(logs).toContainEqual(expect.objectContaining({ event: 'listing_viewed' }))
   })
 
   test('should respect feature flag', async ({ page }) => {
     // Set feature flag via bootstrap or mock
     await page.addInitScript(() => {
-      (window as any).__POSTHOG_BOOTSTRAP__ = {
+      ;(window as any).__POSTHOG_BOOTSTRAP__ = {
         featureFlags: { 'new-dashboard': true },
       }
     })
@@ -1803,9 +1813,7 @@ test.describe('PostHog Analytics E2E', () => {
     await expect(page.locator('body')).toBeVisible()
 
     // Verify no console errors break the app
-    const errors = await page.evaluate(() =>
-      (window as any).__appErrors || []
-    )
+    const errors = await page.evaluate(() => (window as any).__appErrors || [])
     expect(errors).toHaveLength(0)
   })
 })
@@ -1831,11 +1839,13 @@ test.describe('PostHog Analytics E2E', () => {
 ### Bundle Size Impact
 
 **Client Bundle**:
+
 - posthog-js: ~50KB gzipped
 - Total bundle increase: ~2% (from ~2MB to ~2.05MB)
 - Lazy loading: Not possible (needs early init for accurate tracking)
 
 **Mitigation**:
+
 - PostHog is tree-shakeable (only used features bundled)
 - Consider code splitting for admin-only analytics features
 - Compression enabled by default in Next.js
@@ -1843,21 +1853,25 @@ test.describe('PostHog Analytics E2E', () => {
 ### Runtime Performance
 
 **Initialization Overhead**:
+
 - PostHog init: ~50-100ms (one-time, non-blocking)
 - First pageview: ~10ms
 - Feature flag fetch: ~50ms (cached for 60s)
 
 **Event Tracking**:
+
 - Event capture: ~5-10ms (async, non-blocking)
 - Batching: Events sent in groups of 10 or every 10 seconds
 - Network: ~20-50ms per batch (to PostHog ingestion)
 
 **Session Recording**:
+
 - Recording overhead: ~10-20ms per user interaction
 - Replay compression: ~90% size reduction
 - Network: Sent in chunks, not blocking
 
 **Performance Budget**:
+
 - ✅ LCP (Largest Contentful Paint): No impact (async init)
 - ✅ FID (First Input Delay): <5ms overhead
 - ✅ CLS (Cumulative Layout Shift): Zero (no UI changes)
@@ -1866,6 +1880,7 @@ test.describe('PostHog Analytics E2E', () => {
 ### Optimization Strategies
 
 **1. Async Initialization**
+
 ```typescript
 // PostHog initializes asynchronously, not blocking app render
 if (typeof window !== 'undefined') {
@@ -1874,6 +1889,7 @@ if (typeof window !== 'undefined') {
 ```
 
 **2. Event Batching**
+
 ```typescript
 // Events batched automatically (10 events or 10 seconds)
 posthog.capture('event1')
@@ -1882,6 +1898,7 @@ posthog.capture('event2')
 ```
 
 **3. Feature Flag Caching**
+
 ```typescript
 // Flags cached for 60 seconds (reduce API calls)
 posthog.init({
@@ -1891,12 +1908,14 @@ posthog.init({
 ```
 
 **4. Session Recording Optimization**
+
 ```typescript
 // Disable recording on slow networks
 disable_session_recording_on_high_network_usage: true,
 ```
 
 **5. Lazy Feature Flags** (Advanced)
+
 ```typescript
 // Load flags after app interactive (not on init)
 posthog.init({ bootstrap: { featureFlags: {} } })
@@ -1908,6 +1927,7 @@ await posthog.reloadFeatureFlags()
 ### Performance Monitoring
 
 **Metrics to Track**:
+
 - PostHog initialization time (target: <100ms)
 - Event capture latency (target: <10ms)
 - Feature flag response time (target: <50ms)
@@ -1915,6 +1935,7 @@ await posthog.reloadFeatureFlags()
 - Network bandwidth (target: <10KB/minute per user)
 
 **Monitoring Setup**:
+
 ```typescript
 // In instrumentation-client.ts
 posthog.init({
@@ -1936,6 +1957,7 @@ posthog.init({
 ### Configuration for Compliance
 
 **1. IP Anonymization**
+
 ```typescript
 // In instrumentation-client.ts
 posthog.init({
@@ -1944,6 +1966,7 @@ posthog.init({
 ```
 
 **2. Person Profiles**
+
 ```typescript
 // Only create profiles for identified users
 posthog.init({
@@ -1952,6 +1975,7 @@ posthog.init({
 ```
 
 **3. Cookie Configuration**
+
 ```typescript
 posthog.init({
   cookie_expiration: 365, // 1 year (inform users in privacy policy)
@@ -1961,17 +1985,18 @@ posthog.init({
 ```
 
 **4. Session Recording Privacy**
+
 ```typescript
 posthog.init({
   session_recording: {
     maskAllInputs: false,
     maskInputOptions: {
-      password: true,    // Always mask
-      tel: true,         // Always mask
-      email: false,      // Allow (not PII in rental context)
+      password: true, // Always mask
+      tel: true, // Always mask
+      email: false, // Allow (not PII in rental context)
     },
     urlBlocklist: [
-      '/api/*',          // Never record API routes
+      '/api/*', // Never record API routes
       '/admin/settings', // Never record sensitive pages
     ],
   },
@@ -2015,6 +2040,7 @@ export function useAnalyticsConsent() {
 ```
 
 **Cookie Consent Banner** (separate US-010):
+
 ```typescript
 // Future implementation in US-010: Cookie Consent
 function CookieConsent() {
@@ -2035,11 +2061,13 @@ function CookieConsent() {
 ### Data Retention
 
 **PostHog Default Retention**:
+
 - Events: 7 years (free tier: 1 year)
 - Session recordings: Unlimited
 - Feature flag history: Unlimited
 
 **Custom Retention** (if needed):
+
 1. Configure in PostHog dashboard: Project Settings → Data Retention
 2. Set event retention to 1 year (GDPR minimum: 1 year for analytics)
 3. Set recording retention to 90 days (sufficient for debugging)
@@ -2047,6 +2075,7 @@ function CookieConsent() {
 ### User Data Deletion
 
 **GDPR Right to Erasure**:
+
 ```typescript
 // Server-side function for GDPR deletion requests
 // Call from admin panel or API endpoint
@@ -2056,15 +2085,12 @@ import { posthogClient } from '@/lib/analytics/posthog.server'
 export async function deleteUserData(userId: string) {
   try {
     // PostHog GDPR delete endpoint
-    await fetch(
-      `${process.env.NEXT_PUBLIC_POSTHOG_HOST}/api/person/${userId}/delete`,
-      {
-        method: 'POST',
-        headers: {
-          Authorization: `Bearer ${process.env.POSTHOG_PERSONAL_API_KEY}`,
-        },
-      }
-    )
+    await fetch(`${process.env.NEXT_PUBLIC_POSTHOG_HOST}/api/person/${userId}/delete`, {
+      method: 'POST',
+      headers: {
+        Authorization: `Bearer ${process.env.POSTHOG_PERSONAL_API_KEY}`,
+      },
+    })
 
     console.log(`[PostHog] User data deleted for ${userId}`)
   } catch (error) {
@@ -2097,6 +2123,7 @@ export async function deleteUserData(userId: string) {
 **Goal**: Install PostHog, configure environment, verify initialization
 
 **Tasks**:
+
 1. Install packages: `pnpm add posthog-js posthog-node`
 2. Create PostHog project in dashboard
 3. Add environment variables to `.env.local` and Vercel
@@ -2106,6 +2133,7 @@ export async function deleteUserData(userId: string) {
 7. Test initialization in browser DevTools
 
 **Verification**:
+
 ```bash
 # In browser console
 window.posthog // Should be defined
@@ -2124,6 +2152,7 @@ window.posthog.__loaded // Should be true
 **Goal**: Identify users on login/signup, set organization context
 
 **Tasks**:
+
 1. Create `lib/hooks/use-posthog-auth.ts`
 2. Update `useSession` import to use actual Better Auth hook
 3. Add `usePostHogAuth()` call in `app/providers.tsx`
@@ -2132,6 +2161,7 @@ window.posthog.__loaded // Should be true
 6. Verify organization group in PostHog dashboard
 
 **Verification**:
+
 ```typescript
 // After login, in console:
 window.posthog._identify_called // Should be true
@@ -2150,6 +2180,7 @@ window.posthog._identify_called // Should be true
 **Goal**: Implement custom events for key user actions
 
 **Tasks**:
+
 1. Create `lib/analytics/types.ts` with event types
 2. Create `lib/analytics/events.ts` with event helpers
 3. Create `lib/hooks/use-track-event.ts`
@@ -2163,6 +2194,7 @@ window.posthog._identify_called // Should be true
 5. Test each event in PostHog dashboard
 
 **Verification**:
+
 ```typescript
 // Perform action (e.g., view listing)
 // In PostHog dashboard:
@@ -2178,6 +2210,7 @@ window.posthog._identify_called // Should be true
 **Goal**: Implement feature flags, session recording, server-side tracking
 
 **Tasks**:
+
 1. Create `lib/analytics/posthog.server.ts`
 2. Create `lib/analytics/posthog.ts` (client utilities)
 3. Create test feature flags in PostHog dashboard:
@@ -2193,6 +2226,7 @@ window.posthog._identify_called // Should be true
    - `docs/analytics/feature-flag-patterns.md`
 
 **Verification**:
+
 ```typescript
 // Create flag in dashboard: new-dashboard = true for 50% of users
 // Reload app multiple times, should see different behavior
@@ -2210,6 +2244,7 @@ window.posthog._identify_called // Should be true
 **Goal**: Write tests, document implementation, prepare for production
 
 **Tasks**:
+
 1. Write unit tests for utilities
 2. Write integration tests for hooks
 3. Write E2E tests for critical flows
@@ -2221,6 +2256,7 @@ window.posthog._identify_called // Should be true
 9. Privacy audit (GDPR compliance)
 
 **Verification**:
+
 - [ ] All tests passing (`pnpm test`)
 - [ ] E2E tests passing (`pnpm test:e2e`)
 - [ ] Documentation complete
@@ -2234,6 +2270,7 @@ window.posthog._identify_called // Should be true
 **If Issues Arise**:
 
 **1. Immediate Rollback** (Critical Bug):
+
 ```bash
 # Remove PostHog provider from app
 git revert <commit-hash>
@@ -2241,6 +2278,7 @@ git push
 ```
 
 **2. Disable Feature** (Non-Critical):
+
 ```typescript
 // In app/providers.tsx, comment out PostHog:
 export function Providers({ children }: { children: React.ReactNode }) {
@@ -2255,12 +2293,14 @@ export function Providers({ children }: { children: React.ReactNode }) {
 ```
 
 **3. Feature Flag Rollback**:
+
 ```typescript
 // In PostHog dashboard:
 // Feature Flags → Select flag → Set to 0% rollout
 ```
 
 **Why Rollback is Safe**:
+
 - PostHog is non-blocking (app works without it)
 - No database migrations required
 - No data loss (events are append-only)
@@ -2315,6 +2355,7 @@ export function Providers({ children }: { children: React.ReactNode }) {
 ### Technical Metrics
 
 **Performance**:
+
 - [ ] PostHog initialization: <100ms
 - [ ] Event capture latency: <10ms
 - [ ] Feature flag response: <50ms
@@ -2323,12 +2364,14 @@ export function Providers({ children }: { children: React.ReactNode }) {
 - [ ] No impact on Core Web Vitals
 
 **Reliability**:
+
 - [ ] Event delivery success rate: >99.5%
 - [ ] Feature flag availability: >99.9%
 - [ ] Session recording capture rate: >95%
 - [ ] Zero analytics-related app crashes
 
 **Quality**:
+
 - [ ] Unit test coverage: >80%
 - [ ] Integration tests: 100% of critical paths
 - [ ] E2E tests: All acceptance criteria covered
@@ -2337,12 +2380,14 @@ export function Providers({ children }: { children: React.ReactNode }) {
 ### Business Metrics
 
 **Usage**:
+
 - [ ] Product team can answer "How many users did X?" in <5 minutes
 - [ ] Engineering can use feature flags for gradual rollouts
 - [ ] Business team has visibility into conversion funnels
 - [ ] Support team can watch session replays to debug issues
 
 **Outcomes**:
+
 - [ ] 100% of key user actions tracked (9 custom events)
 - [ ] Feature flags enable safe deployments
 - [ ] Session recordings reduce support tickets by 20%
@@ -2355,17 +2400,21 @@ export function Providers({ children }: { children: React.ReactNode }) {
 Create this file after implementation: `/Users/brianjohnson/dev/github_personal/apartmentdibs-mock-01/docs/analytics/event-catalog.md`
 
 **Template**:
+
 ```markdown
 # PostHog Event Catalog
 
 ## Overview
+
 This document catalogs all custom events tracked in ApartmentDibs.
 
 ## Events
 
 ### application_created
+
 **When**: Tenant submits rental application
 **Properties**:
+
 - `userId` (string): User ID of tenant
 - `listingId` (string): Listing ID
 - `organizationId` (string): Organization ID
@@ -2374,11 +2423,11 @@ This document catalogs all custom events tracked in ApartmentDibs.
 **Example**:
 \`\`\`json
 {
-  "event": "application_created",
-  "userId": "user_123",
-  "listingId": "listing_456",
-  "organizationId": "org_789",
-  "timestamp": "2025-11-20T12:00:00Z"
+"event": "application_created",
+"userId": "user_123",
+"listingId": "listing_456",
+"organizationId": "org_789",
+"timestamp": "2025-11-20T12:00:00Z"
 }
 \`\`\`
 
@@ -2392,12 +2441,14 @@ This document catalogs all custom events tracked in ApartmentDibs.
 Create this file after implementation: `/Users/brianjohnson/dev/github_personal/apartmentdibs-mock-01/docs/analytics/feature-flag-patterns.md`
 
 **Template**:
+
 ```markdown
 # PostHog Feature Flag Patterns
 
 ## Client-Side Flags
 
 ### Conditional Rendering
+
 \`\`\`typescript
 const isEnabled = useFeatureFlagEnabled('new-dashboard')
 return isEnabled ? <NewDashboard /> : <LegacyDashboard />
@@ -2406,6 +2457,7 @@ return isEnabled ? <NewDashboard /> : <LegacyDashboard />
 ## Server-Side Flags
 
 ### API Route Protection
+
 \`\`\`typescript
 const isEnabled = await getFeatureFlag('beta-api', userId, false)
 if (!isEnabled) return { error: 'Feature not available' }
@@ -2419,17 +2471,21 @@ if (!isEnabled) return { error: 'Feature not available' }
 ## Questions for HITL Review
 
 ### 1. Better Auth Integration
+
 **Question**: What is the exact import path for the Better Auth session hook?
 **Context**: Currently using a mock `useSession()` hook in `use-posthog-auth.ts`. Need actual import.
 **Options**:
+
 - A) `import { useSession } from '@/lib/auth-client'`
 - B) `import { useSession } from 'better-auth/react'`
 - C) Custom implementation
 
 ### 2. Cookie Consent Timing
+
 **Question**: Should we block PostHog initialization until cookie consent is given?
 **Context**: GDPR requires consent before non-essential cookies. PostHog uses cookies.
 **Options**:
+
 - A) Implement consent banner now (blocking for MVP)
 - B) Deploy without consent, add in US-010 (separate story)
 - C) Use localStorage instead of cookies (no consent needed)
@@ -2437,9 +2493,11 @@ if (!isEnabled) return { error: 'Feature not available' }
 **Recommendation**: Option B (add consent in US-010, deploy now for team usage)
 
 ### 3. Session Recording Scope
+
 **Question**: Should session recording be enabled for all users or opt-in?
 **Context**: Privacy-conscious users may not want recordings. Recordings useful for debugging.
 **Options**:
+
 - A) Enabled by default, user can opt-out
 - B) Opt-in only (requires banner/setting)
 - C) Enabled for internal users only (by feature flag)
@@ -2447,9 +2505,11 @@ if (!isEnabled) return { error: 'Feature not available' }
 **Recommendation**: Option A (enabled by default, opt-out in settings)
 
 ### 4. Feature Flag Testing
+
 **Question**: What initial feature flags should we create for testing?
 **Context**: Need 2-3 flags to validate implementation.
 **Suggestions**:
+
 - `new-dashboard` (boolean): Enable new dashboard UI
 - `beta-features` (boolean): Show beta features
 - `maintenance-mode` (boolean): Display maintenance banner
@@ -2457,9 +2517,11 @@ if (!isEnabled) return { error: 'Feature not available' }
 **Recommendation**: Create all three for comprehensive testing
 
 ### 5. Production Rollout
+
 **Question**: Should we deploy PostHog to production immediately or staging first?
 **Context**: PostHog is non-blocking, but we want to verify no issues.
 **Options**:
+
 - A) Deploy to production immediately (feature flag at 0% for safety)
 - B) Deploy to staging first, test for 1 week, then production
 - C) Deploy to production for internal team only (by organization ID)
@@ -2483,12 +2545,14 @@ This technical specification provides a complete, production-ready implementatio
 **Estimated Implementation**: 2 weeks (13 story points) matches US-002 estimate.
 
 **Next Steps**:
+
 1. HITL Gate #3 review of this specification
 2. Address any questions/feedback
 3. Begin implementation Phase 1 (setup)
 4. Proceed through 5 phases as defined in Migration Plan
 
 **Dependencies Ready**:
+
 - ✅ Environment variables (`.env.example` already updated)
 - ✅ Better Auth integration (hooks need session import path)
 - ✅ TanStack Query provider (already in place)

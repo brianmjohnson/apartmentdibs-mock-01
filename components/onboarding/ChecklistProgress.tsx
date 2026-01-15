@@ -1,13 +1,7 @@
 'use client'
 
 import { CheckCircle, Circle, Clock, Trophy } from 'lucide-react'
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from '@/components/ui/card'
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Progress } from '@/components/ui/progress'
 import { cn } from '@/lib/utils'
 
@@ -25,11 +19,7 @@ interface ChecklistProgressProps {
   className?: string
 }
 
-export function ChecklistProgress({
-  steps,
-  currentStepId,
-  className,
-}: ChecklistProgressProps) {
+export function ChecklistProgress({ steps, currentStepId, className }: ChecklistProgressProps) {
   const completedSteps = steps.filter(
     (s) => s.status === 'complete' || s.status === 'skipped'
   ).length
@@ -56,9 +46,7 @@ export function ChecklistProgress({
       return <CheckCircle className="h-5 w-5 text-gray-400" />
     }
     if (step.id === currentStepId || step.status === 'in_progress') {
-      return (
-        <div className="h-5 w-5 rounded-full border-2 border-primary bg-primary/20" />
-      )
+      return <div className="border-primary bg-primary/20 h-5 w-5 rounded-full border-2" />
     }
     return <Circle className="h-5 w-5 text-gray-300" />
   }
@@ -91,7 +79,7 @@ export function ChecklistProgress({
           </div>
           <Progress value={progressPercentage} className="h-3" />
           {remainingMinutes > 0 && (
-            <p className="text-sm text-muted-foreground">
+            <p className="text-muted-foreground text-sm">
               Estimated time remaining: {formatTime(remainingMinutes)}
             </p>
           )}
@@ -117,7 +105,7 @@ export function ChecklistProgress({
               {index < steps.length - 1 && (
                 <div
                   className={cn(
-                    'absolute left-[9px] top-6 w-0.5 h-full',
+                    'absolute top-6 left-[9px] h-full w-0.5',
                     step.status === 'complete' || step.status === 'skipped'
                       ? 'bg-green-200'
                       : 'bg-gray-200'
@@ -129,27 +117,24 @@ export function ChecklistProgress({
               <div className="relative z-10 flex-shrink-0">{getStepIcon(step)}</div>
 
               {/* Content */}
-              <div className="flex-1 min-w-0">
+              <div className="min-w-0 flex-1">
                 <div
                   className={cn(
-                    'font-medium text-sm',
+                    'text-sm font-medium',
                     step.status === 'complete' && 'text-green-600',
                     step.status === 'skipped' && 'text-gray-400 line-through',
-                    (step.id === currentStepId || step.status === 'in_progress') &&
-                      'text-primary'
+                    (step.id === currentStepId || step.status === 'in_progress') && 'text-primary'
                   )}
                 >
                   {step.title}
                 </div>
                 {step.description && (
-                  <p className="text-xs text-muted-foreground mt-0.5">
-                    {step.description}
-                  </p>
+                  <p className="text-muted-foreground mt-0.5 text-xs">{step.description}</p>
                 )}
                 {step.estimatedMinutes &&
                   step.status !== 'complete' &&
                   step.status !== 'skipped' && (
-                    <p className="text-xs text-muted-foreground mt-1">
+                    <p className="text-muted-foreground mt-1 text-xs">
                       ~{step.estimatedMinutes} min
                     </p>
                   )}

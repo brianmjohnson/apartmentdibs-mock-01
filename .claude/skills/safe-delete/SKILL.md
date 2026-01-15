@@ -94,11 +94,13 @@ git rm -r .deleted/
 Decide whether to track `.deleted/`:
 
 **Track it** (recommended for teams): Files remain recoverable from git history
+
 ```gitignore
 # Don't ignore .deleted/
 ```
 
 **Ignore it** (local only): Personal trash, not shared
+
 ```gitignore
 .deleted/
 ```

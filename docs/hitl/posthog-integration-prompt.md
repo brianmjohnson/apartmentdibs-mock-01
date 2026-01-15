@@ -1,9 +1,11 @@
 # PostHog Integration Prompt
 
 ## Objective
+
 Add PostHog analytics and experimentation platform to the ApartmentDibs application following the official Next.js 15+ App Router integration guide.
 
 ## Documentation Reference
+
 - **Primary Guide**: https://posthog.com/docs/libraries/next-js
 - **App Router Tutorial**: https://posthog.com/tutorials/nextjs-app-directory-analytics
 - **A/B Testing Guide**: https://posthog.com/tutorials/nextjs-ab-tests
@@ -12,6 +14,7 @@ Add PostHog analytics and experimentation platform to the ApartmentDibs applicat
 ## Feature Requirements
 
 ### Core Capabilities
+
 1. **Analytics**: Track pageviews, user interactions, and custom events
 2. **Feature Flags**: Enable/disable features for different user segments
 3. **A/B Testing**: Run experiments to optimize user experience
@@ -20,6 +23,7 @@ Add PostHog analytics and experimentation platform to the ApartmentDibs applicat
 6. **Organization Tracking**: Track events by organization context
 
 ### Technical Requirements
+
 - Use Next.js 15.3+ `instrumentation-client.ts` approach (lightweight setup)
 - Support both client-side and server-side event tracking
 - Integrate with Better Auth for user identification
@@ -32,11 +36,14 @@ Add PostHog analytics and experimentation platform to the ApartmentDibs applicat
 ### Phase 1: Documentation & Planning
 
 #### Step 1.1: Update Business Plan (README.md)
+
 **Action**: Add PostHog to the Features section of README.md
 
 **What to Add**:
+
 ```markdown
 ### Analytics & Experimentation
+
 - **Platform**: PostHog (open-source product analytics)
 - **Capabilities**:
   - Event tracking and analytics
@@ -49,9 +56,11 @@ Add PostHog analytics and experimentation platform to the ApartmentDibs applicat
 **Agent**: None (direct edit or use general-purpose agent)
 
 #### Step 1.2: Create User Story
+
 **Agent**: `product-manager.md`
 
 **Prompt to Product Manager Agent**:
+
 ```
 Create a user story for integrating PostHog analytics and experimentation platform into the application.
 
@@ -74,6 +83,7 @@ RICE Scoring Factors:
 **Output**: `docs/user-stories/posthog-integration.md`
 
 **HITL Gate #1**: STOP HERE. Review the user story.
+
 - [ ] User story accurately captures PostHog capabilities
 - [ ] Acceptance criteria are clear and testable
 - [ ] RICE score is reasonable
@@ -84,9 +94,11 @@ RICE Scoring Factors:
 ---
 
 #### Step 1.3: Create Architecture Decision Record (ADR)
+
 **Agent**: `architecture-agent.md`
 
 **Prompt to Architecture Agent**:
+
 ```
 Create an ADR for integrating PostHog as our analytics and experimentation platform.
 
@@ -123,6 +135,7 @@ Integration Points:
 **Output**: `docs/adr/XXX-posthog-integration.md` (auto-numbered)
 
 **HITL Gate #2**: STOP HERE. Review the ADR.
+
 - [ ] Decision rationale is sound
 - [ ] Alternatives were properly evaluated
 - [ ] Technical considerations are complete
@@ -134,9 +147,11 @@ Integration Points:
 ---
 
 #### Step 1.4: Create Technical Specification
+
 **Agent**: `frontend-developer.md` (PostHog is primarily frontend integration)
 
 **Prompt to Frontend Developer Agent**:
+
 ```
 Create a technical specification for PostHog integration based on the approved ADR and user story.
 
@@ -163,6 +178,7 @@ Reference: https://posthog.com/docs/libraries/next-js
 **Output**: Create technical spec document or detailed implementation plan
 
 **HITL Gate #3**: STOP HERE. Review the technical specification.
+
 - [ ] Implementation approach is clear
 - [ ] All integration points are covered
 - [ ] TypeScript types are properly defined
@@ -177,15 +193,18 @@ Reference: https://posthog.com/docs/libraries/next-js
 ### Phase 2: Implementation
 
 #### Step 2.1: Environment Configuration
+
 **Action**: Update environment variables
 
 **Files to Update**:
+
 1. `.env.example` - Add PostHog variables with documentation
 2. `.env.local` - Add actual values (local development)
 3. `docs/GETTING_STARTED.md` - Document new env vars
 4. Vercel project settings - Add production env vars
 
 **Required Environment Variables**:
+
 ```bash
 # PostHog Analytics
 NEXT_PUBLIC_POSTHOG_KEY=phc_xxxxxxxxxxxxxxxxxxxxxxxxxxxxx
@@ -200,6 +219,7 @@ POSTHOG_API_KEY=phx_xxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 ---
 
 #### Step 2.2: Install PostHog Package
+
 **Action**: Install npm package
 
 ```bash
@@ -211,11 +231,13 @@ pnpm add posthog-js
 ---
 
 #### Step 2.3: Create PostHog Client Setup
+
 **Agent**: `frontend-developer.md`
 
 **Files to Create/Modify**:
 
 1. **Create**: `instrumentation-client.ts` (root level, Next.js 15.3+)
+
 ```typescript
 // instrumentation-client.ts
 import posthog from 'posthog-js'
@@ -235,6 +257,7 @@ if (typeof window !== 'undefined') {
 ```
 
 2. **Create**: `lib/analytics/posthog.ts` (utilities)
+
 ```typescript
 import posthog from 'posthog-js'
 
@@ -269,6 +292,7 @@ export { posthog }
 ```
 
 3. **Create**: `app/providers/posthog-provider.tsx` (if needed for app router < 15.3)
+
 ```typescript
 'use client'
 
@@ -297,6 +321,7 @@ export function PostHogPageView(): null {
 ---
 
 #### Step 2.4: Integrate with Better Auth
+
 **Agent**: `backend-developer.md` or `frontend-developer.md`
 
 **Action**: Add PostHog identification when user logs in
@@ -304,6 +329,7 @@ export function PostHogPageView(): null {
 **File to Modify**: Look for auth callback/login handler
 
 **Example Integration**:
+
 ```typescript
 // When user successfully authenticates
 import { analytics } from '@/lib/analytics/posthog'
@@ -325,11 +351,13 @@ if (user.organizationId) {
 ---
 
 #### Step 2.5: Add Event Tracking
+
 **Agent**: `frontend-developer.md`
 
 **Action**: Add tracking for key user actions
 
 **Examples**:
+
 - Property search
 - Application submission
 - Message sent
@@ -341,6 +369,7 @@ if (user.organizationId) {
 ---
 
 #### Step 2.6: Update TypeScript Configuration
+
 **Action**: Ensure instrumentation files are included
 
 **File**: `tsconfig.json` or `next.config.ts`
@@ -352,9 +381,11 @@ Verify that instrumentation files are properly typed and included.
 ### Phase 3: Testing & Validation
 
 #### Step 3.1: Manual Testing
+
 **Agent**: `quality-reviewer.md`
 
 **Test Cases**:
+
 1. PostHog initializes on page load
 2. Page views are tracked
 3. User identification works on login
@@ -369,6 +400,7 @@ Verify that instrumentation files are properly typed and included.
 ---
 
 #### Step 3.2: Automated Testing (Optional)
+
 **Agent**: `quality-reviewer.md`
 
 **Action**: Create tests for analytics utility functions
@@ -382,6 +414,7 @@ Mock PostHog and verify function calls work correctly.
 ### Phase 4: Documentation
 
 #### Step 4.1: Update Project Documentation
+
 **Files to Update**:
 
 1. **README.md**: Already updated in Step 1.1
@@ -393,9 +426,11 @@ Mock PostHog and verify function calls work correctly.
 ---
 
 #### Step 4.2: Create PostHog Usage Guide (Optional)
+
 **File**: `docs/analytics/posthog-guide.md`
 
 **Content**:
+
 - How to track custom events
 - How to use feature flags
 - How to set up A/B tests
@@ -408,6 +443,7 @@ Mock PostHog and verify function calls work correctly.
 ### Phase 5: Deployment
 
 #### Step 5.1: Verify Environment Variables in Vercel
+
 **Action**: Ensure PostHog env vars are set in Vercel project settings
 
 **Environments**: Production, Preview (optional)
@@ -415,9 +451,11 @@ Mock PostHog and verify function calls work correctly.
 ---
 
 #### Step 5.2: Deploy and Monitor
+
 **Agent**: Can use `general-purpose` or manual deploy
 
 **Steps**:
+
 1. Commit all changes
 2. Push to branch
 3. Create PR
@@ -431,6 +469,7 @@ Mock PostHog and verify function calls work correctly.
 ### Phase 6: Follow-up Tasks
 
 #### Optional Enhancements:
+
 1. **Session Recording**: Enable in PostHog settings
 2. **Feature Flags**: Create first feature flag
 3. **A/B Test**: Set up first experiment (use `experimentation-agent.md`)
@@ -441,15 +480,15 @@ Mock PostHog and verify function calls work correctly.
 
 ## Agent Summary
 
-| Phase | Agent | Purpose |
-|-------|-------|---------|
-| Planning | `product-manager.md` | Create user story with RICE scoring |
-| Planning | `architecture-agent.md` | Create ADR for PostHog integration |
-| Planning | `frontend-developer.md` | Create technical specification |
-| Implementation | `frontend-developer.md` | Implement PostHog client setup |
-| Implementation | `backend-developer.md` | Integrate with Better Auth |
-| Testing | `quality-reviewer.md` | QA testing and validation |
-| Experimentation | `experimentation-agent.md` | Set up A/B tests (future) |
+| Phase           | Agent                      | Purpose                             |
+| --------------- | -------------------------- | ----------------------------------- |
+| Planning        | `product-manager.md`       | Create user story with RICE scoring |
+| Planning        | `architecture-agent.md`    | Create ADR for PostHog integration  |
+| Planning        | `frontend-developer.md`    | Create technical specification      |
+| Implementation  | `frontend-developer.md`    | Implement PostHog client setup      |
+| Implementation  | `backend-developer.md`     | Integrate with Better Auth          |
+| Testing         | `quality-reviewer.md`      | QA testing and validation           |
+| Experimentation | `experimentation-agent.md` | Set up A/B tests (future)           |
 
 ---
 
@@ -510,6 +549,7 @@ Reference: https://posthog.com/docs/libraries/next-js
 ## Success Criteria
 
 Integration is complete when:
+
 - [ ] PostHog successfully initializes on all pages
 - [ ] Page views are tracked automatically
 - [ ] User identification works on authentication

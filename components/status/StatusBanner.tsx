@@ -86,8 +86,8 @@ export function StatusBanner({
         status === 'degraded'
           ? 'border-yellow-500 bg-yellow-50 dark:bg-yellow-950/20'
           : status === 'maintenance'
-          ? 'border-blue-500 bg-blue-50 dark:bg-blue-950/20'
-          : ''
+            ? 'border-blue-500 bg-blue-50 dark:bg-blue-950/20'
+            : ''
       } ${className}`}
     >
       {getIcon()}
@@ -96,8 +96,8 @@ export function StatusBanner({
           status === 'degraded'
             ? 'text-yellow-800 dark:text-yellow-200'
             : status === 'maintenance'
-            ? 'text-blue-800 dark:text-blue-200'
-            : ''
+              ? 'text-blue-800 dark:text-blue-200'
+              : ''
         }
       >
         {getTitle()}
@@ -107,15 +107,13 @@ export function StatusBanner({
           status === 'degraded'
             ? 'text-yellow-700 dark:text-yellow-300'
             : status === 'maintenance'
-            ? 'text-blue-700 dark:text-blue-300'
-            : ''
+              ? 'text-blue-700 dark:text-blue-300'
+              : ''
         }
       >
         <p>{message || getDefaultMessage()}</p>
         {estimatedResolution && (
-          <p className="mt-1 text-sm">
-            Estimated resolution: {formatTime(estimatedResolution)}
-          </p>
+          <p className="mt-1 text-sm">Estimated resolution: {formatTime(estimatedResolution)}</p>
         )}
         <div className="mt-3 flex flex-wrap items-center gap-3">
           {statusPageUrl && (
@@ -127,8 +125,8 @@ export function StatusBanner({
                 status === 'degraded'
                   ? 'border-yellow-600 text-yellow-800 hover:bg-yellow-100'
                   : status === 'maintenance'
-                  ? 'border-blue-600 text-blue-800 hover:bg-blue-100'
-                  : ''
+                    ? 'border-blue-600 text-blue-800 hover:bg-blue-100'
+                    : ''
               }
             >
               <a href={statusPageUrl} target="_blank" rel="noopener noreferrer">
@@ -146,8 +144,8 @@ export function StatusBanner({
                 status === 'degraded'
                   ? 'text-yellow-800 hover:bg-yellow-100'
                   : status === 'maintenance'
-                  ? 'text-blue-800 hover:bg-blue-100'
-                  : ''
+                    ? 'text-blue-800 hover:bg-blue-100'
+                    : ''
               }
             >
               Dismiss

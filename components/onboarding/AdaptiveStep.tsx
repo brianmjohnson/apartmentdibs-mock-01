@@ -10,13 +10,7 @@ import {
   Loader2,
 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from '@/components/ui/card'
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { cn } from '@/lib/utils'
 
@@ -110,7 +104,7 @@ export function AdaptiveStep({
     return (
       <Card className={cn('border-green-200 bg-green-50/50', className)}>
         <CardContent className="flex items-center gap-4 py-4">
-          <CheckCircle className="h-6 w-6 text-green-500 flex-shrink-0" />
+          <CheckCircle className="h-6 w-6 flex-shrink-0 text-green-500" />
           <div className="flex-1">
             <p className="font-medium text-green-700">{title}</p>
             <p className="text-sm text-green-600">Completed</p>
@@ -124,7 +118,7 @@ export function AdaptiveStep({
     return (
       <Card className={cn('border-gray-200 bg-gray-50/50 opacity-60', className)}>
         <CardContent className="flex items-center gap-4 py-4">
-          <CheckCircle className="h-6 w-6 text-gray-400 flex-shrink-0" />
+          <CheckCircle className="h-6 w-6 flex-shrink-0 text-gray-400" />
           <div className="flex-1">
             <p className="font-medium text-gray-500 line-through">{title}</p>
             <p className="text-sm text-gray-400">Skipped - Not applicable</p>
@@ -135,16 +129,11 @@ export function AdaptiveStep({
   }
 
   return (
-    <Card
-      className={cn(
-        status === 'in_progress' && 'border-primary shadow-md',
-        className
-      )}
-    >
+    <Card className={cn(status === 'in_progress' && 'border-primary shadow-md', className)}>
       <CardHeader>
         <div className="flex items-start justify-between">
           <div>
-            <CardTitle className="text-lg flex items-center gap-2">
+            <CardTitle className="flex items-center gap-2 text-lg">
               {title}
               {isRequired ? (
                 <Badge variant="destructive" className="text-xs">
@@ -159,12 +148,7 @@ export function AdaptiveStep({
             <CardDescription className="mt-1">{description}</CardDescription>
           </div>
           {onHelp && (
-            <Button
-              variant="ghost"
-              size="icon"
-              onClick={() => onHelp(id)}
-              aria-label="Get help"
-            >
+            <Button variant="ghost" size="icon" onClick={() => onHelp(id)} aria-label="Get help">
               <HelpCircle className="h-5 w-5" />
             </Button>
           )}
@@ -172,25 +156,17 @@ export function AdaptiveStep({
       </CardHeader>
       <CardContent className="space-y-4">
         {helpText && (
-          <div className="rounded-lg bg-muted p-3 text-sm text-muted-foreground">
-            {helpText}
-          </div>
+          <div className="bg-muted text-muted-foreground rounded-lg p-3 text-sm">{helpText}</div>
         )}
 
         <div className="flex items-center justify-between">
           {estimatedMinutes && (
-            <span className="text-sm text-muted-foreground">
-              ~{estimatedMinutes} min
-            </span>
+            <span className="text-muted-foreground text-sm">~{estimatedMinutes} min</span>
           )}
 
-          <div className="flex gap-2 ml-auto">
+          <div className="ml-auto flex gap-2">
             {!isRequired && onSkip && (
-              <Button
-                variant="ghost"
-                onClick={handleSkip}
-                disabled={isLoading}
-              >
+              <Button variant="ghost" onClick={handleSkip} disabled={isLoading}>
                 Skip
               </Button>
             )}

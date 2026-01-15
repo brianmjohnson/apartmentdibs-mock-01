@@ -1,13 +1,7 @@
 'use client'
 
 import { Eye, Star, Clock, TrendingUp } from 'lucide-react'
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from '@/components/ui/card'
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Progress } from '@/components/ui/progress'
 import { Badge } from '@/components/ui/badge'
 import { cn } from '@/lib/utils'
@@ -63,34 +57,28 @@ export function EngagementSignal({
           <TrendingUp className="h-5 w-5" />
           Landlord Engagement
         </CardTitle>
-        <CardDescription>
-          How the landlord has interacted with your application
-        </CardDescription>
+        <CardDescription>How the landlord has interacted with your application</CardDescription>
       </CardHeader>
       <CardContent className="space-y-4">
         {/* View Count */}
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">
-            <Eye className="h-4 w-4 text-muted-foreground" />
+            <Eye className="text-muted-foreground h-4 w-4" />
             <span className="text-sm">Profile Views</span>
           </div>
           <div className="text-right">
             <span className="font-semibold">{viewCount}</span>
-            <span className={cn('text-sm ml-2', engagement.color)}>
-              {engagement.label}
-            </span>
+            <span className={cn('ml-2 text-sm', engagement.color)}>{engagement.label}</span>
           </div>
         </div>
 
         {lastViewedAt && (
-          <p className="text-xs text-muted-foreground">
-            Last viewed: {formatDate(lastViewedAt)}
-          </p>
+          <p className="text-muted-foreground text-xs">Last viewed: {formatDate(lastViewedAt)}</p>
         )}
 
         {/* Shortlist Status */}
         {isShortlisted && (
-          <div className="rounded-lg bg-yellow-50 border border-yellow-200 p-3">
+          <div className="rounded-lg border border-yellow-200 bg-yellow-50 p-3">
             <div className="flex items-center gap-2">
               <Star className="h-5 w-5 text-yellow-500" />
               <div>
@@ -115,17 +103,15 @@ export function EngagementSignal({
               </span>
             </div>
             <Progress value={rankPercentile || 0} className="h-2" />
-            <p className="text-xs text-muted-foreground">
-              Top {rankPercentile}% of applicants
-            </p>
+            <p className="text-muted-foreground text-xs">Top {rankPercentile}% of applicants</p>
           </div>
         )}
 
         {/* Expected Decision */}
         {expectedDecisionDate && (
-          <div className="flex items-center justify-between pt-2 border-t">
+          <div className="flex items-center justify-between border-t pt-2">
             <div className="flex items-center gap-2">
-              <Clock className="h-4 w-4 text-muted-foreground" />
+              <Clock className="text-muted-foreground h-4 w-4" />
               <span className="text-sm">Expected Decision</span>
             </div>
             <Badge variant="secondary">
@@ -139,9 +125,9 @@ export function EngagementSignal({
 
         {/* Encouragement message */}
         {viewCount > 0 && !isShortlisted && (
-          <p className="text-xs text-muted-foreground italic">
-            The landlord is actively reviewing applications. Keep your profile
-            up-to-date for the best chance.
+          <p className="text-muted-foreground text-xs italic">
+            The landlord is actively reviewing applications. Keep your profile up-to-date for the
+            best chance.
           </p>
         )}
       </CardContent>

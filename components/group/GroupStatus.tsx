@@ -2,13 +2,7 @@
 
 import { CheckCircle, Clock, AlertCircle, User, RefreshCw } from 'lucide-react'
 import { Button } from '@/components/ui/button'
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from '@/components/ui/card'
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Progress } from '@/components/ui/progress'
 import { Badge } from '@/components/ui/badge'
 import { cn } from '@/lib/utils'
@@ -112,8 +106,8 @@ export function GroupStatus({
               key={member.id}
               className={cn(
                 'rounded-lg border p-4 transition-colors',
-                member.profileStatus === 'complete' && 'bg-green-50 border-green-200',
-                member.profileStatus === 'expired' && 'bg-red-50 border-red-200'
+                member.profileStatus === 'complete' && 'border-green-200 bg-green-50',
+                member.profileStatus === 'expired' && 'border-red-200 bg-red-50'
               )}
             >
               <div className="flex items-start justify-between">
@@ -121,20 +115,18 @@ export function GroupStatus({
                   {getStatusIcon(member.profileStatus)}
                   <div>
                     <div className="flex items-center gap-2">
-                      <span className="font-medium">
-                        {member.name || member.email}
-                      </span>
+                      <span className="font-medium">{member.name || member.email}</span>
                       {member.isPrimary && (
                         <Badge variant="secondary" className="text-xs">
                           Primary
                         </Badge>
                       )}
                     </div>
-                    <p className="text-sm text-muted-foreground">
+                    <p className="text-muted-foreground text-sm">
                       {getStatusLabel(member.profileStatus)}
                     </p>
                     {member.lastActivity && (
-                      <p className="text-xs text-muted-foreground mt-1">
+                      <p className="text-muted-foreground mt-1 text-xs">
                         Last active: {new Date(member.lastActivity).toLocaleDateString()}
                       </p>
                     )}
@@ -144,13 +136,8 @@ export function GroupStatus({
                 <div className="flex items-center gap-2">
                   {member.profileStatus !== 'complete' && (
                     <div className="text-right">
-                      <span className="text-sm font-medium">
-                        {member.completionPercentage}%
-                      </span>
-                      <Progress
-                        value={member.completionPercentage}
-                        className="h-1 w-20"
-                      />
+                      <span className="text-sm font-medium">{member.completionPercentage}%</span>
+                      <Progress value={member.completionPercentage} className="h-1 w-20" />
                     </div>
                   )}
                 </div>
@@ -158,7 +145,7 @@ export function GroupStatus({
 
               {/* Actions for incomplete members */}
               {member.profileStatus !== 'complete' && !member.isPrimary && (
-                <div className="mt-3 flex gap-2 pt-3 border-t">
+                <div className="mt-3 flex gap-2 border-t pt-3">
                   {onSendReminder && (
                     <Button
                       variant="outline"
@@ -189,7 +176,7 @@ export function GroupStatus({
         <div
           className={cn(
             'rounded-lg p-4',
-            canSubmit ? 'bg-green-50 border border-green-200' : 'bg-muted'
+            canSubmit ? 'border border-green-200 bg-green-50' : 'bg-muted'
           )}
         >
           {canSubmit ? (
@@ -198,7 +185,7 @@ export function GroupStatus({
               <span className="font-medium">Ready to submit!</span>
             </div>
           ) : (
-            <div className="text-sm text-muted-foreground">
+            <div className="text-muted-foreground text-sm">
               <p className="font-medium">Waiting for all members to complete</p>
               <p className="mt-1">
                 Send reminders to help your roommates finish their profiles faster.

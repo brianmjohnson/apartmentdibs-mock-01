@@ -22,11 +22,7 @@ interface ExportRequestProps {
   className?: string
 }
 
-export function ExportRequest({
-  onSubmit,
-  existingRequest,
-  className,
-}: ExportRequestProps) {
+export function ExportRequest({ onSubmit, existingRequest, className }: ExportRequestProps) {
   const [format, setFormat] = useState<ExportFormat>('json')
   const [includeDocuments, setIncludeDocuments] = useState(true)
   const [requestState, setRequestState] = useState<RequestState>(
@@ -66,9 +62,7 @@ export function ExportRequest({
           <Download className="h-5 w-5" />
           Export Your Data
         </CardTitle>
-        <CardDescription>
-          Download a copy of all your personal data
-        </CardDescription>
+        <CardDescription>Download a copy of all your personal data</CardDescription>
       </CardHeader>
       <CardContent>
         {requestState === 'submitted' || existingRequest ? (
@@ -91,8 +85,8 @@ export function ExportRequest({
               </AlertDescription>
             </Alert>
 
-            <div className="rounded-lg bg-muted/50 p-4 text-sm">
-              <div className="flex items-center gap-2 text-muted-foreground">
+            <div className="bg-muted/50 rounded-lg p-4 text-sm">
+              <div className="text-muted-foreground flex items-center gap-2">
                 <Clock className="h-4 w-4" />
                 <span>
                   GDPR requires delivery within 30 days. We typically deliver within 48 hours.
@@ -100,11 +94,7 @@ export function ExportRequest({
               </div>
             </div>
 
-            <Button
-              variant="outline"
-              className="w-full"
-              onClick={() => setRequestState('idle')}
-            >
+            <Button variant="outline" className="w-full" onClick={() => setRequestState('idle')}>
               Request New Export
             </Button>
           </div>
@@ -119,10 +109,10 @@ export function ExportRequest({
                 <div className="flex items-center space-x-3 rounded-lg border p-3">
                   <RadioGroupItem value="json" id="json" />
                   <Label htmlFor="json" className="flex flex-1 cursor-pointer items-center gap-3">
-                    <FileJson className="h-5 w-5 text-muted-foreground" />
+                    <FileJson className="text-muted-foreground h-5 w-5" />
                     <div>
                       <p className="font-medium">JSON (Machine-Readable)</p>
-                      <p className="text-sm text-muted-foreground">
+                      <p className="text-muted-foreground text-sm">
                         Portable format you can import to other services
                       </p>
                     </div>
@@ -131,10 +121,10 @@ export function ExportRequest({
                 <div className="flex items-center space-x-3 rounded-lg border p-3">
                   <RadioGroupItem value="pdf" id="pdf" />
                   <Label htmlFor="pdf" className="flex flex-1 cursor-pointer items-center gap-3">
-                    <FileText className="h-5 w-5 text-muted-foreground" />
+                    <FileText className="text-muted-foreground h-5 w-5" />
                     <div>
                       <p className="font-medium">PDF (Human-Readable)</p>
-                      <p className="text-sm text-muted-foreground">
+                      <p className="text-muted-foreground text-sm">
                         Easy to read summary of your data
                       </p>
                     </div>
@@ -154,8 +144,8 @@ export function ExportRequest({
               </Label>
             </div>
 
-            <div className="rounded-lg bg-muted/50 p-4 text-sm text-muted-foreground">
-              <p className="font-medium text-foreground">What is included:</p>
+            <div className="bg-muted/50 text-muted-foreground rounded-lg p-4 text-sm">
+              <p className="text-foreground font-medium">What is included:</p>
               <ul className="mt-2 list-inside list-disc space-y-1">
                 <li>Profile information</li>
                 <li>Application history</li>
@@ -183,7 +173,7 @@ export function ExportRequest({
               )}
             </Button>
 
-            <p className="text-center text-xs text-muted-foreground">
+            <p className="text-muted-foreground text-center text-xs">
               You will receive an email when your export is ready for download
             </p>
           </div>

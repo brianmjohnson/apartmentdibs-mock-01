@@ -34,7 +34,7 @@ export function TransparencySection() {
         </CardTitle>
       </CardHeader>
       <CardContent className="space-y-6">
-        <div className="rounded-lg bg-muted p-4">
+        <div className="bg-muted rounded-lg p-4">
           <div className="mb-4 grid gap-4 md:grid-cols-2">
             <div>
               <p className="mb-2 font-medium">Traditional Model</p>
@@ -46,7 +46,7 @@ export function TransparencySection() {
               </ul>
             </div>
             <div>
-              <p className="mb-2 font-medium text-primary">ApartmentDibs Model</p>
+              <p className="text-primary mb-2 font-medium">ApartmentDibs Model</p>
               <ul className="space-y-1 text-sm">
                 <li>Tenant pays once, owns profile</li>
                 <li>Tenant controls their data</li>

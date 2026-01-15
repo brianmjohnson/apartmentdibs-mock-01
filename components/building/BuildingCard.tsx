@@ -43,7 +43,7 @@ export function BuildingCard({ building }: BuildingCardProps) {
               sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
             />
           </AspectRatio>
-          <div className="absolute bottom-2 right-2">
+          <div className="absolute right-2 bottom-2">
             <Badge variant="secondary" className="bg-background/90">
               <Home className="mr-1 h-3 w-3" />
               {building.availableUnits} available

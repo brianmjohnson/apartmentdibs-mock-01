@@ -105,22 +105,20 @@ export function IDUpload({
           <FileText className="h-5 w-5" />
           Upload Government ID
         </CardTitle>
-        <CardDescription>
-          Accepted: {acceptedTypes.join(', ')}
-        </CardDescription>
+        <CardDescription>Accepted: {acceptedTypes.join(', ')}</CardDescription>
       </CardHeader>
       <CardContent>
         {uploadState === 'idle' && (
           <>
             <div
-              className="cursor-pointer rounded-lg border-2 border-dashed p-8 text-center transition-colors hover:border-primary hover:bg-muted/50"
+              className="hover:border-primary hover:bg-muted/50 cursor-pointer rounded-lg border-2 border-dashed p-8 text-center transition-colors"
               onDrop={handleDrop}
               onDragOver={handleDragOver}
               onClick={() => fileInputRef.current?.click()}
             >
-              <Upload className="mx-auto mb-4 h-10 w-10 text-muted-foreground" />
+              <Upload className="text-muted-foreground mx-auto mb-4 h-10 w-10" />
               <p className="font-medium">Drop your ID here or click to upload</p>
-              <p className="mt-1 text-sm text-muted-foreground">
+              <p className="text-muted-foreground mt-1 text-sm">
                 JPEG, PNG, HEIC, or PDF up to {maxSizeMB}MB
               </p>
             </div>
@@ -139,15 +137,11 @@ export function IDUpload({
                   <div className="absolute inset-0 flex items-center">
                     <span className="w-full border-t" />
                   </div>
-                  <span className="relative bg-background px-2 text-sm text-muted-foreground">
+                  <span className="bg-background text-muted-foreground relative px-2 text-sm">
                     or
                   </span>
                 </div>
-                <Button
-                  variant="outline"
-                  className="mt-4 w-full"
-                  onClick={onCapture}
-                >
+                <Button variant="outline" className="mt-4 w-full" onClick={onCapture}>
                   <Camera className="mr-2 h-4 w-4" />
                   Take Photo with Camera
                 </Button>
@@ -165,15 +159,13 @@ export function IDUpload({
 
         {(uploadState === 'uploading' || uploadState === 'processing') && (
           <div className="py-8 text-center">
-            <div className="mx-auto mb-4 h-12 w-12 animate-pulse rounded-full bg-primary/10" />
+            <div className="bg-primary/10 mx-auto mb-4 h-12 w-12 animate-pulse rounded-full" />
             <p className="font-medium">
               {uploadState === 'uploading' ? 'Uploading...' : 'Processing document...'}
             </p>
             <Progress value={progress} className="mt-4" />
             {selectedFile && (
-              <p className="mt-2 text-sm text-muted-foreground">
-                {selectedFile.name}
-              </p>
+              <p className="text-muted-foreground mt-2 text-sm">{selectedFile.name}</p>
             )}
           </div>
         )}
@@ -182,7 +174,7 @@ export function IDUpload({
           <div className="py-8 text-center">
             <CheckCircle className="mx-auto mb-4 h-12 w-12 text-green-600" />
             <p className="font-medium text-green-600">Upload Complete</p>
-            <p className="mt-1 text-sm text-muted-foreground">
+            <p className="text-muted-foreground mt-1 text-sm">
               Your document has been uploaded successfully
             </p>
             <Button variant="outline" className="mt-4" onClick={reset}>
@@ -195,17 +187,17 @@ export function IDUpload({
           <div className="py-8 text-center">
             <AlertCircle className="mx-auto mb-4 h-12 w-12 text-red-600" />
             <p className="font-medium text-red-600">Upload Failed</p>
-            <p className="mt-1 text-sm text-muted-foreground">{error}</p>
+            <p className="text-muted-foreground mt-1 text-sm">{error}</p>
             <Button variant="outline" className="mt-4" onClick={reset}>
               Try Again
             </Button>
           </div>
         )}
 
-        <div className="mt-6 rounded-lg bg-muted/50 p-3">
-          <p className="text-xs text-muted-foreground">
-            Your ID is encrypted and stored securely. We automatically delete it after 90 days
-            in compliance with privacy regulations.
+        <div className="bg-muted/50 mt-6 rounded-lg p-3">
+          <p className="text-muted-foreground text-xs">
+            Your ID is encrypted and stored securely. We automatically delete it after 90 days in
+            compliance with privacy regulations.
           </p>
         </div>
       </CardContent>

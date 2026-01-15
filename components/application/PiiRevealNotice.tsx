@@ -87,50 +87,50 @@ export function PiiRevealNotice({
                   </div>
                 </motion.div>
 
-          {/* Content */}
-          <div className="min-w-0 flex-1">
-            <h3 className="font-semibold text-green-800 dark:text-green-200">
-              Applicant Selected - PII Unlocked
-            </h3>
-            <p className="mt-1 text-sm text-green-700 dark:text-green-300">
-              You&apos;ve selected <strong>{applicantName}</strong> ({applicantId}). Their full
-              profile information is now visible.
-            </p>
+                {/* Content */}
+                <div className="min-w-0 flex-1">
+                  <h3 className="font-semibold text-green-800 dark:text-green-200">
+                    Applicant Selected - PII Unlocked
+                  </h3>
+                  <p className="mt-1 text-sm text-green-700 dark:text-green-300">
+                    You&apos;ve selected <strong>{applicantName}</strong> ({applicantId}). Their
+                    full profile information is now visible.
+                  </p>
 
-            {/* Timestamp */}
-            <div className="mt-2 flex items-center gap-1 text-xs text-green-600 dark:text-green-400">
-              <Clock className="h-3 w-3" />
-              <span>Revealed {formatDate(revealedAt)}</span>
-            </div>
+                  {/* Timestamp */}
+                  <div className="mt-2 flex items-center gap-1 text-xs text-green-600 dark:text-green-400">
+                    <Clock className="h-3 w-3" />
+                    <span>Revealed {formatDate(revealedAt)}</span>
+                  </div>
 
-            {/* Email Notification Info */}
-            <div className="mt-3 flex items-center gap-2 rounded bg-green-100 p-2 text-xs text-green-700 dark:bg-green-800/50 dark:text-green-300">
-              <Mail className="h-4 w-4 shrink-0" />
-              <span>Email notification sent to {applicantName} with next steps</span>
-            </div>
+                  {/* Email Notification Info */}
+                  <div className="mt-3 flex items-center gap-2 rounded bg-green-100 p-2 text-xs text-green-700 dark:bg-green-800/50 dark:text-green-300">
+                    <Mail className="h-4 w-4 shrink-0" />
+                    <span>Email notification sent to {applicantName} with next steps</span>
+                  </div>
 
-            {/* Action Buttons */}
-            <div className="mt-4 flex flex-wrap gap-2">
-              <Button
-                size="sm"
-                className="border-2 border-green-600 bg-green-600 text-white hover:bg-green-700"
-                onClick={onContactApplicant}
-              >
-                <Phone className="mr-1 h-3 w-3" />
-                Contact Applicant
-              </Button>
-              <Button
-                size="sm"
-                variant="outline"
-                className="border-2 border-green-600 text-green-700 hover:bg-green-100"
-                onClick={onCreateLease}
-              >
-                <FileText className="mr-1 h-3 w-3" />
-                Create Lease
-                <ArrowRight className="ml-1 h-3 w-3" />
-              </Button>
-            </div>
-          </div>
+                  {/* Action Buttons */}
+                  <div className="mt-4 flex flex-wrap gap-2">
+                    <Button
+                      size="sm"
+                      className="border-2 border-green-600 bg-green-600 text-white hover:bg-green-700"
+                      onClick={onContactApplicant}
+                    >
+                      <Phone className="mr-1 h-3 w-3" />
+                      Contact Applicant
+                    </Button>
+                    <Button
+                      size="sm"
+                      variant="outline"
+                      className="border-2 border-green-600 text-green-700 hover:bg-green-100"
+                      onClick={onCreateLease}
+                    >
+                      <FileText className="mr-1 h-3 w-3" />
+                      Create Lease
+                      <ArrowRight className="ml-1 h-3 w-3" />
+                    </Button>
+                  </div>
+                </div>
 
                 {/* Dismiss Button */}
                 {onDismiss && (

@@ -175,7 +175,7 @@ export type FeatureFlagKey =
   | 'beta-features'
   | 'maintenance-mode'
   | 'session-recording'
-  // Add more feature flags as needed
+// Add more feature flags as needed
 
 /**
  * PostHog initialization configuration

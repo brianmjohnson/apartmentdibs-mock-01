@@ -605,7 +605,6 @@ Before Selection:          After Selection:
 **Animation Specifications:**
 
 1. **PII Reveal Transition** (`components/tenant-profile/RevealedProfile.tsx`)
-
    - Replace: `<div>` wrapper with `<motion.div>`
    - Animation: Blur and fade transition
    - Properties:
@@ -641,7 +640,6 @@ Before Selection:          After Selection:
      ```
 
 2. **Anonymized Badge** (`components/application/ApplicationCard.tsx`)
-
    - Replace: `<Badge>` wrapper with `<motion.div>`
    - Animation: Scale in with spring bounce
    - Properties:
@@ -662,7 +660,6 @@ Before Selection:          After Selection:
      ```
 
 3. **Applicant Card Hover States** (`components/application/ApplicationCard.tsx`)
-
    - Replace: Card container `<div>` with `<motion.div>`
    - Animation: Lift and shadow on hover
    - Properties:
@@ -685,7 +682,6 @@ Before Selection:          After Selection:
      ```
 
 4. **Selection Confirmation Dialog** (`components/application/SelectApplicantDialog.tsx`)
-
    - Replace: Dialog content wrapper with `<motion.div>`
    - Animation: Scale up from center with backdrop fade
    - Properties:
@@ -710,7 +706,6 @@ Before Selection:          After Selection:
      ```
 
 5. **Success Notification Banner** (`components/application/PiiRevealNotice.tsx`)
-
    - Replace: Banner container with `<motion.div>`
    - Animation: Slide in from top with bounce
    - Properties:
@@ -739,10 +734,10 @@ Before Selection:          After Selection:
      ```
 
 6. **Profile Card Loading Skeleton → Content Transition** (`components/tenant-profile/ObfuscatedProfile.tsx`)
-
    - Replace: Profile container with `<AnimatePresence>` wrapper
    - Animation: Crossfade between skeleton and content
    - Properties:
+
      ```typescript
      // Skeleton
      <motion.div
@@ -764,6 +759,7 @@ Before Selection:          After Selection:
        {/* Profile data */}
      </motion.div>
      ```
+
    - Skeleton shimmer effect:
      ```typescript
      <motion.div
@@ -785,7 +781,6 @@ Before Selection:          After Selection:
      ```
 
 7. **Credit Band Color Transitions** (`components/tenant-profile/CreditBand.tsx`)
-
    - Replace: Credit band display `<div>` with `<motion.div>`
    - Animation: Color morph and scale pulse on mount
    - Properties:

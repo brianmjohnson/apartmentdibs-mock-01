@@ -58,11 +58,7 @@ export function TierCard({ tier, onSelect }: TierCardProps) {
           className="w-full"
           onClick={onSelect}
         >
-          {onSelect ? (
-            <span>{tier.ctaText}</span>
-          ) : (
-            <Link href={tier.ctaLink}>{tier.ctaText}</Link>
-          )}
+          {onSelect ? <span>{tier.ctaText}</span> : <Link href={tier.ctaLink}>{tier.ctaText}</Link>}
         </Button>
       </CardContent>
     </Card>

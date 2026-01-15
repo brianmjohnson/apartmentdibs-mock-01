@@ -55,7 +55,7 @@ export function FAQCrossLinks({ currentType }: FAQCrossLinksProps) {
   const otherLinks = Object.entries(links).filter(([type]) => type !== currentType)
 
   return (
-    <div className="rounded-lg border bg-muted/30 p-4 text-center">
+    <div className="bg-muted/30 rounded-lg border p-4 text-center">
       <p className="text-muted-foreground mb-2 text-sm">Looking for different information?</p>
       <div className="flex flex-wrap justify-center gap-2">
         {otherLinks.map(([type, { href, label }]) => (

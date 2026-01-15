@@ -29,20 +29,14 @@ interface SelectiveDeleteProps {
   className?: string
 }
 
-export function SelectiveDelete({
-  items,
-  onDelete,
-  className,
-}: SelectiveDeleteProps) {
+export function SelectiveDelete({ items, onDelete, className }: SelectiveDeleteProps) {
   const [selectedItems, setSelectedItems] = useState<string[]>([])
   const [isConfirming, setIsConfirming] = useState(false)
   const [isDeleting, setIsDeleting] = useState(false)
   const [isComplete, setIsComplete] = useState(false)
 
   const toggleItem = (id: string) => {
-    setSelectedItems((prev) =>
-      prev.includes(id) ? prev.filter((i) => i !== id) : [...prev, id]
-    )
+    setSelectedItems((prev) => (prev.includes(id) ? prev.filter((i) => i !== id) : [...prev, id]))
   }
 
   const toggleAll = () => {
@@ -79,11 +73,11 @@ export function SelectiveDelete({
   const getItemIcon = (type: DeletableItem['type']) => {
     switch (type) {
       case 'document':
-        return <FileText className="h-4 w-4 text-muted-foreground" />
+        return <FileText className="text-muted-foreground h-4 w-4" />
       case 'application':
-        return <Building2 className="h-4 w-4 text-muted-foreground" />
+        return <Building2 className="text-muted-foreground h-4 w-4" />
       case 'message':
-        return <MessageSquare className="h-4 w-4 text-muted-foreground" />
+        return <MessageSquare className="text-muted-foreground h-4 w-4" />
     }
   }
 
@@ -95,12 +89,15 @@ export function SelectiveDelete({
     }).format(date)
   }
 
-  const groupedItems = items.reduce((acc, item) => {
-    const group = item.type
-    if (!acc[group]) acc[group] = []
-    acc[group].push(item)
-    return acc
-  }, {} as Record<string, DeletableItem[]>)
+  const groupedItems = items.reduce(
+    (acc, item) => {
+      const group = item.type
+      if (!acc[group]) acc[group] = []
+      acc[group].push(item)
+      return acc
+    },
+    {} as Record<string, DeletableItem[]>
+  )
 
   const typeLabels: Record<string, string> = {
     document: 'Documents',
@@ -116,13 +113,11 @@ export function SelectiveDelete({
             <Trash2 className="h-5 w-5" />
             Selective Data Deletion
           </CardTitle>
-          <CardDescription>
-            Delete specific items while keeping your account active
-          </CardDescription>
+          <CardDescription>Delete specific items while keeping your account active</CardDescription>
         </CardHeader>
         <CardContent>
           {items.length === 0 ? (
-            <div className="py-8 text-center text-muted-foreground">
+            <div className="text-muted-foreground py-8 text-center">
               <FileText className="mx-auto mb-3 h-8 w-8" />
               <p>No deletable items found</p>
             </div>
@@ -140,7 +135,7 @@ export function SelectiveDelete({
                   </Label>
                 </div>
                 {selectedItems.length > 0 && (
-                  <span className="text-sm text-muted-foreground">
+                  <span className="text-muted-foreground text-sm">
                     {selectedItems.length} selected
                   </span>
                 )}
@@ -149,7 +144,7 @@ export function SelectiveDelete({
               <div className="space-y-4">
                 {Object.entries(groupedItems).map(([type, typeItems]) => (
                   <div key={type}>
-                    <h4 className="mb-2 text-sm font-medium text-muted-foreground">
+                    <h4 className="text-muted-foreground mb-2 text-sm font-medium">
                       {typeLabels[type]}
                     </h4>
                     <div className="space-y-2">
@@ -157,9 +152,7 @@ export function SelectiveDelete({
                         <div
                           key={item.id}
                           className={`flex items-center space-x-3 rounded-lg border p-3 transition-colors ${
-                            selectedItems.includes(item.id)
-                              ? 'border-primary bg-primary/5'
-                              : ''
+                            selectedItems.includes(item.id) ? 'border-primary bg-primary/5' : ''
                           }`}
                         >
                           <Checkbox
@@ -174,11 +167,9 @@ export function SelectiveDelete({
                             {getItemIcon(item.type)}
                             <div className="flex-1">
                               <p className="font-medium">{item.name}</p>
-                              <p className="text-sm text-muted-foreground">
-                                {item.description}
-                              </p>
+                              <p className="text-muted-foreground text-sm">{item.description}</p>
                             </div>
-                            <span className="text-sm text-muted-foreground">
+                            <span className="text-muted-foreground text-sm">
                               {formatDate(item.createdAt)}
                             </span>
                           </Label>
@@ -220,7 +211,7 @@ export function SelectiveDelete({
             </div>
           ) : (
             <>
-              <div className="max-h-48 overflow-y-auto rounded-lg bg-muted/50 p-3">
+              <div className="bg-muted/50 max-h-48 overflow-y-auto rounded-lg p-3">
                 <ul className="space-y-1 text-sm">
                   {selectedItems.map((id) => {
                     const item = items.find((i) => i.id === id)
@@ -241,11 +232,7 @@ export function SelectiveDelete({
                 >
                   Cancel
                 </Button>
-                <Button
-                  variant="destructive"
-                  onClick={handleDelete}
-                  disabled={isDeleting}
-                >
+                <Button variant="destructive" onClick={handleDelete} disabled={isDeleting}>
                   {isDeleting ? (
                     <>
                       <Loader2 className="mr-2 h-4 w-4 animate-spin" />

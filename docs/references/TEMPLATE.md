@@ -6,13 +6,13 @@
 
 ## Document Metadata
 
-| Field | Value |
-|-------|-------|
-| **Document Name** | [Descriptive name of the reference] |
-| **Source URL** | [Full URL to the original documentation] |
-| **Date Fetched** | [YYYY-MM-DD] |
-| **Fetched By** | [Agent name or role] |
-| **Last Updated** | [YYYY-MM-DD] |
+| Field               | Value                                         |
+| ------------------- | --------------------------------------------- |
+| **Document Name**   | [Descriptive name of the reference]           |
+| **Source URL**      | [Full URL to the original documentation]      |
+| **Date Fetched**    | [YYYY-MM-DD]                                  |
+| **Fetched By**      | [Agent name or role]                          |
+| **Last Updated**    | [YYYY-MM-DD]                                  |
 | **Version/Release** | [If applicable, version of the documentation] |
 
 ---
@@ -20,21 +20,27 @@
 ## Related Project Documentation
 
 ### ADRs (Architecture Decision Records)
+
 - [ADR-XXX](../adr/ADR-XXX-name.md) - Brief description of relationship
 
 ### User Stories
+
 - [US-XXX](../user-stories/story-name.md) - Brief description of relationship
 
 ### Technical Specifications
+
 - [Spec Name](../technical-specs/spec-name.md) - Brief description of relationship
 
 ### Agents
+
 - [Agent Name](../../.claude/agents/agent-name.md) - Brief description of how this agent uses this reference
 
 ### Skills
+
 - [Skill Name](../../.claude/skills/skill-name/) - Brief description of how this skill uses this reference
 
 ### Other References
+
 - [Reference Name](./other-reference.md) - Brief description of relationship
 
 ---
@@ -102,11 +108,13 @@ Highlight any critical warnings, deprecations, or common mistakes:
 **When to use**: Description of when this pattern applies
 
 **Implementation**:
+
 ```typescript
 // Code example
 ```
 
 **Considerations**:
+
 - Pro: Advantage 1
 - Pro: Advantage 2
 - Con: Limitation 1
@@ -116,11 +124,13 @@ Highlight any critical warnings, deprecations, or common mistakes:
 **When to use**: Description
 
 **Implementation**:
+
 ```typescript
 // Code example
 ```
 
 **Considerations**:
+
 - Pro: ...
 - Con: ...
 
@@ -147,15 +157,18 @@ Highlight any critical warnings, deprecations, or common mistakes:
 ## Cross-References
 
 ### External Documentation
+
 - [Official Docs - Related Topic 1](https://example.com/docs/topic-1) - Brief description
 - [Official Docs - Related Topic 2](https://example.com/docs/topic-2) - Brief description
 - [Community Tutorial](https://example.com/tutorial) - Brief description
 
 ### Internal Implementation Files
+
 - [File Path 1](../../path/to/file.ts) - Brief description of implementation
 - [File Path 2](../../path/to/file.ts) - Brief description of implementation
 
 ### Related Technologies
+
 - Technology 1 - How it relates to this reference
 - Technology 2 - How it relates to this reference
 
@@ -163,9 +176,9 @@ Highlight any critical warnings, deprecations, or common mistakes:
 
 ## Update History
 
-| Date | Updated By | Changes |
-|------|------------|---------|
-| YYYY-MM-DD | [Agent/Person] | Initial creation |
+| Date       | Updated By     | Changes                |
+| ---------- | -------------- | ---------------------- |
+| YYYY-MM-DD | [Agent/Person] | Initial creation       |
 | YYYY-MM-DD | [Agent/Person] | Description of updates |
 
 ---
@@ -180,6 +193,7 @@ Highlight any critical warnings, deprecations, or common mistakes:
 4. **When to update**: Describe conditions that would require updating this reference document
 
 **Example workflow**:
+
 1. Agent reads this reference instead of fetching external docs
 2. Agent implements based on patterns and configuration shown here
 3. Agent validates implementation against "Key Configuration" section

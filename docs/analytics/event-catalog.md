@@ -11,6 +11,7 @@
 This document catalogs all custom events tracked in PostHog, including their properties, usage, and business purpose.
 
 **Related Documents**:
+
 - [PostHog Setup Guide](./posthog-setup-guide.md) - One-time account configuration (HITL task)
 - [User Story: PostHog Integration](../user-stories/posthog-integration.md)
 - [ADR-013: PostHog Analytics Platform](../adr/ADR-013-posthog-analytics-and-experimentation-platform.md)
@@ -35,6 +36,7 @@ This ensures that the metrics in this catalog accurately represent user behavior
 All custom events follow the pattern: `<noun>_<past_tense_verb>`
 
 **Examples**:
+
 - `application_created` (not `create_application`)
 - `listing_viewed` (not `view_listing`)
 - `message_sent` (not `send_message`)
@@ -60,18 +62,21 @@ All custom events follow the pattern: `<noun>_<past_tense_verb>`
 | `organization_id` | string | ❌ | Organization context (if applicable) |
 
 **Usage Example**:
+
 ```typescript
 import { Events } from '@/lib/analytics/events'
 import { useTrackEvent } from '@/lib/hooks/use-track-event'
 
 const track = useTrackEvent()
 
-track(Events.Application.created({
-  application_id: application.id,
-  listing_id: listing.id,
-  user_id: user.id,
-  organization_id: organization?.id
-}))
+track(
+  Events.Application.created({
+    application_id: application.id,
+    listing_id: listing.id,
+    user_id: user.id,
+    organization_id: organization?.id,
+  })
+)
 ```
 
 **Business Value**: Measure application submission rate, identify high-performing listings
@@ -90,12 +95,15 @@ track(Events.Application.created({
 | `viewer_role` | string | ✅ | Role: 'landlord', 'agent', 'admin' |
 
 **Usage Example**:
+
 ```typescript
-track(Events.Application.viewed({
-  application_id: application.id,
-  user_id: user.id,
-  viewer_role: user.role
-}))
+track(
+  Events.Application.viewed({
+    application_id: application.id,
+    user_id: user.id,
+    viewer_role: user.role,
+  })
+)
 ```
 
 **Business Value**: Measure landlord engagement, time-to-review metrics
@@ -117,13 +125,16 @@ track(Events.Application.viewed({
 | `property_type` | string | ❌ | 'apartment', 'house', 'condo', etc. |
 
 **Usage Example**:
+
 ```typescript
-track(Events.Listing.created({
-  listing_id: listing.id,
-  user_id: user.id,
-  organization_id: organization?.id,
-  property_type: listing.propertyType
-}))
+track(
+  Events.Listing.created({
+    listing_id: listing.id,
+    user_id: user.id,
+    organization_id: organization?.id,
+    property_type: listing.propertyType,
+  })
+)
 ```
 
 **Business Value**: Track supply growth, identify active landlords
@@ -142,12 +153,15 @@ track(Events.Listing.created({
 | `source` | string | ❌ | Referrer: 'search', 'map', 'email', etc. |
 
 **Usage Example**:
+
 ```typescript
-track(Events.Listing.viewed({
-  listing_id: listing.id,
-  user_id: user?.id,
-  source: 'search-results'
-}))
+track(
+  Events.Listing.viewed({
+    listing_id: listing.id,
+    user_id: user?.id,
+    source: 'search-results',
+  })
+)
 ```
 
 **Business Value**: Measure listing popularity, optimize search results
@@ -169,13 +183,16 @@ track(Events.Listing.viewed({
 | `conversation_id` | string | ❌ | Conversation/thread identifier |
 
 **Usage Example**:
+
 ```typescript
-track(Events.Message.sent({
-  message_id: message.id,
-  sender_id: user.id,
-  recipient_id: recipient.id,
-  conversation_id: conversation?.id
-}))
+track(
+  Events.Message.sent({
+    message_id: message.id,
+    sender_id: user.id,
+    recipient_id: recipient.id,
+    conversation_id: conversation?.id,
+  })
+)
 ```
 
 **Business Value**: Measure engagement, response rates, communication patterns
@@ -197,13 +214,16 @@ track(Events.Message.sent({
 | `user_id` | string | ❌ | User performing search |
 
 **Usage Example**:
+
 ```typescript
-track(Events.Search.performed({
-  query: 'Brooklyn 2BR',
-  filters: { minPrice: 2000, maxPrice: 3000, beds: 2 },
-  results_count: 42,
-  user_id: user?.id
-}))
+track(
+  Events.Search.performed({
+    query: 'Brooklyn 2BR',
+    filters: { minPrice: 2000, maxPrice: 3000, beds: 2 },
+    results_count: 42,
+    user_id: user?.id,
+  })
+)
 ```
 
 **Business Value**: Understand search behavior, optimize search algorithm
@@ -224,12 +244,15 @@ track(Events.Search.performed({
 | `completion_percentage` | number | ✅ | Profile completion (0-100) |
 
 **Usage Example**:
+
 ```typescript
-track(Events.Profile.completed({
-  user_id: user.id,
-  profile_type: user.role,
-  completion_percentage: 100
-}))
+track(
+  Events.Profile.completed({
+    user_id: user.id,
+    profile_type: user.role,
+    completion_percentage: 100,
+  })
+)
 ```
 
 **Business Value**: Measure onboarding completion, identify drop-off points
@@ -252,14 +275,17 @@ track(Events.Profile.completed({
 | `payment_method` | string | ❌ | 'card', 'ach', 'wire', etc. |
 
 **Usage Example**:
+
 ```typescript
-track(Events.Payment.initiated({
-  payment_id: payment.id,
-  amount: 5000, // $50.00 in cents
-  currency: 'USD',
-  user_id: user.id,
-  payment_method: 'card'
-}))
+track(
+  Events.Payment.initiated({
+    payment_id: payment.id,
+    amount: 5000, // $50.00 in cents
+    currency: 'USD',
+    user_id: user.id,
+    payment_method: 'card',
+  })
+)
 ```
 
 **Business Value**: Track revenue funnel, identify payment friction
@@ -280,14 +306,17 @@ track(Events.Payment.initiated({
 | `status` | string | ✅ | 'success' or 'failed' |
 
 **Usage Example**:
+
 ```typescript
-track(Events.Payment.completed({
-  payment_id: payment.id,
-  amount: 5000,
-  currency: 'USD',
-  user_id: user.id,
-  status: 'success'
-}))
+track(
+  Events.Payment.completed({
+    payment_id: payment.id,
+    amount: 5000,
+    currency: 'USD',
+    user_id: user.id,
+    status: 'success',
+  })
+)
 ```
 
 **Business Value**: Measure payment success rate, revenue metrics
@@ -310,14 +339,14 @@ PostHog automatically tracks these events:
 
 Based on US-002 user story projections:
 
-| Event | Monthly Volume | Free Tier Limit | Notes |
-|-------|----------------|-----------------|-------|
-| `listing_viewed` | ~50,000 | 1M events/month | High volume |
-| `search_performed` | ~30,000 | 1M events/month | High volume |
-| `application_created` | ~5,000 | 1M events/month | Medium |
-| `message_sent` | ~10,000 | 1M events/month | Medium |
-| `payment_completed` | ~2,000 | 1M events/month | Low |
-| **TOTAL** | **~100,000** | **1M events/month** | ✅ Within free tier |
+| Event                 | Monthly Volume | Free Tier Limit     | Notes               |
+| --------------------- | -------------- | ------------------- | ------------------- |
+| `listing_viewed`      | ~50,000        | 1M events/month     | High volume         |
+| `search_performed`    | ~30,000        | 1M events/month     | High volume         |
+| `application_created` | ~5,000         | 1M events/month     | Medium              |
+| `message_sent`        | ~10,000        | 1M events/month     | Medium              |
+| `payment_completed`   | ~2,000         | 1M events/month     | Low                 |
+| **TOTAL**             | **~100,000**   | **1M events/month** | ✅ Within free tier |
 
 ---
 
@@ -326,6 +355,7 @@ Based on US-002 user story projections:
 ### Process
 
 1. **Define the event** in `lib/analytics/types.ts`:
+
    ```typescript
    export interface NewEventEvent {
      event: 'new_event_name'
@@ -337,17 +367,19 @@ Based on US-002 user story projections:
    ```
 
 2. **Add to union type** in `lib/analytics/types.ts`:
+
    ```typescript
    export type AnalyticsEvent = ... | NewEventEvent
    ```
 
 3. **Create event builder** in `lib/analytics/events.ts`:
+
    ```typescript
    export const NewEvents = {
      triggered: (properties): NewEventEvent => ({
        event: 'new_event_name',
-       properties
-     })
+       properties,
+     }),
    }
    ```
 
@@ -360,17 +392,20 @@ Based on US-002 user story projections:
 ## Best Practices
 
 ### Event Naming
+
 - Use past tense verbs (`created`, `viewed`, `sent`)
 - Be specific but concise (`application_created` not `new_application`)
 - Avoid generic names (`click`, `view`)
 
 ### Properties
+
 - Always include IDs (user_id, listing_id, etc.)
 - Use snake_case for property names
 - Include timestamps only if different from event time
 - Keep property values simple (strings, numbers, booleans)
 
 ### Tracking Calls
+
 - Use event builders from `lib/analytics/events.ts`
 - Track events close to the action (not in useEffect)
 - Handle errors gracefully (use `useSafeTrackEvent` if needed)

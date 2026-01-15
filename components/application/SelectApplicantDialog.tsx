@@ -77,8 +77,8 @@ export function SelectApplicantDialog({
                   </p>
                 </div>
                 <p className="text-muted-foreground mt-4 text-sm">
-                  This will notify the applicant and your agent to proceed with lease preparation. Other
-                  applicants will be notified that the unit is no longer available.
+                  This will notify the applicant and your agent to proceed with lease preparation.
+                  Other applicants will be notified that the unit is no longer available.
                 </p>
               </div>
               <DialogFooter>
@@ -86,7 +86,11 @@ export function SelectApplicantDialog({
                   whileHover={shouldReduceMotion ? {} : { scale: 1.05 }}
                   whileTap={shouldReduceMotion ? {} : { scale: 0.95 }}
                 >
-                  <Button variant="outline" onClick={() => onOpenChange(false)} className="border-2">
+                  <Button
+                    variant="outline"
+                    onClick={() => onOpenChange(false)}
+                    className="border-2"
+                  >
                     Cancel
                   </Button>
                 </motion.div>

@@ -33,23 +33,17 @@ export function ComplianceGate({
   return (
     <Card className={`border-2 border-dashed ${className}`}>
       <CardHeader className="text-center">
-        <div className="mx-auto mb-3 flex h-12 w-12 items-center justify-center rounded-full bg-muted">
-          <Lock className="h-6 w-6 text-muted-foreground" />
+        <div className="bg-muted mx-auto mb-3 flex h-12 w-12 items-center justify-center rounded-full">
+          <Lock className="text-muted-foreground h-6 w-6" />
         </div>
-        <CardTitle className="text-lg">
-          {featureName}
-        </CardTitle>
-        {featureDescription && (
-          <CardDescription>
-            {featureDescription}
-          </CardDescription>
-        )}
+        <CardTitle className="text-lg">{featureName}</CardTitle>
+        {featureDescription && <CardDescription>{featureDescription}</CardDescription>}
       </CardHeader>
       <CardContent className="text-center">
-        <div className="mb-4 rounded-lg bg-muted/50 p-3">
-          <p className="text-sm text-muted-foreground">
+        <div className="bg-muted/50 mb-4 rounded-lg p-3">
+          <p className="text-muted-foreground text-sm">
             This feature requires the{' '}
-            <span className="font-semibold text-primary">{requiredTier}</span> tier
+            <span className="text-primary font-semibold">{requiredTier}</span> tier
           </p>
         </div>
 
@@ -59,16 +53,14 @@ export function ComplianceGate({
             Upgrade to {requiredTier}
           </Button>
 
-          <div className="flex items-center justify-center gap-2 text-xs text-muted-foreground">
+          <div className="text-muted-foreground flex items-center justify-center gap-2 text-xs">
             <Shield className="h-3 w-3" />
             <span>Protect your investment with compliance tools</span>
           </div>
         </div>
 
         {currentTier === 'free' && (
-          <p className="mt-4 text-xs text-muted-foreground">
-            You are currently on the Free tier
-          </p>
+          <p className="text-muted-foreground mt-4 text-xs">You are currently on the Free tier</p>
         )}
       </CardContent>
     </Card>

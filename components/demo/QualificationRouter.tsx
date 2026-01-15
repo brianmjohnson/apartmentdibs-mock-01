@@ -26,8 +26,8 @@ export function QualificationRouter({ teamSize, unitCount }: QualificationRouter
             </div>
             <h3 className="mb-2 text-lg font-semibold">Try Our Professional Tier</h3>
             <p className="text-muted-foreground mb-4 text-sm">
-              Based on your team size, our Professional tier may be the best fit.
-              Start your free trial today - no credit card required.
+              Based on your team size, our Professional tier may be the best fit. Start your free
+              trial today - no credit card required.
             </p>
             <Button asChild className="w-full">
               <Link href="/register">Start Free Trial</Link>

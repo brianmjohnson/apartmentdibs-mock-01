@@ -192,8 +192,8 @@ docs/hitl/REVIEW_BATCH_<date>_pr-comment-responses.md
 **Approve these changes to push to PR?**
 
 - [ ] ✅ Approve - Push all commits and post comment replies
-- [ ] 🔄 Revise - Feedback: ******\_\_\_******
-- [ ] ❌ Reject - Reason: ******\_\_\_******
+- [ ] 🔄 Revise - Feedback: **\*\***\_\_\_**\*\***
+- [ ] ❌ Reject - Reason: **\*\***\_\_\_**\*\***
 ```
 
 #### Step 4: Await HITL Approval
@@ -350,9 +350,9 @@ Based on retrospective analysis of sessions:
 **Approve this enhancement for implementation?**
 
 - [ ] ✅ Approve - Proceed with implementation
-- [ ] 🔄 Revise - Feedback: ******\_\_\_******
-- [ ] ❌ Reject - Reason: ******\_\_\_******
-- [ ] ⏸️ Defer - Revisit when: ******\_\_\_******
+- [ ] 🔄 Revise - Feedback: **\*\***\_\_\_**\*\***
+- [ ] ❌ Reject - Reason: **\*\***\_\_\_**\*\***
+- [ ] ⏸️ Defer - Revisit when: **\*\***\_\_\_**\*\***
 ```
 
 #### Step 5: Await HITL Approval

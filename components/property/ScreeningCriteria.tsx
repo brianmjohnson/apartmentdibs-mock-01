@@ -47,8 +47,8 @@ export function ScreeningCriteria({ hardCriteria, softCriteria }: ScreeningCrite
         )}
 
         <p className="text-muted-foreground text-xs">
-          Meeting hard criteria is required for approval. Soft criteria improve your application
-          but are not mandatory.
+          Meeting hard criteria is required for approval. Soft criteria improve your application but
+          are not mandatory.
         </p>
       </CardContent>
     </Card>

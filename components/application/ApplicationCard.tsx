@@ -29,7 +29,12 @@ interface ApplicationCardProps {
   className?: string
 }
 
-export function ApplicationCard({ applicant, onSelect, onDeny, className = '' }: ApplicationCardProps) {
+export function ApplicationCard({
+  applicant,
+  onSelect,
+  onDeny,
+  className = '',
+}: ApplicationCardProps) {
   const shouldReduceMotion = useReducedMotion()
 
   const cardVariants = shouldReduceMotion
@@ -84,9 +89,14 @@ export function ApplicationCard({ applicant, onSelect, onDeny, className = '' }:
                     </Badge>
                   </motion.div>
                 </div>
-                <p className="text-muted-foreground text-sm">Applied {formatDate(applicant.appliedAt)}</p>
+                <p className="text-muted-foreground text-sm">
+                  Applied {formatDate(applicant.appliedAt)}
+                </p>
               </div>
-              <Badge variant="outline" className={`${getApplicantStatusColor(applicant.status)} border-2`}>
+              <Badge
+                variant="outline"
+                className={`${getApplicantStatusColor(applicant.status)} border-2`}
+              >
                 {applicant.status}
               </Badge>
             </div>
@@ -105,7 +115,10 @@ export function ApplicationCard({ applicant, onSelect, onDeny, className = '' }:
             <p className="text-muted-foreground">Credit Band</p>
             <div className="flex items-center gap-2">
               <p className="font-bold">{applicant.creditBand}</p>
-              <Badge variant="outline" className={`${getCreditBandColor(applicant.creditBand)} border text-xs`}>
+              <Badge
+                variant="outline"
+                className={`${getCreditBandColor(applicant.creditBand)} border text-xs`}
+              >
                 {getCreditBandLabel(applicant.creditBand)}
               </Badge>
             </div>
@@ -152,13 +165,23 @@ export function ApplicationCard({ applicant, onSelect, onDeny, className = '' }:
               View Details
             </Button>
           </Link>
-          <motion.div className="flex-1" whileHover={shouldReduceMotion ? {} : { scale: 1.05 }} whileTap={shouldReduceMotion ? {} : { scale: 0.95 }}>
-            <Button className="border-foreground w-full border-2" onClick={() => onSelect(applicant)}>
+          <motion.div
+            className="flex-1"
+            whileHover={shouldReduceMotion ? {} : { scale: 1.05 }}
+            whileTap={shouldReduceMotion ? {} : { scale: 0.95 }}
+          >
+            <Button
+              className="border-foreground w-full border-2"
+              onClick={() => onSelect(applicant)}
+            >
               <CheckCircle className="mr-2 h-4 w-4" />
               Select
             </Button>
           </motion.div>
-          <motion.div whileHover={shouldReduceMotion ? {} : { scale: 1.05 }} whileTap={shouldReduceMotion ? {} : { scale: 0.95 }}>
+          <motion.div
+            whileHover={shouldReduceMotion ? {} : { scale: 1.05 }}
+            whileTap={shouldReduceMotion ? {} : { scale: 0.95 }}
+          >
             <Button variant="outline" className="border-2" onClick={() => onDeny(applicant)}>
               <XCircle className="h-4 w-4" />
             </Button>

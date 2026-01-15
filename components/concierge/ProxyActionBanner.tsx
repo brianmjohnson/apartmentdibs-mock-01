@@ -40,7 +40,7 @@ export function ProxyActionBanner({
         <AlertTitle className="text-blue-700">Action by Support</AlertTitle>
         <AlertDescription className="text-blue-600">
           <p>{action.description}</p>
-          <div className="flex items-center gap-4 mt-2 text-xs">
+          <div className="mt-2 flex items-center gap-4 text-xs">
             <span>Performed by: {action.performedBy}</span>
             <span className="flex items-center gap-1">
               <Clock className="h-3 w-3" />
@@ -53,14 +53,9 @@ export function ProxyActionBanner({
   }
 
   return (
-    <div
-      className={cn(
-        'flex items-center gap-2 text-sm text-muted-foreground',
-        className
-      )}
-    >
+    <div className={cn('text-muted-foreground flex items-center gap-2 text-sm', className)}>
       <Badge variant="outline" className="text-xs font-normal">
-        <UserCog className="h-3 w-3 mr-1" />
+        <UserCog className="mr-1 h-3 w-3" />
         Support Action
       </Badge>
       <span>by {action.performedBy}</span>
@@ -81,13 +76,11 @@ export function ProxyModeBanner({
   onExit?: () => void
 }) {
   return (
-    <div className="bg-yellow-100 border-b border-yellow-200 px-4 py-2">
-      <div className="max-w-7xl mx-auto flex items-center justify-between">
+    <div className="border-b border-yellow-200 bg-yellow-100 px-4 py-2">
+      <div className="mx-auto flex max-w-7xl items-center justify-between">
         <div className="flex items-center gap-2">
           <UserCog className="h-4 w-4 text-yellow-700" />
-          <span className="text-sm font-medium text-yellow-700">
-            Proxy Mode Active
-          </span>
+          <span className="text-sm font-medium text-yellow-700">Proxy Mode Active</span>
           <span className="text-sm text-yellow-600">
             {repName} acting on behalf of {landlordName}
           </span>
@@ -95,7 +88,7 @@ export function ProxyModeBanner({
         {onExit && (
           <button
             onClick={onExit}
-            className="text-sm text-yellow-700 hover:text-yellow-800 font-medium"
+            className="text-sm font-medium text-yellow-700 hover:text-yellow-800"
           >
             Exit Proxy Mode
           </button>
@@ -126,28 +119,23 @@ export function ProxyActionList({
 
   return (
     <div className={cn('space-y-3', className)}>
-      <h3 className="font-medium text-sm flex items-center gap-2">
+      <h3 className="flex items-center gap-2 text-sm font-medium">
         <Info className="h-4 w-4" />
         Actions Performed by Support
       </h3>
       <div className="space-y-2">
         {actions.map((action) => (
-          <div
-            key={action.id}
-            className="rounded-lg border border-blue-200 bg-blue-50/50 p-3"
-          >
+          <div key={action.id} className="rounded-lg border border-blue-200 bg-blue-50/50 p-3">
             <div className="flex items-start justify-between">
               <div>
-                <p className="font-medium text-sm">{action.actionType}</p>
-                <p className="text-sm text-muted-foreground mt-0.5">
-                  {action.description}
-                </p>
+                <p className="text-sm font-medium">{action.actionType}</p>
+                <p className="text-muted-foreground mt-0.5 text-sm">{action.description}</p>
               </div>
               <Badge variant="outline" className="text-xs">
                 {action.performedBy}
               </Badge>
             </div>
-            <p className="text-xs text-muted-foreground mt-2 flex items-center gap-1">
+            <p className="text-muted-foreground mt-2 flex items-center gap-1 text-xs">
               <Clock className="h-3 w-3" />
               {formatTimestamp(action.performedAt)}
             </p>

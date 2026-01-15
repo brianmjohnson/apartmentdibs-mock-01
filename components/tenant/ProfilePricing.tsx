@@ -2,7 +2,14 @@
 
 import { Check, Shield, Users, Star } from 'lucide-react'
 import { Button } from '@/components/ui/button'
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card'
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 
 interface ProfileTier {
@@ -89,7 +96,7 @@ export function ProfilePricing({ onSelectTier, currentTierId, className }: Profi
   return (
     <div className={className}>
       <div className="mb-6 text-center">
-        <p className="text-sm text-muted-foreground">
+        <p className="text-muted-foreground text-sm">
           30-day money-back guarantee if denied by all landlords
         </p>
       </div>
@@ -99,18 +106,16 @@ export function ProfilePricing({ onSelectTier, currentTierId, className }: Profi
           <Card
             key={tier.id}
             className={`relative flex flex-col ${
-              tier.isBestValue
-                ? 'border-2 border-primary shadow-lg'
-                : 'border'
-            } ${currentTierId === tier.id ? 'ring-2 ring-primary' : ''}`}
+              tier.isBestValue ? 'border-primary border-2 shadow-lg' : 'border'
+            } ${currentTierId === tier.id ? 'ring-primary ring-2' : ''}`}
           >
             {tier.isBestValue && (
-              <Badge className="absolute -top-3 left-1/2 -translate-x-1/2 bg-primary">
+              <Badge className="bg-primary absolute -top-3 left-1/2 -translate-x-1/2">
                 Best Value
               </Badge>
             )}
             <CardHeader>
-              <div className="mb-2 flex h-12 w-12 items-center justify-center rounded-lg bg-primary/10 text-primary">
+              <div className="bg-primary/10 text-primary mb-2 flex h-12 w-12 items-center justify-center rounded-lg">
                 {tier.icon}
               </div>
               <CardTitle>{tier.name}</CardTitle>
@@ -120,7 +125,7 @@ export function ProfilePricing({ onSelectTier, currentTierId, className }: Profi
               <div className="mb-6">
                 <span className="text-4xl font-bold">${tier.price}</span>
                 <span className="text-muted-foreground"> one-time</span>
-                <p className="mt-1 text-sm text-muted-foreground">
+                <p className="text-muted-foreground mt-1 text-sm">
                   Valid for {tier.validityDays} days
                 </p>
               </div>

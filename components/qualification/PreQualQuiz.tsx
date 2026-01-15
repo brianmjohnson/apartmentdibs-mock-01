@@ -5,13 +5,7 @@ import { Calculator, DollarSign, CreditCard, AlertTriangle, Loader2 } from 'luci
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from '@/components/ui/card'
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import {
   Select,
   SelectContent,
@@ -37,11 +31,7 @@ interface PreQualQuizProps {
   className?: string
 }
 
-export function PreQualQuiz({
-  onComplete,
-  onCreateProfile,
-  className,
-}: PreQualQuizProps) {
+export function PreQualQuiz({ onComplete, onCreateProfile, className }: PreQualQuizProps) {
   const [annualIncome, setAnnualIncome] = useState('')
   const [creditScore, setCreditScore] = useState<CreditScoreRange | ''>('')
   const [hasEviction, setHasEviction] = useState<'yes' | 'no' | ''>('')
@@ -113,9 +103,7 @@ export function PreQualQuiz({
           <Calculator className="h-5 w-5" />
           Budget Pre-Qualification
         </CardTitle>
-        <CardDescription>
-          Answer a few questions to see what you can afford
-        </CardDescription>
+        <CardDescription>Answer a few questions to see what you can afford</CardDescription>
       </CardHeader>
       <CardContent className="space-y-6">
         {!result ? (
@@ -127,7 +115,7 @@ export function PreQualQuiz({
                 What&apos;s your annual income?
               </Label>
               <div className="relative">
-                <span className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground">
+                <span className="text-muted-foreground absolute top-1/2 left-3 -translate-y-1/2">
                   $
                 </span>
                 <Input
@@ -139,7 +127,7 @@ export function PreQualQuiz({
                   className="pl-7"
                 />
               </div>
-              <p className="text-xs text-muted-foreground">
+              <p className="text-muted-foreground text-xs">
                 Include all sources: salary, bonuses, investments
               </p>
             </div>
@@ -150,7 +138,10 @@ export function PreQualQuiz({
                 <CreditCard className="h-4 w-4" />
                 What&apos;s your estimated credit score?
               </Label>
-              <Select value={creditScore} onValueChange={(v) => setCreditScore(v as CreditScoreRange)}>
+              <Select
+                value={creditScore}
+                onValueChange={(v) => setCreditScore(v as CreditScoreRange)}
+              >
                 <SelectTrigger id="credit">
                   <SelectValue placeholder="Select range" />
                 </SelectTrigger>
@@ -202,43 +193,33 @@ export function PreQualQuiz({
         ) : (
           <>
             {/* Results */}
-            <div className="rounded-lg bg-primary/10 p-6 text-center">
-              <p className="text-sm text-muted-foreground mb-2">
-                Your maximum monthly rent
-              </p>
-              <p className="text-4xl font-bold text-primary">
-                ${result.maxRent.toLocaleString()}
-              </p>
-              <p className="text-sm text-muted-foreground mt-2">
-                per month
-              </p>
+            <div className="bg-primary/10 rounded-lg p-6 text-center">
+              <p className="text-muted-foreground mb-2 text-sm">Your maximum monthly rent</p>
+              <p className="text-primary text-4xl font-bold">${result.maxRent.toLocaleString()}</p>
+              <p className="text-muted-foreground mt-2 text-sm">per month</p>
             </div>
 
-            <div className="rounded-lg bg-muted p-4">
+            <div className="bg-muted rounded-lg p-4">
               <p className="text-sm">{result.qualifiedMessage}</p>
             </div>
 
             <Separator />
 
             <div className="space-y-3">
-              <h4 className="font-medium text-sm">Next Steps</h4>
+              <h4 className="text-sm font-medium">Next Steps</h4>
               {onCreateProfile && (
                 <Button className="w-full" onClick={onCreateProfile}>
                   Create Profile for Accurate Assessment
                 </Button>
               )}
-              <Button
-                variant="outline"
-                className="w-full"
-                onClick={() => setResult(null)}
-              >
+              <Button variant="outline" className="w-full" onClick={() => setResult(null)}>
                 Recalculate
               </Button>
             </div>
 
-            <p className="text-xs text-muted-foreground text-center">
-              This is an estimate based on standard 3x income requirements.
-              Actual qualifications vary by landlord and location.
+            <p className="text-muted-foreground text-center text-xs">
+              This is an estimate based on standard 3x income requirements. Actual qualifications
+              vary by landlord and location.
             </p>
           </>
         )}

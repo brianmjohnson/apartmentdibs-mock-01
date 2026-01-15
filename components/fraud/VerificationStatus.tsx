@@ -18,11 +18,7 @@ interface VerificationStatusProps {
   className?: string
 }
 
-export function VerificationStatus({
-  items,
-  overallScore,
-  className,
-}: VerificationStatusProps) {
+export function VerificationStatus({ items, overallScore, className }: VerificationStatusProps) {
   const getStatusIcon = (status: VerificationItemStatus) => {
     switch (status) {
       case 'verified':
@@ -40,25 +36,23 @@ export function VerificationStatus({
     switch (status) {
       case 'verified':
         return (
-          <Badge variant="secondary" className="bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-300">
+          <Badge
+            variant="secondary"
+            className="bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-300"
+          >
             Verified
           </Badge>
         )
       case 'unverified':
-        return (
-          <Badge variant="secondary">
-            Not Verified
-          </Badge>
-        )
+        return <Badge variant="secondary">Not Verified</Badge>
       case 'flagged':
-        return (
-          <Badge variant="destructive">
-            Flagged
-          </Badge>
-        )
+        return <Badge variant="destructive">Flagged</Badge>
       case 'pending':
         return (
-          <Badge variant="secondary" className="bg-yellow-100 text-yellow-800 dark:bg-yellow-900/30 dark:text-yellow-300">
+          <Badge
+            variant="secondary"
+            className="bg-yellow-100 text-yellow-800 dark:bg-yellow-900/30 dark:text-yellow-300"
+          >
             Pending
           </Badge>
         )
@@ -88,7 +82,9 @@ export function VerificationStatus({
           </CardTitle>
           {overallScore !== undefined && (
             <Badge
-              variant={overallScore >= 80 ? 'secondary' : overallScore >= 60 ? 'outline' : 'destructive'}
+              variant={
+                overallScore >= 80 ? 'secondary' : overallScore >= 60 ? 'outline' : 'destructive'
+              }
               className={overallScore >= 80 ? 'bg-green-100 text-green-800' : ''}
             >
               Score: {overallScore}%
@@ -114,9 +110,7 @@ export function VerificationStatus({
                 <div>
                   <p className="font-medium">{item.name}</p>
                   {item.details && (
-                    <p className="mt-0.5 text-sm text-muted-foreground">
-                      {item.details}
-                    </p>
+                    <p className="text-muted-foreground mt-0.5 text-sm">{item.details}</p>
                   )}
                 </div>
               </div>

@@ -177,7 +177,10 @@ export const analyticsServer = {
    *   // Render new dashboard
    * }
    */
-  isFeatureEnabled: async (flagKey: FeatureFlagKey, userId: string): Promise<boolean | undefined> => {
+  isFeatureEnabled: async (
+    flagKey: FeatureFlagKey,
+    userId: string
+  ): Promise<boolean | undefined> => {
     const client = getPostHogServer()
     if (!client) return undefined
 

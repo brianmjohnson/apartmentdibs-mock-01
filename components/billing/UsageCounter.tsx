@@ -31,7 +31,7 @@ export function UsageCounter({
         </CardHeader>
         <CardContent>
           <div className="text-2xl font-bold">{used}</div>
-          <p className="text-xs text-muted-foreground">Unlimited</p>
+          <p className="text-muted-foreground text-xs">Unlimited</p>
         </CardContent>
       </Card>
     )
@@ -61,7 +61,7 @@ export function UsageCounter({
       <CardContent className="space-y-3">
         <div className="flex items-baseline justify-between">
           <span className={`text-2xl font-bold ${getStatusColor()}`}>{used}</span>
-          <span className="text-sm text-muted-foreground">of {limit}</span>
+          <span className="text-muted-foreground text-sm">of {limit}</span>
         </div>
 
         <Progress value={percentage} className={getProgressColor()} />
@@ -73,11 +73,7 @@ export function UsageCounter({
             <AlertDescription className="mt-2">
               You have reached your {resourceName.toLowerCase()} limit. Upgrade to continue.
               {onUpgrade && (
-                <Button
-                  size="sm"
-                  className="mt-2 w-full"
-                  onClick={onUpgrade}
-                >
+                <Button size="sm" className="mt-2 w-full" onClick={onUpgrade}>
                   <ArrowUp className="mr-2 h-4 w-4" />
                   Upgrade Plan
                 </Button>

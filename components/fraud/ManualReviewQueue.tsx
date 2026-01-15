@@ -96,7 +96,10 @@ export function ManualReviewQueue({
         return <Badge variant="destructive">High</Badge>
       case 'medium':
         return (
-          <Badge variant="secondary" className="bg-yellow-100 text-yellow-800 dark:bg-yellow-900/30 dark:text-yellow-300">
+          <Badge
+            variant="secondary"
+            className="bg-yellow-100 text-yellow-800 dark:bg-yellow-900/30 dark:text-yellow-300"
+          >
             Medium
           </Badge>
         )
@@ -158,7 +161,7 @@ export function ManualReviewQueue({
         </CardHeader>
         <CardContent>
           {items.length === 0 ? (
-            <div className="py-8 text-center text-muted-foreground">
+            <div className="text-muted-foreground py-8 text-center">
               <CheckCircle className="mx-auto mb-3 h-8 w-8 text-green-600" />
               <p>No items pending review</p>
             </div>
@@ -180,7 +183,7 @@ export function ManualReviewQueue({
                     <TableCell>
                       <div>
                         <p className="font-medium">{item.applicantName}</p>
-                        <p className="text-sm text-muted-foreground">{item.applicantEmail}</p>
+                        <p className="text-muted-foreground text-sm">{item.applicantEmail}</p>
                       </div>
                     </TableCell>
                     <TableCell>{item.documentType}</TableCell>
@@ -189,18 +192,14 @@ export function ManualReviewQueue({
                     </TableCell>
                     <TableCell>{getPriorityBadge(item.priority)}</TableCell>
                     <TableCell>
-                      <div className="flex items-center gap-1 text-sm text-muted-foreground">
+                      <div className="text-muted-foreground flex items-center gap-1 text-sm">
                         <Clock className="h-3 w-3" />
                         {formatDate(item.flaggedAt)}
                       </div>
                     </TableCell>
                     <TableCell className="text-right">
                       <div className="flex justify-end gap-1">
-                        <Button
-                          variant="ghost"
-                          size="sm"
-                          onClick={() => onViewDetails?.(item.id)}
-                        >
+                        <Button variant="ghost" size="sm" onClick={() => onViewDetails?.(item.id)}>
                           <Eye className="h-4 w-4" />
                         </Button>
                         <Button
@@ -260,9 +259,9 @@ export function ManualReviewQueue({
           </DialogHeader>
           <div className="space-y-4 py-4">
             {selectedItem && (
-              <div className="rounded-lg bg-muted p-3">
+              <div className="bg-muted rounded-lg p-3">
                 <p className="text-sm font-medium">{selectedItem.applicantName}</p>
-                <p className="text-sm text-muted-foreground">
+                <p className="text-muted-foreground text-sm">
                   {selectedItem.documentType} - {selectedItem.flagReason}
                 </p>
               </div>

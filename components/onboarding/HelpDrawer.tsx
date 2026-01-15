@@ -83,45 +83,39 @@ export function HelpDrawer({
       <SheetContent className="overflow-y-auto">
         <SheetHeader>
           <SheetTitle>Help: {stepTitle}</SheetTitle>
-          <SheetDescription>
-            Find answers and resources to complete this step
-          </SheetDescription>
+          <SheetDescription>Find answers and resources to complete this step</SheetDescription>
         </SheetHeader>
 
         <div className="mt-6 space-y-6">
           {/* Resources */}
           {resources.length > 0 && (
             <div className="space-y-3">
-              <h3 className="font-medium text-sm">Resources</h3>
+              <h3 className="text-sm font-medium">Resources</h3>
               <div className="space-y-2">
                 {resources.map((resource) => (
                   <button
                     key={resource.id}
                     onClick={() => handleResourceClick(resource)}
-                    className="w-full flex items-start gap-3 rounded-lg border p-3 text-left hover:bg-muted/50 transition-colors"
+                    className="hover:bg-muted/50 flex w-full items-start gap-3 rounded-lg border p-3 text-left transition-colors"
                   >
-                    <div className="mt-0.5 text-muted-foreground">
+                    <div className="text-muted-foreground mt-0.5">
                       {getResourceIcon(resource.type)}
                     </div>
-                    <div className="flex-1 min-w-0">
+                    <div className="min-w-0 flex-1">
                       <div className="flex items-center gap-2">
-                        <span className="font-medium text-sm">{resource.title}</span>
-                        {resource.url && (
-                          <ExternalLink className="h-3 w-3 text-muted-foreground" />
-                        )}
+                        <span className="text-sm font-medium">{resource.title}</span>
+                        {resource.url && <ExternalLink className="text-muted-foreground h-3 w-3" />}
                       </div>
                       {resource.description && (
-                        <p className="text-xs text-muted-foreground mt-0.5">
+                        <p className="text-muted-foreground mt-0.5 text-xs">
                           {resource.description}
                         </p>
                       )}
                       {resource.duration && (
-                        <p className="text-xs text-muted-foreground mt-1">
-                          {resource.duration}
-                        </p>
+                        <p className="text-muted-foreground mt-1 text-xs">{resource.duration}</p>
                       )}
                     </div>
-                    <ChevronRight className="h-4 w-4 text-muted-foreground mt-0.5" />
+                    <ChevronRight className="text-muted-foreground mt-0.5 h-4 w-4" />
                   </button>
                 ))}
               </div>
@@ -133,12 +127,12 @@ export function HelpDrawer({
             <>
               <Separator />
               <div className="space-y-3">
-                <h3 className="font-medium text-sm">Common Questions</h3>
+                <h3 className="text-sm font-medium">Common Questions</h3>
                 <div className="space-y-4">
                   {faqs.map((faq, index) => (
                     <div key={index} className="space-y-1">
-                      <p className="font-medium text-sm">{faq.question}</p>
-                      <p className="text-sm text-muted-foreground">{faq.answer}</p>
+                      <p className="text-sm font-medium">{faq.question}</p>
+                      <p className="text-muted-foreground text-sm">{faq.answer}</p>
                     </div>
                   ))}
                 </div>
@@ -151,12 +145,8 @@ export function HelpDrawer({
             <>
               <Separator />
               <div className="space-y-3">
-                <h3 className="font-medium text-sm">Still need help?</h3>
-                <Button
-                  variant="outline"
-                  className="w-full"
-                  onClick={onContactSupport}
-                >
+                <h3 className="text-sm font-medium">Still need help?</h3>
+                <Button variant="outline" className="w-full" onClick={onContactSupport}>
                   <MessageCircle className="mr-2 h-4 w-4" />
                   Contact Support
                 </Button>

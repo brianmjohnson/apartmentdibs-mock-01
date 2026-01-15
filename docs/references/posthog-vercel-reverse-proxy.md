@@ -6,37 +6,43 @@
 
 ## Document Metadata
 
-| Field | Value |
-|-------|-------|
-| **Document Name** | PostHog Vercel Reverse Proxy Configuration |
-| **Source URL** | https://posthog.com/docs/advanced/proxy/vercel |
-| **Date Fetched** | 2025-11-20 |
-| **Fetched By** | architecture-agent (PostHog integration task) |
-| **Last Updated** | 2025-11-20 |
-| **Version/Release** | PostHog 2025 defaults (2025-05-24) |
+| Field               | Value                                          |
+| ------------------- | ---------------------------------------------- |
+| **Document Name**   | PostHog Vercel Reverse Proxy Configuration     |
+| **Source URL**      | https://posthog.com/docs/advanced/proxy/vercel |
+| **Date Fetched**    | 2025-11-20                                     |
+| **Fetched By**      | architecture-agent (PostHog integration task)  |
+| **Last Updated**    | 2025-11-20                                     |
+| **Version/Release** | PostHog 2025 defaults (2025-05-24)             |
 
 ---
 
 ## Related Project Documentation
 
 ### ADRs (Architecture Decision Records)
+
 - [ADR-013](../adr/ADR-013-posthog-analytics-and-experimentation-platform.md) - PostHog Analytics and Experimentation Platform
 
 ### User Stories
+
 - [US-002](../user-stories/posthog-integration.md) - PostHog Integration for Analytics and Experimentation
 
 ### Technical Specifications
+
 - [PostHog Integration Spec](../technical-specs/posthog-integration-spec.md) - Complete technical implementation specification
 
 ### Agents
+
 - [architecture-agent](../../.claude/agents/architecture-agent.md) - Created ADR-013 for PostHog selection
 - [frontend-developer](../../.claude/agents/frontend-developer.md) - Implemented PostHog provider and client-side tracking
 - [quality-reviewer](../../.claude/agents/quality-reviewer.md) - Validated PostHog implementation against specifications
 
 ### Skills
+
 - None currently - this is a configuration reference
 
 ### Other References
+
 - [PostHog Next.js Integration](./posthog-nextjs-integration.md) - Main Next.js integration reference (when created)
 
 ---
@@ -64,23 +70,27 @@ List specific use cases within this project where this documentation is referenc
 PostHog recommends using a reverse proxy to avoid ad blockers blocking analytics requests. Vercel supports this through the `rewrites` configuration in `vercel.json`.
 
 **Key Benefits:**
+
 - Prevents ad blockers from blocking PostHog tracking requests
 - Requests appear to come from your domain rather than PostHog's domain
 - Improves data collection reliability by 20-40% in typical deployments
 - No additional infrastructure required - uses Vercel's built-in rewrites
 
 **Key Concepts:**
+
 - Two proxy routes required: one for static assets, one for API calls
 - Custom proxy path must be unique and non-obvious (not `/ingest`, `/tracking`, `/analytics`, or `/posthog`)
 - Client-side configuration uses relative path (`api_host`) and absolute UI host (`ui_host`)
 - Works seamlessly with Vercel's edge network for optimal performance
 
 **Configuration Overview:**
+
 1. Add rewrites to `vercel.json` with unique, non-obvious path
 2. Update PostHog initialization to use relative `api_host` and absolute `ui_host`
 3. Deploy to Vercel - rewrites work automatically across all environments
 
 **Critical for Success:**
+
 - Path must be unique to your application (use random hash or app-specific identifier)
 - `ui_host` is required for PostHog toolbar authentication
 - Both static assets and API endpoints must be proxied
@@ -110,6 +120,7 @@ PostHog recommends using a reverse proxy to avoid ad blockers blocking analytics
 ```
 
 **Path Selection Notes:**
+
 - Original blocked path: `/ingest` (commonly blocked by ad blockers)
 - Current path: `/0579f8f99ca21e72e24243d7b9f81954` (random hash - ad blocker resistant)
 - Alternative options: `/apt-dibs-ph`, `/your-app-name-analytics`, or any non-obvious identifier
@@ -162,6 +173,7 @@ posthog.init(process.env.NEXT_PUBLIC_POSTHOG_KEY!, {
 **When to use**: Default choice for Next.js applications deployed on Vercel
 
 **Implementation**:
+
 ```json
 // vercel.json
 {
@@ -188,6 +200,7 @@ posthog.init(POSTHOG_KEY, {
 ```
 
 **Considerations**:
+
 - Pro: Simple configuration, no additional code
 - Pro: Works automatically across all Vercel environments (production, preview, development)
 - Pro: Optimal performance via Vercel edge network
@@ -198,6 +211,7 @@ posthog.init(POSTHOG_KEY, {
 **When to use**: When you want the proxy to work in local development without Vercel, or when vercel.json rewrites don't work with your framework
 
 **Implementation**:
+
 ```typescript
 // next.config.js
 module.exports = {
@@ -217,6 +231,7 @@ module.exports = {
 ```
 
 **Considerations**:
+
 - Pro: Works in local development (`pnpm dev`)
 - Pro: Portable across hosting platforms
 - Con: Slightly more complex configuration
@@ -227,6 +242,7 @@ module.exports = {
 **When to use**: When you need fine-grained control, custom headers, or request/response transformation
 
 **Implementation**:
+
 ```typescript
 // middleware.ts
 import { NextResponse } from 'next/server'
@@ -254,6 +270,7 @@ export const config = {
 ```
 
 **Considerations**:
+
 - Pro: Maximum flexibility and control
 - Pro: Can add custom logic, rate limiting, or request transformation
 - Con: More complex to maintain
@@ -301,12 +318,14 @@ Add a `rewrites` array to your `vercel.json` in the project root:
 ```
 
 **Important**: Replace `your-unique-path` with something unique to your application. Avoid common names like:
+
 - `/ingest` ❌
 - `/tracking` ❌
 - `/analytics` ❌
 - `/posthog` ❌
 
 Good examples:
+
 - `/0579f8f99ca21e72e24243d7b9f81954` ✅ (random hash)
 - `/apt-dibs-ph` ✅ (app-specific)
 - `/my-company-events` ✅ (company-specific)
@@ -328,6 +347,7 @@ posthog.init(process.env.NEXT_PUBLIC_POSTHOG_KEY!, {
 **Step 3: Deploy to Vercel**
 
 Deploy your changes to Vercel. The rewrites will automatically work in:
+
 - Production deployments
 - Preview deployments
 - Development deployments (if using `vercel dev`)
@@ -348,25 +368,30 @@ PostHog has different regional endpoints. Update the `destination` URLs based on
 - **EU Cloud**: `https://eu.i.posthog.com`
 
 Static assets:
+
 - **US Cloud**: `https://us-assets.i.posthog.com`
 - **EU Cloud**: `https://eu-assets.i.posthog.com`
 
 ### Troubleshooting
 
 **Problem**: Events not being captured
+
 - Check browser DevTools → Network tab for 404 or 500 errors on proxy path
 - Verify `api_host` exactly matches vercel.json `source` path
 - Ensure both static and API rewrites are configured
 
 **Problem**: PostHog toolbar not working
+
 - Verify `ui_host` is set to `https://us.posthog.com` (or your region)
 - Check console for CORS or authentication errors
 
 **Problem**: Proxy works in production but not locally
+
 - Use `vercel dev` instead of `next dev` for local development
 - Or switch to next.config.js rewrites pattern
 
 **Problem**: 500 errors on proxy requests
+
 - Verify destination URLs are correct for your region
 - Check Vercel deployment logs for detailed error messages
 
@@ -375,18 +400,21 @@ Static assets:
 ## Cross-References
 
 ### External Documentation
+
 - [PostHog Vercel Proxy Docs](https://posthog.com/docs/advanced/proxy/vercel) - Official Vercel proxy documentation
 - [PostHog Next.js Integration](https://posthog.com/docs/libraries/next-js) - Main Next.js setup guide
 - [PostHog Reverse Proxy Overview](https://posthog.com/docs/advanced/proxy) - General reverse proxy concepts
 - [Vercel Rewrites Documentation](https://vercel.com/docs/edge-network/rewrites) - Vercel's official rewrites reference
 
 ### Internal Implementation Files
+
 - [vercel.json](../../vercel.json) - Reverse proxy configuration
 - [components/providers/posthog-provider.tsx](../../components/providers/posthog-provider.tsx) - PostHog initialization with proxy
-- [app/_components/posthog-pageview.tsx](../../app/_components/posthog-pageview.tsx) - Pageview tracking component
+- [app/\_components/posthog-pageview.tsx](../../app/_components/posthog-pageview.tsx) - Pageview tracking component
 - [lib/analytics/posthog.ts](../../lib/analytics/posthog.ts) - Client-side analytics utilities
 
 ### Related Technologies
+
 - **Vercel Edge Network** - Handles proxy rewrites at the edge for optimal performance
 - **Next.js Rewrites** - Alternative proxy method using next.config.js
 - **PostHog JavaScript SDK** - Client library that connects through the proxy
@@ -396,8 +424,8 @@ Static assets:
 
 ## Update History
 
-| Date | Updated By | Changes |
-|------|------------|---------|
+| Date       | Updated By         | Changes                                                      |
+| ---------- | ------------------ | ------------------------------------------------------------ |
 | 2025-11-20 | architecture-agent | Initial creation based on PostHog Vercel proxy documentation |
 
 ---
@@ -432,12 +460,14 @@ Static assets:
    - Vercel changes rewrites API or behavior
 
 **Example workflow**:
+
 1. **Architecture Agent**: References this doc when creating ADR for analytics platform selection
 2. **Frontend Developer Agent**: Implements reverse proxy using exact configuration from this reference
 3. **Quality Reviewer Agent**: Validates implementation matches this reference's configuration
 4. **DevOps Agent**: Verifies proxy works in all Vercel environments (production, preview, development)
 
 **Validation checklist for agents**:
+
 - [ ] vercel.json exists with rewrites configuration
 - [ ] Two rewrites: static assets and API endpoint
 - [ ] Proxy path is unique (not `/ingest`, `/tracking`, etc.)

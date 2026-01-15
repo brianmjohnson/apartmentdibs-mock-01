@@ -1,13 +1,7 @@
 'use client'
 
 import { Phone, PhoneIncoming, PhoneOutgoing, Clock, FileText } from 'lucide-react'
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from '@/components/ui/card'
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { cn } from '@/lib/utils'
@@ -43,9 +37,7 @@ export function ConciergeCallLog({
   const formatTimestamp = (date: Date) => {
     const now = new Date()
     const callDate = new Date(date)
-    const diffDays = Math.floor(
-      (now.getTime() - callDate.getTime()) / (1000 * 60 * 60 * 24)
-    )
+    const diffDays = Math.floor((now.getTime() - callDate.getTime()) / (1000 * 60 * 60 * 24))
 
     if (diffDays === 0) {
       return callDate.toLocaleTimeString('en-US', {
@@ -75,23 +67,11 @@ export function ConciergeCallLog({
   const getStatusBadge = (status: CallStatus) => {
     switch (status) {
       case 'completed':
-        return (
-          <Badge className="bg-green-100 text-green-700 hover:bg-green-100">
-            Completed
-          </Badge>
-        )
+        return <Badge className="bg-green-100 text-green-700 hover:bg-green-100">Completed</Badge>
       case 'missed':
-        return (
-          <Badge className="bg-red-100 text-red-700 hover:bg-red-100">
-            Missed
-          </Badge>
-        )
+        return <Badge className="bg-red-100 text-red-700 hover:bg-red-100">Missed</Badge>
       case 'scheduled':
-        return (
-          <Badge className="bg-blue-100 text-blue-700 hover:bg-blue-100">
-            Scheduled
-          </Badge>
-        )
+        return <Badge className="bg-blue-100 text-blue-700 hover:bg-blue-100">Scheduled</Badge>
     }
   }
 
@@ -113,28 +93,23 @@ export function ConciergeCallLog({
           <Phone className="h-5 w-5" />
           Call History
         </CardTitle>
-        <CardDescription>
-          Your support call history with your account manager
-        </CardDescription>
+        <CardDescription>Your support call history with your account manager</CardDescription>
       </CardHeader>
       <CardContent className="space-y-6">
         {/* Scheduled Calls */}
         {scheduledCalls.length > 0 && (
           <div className="space-y-3">
-            <h3 className="font-medium text-sm flex items-center gap-2">
+            <h3 className="flex items-center gap-2 text-sm font-medium">
               <Clock className="h-4 w-4" />
               Upcoming Calls
             </h3>
             <div className="space-y-2">
               {scheduledCalls.map((call) => (
-                <div
-                  key={call.id}
-                  className="rounded-lg border border-blue-200 bg-blue-50 p-4"
-                >
+                <div key={call.id} className="rounded-lg border border-blue-200 bg-blue-50 p-4">
                   <div className="flex items-start justify-between">
                     <div>
                       <p className="font-medium">{call.topic}</p>
-                      <p className="text-sm text-muted-foreground mt-1">
+                      <p className="text-muted-foreground mt-1 text-sm">
                         {call.scheduledFor
                           ? new Date(call.scheduledFor).toLocaleDateString('en-US', {
                               weekday: 'long',
@@ -145,16 +120,10 @@ export function ConciergeCallLog({
                             })
                           : 'Time TBD'}
                       </p>
-                      <p className="text-xs text-muted-foreground mt-1">
-                        with {call.repName}
-                      </p>
+                      <p className="text-muted-foreground mt-1 text-xs">with {call.repName}</p>
                     </div>
                     {onReschedule && (
-                      <Button
-                        variant="outline"
-                        size="sm"
-                        onClick={() => onReschedule(call.id)}
-                      >
+                      <Button variant="outline" size="sm" onClick={() => onReschedule(call.id)}>
                         Reschedule
                       </Button>
                     )}
@@ -168,7 +137,7 @@ export function ConciergeCallLog({
         {/* Past Calls */}
         {pastCalls.length > 0 && (
           <div className="space-y-3">
-            <h3 className="font-medium text-sm">Past Calls</h3>
+            <h3 className="text-sm font-medium">Past Calls</h3>
             <div className="space-y-2">
               {pastCalls.map((call) => (
                 <div
@@ -183,25 +152,19 @@ export function ConciergeCallLog({
                       {getDirectionIcon(call.direction)}
                       <div>
                         <div className="flex items-center gap-2">
-                          <p className="font-medium text-sm">{call.topic}</p>
+                          <p className="text-sm font-medium">{call.topic}</p>
                           {getStatusBadge(call.status)}
                         </div>
-                        <p className="text-xs text-muted-foreground mt-1">
+                        <p className="text-muted-foreground mt-1 text-xs">
                           {formatTimestamp(call.timestamp)}
                           {call.duration && ` - ${formatDuration(call.duration)}`}
                         </p>
-                        <p className="text-xs text-muted-foreground">
-                          with {call.repName}
-                        </p>
+                        <p className="text-muted-foreground text-xs">with {call.repName}</p>
                       </div>
                     </div>
                     {call.notes && onViewNotes && (
-                      <Button
-                        variant="ghost"
-                        size="sm"
-                        onClick={() => onViewNotes(call.id)}
-                      >
-                        <FileText className="h-3 w-3 mr-1" />
+                      <Button variant="ghost" size="sm" onClick={() => onViewNotes(call.id)}>
+                        <FileText className="mr-1 h-3 w-3" />
                         Notes
                       </Button>
                     )}
@@ -213,12 +176,10 @@ export function ConciergeCallLog({
         )}
 
         {calls.length === 0 && (
-          <div className="text-center py-8">
-            <Phone className="h-12 w-12 mx-auto text-muted-foreground mb-4" />
+          <div className="py-8 text-center">
+            <Phone className="text-muted-foreground mx-auto mb-4 h-12 w-12" />
             <p className="text-muted-foreground">No calls yet</p>
-            <p className="text-sm text-muted-foreground mt-1">
-              Your call history will appear here
-            </p>
+            <p className="text-muted-foreground mt-1 text-sm">Your call history will appear here</p>
           </div>
         )}
       </CardContent>

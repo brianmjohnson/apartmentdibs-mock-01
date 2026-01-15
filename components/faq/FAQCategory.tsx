@@ -97,19 +97,19 @@ export const tenantFAQCategories = {
     title: 'Application Process',
     items: [
       {
-        question: 'What happens if I\'m denied?',
+        question: "What happens if I'm denied?",
         answer:
           'You receive an adverse action notice explaining why. Your profile remains active for other applications. Our CRM can automatically match you to other listings you qualify for.',
       },
       {
         question: 'How do I get matched to new listings?',
         answer:
-          'Enable notifications in your profile settings. When new listings match your criteria (neighborhood, price, pets, etc.), you\'ll receive alerts and can apply with one click.',
+          "Enable notifications in your profile settings. When new listings match your criteria (neighborhood, price, pets, etc.), you'll receive alerts and can apply with one click.",
       },
       {
         question: 'Can I apply to multiple listings at once?',
         answer:
-          'Yes! That\'s the main benefit. Your profile works for unlimited applications during its validity period. Apply to as many listings as you want with one click each.',
+          "Yes! That's the main benefit. Your profile works for unlimited applications during its validity period. Apply to as many listings as you want with one click each.",
       },
     ],
   },
@@ -119,17 +119,17 @@ export const tenantFAQCategories = {
       {
         question: 'Why do I pay instead of the landlord?',
         answer:
-          'When you pay, you own and control your profile. You decide who sees it, and it works across all listings. Traditional landlord-paid screening creates fragmented reports you can\'t reuse.',
+          "When you pay, you own and control your profile. You decide who sees it, and it works across all listings. Traditional landlord-paid screening creates fragmented reports you can't reuse.",
       },
       {
-        question: 'What\'s included in the profile fee?',
+        question: "What's included in the profile fee?",
         answer:
           'Credit report, background check, identity verification, and unlimited applications for the validity period. Premium adds income verification and eviction history search.',
       },
       {
         question: 'Is there a refund policy?',
         answer:
-          'Yes. If your profile is denied by all landlords within 30 days, we refund your fee. If you find a place before using all applications, unused value doesn\'t carry over.',
+          "Yes. If your profile is denied by all landlords within 30 days, we refund your fee. If you find a place before using all applications, unused value doesn't carry over.",
       },
     ],
   },

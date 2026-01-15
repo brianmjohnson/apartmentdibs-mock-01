@@ -2,13 +2,7 @@
 
 import { Phone, Mail, Calendar, Clock, Star } from 'lucide-react'
 import { Button } from '@/components/ui/button'
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from '@/components/ui/card'
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { Badge } from '@/components/ui/badge'
 
@@ -81,27 +75,23 @@ export function AccountManagerCard({
     <Card className={className}>
       <CardHeader>
         <CardTitle className="text-lg">Your Account Manager</CardTitle>
-        <CardDescription>
-          Personal support for your concierge subscription
-        </CardDescription>
+        <CardDescription>Personal support for your concierge subscription</CardDescription>
       </CardHeader>
       <CardContent className="space-y-4">
         {/* Manager Info */}
         <div className="flex items-start gap-4">
           <Avatar className="h-16 w-16">
             <AvatarImage src={manager.photoUrl} alt={manager.name} />
-            <AvatarFallback className="text-lg">
-              {getInitials(manager.name)}
-            </AvatarFallback>
+            <AvatarFallback className="text-lg">{getInitials(manager.name)}</AvatarFallback>
           </Avatar>
           <div className="flex-1">
-            <h3 className="font-semibold text-lg">{manager.name}</h3>
-            <p className="text-sm text-muted-foreground">{manager.title}</p>
+            <h3 className="text-lg font-semibold">{manager.name}</h3>
+            <p className="text-muted-foreground text-sm">{manager.title}</p>
             {manager.rating && (
-              <div className="flex items-center gap-1 mt-1">
+              <div className="mt-1 flex items-center gap-1">
                 <Star className="h-4 w-4 fill-yellow-400 text-yellow-400" />
                 <span className="text-sm font-medium">{manager.rating}</span>
-                <span className="text-xs text-muted-foreground">rating</span>
+                <span className="text-muted-foreground text-xs">rating</span>
               </div>
             )}
           </div>
@@ -119,7 +109,7 @@ export function AccountManagerCard({
         )}
 
         {/* Availability */}
-        <div className="flex items-center gap-2 text-sm text-muted-foreground">
+        <div className="text-muted-foreground flex items-center gap-2 text-sm">
           <Clock className="h-4 w-4" />
           <span>{manager.availability}</span>
         </div>
@@ -144,7 +134,7 @@ export function AccountManagerCard({
         )}
 
         {/* Contact Details */}
-        <div className="pt-3 border-t space-y-2 text-sm">
+        <div className="space-y-2 border-t pt-3 text-sm">
           <div className="flex items-center justify-between">
             <span className="text-muted-foreground">Direct Line</span>
             <a href={`tel:${manager.phone}`} className="font-medium hover:underline">
@@ -155,7 +145,7 @@ export function AccountManagerCard({
             <span className="text-muted-foreground">Email</span>
             <a
               href={`mailto:${manager.email}`}
-              className="font-medium hover:underline truncate ml-2"
+              className="ml-2 truncate font-medium hover:underline"
             >
               {manager.email}
             </a>

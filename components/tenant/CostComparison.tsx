@@ -28,9 +28,7 @@ export function CostComparison({
           <TrendingDown className="h-5 w-5 text-green-600" />
           Save with ApartmentDibs
         </CardTitle>
-        <CardDescription>
-          Compare our pricing to traditional per-application fees
-        </CardDescription>
+        <CardDescription>Compare our pricing to traditional per-application fees</CardDescription>
       </CardHeader>
       <CardContent className="space-y-6">
         <div className="grid gap-4 md:grid-cols-2">
@@ -67,20 +65,18 @@ export function CostComparison({
 
         <Separator />
 
-        <div className="rounded-lg bg-primary/5 p-4 text-center">
-          <div className="flex items-center justify-center gap-2 text-primary">
+        <div className="bg-primary/5 rounded-lg p-4 text-center">
+          <div className="text-primary flex items-center justify-center gap-2">
             <DollarSign className="h-5 w-5" />
             <span className="text-lg font-semibold">Your Savings</span>
           </div>
-          <p className="mt-2 text-3xl font-bold text-primary">
-            ${savings.toFixed(2)}
-          </p>
-          <p className="mt-1 text-sm text-muted-foreground">
+          <p className="text-primary mt-2 text-3xl font-bold">${savings.toFixed(2)}</p>
+          <p className="text-muted-foreground mt-1 text-sm">
             That is {savingsPercentage}% less than traditional screening fees
           </p>
         </div>
 
-        <div className="text-center text-sm text-muted-foreground">
+        <div className="text-muted-foreground text-center text-sm">
           <p>Average tenant applies to {avgApplications} apartments before finding a home.</p>
           <p className="mt-1">Pay once, apply everywhere.</p>
         </div>

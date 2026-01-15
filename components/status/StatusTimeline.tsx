@@ -1,21 +1,7 @@
 'use client'
 
-import {
-  FileText,
-  CheckCircle,
-  Eye,
-  Star,
-  Clock,
-  PartyPopper,
-  XCircle,
-} from 'lucide-react'
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from '@/components/ui/card'
+import { FileText, CheckCircle, Eye, Star, Clock, PartyPopper, XCircle } from 'lucide-react'
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { cn } from '@/lib/utils'
 
 interface TimelineEvent {
@@ -116,7 +102,7 @@ export function StatusTimeline({
       </CardHeader>
       <CardContent>
         {expectedDecisionDate && (
-          <div className="mb-6 rounded-lg bg-muted p-3">
+          <div className="bg-muted mb-6 rounded-lg p-3">
             <p className="text-sm">
               <span className="font-medium">Expected Decision:</span>{' '}
               {formatDate(expectedDecisionDate)}
@@ -136,7 +122,7 @@ export function StatusTimeline({
                 {!isLast && (
                   <div
                     className={cn(
-                      'absolute left-[15px] top-8 w-0.5 h-full',
+                      'absolute top-8 left-[15px] h-full w-0.5',
                       event.isComplete ? 'bg-primary/30' : 'bg-gray-200'
                     )}
                   />
@@ -150,32 +136,24 @@ export function StatusTimeline({
                   )}
                 >
                   <Icon
-                    className={cn(
-                      'h-4 w-4',
-                      event.isComplete ? config.color : 'text-gray-400'
-                    )}
+                    className={cn('h-4 w-4', event.isComplete ? config.color : 'text-gray-400')}
                   />
                 </div>
 
                 {/* Content */}
-                <div className="flex-1 min-w-0 pt-1">
+                <div className="min-w-0 flex-1 pt-1">
                   <div className="flex items-start justify-between">
                     <div>
                       <p
-                        className={cn(
-                          'font-medium',
-                          !event.isComplete && 'text-muted-foreground'
-                        )}
+                        className={cn('font-medium', !event.isComplete && 'text-muted-foreground')}
                       >
                         {event.title}
                       </p>
                       {event.description && (
-                        <p className="text-sm text-muted-foreground mt-0.5">
-                          {event.description}
-                        </p>
+                        <p className="text-muted-foreground mt-0.5 text-sm">{event.description}</p>
                       )}
                     </div>
-                    <span className="text-xs text-muted-foreground whitespace-nowrap ml-2">
+                    <span className="text-muted-foreground ml-2 text-xs whitespace-nowrap">
                       {formatTimestamp(event.timestamp)}
                     </span>
                   </div>

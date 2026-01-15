@@ -103,7 +103,7 @@ export function DemoRequestForm({ type, onSubmit }: DemoRequestFormProps) {
     return (
       <Card>
         <CardContent className="py-12 text-center">
-          <div className="text-primary mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-primary/10">
+          <div className="text-primary bg-primary/10 mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full">
             <svg
               xmlns="http://www.w3.org/2000/svg"
               fill="none"

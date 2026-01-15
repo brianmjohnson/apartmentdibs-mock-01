@@ -45,7 +45,9 @@ export function BusinessCard({ business }: BusinessCardProps) {
             <div className="relative flex-shrink-0">
               {business.image ? (
                 <div className="relative h-16 w-16 overflow-hidden rounded-full">
-                  {!imageLoaded && <Skeleton className="absolute inset-0 h-full w-full rounded-full" />}
+                  {!imageLoaded && (
+                    <Skeleton className="absolute inset-0 h-full w-full rounded-full" />
+                  )}
                   <Image
                     src={business.image}
                     alt={business.name}
@@ -61,7 +63,7 @@ export function BusinessCard({ business }: BusinessCardProps) {
                 </div>
               )}
               {business.verified && (
-                <CheckCircle2 className="absolute -right-1 -bottom-1 h-5 w-5 fill-primary text-background" />
+                <CheckCircle2 className="fill-primary text-background absolute -right-1 -bottom-1 h-5 w-5" />
               )}
             </div>
 

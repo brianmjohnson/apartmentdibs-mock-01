@@ -35,9 +35,11 @@
 **RICE Score**: (1000 × 3 × 1.0) / 2 = **1,500**
 
 ### Story Points
+
 **Estimated Effort**: 13 story points (32 hours)
 
 **Complexity Factors**:
+
 - Technical complexity: Medium (React provider setup, server-side identification, multi-tenant context)
 - UI complexity: Low (no UI changes, invisible to users)
 - Integration complexity: Medium (Better Auth integration, organization tracking, event instrumentation)
@@ -48,6 +50,7 @@
 ## Acceptance Criteria
 
 ### AC-1: PostHog Provider Initialized
+
 **Given** the application loads
 **When** a user visits any page
 **Then** PostHog client is initialized with correct project API key
@@ -55,6 +58,7 @@
 **And** no console errors related to PostHog appear
 
 **Verification**:
+
 - [ ] PostHog provider wraps app in `app/layout.tsx`
 - [ ] `NEXT_PUBLIC_POSTHOG_KEY` environment variable configured
 - [ ] Client initializes on first page load
@@ -62,6 +66,7 @@
 - [ ] Works in both development and production environments
 
 ### AC-2: User Identification on Authentication
+
 **Given** a user successfully logs in with Better Auth
 **When** authentication completes
 **Then** PostHog identifies user with `userId`, `email`, and `name`
@@ -70,6 +75,7 @@
 **And** all subsequent events are linked to this user identity
 
 **Verification**:
+
 - [ ] `posthog.identify()` called after Better Auth login
 - [ ] User ID matches Better Auth user ID
 - [ ] User properties set correctly: `{email, name, role, organizationId, organizationName}`
@@ -78,25 +84,27 @@
 - [ ] Identification cleared on logout
 
 ### AC-3: Custom Event Tracking for Key User Actions
+
 **Given** key user interactions occur
 **When** users perform critical actions
 **Then** custom events are tracked with relevant properties
 
 **Events to Track**:
 
-| Event Name | When Triggered | Properties |
-|------------|----------------|------------|
-| `application_created` | Tenant submits rental application | `{userId, listingId, organizationId, timestamp}` |
-| `application_viewed` | Landlord/agent views application | `{userId, applicationId, viewerRole, timestamp}` |
-| `listing_created` | Landlord creates new listing | `{userId, listingId, organizationId, timestamp}` |
-| `listing_viewed` | User views listing details | `{userId, listingId, source, timestamp}` |
-| `message_sent` | User sends message | `{userId, recipientRole, conversationId, timestamp}` |
-| `search_performed` | User searches listings | `{userId, query, filters, resultCount, timestamp}` |
-| `profile_completed` | User completes profile | `{userId, role, profileType, timestamp}` |
-| `payment_initiated` | User starts payment flow | `{userId, amount, paymentType, timestamp}` |
-| `payment_completed` | Payment succeeds | `{userId, amount, paymentType, timestamp}` |
+| Event Name            | When Triggered                    | Properties                                           |
+| --------------------- | --------------------------------- | ---------------------------------------------------- |
+| `application_created` | Tenant submits rental application | `{userId, listingId, organizationId, timestamp}`     |
+| `application_viewed`  | Landlord/agent views application  | `{userId, applicationId, viewerRole, timestamp}`     |
+| `listing_created`     | Landlord creates new listing      | `{userId, listingId, organizationId, timestamp}`     |
+| `listing_viewed`      | User views listing details        | `{userId, listingId, source, timestamp}`             |
+| `message_sent`        | User sends message                | `{userId, recipientRole, conversationId, timestamp}` |
+| `search_performed`    | User searches listings            | `{userId, query, filters, resultCount, timestamp}`   |
+| `profile_completed`   | User completes profile            | `{userId, role, profileType, timestamp}`             |
+| `payment_initiated`   | User starts payment flow          | `{userId, amount, paymentType, timestamp}`           |
+| `payment_completed`   | Payment succeeds                  | `{userId, amount, paymentType, timestamp}`           |
 
 **Verification**:
+
 - [ ] All listed events tracked correctly
 - [ ] Event properties captured accurately
 - [ ] Events appear in PostHog within 60 seconds
@@ -104,6 +112,7 @@
 - [ ] No PII leaked in event properties (email, SSN, etc.)
 
 ### AC-4: Feature Flags Implementation
+
 **Given** feature flags are configured in PostHog dashboard
 **When** application checks for feature flag status
 **Then** correct boolean value returned based on user/organization context
@@ -111,6 +120,7 @@
 **And** flags support gradual rollouts (0-100% of users)
 
 **Verification**:
+
 - [ ] `useFeatureFlagEnabled()` hook works in client components
 - [ ] Server-side feature flag checks work in API routes
 - [ ] Flags respect user-level targeting rules
@@ -119,6 +129,7 @@
 - [ ] Default fallback value used if flag undefined
 
 **Example Usage**:
+
 ```typescript
 // Client-side
 const isNewDashboardEnabled = useFeatureFlagEnabled('new-dashboard')
@@ -128,6 +139,7 @@ const flagValue = await posthog.getFeatureFlag('new-dashboard', userId)
 ```
 
 ### AC-5: Session Recording for Debugging
+
 **Given** session recording is enabled
 **When** users interact with the application
 **Then** user sessions are recorded and playable in PostHog dashboard
@@ -135,6 +147,7 @@ const flagValue = await posthog.getFeatureFlag('new-dashboard', userId)
 **And** recordings help debug issues and understand UX problems
 
 **Verification**:
+
 - [ ] Session recording enabled in PostHog config
 - [ ] Recordings appear in PostHog dashboard
 - [ ] Recordings show mouse movements, clicks, scrolls, page transitions
@@ -144,6 +157,7 @@ const flagValue = await posthog.getFeatureFlag('new-dashboard', userId)
 - [ ] Performance impact acceptable (< 50ms overhead)
 
 ### AC-6: Organization-Level Analytics
+
 **Given** ApartmentDibs is a multi-tenant application
 **When** events are tracked
 **Then** organization context is included in all events
@@ -151,6 +165,7 @@ const flagValue = await posthog.getFeatureFlag('new-dashboard', userId)
 **And** organization admins can see their organization's metrics
 
 **Verification**:
+
 - [ ] `organizationId` included in all user events
 - [ ] `organizationName` set as user property
 - [ ] Events filterable by organization in PostHog
@@ -159,19 +174,23 @@ const flagValue = await posthog.getFeatureFlag('new-dashboard', userId)
 - [ ] Organization context set on login and persists
 
 ### AC-7: Performance and Error Handling
+
 **Performance**:
+
 - [ ] PostHog initialization adds < 100ms to page load
 - [ ] Event tracking is non-blocking (async)
 - [ ] Analytics don't impact core app functionality
 - [ ] Works on slow network connections (3G)
 
 **Error Handling**:
+
 - [ ] PostHog failures don't break app functionality
 - [ ] Console warnings logged if PostHog unavailable
 - [ ] Events queued if PostHog temporarily unreachable
 - [ ] Graceful degradation if PostHog blocked (ad blockers)
 
 **Privacy & Compliance**:
+
 - [ ] GDPR compliance: respect user consent preferences
 - [ ] CCPA compliance: support opt-out requests
 - [ ] No sensitive PII tracked (SSN, full credit card, etc.)
@@ -185,18 +204,16 @@ const flagValue = await posthog.getFeatureFlag('new-dashboard', userId)
 ### Backend Specification
 
 **PostHog Server-Side Client**:
+
 ```typescript
 // lib/posthog.server.ts
 import { PostHog } from 'posthog-node'
 
-export const posthog = new PostHog(
-  process.env.POSTHOG_PERSONAL_API_KEY!,
-  {
-    host: process.env.NEXT_PUBLIC_POSTHOG_HOST,
-    flushAt: 20, // Batch size
-    flushInterval: 10000, // 10 seconds
-  }
-)
+export const posthog = new PostHog(process.env.POSTHOG_PERSONAL_API_KEY!, {
+  host: process.env.NEXT_PUBLIC_POSTHOG_HOST,
+  flushAt: 20, // Batch size
+  flushInterval: 10000, // 10 seconds
+})
 
 // Helper for server-side events
 export async function trackServerEvent(
@@ -219,6 +236,7 @@ export async function trackServerEvent(
 ```
 
 **Better Auth Integration**:
+
 ```typescript
 // app/api/auth/[...all]/route.ts
 import { auth } from '@/lib/auth'
@@ -252,6 +270,7 @@ export async function identifyUser(session: Session) {
 ```
 
 **Feature Flag Helper**:
+
 ```typescript
 // lib/feature-flags.ts
 import { posthog } from './posthog.server'
@@ -281,6 +300,7 @@ export async function getAllFeatureFlags(userId: string): Promise<Record<string,
 ```
 
 **Environment Variables** (already in `.env.example`):
+
 - `NEXT_PUBLIC_POSTHOG_KEY` - Project API key (client-side)
 - `NEXT_PUBLIC_POSTHOG_HOST` - PostHog host URL
 - `POSTHOG_PERSONAL_API_KEY` - Personal API key (server-side)
@@ -288,6 +308,7 @@ export async function getAllFeatureFlags(userId: string): Promise<Record<string,
 ### Frontend Specification
 
 **PostHog Provider**:
+
 ```typescript
 // components/providers/posthog-provider.tsx
 'use client'
@@ -321,6 +342,7 @@ export function PHProvider({ children }: { children: React.ReactNode }) {
 ```
 
 **App Layout Integration**:
+
 ```typescript
 // app/layout.tsx
 import { PHProvider } from '@/components/providers/posthog-provider'
@@ -341,6 +363,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
 ```
 
 **Pageview Tracking Component**:
+
 ```typescript
 // components/posthog-pageview.tsx
 'use client'
@@ -372,6 +395,7 @@ export function PostHogPageview() {
 ```
 
 **Auth Integration Hook**:
+
 ```typescript
 // hooks/use-posthog-auth.ts
 'use client'
@@ -409,6 +433,7 @@ export function usePostHogAuth() {
 ```
 
 **Event Tracking Hook**:
+
 ```typescript
 // hooks/use-track-event.ts
 'use client'
@@ -438,6 +463,7 @@ export function useTrackEvent() {
 ```
 
 **Feature Flag Hook** (provided by PostHog):
+
 ```typescript
 // Already provided by posthog-js/react
 import { useFeatureFlagEnabled, useFeatureFlagPayload } from 'posthog-js/react'
@@ -448,9 +474,11 @@ const payload = useFeatureFlagPayload('new-dashboard')
 ```
 
 **Routing**:
+
 - No new routes needed (analytics are invisible infrastructure)
 
 **Dependencies**:
+
 ```json
 {
   "dependencies": {
@@ -465,6 +493,7 @@ const payload = useFeatureFlagPayload('new-dashboard')
 ## Analytics Tracking
 
 **Core Events** (Auto-tracked):
+
 - `$pageview` - Every page navigation
 - `$pageleave` - When user leaves page
 - `$autocapture` - Automatic click tracking
@@ -473,6 +502,7 @@ const payload = useFeatureFlagPayload('new-dashboard')
 See AC-3 for comprehensive list of custom events
 
 **Success Metrics**:
+
 - Event tracking latency < 60 seconds (from action to dashboard)
 - Event delivery success rate > 99.5%
 - Feature flag response time < 100ms
@@ -485,7 +515,9 @@ See AC-3 for comprehensive list of custom events
 ## Dependencies
 
 ### Blocks
+
 This story is foundational infrastructure and blocks:
+
 - **All A/B testing features** - Need feature flags
 - **Data-driven product decisions** - Need event tracking
 - **User behavior analysis** - Need session recordings
@@ -493,14 +525,17 @@ This story is foundational infrastructure and blocks:
 - **Performance monitoring** - Need analytics baseline
 
 ### Blocked By
+
 - **US-001: User Authentication** - Need user identification working
 
 ### Related Stories
+
 - US-010: GDPR Compliance - Cookie consent integration
 - US-011: Analytics Dashboard - Custom dashboards for stakeholders
 - US-015: A/B Test Framework - Structured experimentation process
 
 ### External Dependencies
+
 - PostHog account created (free tier available)
 - PostHog project API keys generated
 - `NEXT_PUBLIC_POSTHOG_KEY` environment variable set
@@ -512,6 +547,7 @@ This story is foundational infrastructure and blocks:
 ## Testing Requirements
 
 ### Unit Tests
+
 - [ ] PostHog provider initializes correctly
 - [ ] User identification function works
 - [ ] Event tracking function captures events
@@ -520,6 +556,7 @@ This story is foundational infrastructure and blocks:
 - [ ] Error handling gracefully degrades
 
 ### Integration Tests
+
 - [ ] PostHog initializes on app load
 - [ ] Pageview events tracked on navigation
 - [ ] User identified after login
@@ -529,6 +566,7 @@ This story is foundational infrastructure and blocks:
 - [ ] Session recordings start after opt-in
 
 ### E2E Tests (Playwright)
+
 ```typescript
 test('PostHog tracks user journey', async ({ page }) => {
   // Visit homepage - should track pageview
@@ -556,7 +594,7 @@ test('PostHog tracks user journey', async ({ page }) => {
 test('Feature flags work correctly', async ({ page }) => {
   // Set up mock feature flag
   await page.addInitScript(() => {
-    (window as any).__POSTHOG_FLAGS__ = {
+    ;(window as any).__POSTHOG_FLAGS__ = {
       'new-dashboard': true,
     }
   })
@@ -575,23 +613,27 @@ test('Feature flags work correctly', async ({ page }) => {
 ## Security Considerations
 
 **Access Control**:
+
 - PostHog Personal API key kept server-side only (never exposed to client)
 - Project API key is public (safe to expose, read-only for events)
 - Organization-level data isolation enforced
 
 **Data Validation**:
+
 - Event properties sanitized before sending
 - No sensitive PII tracked (SSN, credit cards, passwords)
 - Email addresses allowed but can be hashed if needed
 - User IDs are opaque (not sequential)
 
 **Privacy Compliance**:
+
 - IP address anonymization enabled
 - Cookie consent integration required (future story)
 - Support for user data deletion requests (GDPR/CCPA)
 - Session recordings respect privacy (mask sensitive fields)
 
 **Potential Risks**:
+
 - **Ad blockers**: Mitigate with proxy setup (future enhancement)
 - **Data leakage**: Never track sensitive fields, use allow-list approach
 - **Performance impact**: Async tracking, batching, graceful degradation
@@ -602,11 +644,13 @@ test('Feature flags work correctly', async ({ page }) => {
 ## Performance Considerations
 
 **Expected Load**:
+
 - 10,000+ events per day initially
 - 100+ concurrent users during peak
 - 1,000+ daily active users at scale
 
 **Optimization Strategies**:
+
 - Client-side batching (PostHog default: 10 events or 10 seconds)
 - Server-side batching (PostHog Node SDK: 20 events or 10 seconds)
 - Async event capture (non-blocking)
@@ -614,6 +658,7 @@ test('Feature flags work correctly', async ({ page }) => {
 - Lazy provider initialization (after app interactive)
 
 **Performance Targets**:
+
 - PostHog initialization: < 100ms overhead
 - Event capture: < 10ms (async, non-blocking)
 - Feature flag lookup: < 50ms (cached)
@@ -625,6 +670,7 @@ test('Feature flags work correctly', async ({ page }) => {
 ## Rollout Plan
 
 **Phase 1: Setup (Week 1, Days 1-2)**
+
 - [ ] Create PostHog account and project
 - [ ] Generate API keys and add to environment
 - [ ] Install `posthog-js` and `posthog-node` packages
@@ -632,6 +678,7 @@ test('Feature flags work correctly', async ({ page }) => {
 - [ ] Verify initialization and pageview tracking
 
 **Phase 2: User Identification (Week 1, Days 3-4)**
+
 - [ ] Integrate with Better Auth login flow
 - [ ] Add user identification on authentication
 - [ ] Add organization group tracking
@@ -639,6 +686,7 @@ test('Feature flags work correctly', async ({ page }) => {
 - [ ] Verify user properties in PostHog dashboard
 
 **Phase 3: Custom Events (Week 2, Days 1-3)**
+
 - [ ] Implement event tracking hook
 - [ ] Add events for applications, listings, messages
 - [ ] Add events for search and profile actions
@@ -646,6 +694,7 @@ test('Feature flags work correctly', async ({ page }) => {
 - [ ] Test all events in dashboard
 
 **Phase 4: Feature Flags & Session Recording (Week 2, Days 4-5)**
+
 - [ ] Implement feature flag helpers (client + server)
 - [ ] Create test feature flags in dashboard
 - [ ] Enable session recording with privacy config
@@ -653,6 +702,7 @@ test('Feature flags work correctly', async ({ page }) => {
 - [ ] Validate session recordings
 
 **Rollback Plan**:
+
 - PostHog is non-blocking infrastructure
 - Can disable by removing provider wrapper
 - Feature flags should have sensible defaults
@@ -684,13 +734,14 @@ test('Feature flags work correctly', async ({ page }) => {
 
 ### Update Log
 
-| Date | Author | Update |
-|------|--------|--------|
+| Date       | Author                | Update                |
+| ---------- | --------------------- | --------------------- |
 | 2025-11-20 | Product Manager Agent | Initial draft created |
 
 ### Discussion Notes
 
 **Why PostHog?**
+
 - Open-source with self-hosting option (future flexibility)
 - All-in-one: analytics + feature flags + A/B testing + session recording
 - Better Auth integration straightforward
@@ -698,12 +749,14 @@ test('Feature flags work correctly', async ({ page }) => {
 - Generous free tier (1M events/month, unlimited feature flags)
 
 **Implementation Strategy**:
+
 - Start with core tracking (pageviews, user identification)
 - Add custom events incrementally across user flows
 - Feature flags introduced gradually with sensible defaults
 - Session recording enabled but respects privacy settings
 
 **Success Indicators**:
+
 - Product team can answer "How many users did X?" queries
 - Engineering can use feature flags for gradual rollouts
 - Business team has visibility into conversion funnels

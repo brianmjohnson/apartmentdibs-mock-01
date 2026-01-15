@@ -118,19 +118,17 @@ export function SelfieCapture({
           <Camera className="h-5 w-5" />
           Liveness Check
         </CardTitle>
-        <CardDescription>
-          Take a selfie to verify you match your ID photo
-        </CardDescription>
+        <CardDescription>Take a selfie to verify you match your ID photo</CardDescription>
       </CardHeader>
       <CardContent>
         {captureState === 'idle' && (
           <div className="space-y-4">
-            <div className="rounded-lg bg-muted/50 p-4">
+            <div className="bg-muted/50 rounded-lg p-4">
               <p className="mb-2 font-medium">Instructions:</p>
-              <ul className="space-y-1 text-sm text-muted-foreground">
+              <ul className="text-muted-foreground space-y-1 text-sm">
                 {instructions.map((instruction, index) => (
                   <li key={index} className="flex items-center gap-2">
-                    <span className="flex h-5 w-5 items-center justify-center rounded-full bg-primary/10 text-xs font-medium">
+                    <span className="bg-primary/10 flex h-5 w-5 items-center justify-center rounded-full text-xs font-medium">
                       {index + 1}
                     </span>
                     {instruction}
@@ -148,13 +146,7 @@ export function SelfieCapture({
         {captureState === 'streaming' && (
           <div className="space-y-4">
             <div className="relative overflow-hidden rounded-lg bg-black">
-              <video
-                ref={videoRef}
-                autoPlay
-                playsInline
-                muted
-                className="w-full"
-              />
+              <video ref={videoRef} autoPlay playsInline muted className="w-full" />
               <div className="absolute inset-0 flex items-center justify-center">
                 <div className="h-64 w-48 rounded-full border-4 border-white/50" />
               </div>
@@ -169,11 +161,7 @@ export function SelfieCapture({
         {captureState === 'captured' && capturedImage && (
           <div className="space-y-4">
             <div className="overflow-hidden rounded-lg">
-              <img
-                src={capturedImage}
-                alt="Captured selfie"
-                className="w-full"
-              />
+              <img src={capturedImage} alt="Captured selfie" className="w-full" />
             </div>
             <div className="flex gap-3">
               <Button variant="outline" className="flex-1" onClick={retake}>
@@ -190,11 +178,9 @@ export function SelfieCapture({
 
         {captureState === 'verifying' && (
           <div className="py-8 text-center">
-            <Loader2 className="mx-auto mb-4 h-12 w-12 animate-spin text-primary" />
+            <Loader2 className="text-primary mx-auto mb-4 h-12 w-12 animate-spin" />
             <p className="font-medium">Verifying your photo...</p>
-            <p className="mt-1 text-sm text-muted-foreground">
-              Matching against your ID
-            </p>
+            <p className="text-muted-foreground mt-1 text-sm">Matching against your ID</p>
           </div>
         )}
 
@@ -202,7 +188,7 @@ export function SelfieCapture({
           <div className="py-8 text-center">
             <CheckCircle className="mx-auto mb-4 h-12 w-12 text-green-600" />
             <p className="font-medium text-green-600">Verification Complete</p>
-            <p className="mt-1 text-sm text-muted-foreground">
+            <p className="text-muted-foreground mt-1 text-sm">
               Your identity has been verified successfully
             </p>
           </div>
@@ -212,7 +198,7 @@ export function SelfieCapture({
           <div className="py-8 text-center">
             <AlertCircle className="mx-auto mb-4 h-12 w-12 text-red-600" />
             <p className="font-medium text-red-600">Verification Failed</p>
-            <p className="mt-1 text-sm text-muted-foreground">{error}</p>
+            <p className="text-muted-foreground mt-1 text-sm">{error}</p>
             <Button variant="outline" className="mt-4" onClick={reset}>
               Try Again
             </Button>

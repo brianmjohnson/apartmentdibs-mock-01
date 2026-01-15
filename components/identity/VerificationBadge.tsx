@@ -2,12 +2,7 @@
 
 import { CheckCircle, Clock, XCircle, Shield } from 'lucide-react'
 import { Badge } from '@/components/ui/badge'
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipProvider,
-  TooltipTrigger,
-} from '@/components/ui/tooltip'
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip'
 
 type VerificationStatus = 'verified' | 'pending' | 'unverified' | 'failed'
 
@@ -84,15 +79,9 @@ export function VerificationBadge({
           <div className="space-y-1">
             <p>Identity verified successfully</p>
             {verifiedAt && (
-              <p className="text-xs text-muted-foreground">
-                Verified on {formatDate(verifiedAt)}
-              </p>
+              <p className="text-muted-foreground text-xs">Verified on {formatDate(verifiedAt)}</p>
             )}
-            {method && (
-              <p className="text-xs text-muted-foreground">
-                Method: {method}
-              </p>
-            )}
+            {method && <p className="text-muted-foreground text-xs">Method: {method}</p>}
           </div>
         )
       case 'pending':
@@ -105,10 +94,7 @@ export function VerificationBadge({
   }
 
   const badge = (
-    <Badge
-      variant="secondary"
-      className={`${getBadgeVariant()} ${className}`}
-    >
+    <Badge variant="secondary" className={`${getBadgeVariant()} ${className}`}>
       <span className="mr-1">{getIcon()}</span>
       {getLabel()}
     </Badge>
@@ -121,12 +107,8 @@ export function VerificationBadge({
   return (
     <TooltipProvider>
       <Tooltip>
-        <TooltipTrigger asChild>
-          {badge}
-        </TooltipTrigger>
-        <TooltipContent>
-          {getTooltipContent()}
-        </TooltipContent>
+        <TooltipTrigger asChild>{badge}</TooltipTrigger>
+        <TooltipContent>{getTooltipContent()}</TooltipContent>
       </Tooltip>
     </TooltipProvider>
   )

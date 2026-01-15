@@ -1,21 +1,8 @@
 'use client'
 
-import {
-  Lightbulb,
-  UserPlus,
-  DollarSign,
-  Search,
-  CreditCard,
-  ChevronRight,
-} from 'lucide-react'
+import { Lightbulb, UserPlus, DollarSign, Search, CreditCard, ChevronRight } from 'lucide-react'
 import { Button } from '@/components/ui/button'
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from '@/components/ui/card'
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { cn } from '@/lib/utils'
 
 interface Tip {
@@ -33,11 +20,7 @@ interface ImprovementTipsProps {
   className?: string
 }
 
-export function ImprovementTips({
-  tips,
-  onTipAction,
-  className,
-}: ImprovementTipsProps) {
+export function ImprovementTips({ tips, onTipAction, className }: ImprovementTipsProps) {
   const getIcon = (iconType: Tip['icon']) => {
     switch (iconType) {
       case 'cosigner':
@@ -78,27 +61,20 @@ export function ImprovementTips({
           <Lightbulb className="h-5 w-5 text-yellow-500" />
           Ways to Improve Your Chances
         </CardTitle>
-        <CardDescription>
-          Consider these options to strengthen your application
-        </CardDescription>
+        <CardDescription>Consider these options to strengthen your application</CardDescription>
       </CardHeader>
       <CardContent className="space-y-3">
         {tips.map((tip) => (
-          <div
-            key={tip.id}
-            className="rounded-lg border p-4 hover:bg-muted/50 transition-colors"
-          >
+          <div key={tip.id} className="hover:bg-muted/50 rounded-lg border p-4 transition-colors">
             <div className="flex items-start gap-3">
-              <div className="mt-0.5 text-muted-foreground">{getIcon(tip.icon)}</div>
-              <div className="flex-1 min-w-0">
-                <p className="font-medium text-sm">{tip.title}</p>
-                <p className="text-sm text-muted-foreground mt-1">
-                  {tip.description}
-                </p>
+              <div className="text-muted-foreground mt-0.5">{getIcon(tip.icon)}</div>
+              <div className="min-w-0 flex-1">
+                <p className="text-sm font-medium">{tip.title}</p>
+                <p className="text-muted-foreground mt-1 text-sm">{tip.description}</p>
                 {tip.actionLabel && (
                   <Button
                     variant="link"
-                    className="h-auto p-0 mt-2 text-sm"
+                    className="mt-2 h-auto p-0 text-sm"
                     onClick={() => handleAction(tip)}
                   >
                     {tip.actionLabel}

@@ -3,13 +3,7 @@
 import { useState } from 'react'
 import { ChevronRight, ChevronLeft, Loader2 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from '@/components/ui/card'
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group'
 import { Label } from '@/components/ui/label'
 import { Progress } from '@/components/ui/progress'
@@ -46,7 +40,11 @@ const questions: Question[] = [
     description: 'This helps us determine which documents you&apos;ll need to provide.',
     options: [
       { value: 'w2', label: 'W-2 Employee', description: 'Regular salaried or hourly' },
-      { value: 'self_employed', label: 'Self-Employed', description: 'Freelancer, contractor, or business owner' },
+      {
+        value: 'self_employed',
+        label: 'Self-Employed',
+        description: 'Freelancer, contractor, or business owner',
+      },
       { value: 'student', label: 'Student', description: 'Currently enrolled in school' },
       { value: 'retired', label: 'Retired', description: 'Receiving pension or retirement income' },
       { value: 'unemployed', label: 'Unemployed', description: 'Currently not employed' },
@@ -130,8 +128,10 @@ export function AssessmentQuiz({
     <Card className={className}>
       <CardHeader>
         <div className="space-y-4">
-          <div className="flex justify-between text-sm text-muted-foreground">
-            <span>Question {currentStep + 1} of {questions.length}</span>
+          <div className="text-muted-foreground flex justify-between text-sm">
+            <span>
+              Question {currentStep + 1} of {questions.length}
+            </span>
             <span>{Math.round(progress)}% complete</span>
           </div>
           <Progress value={progress} className="h-2" />
@@ -140,9 +140,7 @@ export function AssessmentQuiz({
       <CardContent className="space-y-6">
         <div>
           <CardTitle className="text-xl">{currentQuestion.title}</CardTitle>
-          <CardDescription className="mt-2">
-            {currentQuestion.description}
-          </CardDescription>
+          <CardDescription className="mt-2">{currentQuestion.description}</CardDescription>
         </div>
 
         <RadioGroup
@@ -154,15 +152,13 @@ export function AssessmentQuiz({
             <div key={option.value}>
               <Label
                 htmlFor={option.value}
-                className="flex items-start space-x-3 rounded-lg border p-4 cursor-pointer hover:bg-muted/50 transition-colors [&:has(:checked)]:border-primary [&:has(:checked)]:bg-primary/5"
+                className="hover:bg-muted/50 [&:has(:checked)]:border-primary [&:has(:checked)]:bg-primary/5 flex cursor-pointer items-start space-x-3 rounded-lg border p-4 transition-colors"
               >
                 <RadioGroupItem value={option.value} id={option.value} className="mt-1" />
                 <div className="space-y-1">
                   <span className="font-medium">{option.label}</span>
                   {option.description && (
-                    <p className="text-sm text-muted-foreground">
-                      {option.description}
-                    </p>
+                    <p className="text-muted-foreground text-sm">{option.description}</p>
                   )}
                 </div>
               </Label>
@@ -171,11 +167,7 @@ export function AssessmentQuiz({
         </RadioGroup>
 
         <div className="flex justify-between pt-4">
-          <Button
-            variant="outline"
-            onClick={handleBack}
-            disabled={currentStep === 0 || isLoading}
-          >
+          <Button variant="outline" onClick={handleBack} disabled={currentStep === 0 || isLoading}>
             <ChevronLeft className="mr-2 h-4 w-4" />
             Back
           </Button>

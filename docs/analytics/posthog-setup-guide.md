@@ -13,6 +13,7 @@
 This guide documents the one-time PostHog account setup required before deploying the PostHog integration to production. These settings must be configured manually at https://posthog.com by a human administrator.
 
 **Related Documents**:
+
 - [ADR-013: PostHog Analytics Platform](../adr/ADR-013-posthog-analytics-and-experimentation-platform.md)
 - [User Story: PostHog Integration](../user-stories/posthog-integration.md)
 - [Event Catalog](./event-catalog.md)
@@ -20,6 +21,7 @@ This guide documents the one-time PostHog account setup required before deployin
 - [PostHog Vercel Reverse Proxy Reference](../references/posthog-vercel-reverse-proxy.md)
 
 **Prerequisites**:
+
 - PostHog account created at https://posthog.com/signup
 - Admin access to the account
 - Production domain deployed (https://apartmentdibs-mock-01.vercel.app/)
@@ -33,10 +35,12 @@ This guide documents the one-time PostHog account setup required before deployin
 **Project Name**: `apartmentdibs-mock-01-posthog`
 
 **Naming Convention**: `<project-slug>-posthog`
+
 - Keeps project name consistent with repository and deployment
 - Makes it easy to identify in PostHog dashboard
 
 **Steps**:
+
 1. Navigate to https://posthog.com/
 2. Click "Create Project"
 3. Enter project name: `apartmentdibs-mock-01-posthog`
@@ -52,11 +56,13 @@ This guide documents the one-time PostHog account setup required before deployin
 **Action**: Invite team members to the PostHog project
 
 **Recommended Roles**:
+
 - **Admin**: Product managers, engineering leads
 - **Member**: Engineers, designers, data analysts
 - **Viewer**: Stakeholders, executives (view-only access)
 
 **Steps**:
+
 1. Navigate to **Settings → Project → Team Members**
 2. Click "Invite Team Member"
 3. Enter email and select role
@@ -74,16 +80,17 @@ This guide documents the one-time PostHog account setup required before deployin
 
 **Settings** (Settings → Project → Session Recording):
 
-| Setting | Value | Rationale |
-|---------|-------|-----------|
-| **Record user sessions** | ✅ Enabled | Debug UX issues and understand user behavior |
-| **Capture console logs** | ✅ Enabled | Debug JavaScript errors in context |
-| **Capture canvas elements** | ❌ Disabled | **PII SAFETY**: Canvas may contain sensitive user data (signatures, drawings) |
-| **Enable capture headers** | ✅ Enabled | Debug authentication and API issues |
-| **Enable capture body** | ✅ Enabled | Debug form submissions and API payloads |
-| **Recording retention** | **30 days (minimum)** | **SCRAPE AND LEARN CYCLE**: Allows monthly UX review cycles |
+| Setting                     | Value                 | Rationale                                                                     |
+| --------------------------- | --------------------- | ----------------------------------------------------------------------------- |
+| **Record user sessions**    | ✅ Enabled            | Debug UX issues and understand user behavior                                  |
+| **Capture console logs**    | ✅ Enabled            | Debug JavaScript errors in context                                            |
+| **Capture canvas elements** | ❌ Disabled           | **PII SAFETY**: Canvas may contain sensitive user data (signatures, drawings) |
+| **Enable capture headers**  | ✅ Enabled            | Debug authentication and API issues                                           |
+| **Enable capture body**     | ✅ Enabled            | Debug form submissions and API payloads                                       |
+| **Recording retention**     | **30 days (minimum)** | **SCRAPE AND LEARN CYCLE**: Allows monthly UX review cycles                   |
 
 **Privacy Notes**:
+
 - Session recording already configured with `maskAllInputs: true` in code (see [PostHogProvider](../../components/providers/posthog-provider.tsx))
 - Elements with `[data-private]` attribute are masked
 - Canvas capture disabled until we implement PII-safe rendering
@@ -98,14 +105,15 @@ This guide documents the one-time PostHog account setup required before deployin
 
 **Settings** (Settings → Project → Autocapture):
 
-| Setting | Value | Rationale |
-|---------|-------|-----------|
-| **Enable heat maps** | ✅ Enabled | Visualize where users click most frequently |
-| **Enable Web Vitals autocapture** | ✅ Enabled | Track Core Web Vitals (LCP, FID, CLS) for performance |
-| **Enable Dead Clicks capture** | ✅ Enabled | Identify rage clicks and broken UI elements |
-| **Enable exception autocapture** | ✅ Enabled | **SCRAPE AND LEARN CYCLE**: Automatically capture JavaScript errors |
+| Setting                           | Value      | Rationale                                                           |
+| --------------------------------- | ---------- | ------------------------------------------------------------------- |
+| **Enable heat maps**              | ✅ Enabled | Visualize where users click most frequently                         |
+| **Enable Web Vitals autocapture** | ✅ Enabled | Track Core Web Vitals (LCP, FID, CLS) for performance               |
+| **Enable Dead Clicks capture**    | ✅ Enabled | Identify rage clicks and broken UI elements                         |
+| **Enable exception autocapture**  | ✅ Enabled | **SCRAPE AND LEARN CYCLE**: Automatically capture JavaScript errors |
 
 **Autocapture Benefits**:
+
 - Zero-code instrumentation for common interactions
 - Identifies UX problems automatically (dead clicks, rage clicks)
 - Performance monitoring built-in (Web Vitals)
@@ -119,13 +127,14 @@ This guide documents the one-time PostHog account setup required before deployin
 
 **Settings** (Settings → Project → General):
 
-| Setting | Value | Rationale |
-|---------|-------|-----------|
-| **Week starts** | **Monday** | Standard business week alignment |
-| **Use human-friendly comparison periods** | ✅ Enabled | Compare "Last 7 days" vs "Previous 7 days" instead of arbitrary dates |
-| **Filter test accounts out of revenue analytics** | ✅ Enabled | Exclude internal testing from business metrics |
+| Setting                                           | Value      | Rationale                                                             |
+| ------------------------------------------------- | ---------- | --------------------------------------------------------------------- |
+| **Week starts**                                   | **Monday** | Standard business week alignment                                      |
+| **Use human-friendly comparison periods**         | ✅ Enabled | Compare "Last 7 days" vs "Previous 7 days" instead of arbitrary dates |
+| **Filter test accounts out of revenue analytics** | ✅ Enabled | Exclude internal testing from business metrics                        |
 
 **Why These Matter**:
+
 - **Week starts Monday**: Aligns with sprint planning and business reviews
 - **Human-friendly periods**: Makes dashboards more intuitive for non-technical stakeholders
 - **Filter test accounts**: Prevents skewed revenue and conversion metrics
@@ -146,10 +155,12 @@ http://localhost:3000
 ```
 
 **Why These URLs**:
+
 - **Production**: https://apartmentdibs-mock-01.vercel.app/ - Live site
 - **Development**: http://localhost:3000 - Local development environment
 
 **Toolbar Access**:
+
 - Press **⌘ + K** (Mac) or **Ctrl + K** (Windows) on authorized domains
 - Opens PostHog toolbar for feature flags, session recording, and heatmaps
 - Only works on authorized URLs for security
@@ -167,6 +178,7 @@ http://localhost:3000
 **Settings** (Settings → Project → Filters):
 
 **Internal User Filter**:
+
 1. Navigate to **Settings → Project → Filters**
 2. Click "Add Filter"
 3. Select **"Email"**
@@ -174,12 +186,14 @@ http://localhost:3000
 5. Save filter
 
 **Test Account Filter**:
+
 1. Add another filter
 2. Select **"User ID"**
 3. Set condition: **"starts with"** `test_`
 4. Save filter
 
 **Why Filter Test Users**:
+
 - Prevents skewed conversion metrics
 - Cleaner user cohorts and funnels
 - More accurate retention calculations
@@ -197,13 +211,14 @@ http://localhost:3000
 
 **Settings** (Settings → Project → Feature Flags):
 
-| Setting | Value | Rationale |
-|---------|-------|-----------|
-| **Enable flag persistence by default** | ✅ Enabled | Users see consistent feature state across sessions |
-| **Require confirmation for feature flag changes** | ✅ Enabled | Prevents accidental production flag changes |
-| **Confirmation message** | Link to experiment documentation | Reminds engineers to document A/B tests |
+| Setting                                           | Value                            | Rationale                                          |
+| ------------------------------------------------- | -------------------------------- | -------------------------------------------------- |
+| **Enable flag persistence by default**            | ✅ Enabled                       | Users see consistent feature state across sessions |
+| **Require confirmation for feature flag changes** | ✅ Enabled                       | Prevents accidental production flag changes        |
+| **Confirmation message**                          | Link to experiment documentation | Reminds engineers to document A/B tests            |
 
 **Confirmation Message Template**:
+
 ```
 ⚠️ You are changing a feature flag in PRODUCTION.
 
@@ -218,6 +233,7 @@ Continue?
 ```
 
 **Why Confirmation Required**:
+
 - Feature flags affect production user experience
 - Forces intentional changes (not accidental clicks)
 - Reminds engineers to document experiments
@@ -231,13 +247,14 @@ Continue?
 
 **Available Integrations**:
 
-| Integration | Status | Notes |
-|------------|--------|-------|
-| **Slack** | 🔲 **Deferred** | Consider enabling for alert notifications in future |
-| **GitHub** | ❌ **Not Enabled** | Not needed - we manage deployments via Vercel |
-| **Pipeline Destinations** | 🔍 **TODO: Explore** | Web hooks for event streaming to data warehouse |
+| Integration               | Status               | Notes                                               |
+| ------------------------- | -------------------- | --------------------------------------------------- |
+| **Slack**                 | 🔲 **Deferred**      | Consider enabling for alert notifications in future |
+| **GitHub**                | ❌ **Not Enabled**   | Not needed - we manage deployments via Vercel       |
+| **Pipeline Destinations** | 🔍 **TODO: Explore** | Web hooks for event streaming to data warehouse     |
 
 **Slack Integration** (Future Consideration):
+
 - **Use Case**: Real-time alerts for critical events (errors, payment failures)
 - **Setup**: Settings → Integrations → Slack
 - **Recommended Channels**:
@@ -245,11 +262,13 @@ Continue?
   - `#product-metrics` - Daily/weekly metrics summaries
 
 **Pipeline Destinations** (To Explore):
+
 - **Use Case**: Stream PostHog events to data warehouse (BigQuery, Snowflake)
 - **Priority**: Low (defer until data warehouse is implemented)
 - **Related**: See ADR-006 (Data Warehouse and Business Intelligence)
 
 **GitHub Integration** (Not Recommended):
+
 - PostHog can link deployments to GitHub commits
 - We use Vercel for deployment tracking (already integrated)
 - Would create duplicate deployment tracking
@@ -265,6 +284,7 @@ Continue?
 **Key Type**: **Project-Scoped API Key** with **MCP Default Permissions**
 
 **Steps**:
+
 1. Navigate to **Settings → Project → API Keys**
 2. Click "Create API Key"
 3. **Name**: `MCP Server - apartmentdibs-mock-01`
@@ -274,6 +294,7 @@ Continue?
 7. **Copy key immediately** - it won't be shown again
 
 **MCP Permissions** (read-only by default):
+
 - ✅ Read events
 - ✅ Read insights
 - ✅ Read dashboards
@@ -281,11 +302,13 @@ Continue?
 - ❌ No write access (safe for AI agents)
 
 **Security**:
+
 - Store key in `.env.local` as `POSTHOG_MCP_API_KEY`
 - Do NOT commit to git
 - Rotate key if ever exposed
 
 **Use Case**:
+
 - MCP server queries PostHog for analytics insights
 - AI agents can answer questions like "How many users signed up last week?"
 - No risk of agents accidentally modifying production data
@@ -297,11 +320,13 @@ Continue?
 Use this checklist to verify all settings are configured:
 
 ### Project Setup
+
 - [ ] Project created with name: `apartmentdibs-mock-01-posthog`
 - [ ] Region set to US Cloud (https://us.posthog.com)
 - [ ] Team members invited with appropriate roles
 
 ### Session Recording
+
 - [ ] Record user sessions: **Enabled**
 - [ ] Capture console logs: **Enabled**
 - [ ] Capture canvas elements: **Disabled** (PII safety)
@@ -310,35 +335,42 @@ Use this checklist to verify all settings are configured:
 - [ ] Recording retention: **30 days minimum**
 
 ### Autocapture
+
 - [ ] Heat maps: **Enabled**
 - [ ] Web Vitals autocapture: **Enabled**
 - [ ] Dead Clicks capture: **Enabled**
 - [ ] Exception autocapture: **Enabled**
 
 ### Project Settings
+
 - [ ] Week starts: **Monday**
 - [ ] Human-friendly comparison periods: **Enabled**
 - [ ] Filter test accounts from revenue: **Enabled**
 
 ### Authorized URLs
+
 - [ ] Added: `https://apartmentdibs-mock-01.vercel.app/`
 - [ ] Added: `http://localhost:3000`
 
 ### User Filtering
+
 - [ ] Internal user filter created (company domain emails)
-- [ ] Test account filter created (test_ prefix)
+- [ ] Test account filter created (test\_ prefix)
 
 ### Feature Flags
+
 - [ ] Flag persistence by default: **Enabled**
 - [ ] Require confirmation for changes: **Enabled**
 - [ ] Confirmation message configured with docs link
 
 ### Integrations
+
 - [ ] Slack integration: Deferred for future
 - [ ] GitHub integration: Not needed
 - [ ] Pipeline destinations: Noted for exploration
 
 ### API Keys
+
 - [ ] MCP API key created with project scope
 - [ ] Key stored securely in `.env.local`
 - [ ] Key NOT committed to git
@@ -397,11 +429,13 @@ After completing the configuration, verify the setup:
 ### Issue: Session recordings not appearing
 
 **Possible Causes**:
+
 - Authorized URLs not configured correctly
 - Session recording disabled in PostHog settings
 - Code configuration incorrect (check `session_recording` in PostHogProvider)
 
 **Solution**:
+
 1. Verify authorized URLs include your domain
 2. Check Settings → Project → Session Recording → **Record user sessions** is enabled
 3. Check browser console for PostHog initialization errors
@@ -409,11 +443,13 @@ After completing the configuration, verify the setup:
 ### Issue: Feature flag toolbar not working
 
 **Possible Causes**:
+
 - Not on authorized URL
 - `ui_host` not configured in code
 - Feature flag service down
 
 **Solution**:
+
 1. Verify you're on an authorized URL (https://apartmentdibs-mock-01.vercel.app/ or http://localhost:3000)
 2. Verify `ui_host: 'https://us.posthog.com'` in [PostHogProvider](../../components/providers/posthog-provider.tsx)
 3. Check PostHog status page: https://status.posthog.com/
@@ -421,11 +457,13 @@ After completing the configuration, verify the setup:
 ### Issue: Events not capturing
 
 **Possible Causes**:
+
 - Reverse proxy not configured correctly
 - PostHog API key incorrect
 - Ad blocker blocking despite proxy
 
 **Solution**:
+
 1. Verify vercel.json rewrites match PostHogProvider api_host
 2. Verify `NEXT_PUBLIC_POSTHOG_KEY` is correct
 3. Check Network tab for failed requests
@@ -434,11 +472,13 @@ After completing the configuration, verify the setup:
 ### Issue: MCP API key not working
 
 **Possible Causes**:
+
 - Wrong key type (personal vs project-scoped)
 - Incorrect scope (organization vs project)
 - Insufficient permissions
 
 **Solution**:
+
 1. Verify key is **Project-Scoped** (not Personal API Key)
 2. Verify key is scoped to `apartmentdibs-mock-01-posthog` project
 3. Verify key has **MCP** permissions
@@ -455,6 +495,7 @@ After completing the configuration, verify the setup:
 **Frequency**: Monthly (first Monday of each month)
 
 **Tasks**:
+
 1. Review recordings with errors (exception autocapture)
 2. Identify UX pain points (dead clicks, rage clicks)
 3. Document findings in `docs/ux-research/`
@@ -462,6 +503,7 @@ After completing the configuration, verify the setup:
 5. Share insights with product team
 
 **Metrics to Review**:
+
 - Sessions with JavaScript errors
 - Sessions with dead clicks (>3 per session)
 - Sessions with rage clicks (>5 rapid clicks)
@@ -472,12 +514,14 @@ After completing the configuration, verify the setup:
 **Frequency**: Monthly (same day as session review)
 
 **Tasks**:
+
 1. List all active feature flags in PostHog
 2. Identify flags at 100% rollout for >30 days
 3. Remove flag code and delete flag (feature is now permanent)
 4. Document flag retirement in changelog
 
 **Why Monthly**:
+
 - Prevents feature flag debt
 - Keeps codebase clean
 - Reduces conditional logic complexity
@@ -487,12 +531,14 @@ After completing the configuration, verify the setup:
 **Frequency**: Weekly (every Monday morning)
 
 **Tasks**:
+
 1. Navigate to PostHog → **Exceptions**
 2. Review new exceptions from past week
 3. Create GitHub issues for critical errors
 4. Track exception trends (increasing/decreasing)
 
 **SCRAPE AND LEARN CYCLE**:
+
 - Learn: Understand which errors users encounter most
 - Fix: Prioritize fixes based on user impact
 - Verify: Monitor exception reduction after fixes
@@ -502,18 +548,21 @@ After completing the configuration, verify the setup:
 ## Additional Resources
 
 ### PostHog Documentation
+
 - [Official PostHog Docs](https://posthog.com/docs)
 - [Session Recording Docs](https://posthog.com/docs/session-recording)
 - [Feature Flags Docs](https://posthog.com/docs/feature-flags)
 - [Experiments Docs](https://posthog.com/docs/experiments)
 
 ### Internal Documentation
+
 - [ADR-013: PostHog Platform Decision](../adr/ADR-013-posthog-analytics-and-experimentation-platform.md)
 - [Event Catalog](./event-catalog.md) - All tracked events
 - [Feature Flag Patterns](./feature-flag-patterns.md) - Best practices
 - [PostHog Vercel Reverse Proxy](../references/posthog-vercel-reverse-proxy.md) - Technical reference
 
 ### Support
+
 - PostHog Community: https://posthog.com/questions
 - PostHog Slack: https://posthog.com/slack
 - Internal Support: #analytics channel in company Slack
@@ -522,8 +571,8 @@ After completing the configuration, verify the setup:
 
 ## Change Log
 
-| Date | Change | Author |
-|------|--------|--------|
+| Date       | Change                      | Author                              |
+| ---------- | --------------------------- | ----------------------------------- |
 | 2025-11-20 | Initial setup guide created | Claude (based on user requirements) |
 
 ---
@@ -531,17 +580,20 @@ After completing the configuration, verify the setup:
 ## Notes
 
 **PII Safety Reminders**:
+
 - Canvas capture is DISABLED until we implement PII-safe rendering
 - Session recording masks all inputs by default
 - Use `[data-private]` attribute on sensitive elements
 - Review recordings periodically for PII leaks
 
 **Cost Monitoring**:
+
 - PostHog free tier: 1M events/month, 5K recordings/month
 - Monitor usage: Settings → Billing → Usage
 - Set up billing alerts at 80% of free tier limits
 
 **Security**:
+
 - Rotate API keys quarterly
 - Audit team member access monthly
 - Review authorized URLs quarterly

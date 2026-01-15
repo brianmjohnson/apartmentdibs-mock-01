@@ -26,7 +26,7 @@ export function ApplyButton({ listingId, hasVerifiedProfile, className }: ApplyB
           <span>Your profile is ready</span>
         </div>
       ) : (
-        <div className="mt-2 flex items-center justify-center gap-1 text-sm text-muted-foreground">
+        <div className="text-muted-foreground mt-2 flex items-center justify-center gap-1 text-sm">
           <Clock className="h-4 w-4" />
           <span>5-minute setup</span>
         </div>
@@ -51,9 +51,5 @@ export function QualificationPreview({ qualified, reason }: QualificationBadgePr
     )
   }
 
-  return (
-    <Badge variant="secondary">
-      {reason || 'Check Qualification'}
-    </Badge>
-  )
+  return <Badge variant="secondary">{reason || 'Check Qualification'}</Badge>
 }

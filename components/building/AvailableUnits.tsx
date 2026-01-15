@@ -43,7 +43,7 @@ export function AvailableUnits({ listings, isLoading }: AvailableUnitsProps) {
         <CardContent>
           <div className="py-8 text-center">
             <p className="text-muted-foreground mb-2">No units currently available</p>
-            <p className="text-sm text-muted-foreground">
+            <p className="text-muted-foreground text-sm">
               Save this building to get notified when units become available.
             </p>
           </div>

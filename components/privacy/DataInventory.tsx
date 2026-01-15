@@ -72,9 +72,7 @@ export function DataInventory({ className }: DataInventoryProps) {
   const [openCategories, setOpenCategories] = useState<string[]>([])
 
   const toggleCategory = (id: string) => {
-    setOpenCategories((prev) =>
-      prev.includes(id) ? prev.filter((c) => c !== id) : [...prev, id]
-    )
+    setOpenCategories((prev) => (prev.includes(id) ? prev.filter((c) => c !== id) : [...prev, id]))
   }
 
   return (
@@ -95,21 +93,21 @@ export function DataInventory({ className }: DataInventoryProps) {
           return (
             <Collapsible key={category.id} open={isOpen}>
               <CollapsibleTrigger
-                className="flex w-full items-center justify-between rounded-lg border p-4 text-left hover:bg-muted/50"
+                className="hover:bg-muted/50 flex w-full items-center justify-between rounded-lg border p-4 text-left"
                 onClick={() => toggleCategory(category.id)}
               >
                 <div>
                   <p className="font-medium">{category.name}</p>
-                  <p className="text-sm text-muted-foreground">{category.description}</p>
+                  <p className="text-muted-foreground text-sm">{category.description}</p>
                 </div>
                 {isOpen ? (
-                  <ChevronDown className="h-5 w-5 text-muted-foreground" />
+                  <ChevronDown className="text-muted-foreground h-5 w-5" />
                 ) : (
-                  <ChevronRight className="h-5 w-5 text-muted-foreground" />
+                  <ChevronRight className="text-muted-foreground h-5 w-5" />
                 )}
               </CollapsibleTrigger>
               <CollapsibleContent className="px-4 pb-4">
-                <div className="mt-3 space-y-4 rounded-lg bg-muted/50 p-4">
+                <div className="bg-muted/50 mt-3 space-y-4 rounded-lg p-4">
                   <div>
                     <p className="mb-2 text-sm font-medium">Data Types:</p>
                     <div className="flex flex-wrap gap-1">
@@ -122,28 +120,28 @@ export function DataInventory({ className }: DataInventoryProps) {
                   </div>
 
                   <div className="flex items-start gap-2">
-                    <Clock className="mt-0.5 h-4 w-4 text-muted-foreground" />
+                    <Clock className="text-muted-foreground mt-0.5 h-4 w-4" />
                     <div>
                       <p className="text-sm font-medium">Retention Period</p>
-                      <p className="text-sm text-muted-foreground">{category.retentionPeriod}</p>
+                      <p className="text-muted-foreground text-sm">{category.retentionPeriod}</p>
                     </div>
                   </div>
 
                   <div className="flex items-start gap-2">
-                    <Users className="mt-0.5 h-4 w-4 text-muted-foreground" />
+                    <Users className="text-muted-foreground mt-0.5 h-4 w-4" />
                     <div>
                       <p className="text-sm font-medium">Shared With</p>
-                      <p className="text-sm text-muted-foreground">
+                      <p className="text-muted-foreground text-sm">
                         {category.sharedWith.join(', ')}
                       </p>
                     </div>
                   </div>
 
                   <div className="flex items-start gap-2">
-                    <Shield className="mt-0.5 h-4 w-4 text-muted-foreground" />
+                    <Shield className="text-muted-foreground mt-0.5 h-4 w-4" />
                     <div>
                       <p className="text-sm font-medium">Purpose</p>
-                      <p className="text-sm text-muted-foreground">{category.purpose}</p>
+                      <p className="text-muted-foreground text-sm">{category.purpose}</p>
                     </div>
                   </div>
                 </div>
@@ -154,8 +152,8 @@ export function DataInventory({ className }: DataInventoryProps) {
 
         <div className="mt-4 rounded-lg bg-blue-50 p-4 dark:bg-blue-950/20">
           <p className="text-sm text-blue-800 dark:text-blue-200">
-            Under GDPR and CCPA, you have the right to access, export, and delete your personal data.
-            Use the options below to exercise these rights.
+            Under GDPR and CCPA, you have the right to access, export, and delete your personal
+            data. Use the options below to exercise these rights.
           </p>
         </div>
       </CardContent>

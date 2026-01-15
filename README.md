@@ -2,7 +2,7 @@
 
 > **Tagline**: Compliance-first rental marketplace with true PII anonymization and portable tenant screening
 
-**Status**: =§ In Development
+**Status**: =ï¿½ In Development
 **Version**: 0.1.0
 **Last Updated**: 2025-11-20
 
@@ -13,10 +13,11 @@
 ApartmentDibs is a compliance-first rental marketplace that connects landlords and renters through an automated, bias-free application platform. We solve the critical problem that **none of the major rental platforms offer true PII anonymization before landlord review**, while addressing the **$276 million annual "excess burden"** in application fees that tenants currently pay.
 
 **Key Highlights**:
+
 - = **True PII Anonymization**: First platform to scrub personally identifiable information before landlord review
-- – **Automated Fair Housing Compliance**: Built-in protection against discrimination lawsuits ($5K-$2.1M settlements)
-- =Ê **Portable Tenant Screening Reports (PTSR)**: Genuine cross-platform portability saving tenants $276M annually
-- =È **Data-Driven Operations**: PostHog-powered analytics for product decisions and experimentation
+- ï¿½ **Automated Fair Housing Compliance**: Built-in protection against discrimination lawsuits ($5K-$2.1M settlements)
+- =ï¿½ **Portable Tenant Screening Reports (PTSR)**: Genuine cross-platform portability saving tenants $276M annually
+- =ï¿½ **Data-Driven Operations**: PostHog-powered analytics for product decisions and experimentation
 
 **Market Opportunity**: $405-$675 million annual screening market with 32,321 fair housing complaints filed in 2024 (20-year high).
 
@@ -27,6 +28,7 @@ ApartmentDibs is a compliance-first rental marketplace that connects landlords a
 ### The Challenge
 
 The rental application process is broken:
+
 - **No major platform offers true PII anonymization** before landlord review
 - **Fair housing complaints at 20-year high** (32,321 in 2024)
 - **Tenants pay $276M annually in excess screening fees** beyond actual costs
@@ -53,6 +55,7 @@ The rental application process is broken:
 ### Our Approach
 
 ApartmentDibs uniquely combines:
+
 1. **True PII Anonymization**: Remove all personally identifiable information before landlord review
 2. **Genuine PTSR Portability**: Cross-platform compatibility with standardized format
 3. **Automated Compliance**: Fair Housing Act, AB 2493, CCPA/GDPR protection
@@ -62,21 +65,25 @@ ApartmentDibs uniquely combines:
 ### Key Features
 
 #### 1. PII Anonymization Engine
+
 **Value**: Eliminates bias by removing names, photos, and protected class information before landlord review
 **How it Works**: Automated redaction + compliance verification before application forwarding
 **Differentiation**: First platform with true PII scrubbing (not just SSN hiding)
 
 #### 2. Portable Tenant Screening Reports
+
 **Value**: Tenants order once, share unlimited times (saves $276M annually)
 **How it Works**: Standardized format accepted across platforms with blockchain verification
 **Differentiation**: Genuine cross-platform portability (competitors are platform-locked)
 
 #### 3. Automated Fair Housing Compliance
+
 **Value**: Protects landlords from $5K-$2.1M discrimination lawsuits
 **How it Works**: AI-powered screening for discriminatory language + automated documentation
 **Differentiation**: Proactive prevention vs. reactive education
 
 #### 4. Analytics & Experimentation Platform
+
 **Value**: Data-driven product decisions, feature flags, and A/B testing
 **How it Works**: PostHog integration for event tracking, user segmentation, and session recording
 **Differentiation**: Product analytics and experimentation built into the platform from day one
@@ -88,6 +95,7 @@ ApartmentDibs uniquely combines:
 ### Primary Personas
 
 #### Persona 1: Risk-Averse Landlord (Individual Owner)
+
 - **Demographics**: 40-60 years old, owns 1-5 rental properties, urban/suburban markets
 - **Goals**: Fill vacancy quickly while minimizing legal risk and compliance burden
 - **Pain Points**: Fair housing lawsuit fear, keeping up with changing regulations, screening costs
@@ -95,12 +103,14 @@ ApartmentDibs uniquely combines:
 - **Success Metrics**: Days to fill, zero discrimination complaints, reduced screening costs
 
 #### Persona 2: Budget-Conscious Tenant
+
 - **Demographics**: 25-40 years old, moving for work/life changes, applying to multiple units
 - **Pain Points**: Paying $30-$50 per application across 5-10 applications ($150-$500 total)
 - **How We Help**: One-time PTSR purchase ($30-50) shareable unlimited times
 - **Success Metrics**: Money saved on applications, faster approval times, transparency
 
 #### Persona 3: Compliance-Focused Property Manager
+
 - **Demographics**: Professional PM firms managing 50-500+ units
 - **Goals**: Scale operations while maintaining perfect compliance record
 - **Pain Points**: Manual compliance verification, high-volume applicant screening, legal liability
@@ -121,18 +131,21 @@ ApartmentDibs uniquely combines:
 ### Tech Stack
 
 **Full-Stack Framework**:
+
 - **Frontend**: Next.js 15 (App Router), React 19, TypeScript 5.9+
 - **Backend**: tRPC v11, ZenStack 2.19+ (access control), Prisma 6+
 - **Database**: PostgreSQL (Neon) with automatic branching
 - **Styling**: Tailwind CSS 4.0, shadcn/ui components
 
 **Infrastructure & Services**:
+
 - **Auth**: Better Auth 1.3+ (OAuth + Organizations)
 - **Hosting**: Vercel (serverless edge functions)
 - **Storage**: Vercel Blob (document storage)
 - **Analytics**: PostHog (product analytics, feature flags, A/B testing)
 
 **Developer Tools**:
+
 - **Query Management**: TanStack Query v5 (auto-generated hooks)
 - **Testing**: Jest (unit), Playwright (E2E)
 - **Code Quality**: ESLint, Prettier, TypeScript strict mode
@@ -142,6 +155,7 @@ ApartmentDibs uniquely combines:
 **Platform**: PostHog (open-source product analytics)
 
 **Capabilities**:
+
 - **Event Tracking**: Page views, user interactions, conversion funnels
 - **Feature Flags**: Gradual rollouts, user segmentation, kill switches
 - **A/B Testing**: Experiments with statistical significance testing
@@ -150,6 +164,7 @@ ApartmentDibs uniquely combines:
 - **Dashboards**: Custom analytics for product, engineering, and business teams
 
 **Integration Points**:
+
 - User identification on authentication (Better Auth)
 - Organization-level tracking for multi-tenant analytics
 - Custom event tracking for key user actions (applications, listings, messages)
@@ -158,7 +173,7 @@ ApartmentDibs uniquely combines:
 ### Architecture Principles
 
 1. **Type Safety**: Full-stack TypeScript with strict mode
-2. **Generated Code**: ZenStack models ’ Prisma schema ’ tRPC routers ’ React hooks
+2. **Generated Code**: ZenStack models ï¿½ Prisma schema ï¿½ tRPC routers ï¿½ React hooks
 3. **Access Control**: Schema-level policies with row-level security
 4. **Scalability**: Serverless architecture with edge functions
 5. **Developer Experience**: Hot reload, type-safe APIs, automated code generation
@@ -206,8 +221,8 @@ See [docs/GETTING_STARTED.md](docs/GETTING_STARTED.md) for complete setup instru
 - **Setup**: [docs/GETTING_STARTED.md](docs/GETTING_STARTED.md)
 - **Workflow**: [docs/WORKFLOW_GUIDE.md](docs/WORKFLOW_GUIDE.md)
 - **HITL Process**: [docs/HITL_GUIDE.md](docs/HITL_GUIDE.md)
-- **Architecture**: [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) *(coming soon)*
-- **User Stories**: [docs/user-stories.md](docs/user-stories.md) *(coming soon)*
+- **Architecture**: [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) _(coming soon)_
+- **User Stories**: [docs/user-stories.md](docs/user-stories.md) _(coming soon)_
 - **ADRs**: [docs/adr/](docs/adr/)
 - **Business Plan**: [docs/Business_Plan_and_GTM.md](docs/Business_Plan_and_GTM.md)
 - **Agent Guide**: [.claude/agents/README.md](.claude/agents/README.md)
@@ -230,16 +245,16 @@ See [docs/PHILOSOPHY.md](docs/PHILOSOPHY.md) and [docs/AGENT_HIRING_CHECKLIST.md
 
 ## Links
 
-- **Production**: *Coming soon*
-- **Staging**: *Coming soon*
-- **PostHog Analytics**: *Project dashboard (team access)*
+- **Production**: _Coming soon_
+- **Staging**: _Coming soon_
+- **PostHog Analytics**: _Project dashboard (team access)_
 - **GitHub**: [apartmentdibs-mock-01](https://github.com/apartmentdibs/apartmentdibs-mock-01)
 
 ---
 
 ## License
 
-*To be determined*
+_To be determined_
 
 ---
 

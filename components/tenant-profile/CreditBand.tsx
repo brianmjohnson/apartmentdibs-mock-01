@@ -61,11 +61,7 @@ export function CreditBand({
         animate={{
           scale: 1,
           opacity: 1,
-          boxShadow: [
-            '0 0 0 rgba(0,0,0,0)',
-            `0 0 12px ${glowColor}`,
-            '0 0 0 rgba(0,0,0,0)',
-          ],
+          boxShadow: ['0 0 0 rgba(0,0,0,0)', `0 0 12px ${glowColor}`, '0 0 0 rgba(0,0,0,0)'],
         }}
         transition={{
           ...bouncySpring,

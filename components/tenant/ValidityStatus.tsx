@@ -25,8 +25,12 @@ export function ValidityStatus({
   className,
 }: ValidityStatusProps) {
   const now = new Date()
-  const totalDays = Math.ceil((expirationDate.getTime() - purchaseDate.getTime()) / (1000 * 60 * 60 * 24))
-  const daysRemaining = Math.ceil((expirationDate.getTime() - now.getTime()) / (1000 * 60 * 60 * 24))
+  const totalDays = Math.ceil(
+    (expirationDate.getTime() - purchaseDate.getTime()) / (1000 * 60 * 60 * 24)
+  )
+  const daysRemaining = Math.ceil(
+    (expirationDate.getTime() - now.getTime()) / (1000 * 60 * 60 * 24)
+  )
   const daysUsed = totalDays - daysRemaining
   const percentageUsed = (daysUsed / totalDays) * 100
 
@@ -64,15 +68,13 @@ export function ValidityStatus({
             <Clock className="h-4 w-4" />
             Profile Validity
           </CardTitle>
-          <Badge variant={getStatusColor()}>
-            {getStatusText()}
-          </Badge>
+          <Badge variant={getStatusColor()}>{getStatusText()}</Badge>
         </div>
       </CardHeader>
       <CardContent className="space-y-4">
         <div>
           <p className="text-sm font-medium">{tierName} Profile</p>
-          <p className="mt-1 text-sm text-muted-foreground">
+          <p className="text-muted-foreground mt-1 text-sm">
             {isExpired ? 'Expired on' : 'Valid until'} {formatDate(expirationDate)}
           </p>
         </div>
@@ -80,7 +82,7 @@ export function ValidityStatus({
         {!isExpired && (
           <>
             <Progress value={percentageUsed} />
-            <p className="text-sm text-muted-foreground">
+            <p className="text-muted-foreground text-sm">
               {daysRemaining} {daysRemaining === 1 ? 'day' : 'days'} remaining
             </p>
           </>
@@ -101,7 +103,8 @@ export function ValidityStatus({
             <AlertTriangle className="h-4 w-4" />
             <AlertTitle>Expiring Soon</AlertTitle>
             <AlertDescription>
-              Your profile expires in {daysRemaining} {daysRemaining === 1 ? 'day' : 'days'}. Renew now to avoid interruption.
+              Your profile expires in {daysRemaining} {daysRemaining === 1 ? 'day' : 'days'}. Renew
+              now to avoid interruption.
             </AlertDescription>
           </Alert>
         )}

@@ -60,7 +60,7 @@ export function ROICalculator({ type }: ROICalculatorProps) {
             </div>
           </div>
 
-          <div className="rounded-lg bg-primary/10 p-6 text-center">
+          <div className="bg-primary/10 rounded-lg p-6 text-center">
             <p className="text-muted-foreground mb-2 text-sm font-medium">
               Estimated Annual Savings
             </p>
@@ -121,8 +121,10 @@ export function ROICalculator({ type }: ROICalculatorProps) {
           </div>
         </div>
 
-        <div className="rounded-lg bg-primary/10 p-6 text-center">
-          <p className="text-muted-foreground mb-2 text-sm font-medium">Additional Annual Revenue</p>
+        <div className="bg-primary/10 rounded-lg p-6 text-center">
+          <p className="text-muted-foreground mb-2 text-sm font-medium">
+            Additional Annual Revenue
+          </p>
           <div className="flex items-center justify-center gap-2">
             <TrendingUp className="text-primary h-8 w-8" />
             <span className="text-4xl font-bold">${additionalRevenue.toLocaleString()}</span>

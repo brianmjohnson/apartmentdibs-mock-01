@@ -1,13 +1,7 @@
 'use client'
 
 import { FileText, Clock, Eye, CheckCircle, XCircle } from 'lucide-react'
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from '@/components/ui/card'
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { cn } from '@/lib/utils'
@@ -40,10 +34,7 @@ interface StatusDashboardProps {
   className?: string
 }
 
-const statusConfig: Record<
-  ApplicationStatus,
-  { label: string; color: string; bgColor: string }
-> = {
+const statusConfig: Record<ApplicationStatus, { label: string; color: string; bgColor: string }> = {
   received: {
     label: 'Received',
     color: 'text-blue-700',
@@ -105,59 +96,47 @@ export function StatusDashboard({
     const config = statusConfig[application.status]
 
     return (
-      <Card key={application.id} className="hover:shadow-md transition-shadow">
+      <Card key={application.id} className="transition-shadow hover:shadow-md">
         <CardContent className="p-4">
           <div className="flex items-start justify-between">
             <div className="flex-1">
-              <div className="flex items-center gap-2 mb-2">
+              <div className="mb-2 flex items-center gap-2">
                 <Badge className={cn(config.bgColor, config.color, 'font-medium')}>
                   {config.label}
                 </Badge>
                 {application.landlordViewCount && application.landlordViewCount > 0 && (
-                  <span className="flex items-center text-xs text-muted-foreground">
-                    <Eye className="h-3 w-3 mr-1" />
+                  <span className="text-muted-foreground flex items-center text-xs">
+                    <Eye className="mr-1 h-3 w-3" />
                     {application.landlordViewCount}
                   </span>
                 )}
               </div>
               <h3 className="font-semibold">{application.address}</h3>
-              <p className="text-sm text-muted-foreground">
+              <p className="text-muted-foreground text-sm">
                 ${application.rent.toLocaleString()}/mo
               </p>
             </div>
             <div className="text-right text-sm">
-              <p className="text-muted-foreground">
-                Applied {formatDate(application.submittedAt)}
-              </p>
+              <p className="text-muted-foreground">Applied {formatDate(application.submittedAt)}</p>
               {application.decisionExpectedBy && (
-                <p className="text-xs text-muted-foreground mt-1">
+                <p className="text-muted-foreground mt-1 text-xs">
                   Decision by {formatDate(application.decisionExpectedBy)}
                 </p>
               )}
             </div>
           </div>
 
-          <div className="flex gap-2 mt-4">
+          <div className="mt-4 flex gap-2">
             {onViewDetails && (
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={() => onViewDetails(application.id)}
-              >
+              <Button variant="outline" size="sm" onClick={() => onViewDetails(application.id)}>
                 View Details
               </Button>
             )}
-            {onWithdraw &&
-              application.status !== 'selected' &&
-              application.status !== 'denied' && (
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  onClick={() => onWithdraw(application.id)}
-                >
-                  Withdraw
-                </Button>
-              )}
+            {onWithdraw && application.status !== 'selected' && application.status !== 'denied' && (
+              <Button variant="ghost" size="sm" onClick={() => onWithdraw(application.id)}>
+                Withdraw
+              </Button>
+            )}
           </div>
         </CardContent>
       </Card>
@@ -167,37 +146,37 @@ export function StatusDashboard({
   return (
     <div className={cn('space-y-6', className)}>
       {/* Summary Stats */}
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+      <div className="grid grid-cols-2 gap-4 md:grid-cols-4">
         <Card>
           <CardContent className="p-4 text-center">
-            <FileText className="h-5 w-5 mx-auto text-muted-foreground mb-2" />
+            <FileText className="text-muted-foreground mx-auto mb-2 h-5 w-5" />
             <p className="text-2xl font-bold">{applications.length}</p>
-            <p className="text-xs text-muted-foreground">Total Applications</p>
+            <p className="text-muted-foreground text-xs">Total Applications</p>
           </CardContent>
         </Card>
         <Card>
           <CardContent className="p-4 text-center">
-            <Clock className="h-5 w-5 mx-auto text-blue-500 mb-2" />
+            <Clock className="mx-auto mb-2 h-5 w-5 text-blue-500" />
             <p className="text-2xl font-bold">{activeApplications.length}</p>
-            <p className="text-xs text-muted-foreground">Active</p>
+            <p className="text-muted-foreground text-xs">Active</p>
           </CardContent>
         </Card>
         <Card>
           <CardContent className="p-4 text-center">
-            <CheckCircle className="h-5 w-5 mx-auto text-green-500 mb-2" />
+            <CheckCircle className="mx-auto mb-2 h-5 w-5 text-green-500" />
             <p className="text-2xl font-bold">
               {applications.filter((a) => a.status === 'selected').length}
             </p>
-            <p className="text-xs text-muted-foreground">Selected</p>
+            <p className="text-muted-foreground text-xs">Selected</p>
           </CardContent>
         </Card>
         <Card>
           <CardContent className="p-4 text-center">
-            <XCircle className="h-5 w-5 mx-auto text-gray-400 mb-2" />
+            <XCircle className="mx-auto mb-2 h-5 w-5 text-gray-400" />
             <p className="text-2xl font-bold">
               {applications.filter((a) => a.status === 'denied').length}
             </p>
-            <p className="text-xs text-muted-foreground">Denied</p>
+            <p className="text-muted-foreground text-xs">Denied</p>
           </CardContent>
         </Card>
       </div>
@@ -205,29 +184,23 @@ export function StatusDashboard({
       {/* Active Applications */}
       {activeApplications.length > 0 && (
         <div className="space-y-3">
-          <h2 className="font-semibold text-lg">Active Applications</h2>
-          <div className="space-y-3">
-            {activeApplications.map(renderApplicationCard)}
-          </div>
+          <h2 className="text-lg font-semibold">Active Applications</h2>
+          <div className="space-y-3">{activeApplications.map(renderApplicationCard)}</div>
         </div>
       )}
 
       {/* Past Applications */}
       {pastApplications.length > 0 && (
         <div className="space-y-3">
-          <h2 className="font-semibold text-lg text-muted-foreground">
-            Past Applications
-          </h2>
-          <div className="space-y-3 opacity-75">
-            {pastApplications.map(renderApplicationCard)}
-          </div>
+          <h2 className="text-muted-foreground text-lg font-semibold">Past Applications</h2>
+          <div className="space-y-3 opacity-75">{pastApplications.map(renderApplicationCard)}</div>
         </div>
       )}
 
       {applications.length === 0 && (
         <Card>
           <CardContent className="p-8 text-center">
-            <FileText className="h-12 w-12 mx-auto text-muted-foreground mb-4" />
+            <FileText className="text-muted-foreground mx-auto mb-4 h-12 w-12" />
             <CardTitle className="text-lg">No Applications Yet</CardTitle>
             <CardDescription className="mt-2">
               Start applying to listings to track your applications here

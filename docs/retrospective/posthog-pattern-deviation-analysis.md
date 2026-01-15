@@ -12,12 +12,14 @@
 The PostHog integration was implemented using a custom `instrumentation-client.ts` pattern instead of the official PostHog documentation pattern (` posthog.init()` in `useEffect` within `PostHogProvider`). This deviation occurred despite the user explicitly requesting to "follow their instructions here https://posthog.com/docs/libraries/next-js".
 
 **Impact**:
+
 - Functional code that works correctly
 - Non-standard pattern that deviates from official docs
 - Potential maintenance issues (future PostHog updates may assume standard pattern)
 - Missing `defaults: '2025-05-24'` parameter from official docs
 
 **Resolution**:
+
 - ✅ Moved `posthog.init()` to `PostHogProvider` with `useEffect` (official pattern)
 - ✅ Added `defaults: '2025-05-24'` parameter
 - ✅ Removed `instrumentation-client.ts` file
@@ -30,14 +32,17 @@ The PostHog integration was implemented using a custom `instrumentation-client.t
 ### 1. Requirements Gathering Phase (Claude Creating Initial Prompt)
 
 **Problem**: When creating [docs/hitl/posthog-integration-prompt.md](../hitl/posthog-integration-prompt.md), I specified:
+
 > "Use Next.js 15.3+ `instrumentation-client.ts` approach (lightweight setup)"
 
 **Root Cause**:
+
 - Did NOT fetch the actual PostHog documentation from https://posthog.com/docs/libraries/next-js
 - Made assumptions about "best practices" without verifying against source
 - Invented a pattern (`instrumentation-client.ts`) that was not in the referenced documentation
 
 **Why It Happened**:
+
 - WebFetch tool returned CSS/fonts instead of actual documentation content
 - Instead of retrying or using WebSearch, I made architectural assumptions
 - Prioritized "modern patterns" over "following the official docs"
@@ -47,11 +52,13 @@ The PostHog integration was implemented using a custom `instrumentation-client.t
 **Problem**: ADR-013 approved the `instrumentation-client.ts` pattern without validating against the source documentation.
 
 **Root Cause**:
+
 - Architecture agent followed the flawed prompt requirements
 - No cross-check against the original PostHog documentation URL
 - Assumed the prompt requirements were already validated
 
 **Why It Happened**:
+
 - No validation step in architecture-agent.md that says "verify against source documentation"
 - Agent trusted the prompt creator (me) too much
 - No requirement to re-fetch or validate external documentation links
@@ -61,11 +68,13 @@ The PostHog integration was implemented using a custom `instrumentation-client.t
 **Problem**: Technical spec detailed the `instrumentation-client.ts` pattern, missing the official `useEffect` pattern entirely.
 
 **Root Cause**:
+
 - Frontend developer agent followed ADR-013 and the prompt
 - No independent verification of PostHog documentation
 - Spec was comprehensive but based on flawed requirements
 
 **Why It Happened**:
+
 - No step in frontend-developer.md to verify against official documentation
 - Agent assumed ADR and prompt were correct
 - No "research-first" validation step before spec creation
@@ -75,11 +84,13 @@ The PostHog integration was implemented using a custom `instrumentation-client.t
 **Problem**: QA agent verified the implementation against the spec/ADR but NOT against the original PostHog documentation URL.
 
 **Root Cause**:
+
 - QA checklist focused on "meets acceptance criteria from US-002"
 - Did not include "matches source documentation URL from user requirement"
 - Validated spec compliance, not source truth compliance
 
 **Why It Happened**:
+
 - quality-reviewer.md does not include "verify against original documentation links"
 - QA agent assumes spec/ADR are ground truth
 - No traceability requirement back to original source documentation
@@ -123,6 +134,7 @@ User catches the deviation ✅
 **Current State**: Agents trust the prompt/spec/ADR as ground truth
 
 **Missing**:
+
 - Requirement to fetch and verify external documentation URLs
 - Validation that implementation matches source documentation
 - Traceability from code back to original requirement source
@@ -132,6 +144,7 @@ User catches the deviation ✅
 **Current State**: Agents can invent "better" patterns
 
 **Missing**:
+
 - Policy: "If user provides official docs URL, match it exactly unless explicitly told otherwise"
 - Validation: "Does our pattern appear in the official docs?"
 - Red flag: "We're using a pattern not shown in the docs the user referenced"
@@ -141,6 +154,7 @@ User catches the deviation ✅
 **Current State**: QA validates against acceptance criteria only
 
 **Missing**:
+
 - QA step: "If user provided documentation URL, verify implementation matches it"
 - Checklist item: "Pattern matches official documentation examples"
 - Requirement: "All external doc URLs must be verified"
@@ -150,6 +164,7 @@ User catches the deviation ✅
 **Current State**: Prompts can be created without fetching referenced URLs
 
 **Missing**:
+
 - Gate: "Must successfully fetch and analyze all referenced URLs before proceeding"
 - Validation: "WebFetch/WebSearch must return actual content, not CSS/fonts"
 - Retry logic: "If fetch fails, try WebSearch or report to user"
@@ -168,21 +183,23 @@ User catches the deviation ✅
 **CRITICAL**: If the user provided a documentation URL in their request:
 
 1. **Fetch the documentation**:
-   ```
-   Use WebFetch to retrieve the actual documentation
-   If WebFetch fails (returns CSS/fonts), use WebSearch
-   If both fail, create HITL file asking for clarification
-   ```
+```
+
+Use WebFetch to retrieve the actual documentation
+If WebFetch fails (returns CSS/fonts), use WebSearch
+If both fail, create HITL file asking for clarification
+
+```
 
 2. **Validate against source**:
-   - Does the pattern we're using appear in the official docs?
-   - Are we adding complexity not shown in the docs?
-   - Are we missing features shown in the docs?
+- Does the pattern we're using appear in the official docs?
+- Are we adding complexity not shown in the docs?
+- Are we missing features shown in the docs?
 
 3. **Document deviations**:
-   - If deviating from official docs, explain WHY in ADR
-   - Get explicit user approval for non-standard patterns
-   - Mark as "NEEDS_REVIEW" if uncertain
+- If deviating from official docs, explain WHY in ADR
+- Get explicit user approval for non-standard patterns
+- Mark as "NEEDS_REVIEW" if uncertain
 
 **Red Flags**:
 - ❌ "We'll use a better pattern" (without checking docs)
@@ -199,7 +216,7 @@ User catches the deviation ✅
 
 **Add to "Before Creating ANY Custom Hook" section**:
 
-```markdown
+````markdown
 ### Before Implementing ANY Feature
 
 **Step 0: Verify Source Documentation** (if provided by user)
@@ -210,6 +227,7 @@ User catches the deviation ✅
    - Original user request
 
 2. **Fetch and verify**:
+
    ```bash
    # Use WebFetch to get actual docs
    WebFetch(url, "Extract implementation pattern and configuration options")
@@ -217,6 +235,7 @@ User catches the deviation ✅
    # If fails, use WebSearch
    WebSearch("library-name next.js integration 2025")
    ```
+````
 
 3. **Match the pattern exactly** unless:
    - ADR explicitly approves deviation with justification
@@ -231,7 +250,8 @@ User catches the deviation ✅
     * Pattern: useEffect initialization in provider component
     */
    ```
-```
+
+````
 
 ### 3. Update `.claude/agents/quality-reviewer.md`
 
@@ -258,9 +278,10 @@ User catches the deviation ✅
    - Does our code structure match their examples?
    - Are we using parameters they recommend?
    - Are we missing features they show?
-   ```
+````
 
 3. **Report Deviations**:
+
    ```markdown
    ### Source Documentation Compliance
 
@@ -271,6 +292,7 @@ User catches the deviation ✅
    **Compliance**: ✅ MATCH | ⚠️ MINOR DEVIATION | ❌ MAJOR DEVIATION
 
    **Deviations**:
+
    1. [Deviation 1] - Reason: [Why]
    2. [Deviation 2] - Reason: [Why]
 
@@ -286,11 +308,13 @@ User catches the deviation ✅
 ### QA Checklist Addition
 
 **Before signing off**:
+
 - [ ] If user provided doc URLs, implementation matches them
 - [ ] If deviating from docs, deviation is justified in ADR
 - [ ] All external URLs referenced are verified
 - [ ] Pattern appears in official documentation
-```
+
+````
 
 ### 4. Create New Validation Agent
 
@@ -326,11 +350,12 @@ WebFetch(url, "Extract code examples, configuration patterns, setup steps")
 
 # Fallback: WebSearch
 WebSearch("[library] [framework] official documentation 2025")
-```
+````
 
 ### 3. Pattern Matching
 
 Compare:
+
 - **File structure**: Do our files match their examples?
 - **Initialization**: Do we initialize the same way?
 - **Configuration**: Are we using recommended parameters?
@@ -342,17 +367,20 @@ Compare:
 # Documentation Compliance Report
 
 ## Sources Verified
+
 - [URL 1]: ✅ Fetched | ❌ Failed
 - [URL 2]: ✅ Fetched | ❌ Failed
 
 ## Pattern Comparison
 
 ### Official Pattern (from docs)
+
 \`\`\`typescript
 [Their code example]
 \`\`\`
 
 ### Our Implementation
+
 \`\`\`typescript
 [Our code]
 \`\`\`
@@ -360,17 +388,20 @@ Compare:
 ### Compliance: ✅ | ⚠️ | ❌
 
 ### Deviations
+
 1. **[Deviation]**
    - Severity: CRITICAL | HIGH | MEDIUM | LOW
    - Justification: [Found in ADR | Not justified]
    - Recommendation: [Fix | Justify | Get approval]
 
 ## Overall Status
+
 - ✅ COMPLIANT: Matches official docs
 - ⚠️ MINOR DEVIATIONS: Justified or low-impact
 - ❌ NON-COMPLIANT: Major deviations without justification
 
 ## Next Steps
+
 [Recommendations]
 ```
 
@@ -379,14 +410,17 @@ Compare:
 **If COMPLIANT**: ✅ Approve, continue workflow
 
 **If MINOR DEVIATIONS**:
+
 - Check if justified in ADR
 - If yes: Approve with note
 - If no: Request justification
 
 **If NON-COMPLIANT**:
+
 - Create HITL file
 - Pause workflow
 - Request user decision: Fix or approve deviation
+
 ```
 
 ---
@@ -396,26 +430,28 @@ Compare:
 ### Updated HITL Workflow with Documentation Validation
 
 ```
+
 Phase 1: Documentation & Planning
-  1.1: Update README
-  1.2: Product Manager → Create User Story
-  1.3: ✨ NEW: Documentation Validator → Verify source URLs
-       ↓ If non-compliant → HITL review
-  1.4: Architecture Agent → Create ADR (with source verification)
-       HITL Gate #1: Review ADR
-  1.5: Frontend Developer → Create Tech Spec (verified against docs)
-       ✨ NEW: Documentation Validator → Verify spec matches sources
-       ↓ If non-compliant → HITL review
-       HITL Gate #2: Review Technical Spec
+1.1: Update README
+1.2: Product Manager → Create User Story
+1.3: ✨ NEW: Documentation Validator → Verify source URLs
+↓ If non-compliant → HITL review
+1.4: Architecture Agent → Create ADR (with source verification)
+HITL Gate #1: Review ADR
+1.5: Frontend Developer → Create Tech Spec (verified against docs)
+✨ NEW: Documentation Validator → Verify spec matches sources
+↓ If non-compliant → HITL review
+HITL Gate #2: Review Technical Spec
 
 Phase 2: Implementation
-  2.1-2.5: Implementation (following verified spec)
-  2.6: ✨ NEW: Documentation Validator → Verify implementation
-       ↓ If non-compliant → Fix or HITL review
+2.1-2.5: Implementation (following verified spec)
+2.6: ✨ NEW: Documentation Validator → Verify implementation
+↓ If non-compliant → Fix or HITL review
 
 Phase 3: Quality Review
-  3.1: Quality Reviewer → QA (includes source doc verification)
-       HITL Gate #3: Review QA Report
+3.1: Quality Reviewer → QA (includes source doc verification)
+HITL Gate #3: Review QA Report
+
 ```
 
 ### New Guard Rails
@@ -560,3 +596,4 @@ This deviation was caught quickly and fixed easily, but it revealed a **systemic
 The fix is straightforward: Add documentation validation steps to our agents and HITL workflow. This will prevent similar deviations in future integrations.
 
 **Status**: ✅ Issue resolved, process improvements documented, ready to implement prevention measures.
+```

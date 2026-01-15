@@ -2,7 +2,14 @@
 
 import { Check, Star } from 'lucide-react'
 import { Button } from '@/components/ui/button'
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card'
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { Switch } from '@/components/ui/switch'
 import { Label } from '@/components/ui/label'
@@ -114,11 +121,7 @@ export function PricingTable({ onSelectPlan, currentPlanId, className }: Pricing
         <Label htmlFor="billing-toggle" className={!isAnnual ? 'font-semibold' : ''}>
           Monthly
         </Label>
-        <Switch
-          id="billing-toggle"
-          checked={isAnnual}
-          onCheckedChange={setIsAnnual}
-        />
+        <Switch id="billing-toggle" checked={isAnnual} onCheckedChange={setIsAnnual} />
         <Label htmlFor="billing-toggle" className={isAnnual ? 'font-semibold' : ''}>
           Annual
           <Badge variant="secondary" className="ml-2">
@@ -132,13 +135,11 @@ export function PricingTable({ onSelectPlan, currentPlanId, className }: Pricing
           <Card
             key={tier.id}
             className={`relative flex flex-col ${
-              tier.isPopular
-                ? 'border-2 border-primary shadow-lg'
-                : 'border'
-            } ${currentPlanId === tier.id ? 'ring-2 ring-primary' : ''}`}
+              tier.isPopular ? 'border-primary border-2 shadow-lg' : 'border'
+            } ${currentPlanId === tier.id ? 'ring-primary ring-2' : ''}`}
           >
             {tier.isPopular && (
-              <Badge className="absolute -top-3 left-1/2 -translate-x-1/2 bg-primary">
+              <Badge className="bg-primary absolute -top-3 left-1/2 -translate-x-1/2">
                 <Star className="mr-1 h-3 w-3" />
                 Most Popular
               </Badge>
@@ -150,13 +151,9 @@ export function PricingTable({ onSelectPlan, currentPlanId, className }: Pricing
             <CardContent className="flex-1">
               <div className="mb-6">
                 <span className="text-4xl font-bold">{formatPrice(tier)}</span>
-                {!tier.isEnterprise && (
-                  <span className="text-muted-foreground">/month</span>
-                )}
+                {!tier.isEnterprise && <span className="text-muted-foreground">/month</span>}
                 {isAnnual && !tier.isEnterprise && (
-                  <p className="mt-1 text-sm text-green-600">
-                    Save ${getAnnualSavings(tier)}/year
-                  </p>
+                  <p className="mt-1 text-sm text-green-600">Save ${getAnnualSavings(tier)}/year</p>
                 )}
               </div>
               <ul className="space-y-3">

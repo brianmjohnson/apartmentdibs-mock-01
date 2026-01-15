@@ -23,7 +23,7 @@ export function TransitInfo({ subwayLines, travelTimes, walkScore, bikeScore }: 
   }
 
   const getScoreLabel = (score: number) => {
-    if (score >= 90) return 'Walker\'s Paradise'
+    if (score >= 90) return "Walker's Paradise"
     if (score >= 70) return 'Very Walkable'
     if (score >= 50) return 'Somewhat Walkable'
     return 'Car-Dependent'
@@ -83,7 +83,11 @@ export function TransitInfo({ subwayLines, travelTimes, walkScore, bikeScore }: 
             </div>
             <p className={`text-2xl font-bold ${getScoreColor(bikeScore)}`}>{bikeScore}</p>
             <p className="text-muted-foreground text-xs">
-              {bikeScore >= 70 ? 'Very Bikeable' : bikeScore >= 50 ? 'Bikeable' : 'Some Bike Infrastructure'}
+              {bikeScore >= 70
+                ? 'Very Bikeable'
+                : bikeScore >= 50
+                  ? 'Bikeable'
+                  : 'Some Bike Infrastructure'}
             </p>
           </div>
         </div>
