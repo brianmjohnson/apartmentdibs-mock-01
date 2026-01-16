@@ -22,9 +22,9 @@ This repository represents a snapshot of what autonomous AI-driven software deve
    - `Personas.md`
    - `Customer_Journey_Map.md`
    - `User_Stories.md`
-   - `NextJS_Sitemap.txt` _(originally intended as markdown)_
+   - `NextJS_Sitemap.txt` <- I had this converted to markdown, once I noticed. It didn't matter though.
    - `Data_Architecture_Schema.md`
-3. **Execute the meta-prompt** with these specification files in context
+3. **Execute the meta-prompt** with these specification files in context. I think that prompt was something like "read the docs/* then implment the MASTER_PROMPT.md".
 
 ### Historical Context
 
@@ -37,7 +37,7 @@ Subsequent commits after the initial November 17-18 session were limited to:
 
 ### Situation and Observations
 
-This project was mainly a "hold my beer" with my fingers crossed and nose pinched shut.
+This project was an experiment, a hunch of what _might_ be possible, so with my fingers crossed and nose pinched shut, I tried it out. I had the idea to create a principled approach using CONTEXT MAXIMIZATION to better guide agentic sessions based on *how I think about things*. I'd wanted my agentic sessions to follow my instructions and approach things like I do. I had Claude write some agents modeled after typical roles in traditional SDLC to the .claude folder. I then built up a number of docs in the docs/* folder, those are the ones in ALL_CAPS.md files, with the OPERATING MODEL I wanted the agents to follow.
 
 11:30 - noon: Our founding team meets with a friend/VC for guidance since our first product wasn't getting traction - no product market fit. I'd built that April to October 2025 using agentically assisted development, followed by Vibe Coding mainly in Cursor and Claude Code. I followed typical agile SDLC approaches.
 
